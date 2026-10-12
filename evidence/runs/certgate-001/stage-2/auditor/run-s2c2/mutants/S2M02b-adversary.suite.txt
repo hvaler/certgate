@@ -1,0 +1,9 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+
+ Test Files  11 passed (11)
+      Tests  246 passed (246)
+   Start at  21:27:46
+   Duration  4.93s (tests 93%, import 5%, transform 2%)
+
