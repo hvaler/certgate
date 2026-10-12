@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad/mut-9d04499
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 405ms
+   ❯ CEV (A-02, A-20, A-22) (8)
+     × A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+AssertionError: expected '0.45000000000000007' to be '0.45' // Object.is equality
+
+Expected: "0.45"
+Received: "0.45000000000000007"
+
+ ❯ test/rules.test.ts:125:30
+    123|   it("A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the…
+    124|     const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    125|     expect(e.cev_recomputed).toBe("0.45");
+       |                              ^
+    126|     expect(e.decision.proposal).toBe("release");
+    127|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 187 passed (188)
+   Start at  19:57:33
+   Duration  4.17s (tests 92%, import 4%, transform 3%, worker 1%)
+

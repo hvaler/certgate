@@ -1,0 +1,15 @@
+
+added 42 packages in 4s
+
+> certgate@0.1.0 build
+> tsc -p tsconfig.json
+
+
+ RUN  v5.0.4 C:/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad/clone-9d04499
+
+
+ Test Files  9 passed (9)
+      Tests  188 passed (188)
+   Start at  19:58:05
+   Duration  3.05s (tests 84%, transform 11%, import 5%)
+

@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad/mut-9d04499
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 265ms
+   ❯ inclusive spec limits, no rounding (D1-07, S1-27, A-22) (7)
+     × A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release
+AssertionError: expected 'release' to be 'block' // Object.is equality
+
+Expected: "block"
+Received: "release"
+
+ ❯ test/rules.test.ts:45:33
+     43|   it("A26: P 0.02500000000000000001 is above 0.025 and blocks; float w…
+     44|     const e = evalWith({ overrides: { "chemistry.P": { value: "0.02500…
+     45|     expect(e.decision.proposal).toBe("block");
+       |                                 ^
+     46|     expect(codes(e)).toContain("RULE_FAIL:P");
+     47|     expect(ok("mechanical.ReH", "354.99999999999999999", "MPa")).toBe(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 187 passed (188)
+   Start at  19:57:28
+   Duration  3.14s (tests 91%, import 4%, transform 4%)
+
