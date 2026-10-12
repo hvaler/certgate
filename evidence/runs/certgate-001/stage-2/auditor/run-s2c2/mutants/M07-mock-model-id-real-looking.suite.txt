@@ -1,0 +1,391 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/entrypoints.test.ts (11 tests | 9 failed) 1006ms
+   ❯ CLI (10)
+     × processes a named dataset case and prints proposal and receipt (exit 0) 575ms
+     × a reader failure is still a processed case (exit 0) with status error 75ms
+     × mock and planted notes say MOCK 48ms
+     × processes an external case directory 37ms
+     × a mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02) 28ms
+     × confirmation and human decision from the CLI 12ms
+     × the CLI rejects release while the proposal is not release (B-14): exit 2 31ms
+     × writes the output file with --out 63ms
+   ❯ HTTP service (1)
+     × answers /health and processes a dataset case 76ms
+ ❯ test/reader.test.ts (22 tests | 8 failed) 1127ms
+   ❯ failure injection and bounded retry (C11) (14)
+     × cg-023 endpoint_off: the receipt labels the injected failure as planted in structural fields (finding F-01) 37ms
+     × cg-024 timeout: the receipt labels the injected failure as planted in structural fields (finding F-01) 29ms
+     × cg-025 http_429: the receipt labels the injected failure as planted in structural fields (finding F-01) 7ms
+     × cg-026 http_5xx: the receipt labels the injected failure as planted in structural fields (finding F-01) 30ms
+     × cg-027 invalid_json: the receipt labels the injected failure as planted in structural fields (finding F-01) 21ms
+   ❯ mock label everywhere (I7, S1-18, A-18) (3)
+     × receipt of a mock run carries the mock label and reading_source 13ms
+   ❯ receipt content (S1-33, A-15, A-19) (2)
+     × has case id, versions, hashes, spec id and revision, timings; no JSON numbers 17ms
+     × contains no secret environment value and no absolute path 20ms
+ ❯ test/dataset.test.ts (36 tests | 30 failed) 2019ms
+   ❯ every dataset case yields its expected outcome through the mock path (30)
+     × cg-001 1005ms
+     × cg-002 33ms
+     × cg-003 27ms
+     × cg-004 30ms
+     × cg-005 17ms
+     × cg-006 17ms
+     × cg-007 19ms
+     × cg-008 17ms
+     × cg-009 16ms
+     × cg-010 25ms
+     × cg-011 34ms
+     × cg-012 30ms
+     × cg-013 24ms
+     × cg-014 19ms
+     × cg-015 16ms
+     × cg-016 22ms
+     × cg-017 17ms
+     × cg-018 18ms
+     × cg-019 19ms
+     × cg-020 14ms
+     × cg-021 15ms
+     × cg-022 17ms
+     × cg-023 20ms
+     × cg-024 15ms
+     × cg-025 15ms
+     × cg-026 18ms
+     × cg-027 11ms
+     × cg-028 13ms
+     × cg-029 14ms
+     × cg-030 13ms
+ ❯ test/web.test.ts (38 tests | 4 failed) 4025ms
+   ❯ stored stories (S2-14, B-12, B-23) (3)
+     × equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings 21ms
+   ❯ confirmations and decisions through the API (S2-04, A-21, B-14, B-15) (4)
+     × cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks 21ms
+     × release is rejected below the UI when the proposal is not release (API 409, core error) 46ms
+     × decided_at and confirmed_at are stamped by the server clock, not the client 28ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 51 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-001
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-002
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-003
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-004
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-005
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-006
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-007
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-008
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-010
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-011
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-012
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-013
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-014
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-015
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-016
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-017
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-018
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-019
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-020
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-021
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-022
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-023
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-024
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-025
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-026
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-027
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-028
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-029
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-030
+AssertionError: expected 'Qwen2.5-VL-72B-Instruct' to match /^MOCK/
+
+- Expected:
+/^MOCK/
+
++ Received:
+"Qwen2.5-VL-72B-Instruct"
+
+ ❯ test/dataset.test.ts:105:41
+    103|       }
+    104|       if (exp.expected_proposal !== "release") expect(r.decision.propo…
+    105|       expect(r.receipt.reader.model_id).toMatch(/^MOCK/);
+       |                                         ^
+    106|     });
+    107|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > processes a named dataset case and prints proposal and receipt (exit 0)
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/entrypoints.test.ts:20:18
+     18|   it("processes a named dataset case and prints proposal and receipt (…
+     19|     const { code, out } = await cli(["process", "--case", "cg-002"]);
+     20|     expect(code).toBe(EXIT.processed);
+       |                  ^
+     21|     const j = JSON.parse(out);
+     22|     expect(j.summary.proposal).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > a reader failure is still a processed case (exit 0) with status error
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/entrypoints.test.ts:28:18
+     26|   it("a reader failure is still a processed case (exit 0) with status …
+     27|     const { code, out } = await cli(["process", "--case", "cg-024"]);
+     28|     expect(code).toBe(EXIT.processed);
+       |                  ^
+     29|     expect(JSON.parse(out).summary.status).toBe("error");
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > mock and planted notes say MOCK
+TypeError: Cannot read properties of undefined (reading 'note')
+ ❯ test/entrypoints.test.ts:44:73
+     42|   });
+     43|   it("mock and planted notes say MOCK", async () => {
+     44|     expect(JSON.parse((await cli(["process", "--case", "cg-001"])).out…
+       |                                                                         ^
+     45|     expect(JSON.parse((await cli(["process", "--case", "cg-023"])).out…
+     46|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > processes an external case directory
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/entrypoints.test.ts:53:18
+     51|     cpSync(path.join(DATA, "delivery", "ALB-2026-1003.csv"), path.join…
+     52|     const { code, out } = await cli(["process", "--case-dir", dir, "--…
+     53|     expect(code).toBe(EXIT.processed);
+       |                  ^
+     54|     expect(JSON.parse(out).summary.proposal).toBe("block");
+     55|     const other = await cli(["process", "--case-dir", dir, "--line", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > a mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02)
+AssertionError: invalid_output: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/entrypoints.test.ts:65:27
+     63|       writeFileSync(path.join(dir, "reading.json"), mutate(readFileSyn…
+     64|       const r = await cli(["process", "--case-dir", dir, "--line", "1"…
+     65|       expect(r.code, cls).toBe(EXIT.processed);
+       |                           ^
+     66|       const j = JSON.parse(r.out);
+     67|       expect(j.summary.status).toBe("error");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > confirmation and human decision from the CLI
+TypeError: Cannot read properties of undefined (reading 'proposal')
+ ❯ test/entrypoints.test.ts:87:22
+     85|       "--decide", "block", "--reason", "ReH below spec", "--decided-by…
+     86|     const j = JSON.parse(r.out);
+     87|     expect(j.summary.proposal).toBe("block");
+       |                      ^
+     88|     expect(j.receipt.human_decision.action).toBe("block");
+     89|     expect(j.receipt.confirmations[0].field).toBe("mechanical.ReH");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > the CLI rejects release while the proposal is not release (B-14): exit 2
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/entrypoints.test.ts:95:125
+     93|     expect(r.code).toBe(EXIT.rejected);
+     94|     expect(JSON.parse(r.out).error).toMatch(/release is not allowed wh…
+     95|     expect((await cli(["process", "--case", "cg-001", "--decide", "rel…
+       |                                                                                                                             ^
+     96|   });
+     97|   it("writes the output file with --out", async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/51]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > writes the output file with --out
+Error: ENOENT: no such file or directory, open '<home>\AppData\Local\Temp\certgate-out-setavH\r.json'
+ ❯ test/entrypoints.test.ts:100:23
+     98|     const f = path.join(mkdtempSync(path.join(tmpdir(), "certgate-out-…
+     99|     await cli(["process", "--case", "cg-001", "--receipt-only", "--out…
+    100|     expect(JSON.parse(readFileSync(f, "utf8")).case_id).toBe("cg-001");
+       |                       ^
+    101|   });
+    102| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/51]⎯
+
+ FAIL  test/entrypoints.test.ts > HTTP service > answers /health and processes a dataset case
+TypeError: Cannot read properties of undefined (reading 'proposal')
+ ❯ test/entrypoints.test.ts:116:24
+    114|       const res = await fetch(`http://127.0.0.1:${port}/api/cases/cg-0…
+    115|       const j = await res.json();
+    116|       expect(j.summary.proposal).toBe("review");
+       |                        ^
+    117|       expect(j.receipt.reading_source).toBe("mock");
+    118|       expect((await fetch(`http://127.0.0.1:${port}/api/cases/zz/proce…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/51]⎯
+
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-023 endpoint_off: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-024 timeout: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-025 http_429: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-026 http_5xx: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-027 invalid_json: the receipt labels the injected failure as planted in structural fields (finding F-01)
+AssertionError: expected [Function] to not throw an error but 'Error: a mock receipt must carry the …' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: a mock receipt must carry the MOCK model label"
+
+ ❯ test/reader.test.ts:40:54
+     38|       for (const e of r.receipt.errors) expect(e).toEqual(expect.objec…
+     39|       expect(r.receipt.errors[0]!.detail).toMatch(/^INJECTED \(mock, p…
+     40|       expect(() => exportReceipt(r.receipt, {})).not.toThrow();
+       |                                                      ^
+     41|     });
+     42|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/51]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > receipt of a mock run carries the mock label and reading_source
+AssertionError: expected 'Qwen2.5-VL-72B-Instruct' to match /^MOCK/
+
+- Expected:
+/^MOCK/
+
++ Received:
+"Qwen2.5-VL-72B-Instruct"
+
+ ❯ test/reader.test.ts:105:39
+    103|     const r = await runCase("cg-001");
+    104|     expect(r.receipt.reading_source).toBe("mock");
+    105|     expect(r.receipt.reader.model_id).toMatch(/^MOCK/);
+       |                                       ^
+    106|     expect(r.receipt.reader.vllm_version).toBe("not applicable (mock)"…
+    107|     expect(r.receipt.reader.rocm_version).toBe("not applicable (mock)"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/51]⎯
+
+ FAIL  test/reader.test.ts > receipt content (S1-33, A-15, A-19) > has case id, versions, hashes, spec id and revision, timings; no JSON numbers
+Error: a mock receipt must carry the MOCK model label
+ ❯ exportReceipt src/receipt.ts:23:11
+     21|   if (r.reader?.reading_source !== r.reading_source) throw new Receipt…
+     22|   if ((r.reading_source === "mock" || r.reading_source === "planted") …
+     23|     throw new ReceiptExportError("a mock receipt must carry the MOCK m…
+       |           ^
+     24|   }
+     25|   assertNoNumbers(receipt);
+ ❯ test/reader.test.ts:125:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/51]⎯
+
+ FAIL  test/reader.test.ts > receipt content (S1-33, A-15, A-19) > contains no secret environment value and no absolute path
+Error: a mock receipt must carry the MOCK model label
+ ❯ exportReceipt src/receipt.ts:23:11
+     21|   if (r.reader?.reading_source !== r.reading_source) throw new Receipt…
+     22|   if ((r.reading_source === "mock" || r.reading_source === "planted") …
+     23|     throw new ReceiptExportError("a mock receipt must carry the MOCK m…
+       |           ^
+     24|   }
+     25|   assertNoNumbers(receipt);
+ ❯ test/reader.test.ts:137:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/51]⎯
+
+ FAIL  test/web.test.ts > stored stories (S2-14, B-12, B-23) > equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings
+Error: a mock receipt must carry the MOCK model label
+ ❯ exportReceipt src/receipt.ts:23:11
+     21|   if (r.reader?.reading_source !== r.reading_source) throw new Receipt…
+     22|   if ((r.reading_source === "mock" || r.reading_source === "planted") …
+     23|     throw new ReceiptExportError("a mock receipt must carry the MOCK m…
+       |           ^
+     24|   }
+     25|   assertNoNumbers(receipt);
+ ❯ buildStories src/tools/build-stories.ts:34:44
+ ❯ test/web.test.ts:298:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/51]⎯
+
+ FAIL  test/web.test.ts > confirmations and decisions through the API (S2-04, A-21, B-14, B-15) > cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks
+TypeError: Cannot read properties of undefined (reading 'proposal')
+ ❯ test/web.test.ts:329:21
+    327|     const base = await app({ env: {} });
+    328|     const all = await (await postJson(`${base}/api/stories/cg-003/eval…
+    329|     expect(all.view.proposal).toBe("release");
+       |                     ^
+    330|     const one = await (await postJson(`${base}/api/stories/cg-003/eval…
+    331|     expect(one.view.proposal).toBe("review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/51]⎯
+
+ FAIL  test/web.test.ts > confirmations and decisions through the API (S2-04, A-21, B-14, B-15) > release is rejected below the UI when the proposal is not release (API 409, core error)
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ ❯ test/web.test.ts:342:23
+    340|     expect(() => recordHumanDecision(core, { action: "release", reason…
+    341|     const ok = await postJson(`${base}/api/stories/cg-002/evaluate`, {…
+    342|     expect(ok.status).toBe(200);
+       |                       ^
+    343|   });
+    344|   it("decided_at and confirmed_at are stamped by the server clock, not…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/51]⎯
+
+ FAIL  test/web.test.ts > confirmations and decisions through the API (S2-04, A-21, B-14, B-15) > decided_at and confirmed_at are stamped by the server clock, not the client
+TypeError: Cannot read properties of undefined (reading 'receipt')
+ ❯ test/web.test.ts:348:19
+    346|     const base = await app({ env: {}, clock: c.now });
+    347|     const j = await (await postJson(`${base}/api/stories/cg-001/evalua…
+    348|     expect(j.view.receipt.human_decision.at).toBe("2026-10-12T18:20:00…
+       |                   ^
+    349|   });
+    350|   it("unknown story ids are not served", async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/51]⎯
+
+
+ Test Files  4 failed | 7 passed (11)
+      Tests  51 failed | 195 passed (246)
+   Start at  21:17:08
+   Duration  4.43s (tests 92%, import 5%, transform 3%, worker 1%)
+

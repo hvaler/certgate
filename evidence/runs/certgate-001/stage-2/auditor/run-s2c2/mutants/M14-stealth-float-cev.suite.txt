@@ -1,0 +1,76 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 326ms
+   ❯ CEV (A-02, A-20, A-22) (8)
+     × A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007 15ms
+ ❯ test/web.test.ts (38 tests | 1 failed) 4799ms
+   ❯ stored stories (S2-14, B-12, B-23) (3)
+     × equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings 105ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+AssertionError: expected '0.45000000000000007' to be '0.45' // Object.is equality
+
+Expected: "0.45"
+Received: "0.45000000000000007"
+
+ ❯ test/rules.test.ts:125:30
+    123|   it("A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the…
+    124|     const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    125|     expect(e.cev_recomputed).toBe("0.45");
+       |                              ^
+    126|     expect(e.decision.proposal).toBe("release");
+    127|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/web.test.ts > stored stories (S2-14, B-12, B-23) > equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings
+AssertionError: expected { proposal: 'release', …(3) } to deeply equal { proposal: 'release', …(3) }
+
+- Expected
++ Received
+
+@@ -712,11 +712,11 @@
+            "chemistry.Mo",
+            "chemistry.V",
+            "chemistry.Ni",
+            "chemistry.Cu",
+          ],
+-         "observed": "0.4124",
++         "observed": "0.41240000000000004",
+          "outcome": "pass",
+          "reason": "within limit",
+          "rule_id": "ESP-014.r3.CEV.recomputed",
+        },
+        {
+@@ -1250,10 +1250,10 @@
+        "source": "computed from C, Mn, Cr, Ni, Mo, Cu, V (IIW formula, cited)",
+        "spec": "<= 0.45 %",
+        "state": "known",
+        "text_layer_value": null,
+        "unit": "%",
+-       "value": "0.4124",
++       "value": "0.412400…",
+        "value_source": "computed",
+      },
+    ],
+  }
+
+ ❯ test/web.test.ts:308:28
+
+ Test Files  2 failed | 9 passed (11)
+    306|       const committed = JSON.parse(readFileSync(path.join(ROOT, "publi…
+    307|       const fresh = JSON.parse(readFileSync(path.join(dir, `${id}.json…
+    308|       expect(strip(fresh)).toEqual(strip(committed));
+       |                            ^
+    309|     }
+    310|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+      Tests  2 failed | 244 passed (246)
+   Start at  21:17:56
+   Duration  5.16s (tests 94%, import 3%, transform 2%)
+

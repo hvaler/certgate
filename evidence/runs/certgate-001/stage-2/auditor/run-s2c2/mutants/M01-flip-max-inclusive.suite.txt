@@ -1,0 +1,132 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 6 failed) 192ms
+   ❯ inclusive spec limits, no rounding (D1-07, S1-27, A-22) (7)
+     × Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08) 7ms
+     × Rm 470 and 630 pass, 469 and 631 fail 7ms
+     × A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails 7ms
+   ❯ CEV (A-02, A-20, A-22) (8)
+     × spec CEV maximum is 0.45 and applies to the exact recomputed value without rounding 4ms
+     × printed CEV 0.45 passes, 0.46 fails 3ms
+     × A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007 9ms
+ ❯ test/dataset.test.ts (36 tests | 1 failed) 2459ms
+   ❯ every dataset case yields its expected outcome through the mock path (30)
+     × cg-009 46ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)
+AssertionError: expected 'block' not to be 'block' // Object.is equality
+ ❯ test/rules.test.ts:31:44
+     29|   });
+     30|   it("Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ra…
+     31|     expect(ok("chemistry.Mn", "1.60")).not.toBe("block");
+       |                                            ^
+     32|     const e161 = evalWith({ overrides: { "chemistry.Mn": { value: "1.6…
+     33|     expect(e161.decision.proposal).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Rm 470 and 630 pass, 469 and 631 fail
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:39:47
+     37|   it("Rm 470 and 630 pass, 469 and 631 fail", () => {
+     38|     expect(ok("mechanical.Rm", "470", "MPa")).toBe("release");
+     39|     expect(ok("mechanical.Rm", "630", "MPa")).toBe("release");
+       |                                               ^
+     40|     expect(ok("mechanical.Rm", "469", "MPa")).toBe("block");
+     41|     expect(ok("mechanical.Rm", "631", "MPa")).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:52:40
+     50|     expect(ok("mechanical.A", "20")).toBe("release");
+     51|     expect(ok("mechanical.A", "19.9")).toBe("block");
+     52|     expect(ok("chemistry.P", "0.025")).toBe("release");
+       |                                        ^
+     53|     expect(ok("chemistry.P", "0.0251")).toBe("block");
+     54|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > spec CEV maximum is 0.45 and applies to the exact recomputed value without rounding
+AssertionError: expected 'fail' to be 'pass' // Object.is equality
+
+Expected: "pass"
+Received: "fail"
+
+ ❯ test/rules.test.ts:88:35
+     86|     // C above its own 0.20 max would block anyway; check the CEV rule…
+     87|     const rec = (c: string, p: string) => run(c, p).rule_results.find(…
+     88|     expect(rec("0.4500", "0.45")).toBe("pass");
+       |                                   ^
+     89|     expect(rec("0.4549", "0.45")).toBe("fail");
+     90|     expect(rec("0.4550", "0.46")).toBe("fail");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > printed CEV 0.45 passes, 0.46 fails
+AssertionError: expected 'fail' to be 'pass' // Object.is equality
+
+Expected: "pass"
+Received: "fail"
+
+ ❯ test/rules.test.ts:96:33
+     94|     const printedRule = (p: string) => evalWith({ overrides: { cev_pri…
+     95|       .rule_results.find((r) => r.rule_id.endsWith("CEV.printed"))!.ou…
+     96|     expect(printedRule("0.45")).toBe("pass");
+       |                                 ^
+     97|     expect(printedRule("0.46")).toBe("fail");
+     98|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:126:33
+    124|     const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    125|     expect(e.cev_recomputed).toBe("0.45");
+    126|     expect(e.decision.proposal).toBe("release");
+       |                                 ^
+    127|   });
+    128|   it("A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); p…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  7 failed | 239 passed (246)
+   Start at  21:16:25
+   Duration  5.32s (tests 93%, import 4%, transform 3%)
+

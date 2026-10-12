@@ -1,0 +1,56 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/entrypoints.test.ts (11 tests | 1 failed) 820ms
+   ❯ CLI (10)
+     × the CLI rejects release while the proposal is not release (B-14): exit 2 12ms
+ ❯ test/web.test.ts (38 tests | 1 failed) 3440ms
+   ❯ confirmations and decisions through the API (S2-04, A-21, B-14, B-15) (4)
+     × release is rejected below the UI when the proposal is not release (API 409, core error) 23ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > the CLI rejects release while the proposal is not release (B-14): exit 2
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ test/entrypoints.test.ts:93:20
+     91|   it("the CLI rejects release while the proposal is not release (B-14)…
+     92|     const r = await cli(["process", "--case", "cg-002", "--decide", "r…
+     93|     expect(r.code).toBe(EXIT.rejected);
+       |                    ^
+     94|     expect(JSON.parse(r.out).error).toMatch(/release is not allowed wh…
+     95|     expect((await cli(["process", "--case", "cg-001", "--decide", "rel…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/web.test.ts > confirmations and decisions through the API (S2-04, A-21, B-14, B-15) > release is rejected below the UI when the proposal is not release (API 409, core error)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/web.test.ts:338:22
+    336|     const base = await app({ env: {} });
+    337|     const r = await postJson(`${base}/api/stories/cg-002/evaluate`, { …
+    338|     expect(r.status).toBe(409);
+       |                      ^
+    339|     const core = await runCase("cg-002");
+    340|     expect(() => recordHumanDecision(core, { action: "release", reason…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  2 failed | 244 passed (246)
+   Start at  21:18:40
+   Duration  3.80s (tests 91%, import 5%, transform 4%, worker 1%)
+

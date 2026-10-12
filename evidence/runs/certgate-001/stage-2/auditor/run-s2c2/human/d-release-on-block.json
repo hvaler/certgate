@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "code": "Error",
+  "error": "release is not allowed while the proposal is block"
+}

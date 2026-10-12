@@ -1,0 +1,60 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 2 failed) 351ms
+   ❯ document rules (3)
+     × missing stamp gives review; illegible stamp gives review (C13, S1-30) 9ms
+   ❯ decision precedence and I5 (S1-31, D1-03) (5)
+     × each I5 trigger alone prevents release 19ms
+ ❯ test/dataset.test.ts (36 tests | 1 failed) 4047ms
+   ❯ every dataset case yields its expected outcome through the mock path (30)
+     × cg-028 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-028
+AssertionError: expected 'release' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "release"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/rules.test.ts > document rules > missing stamp gives review; illegible stamp gives review (C13, S1-30)
+AssertionError: expected [] to include 'STAMP_MISSING'
+ ❯ test/rules.test.ts:171:101
+    169|   });
+    170|   it("missing stamp gives review; illegible stamp gives review (C13, S…
+    171|     expect(codes(evalWith({ overrides: { inspection_stamp: { value: nu…
+       |                                                                                                     ^
+    172|     expect(proposal({ overrides: { inspection_stamp: { value: null, st…
+    173|     expect(proposal({ scan: true, overrides: { inspection_stamp: { val…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/rules.test.ts > decision precedence and I5 (S1-31, D1-03) > each I5 trigger alone prevents release
+AssertionError: expected 'release' not to be 'release' // Object.is equality
+ ❯ test/rules.test.ts:250:55
+    248|       { scan: true }, // no second channel
+    249|     ];
+    250|     for (const t of triggers) expect(proposal(t)).not.toBe("release");
+       |                                                       ^
+    251|     // Channel disagreement and invalid model output: see channels.tes…
+    252|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  3 failed | 243 passed (246)
+   Start at  21:16:41
+   Duration  6.15s (tests 93%, import 4%, transform 2%)
+

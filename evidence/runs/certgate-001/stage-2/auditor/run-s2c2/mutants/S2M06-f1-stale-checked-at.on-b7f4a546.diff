@@ -1,0 +1,13 @@
+diff --git a/src/web/f1.ts b/src/web/f1.ts
+index a3fd977..673723c 100644
+--- a/src/web/f1.ts
++++ b/src/web/f1.ts
+@@ -41,7 +41,7 @@ export async function probeF1(
+   clock: () => Date,
+   lastReading: { completion_tokens: string | null; elapsed_ms: string } | null = null,
+ ): Promise<F1Snapshot> {
+-  const checkedAt = clock();
++  const checkedAt = new Date("2026-10-12T00:00:00Z");
+   if (!cfg.modelBaseUrl) return off(checkedAt, "no endpoint configured");
+   const headers: Record<string, string> = cfg.modelApiKey ? { authorization: `Bearer ${cfg.modelApiKey}` } : {};
+   const t0 = Date.now();

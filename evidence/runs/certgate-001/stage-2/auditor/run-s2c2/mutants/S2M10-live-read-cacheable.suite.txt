@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/web.test.ts (38 tests | 1 failed) 4067ms
+   ❯ live reading without an endpoint (S2-15, S2-20, S2-31, B-13) (4)
+     × an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted 635ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected 'public, max-age=3600' to be 'no-store' // Object.is equality
+
+Expected: "no-store"
+Received: "public, max-age=3600"
+
+ ❯ test/web.test.ts:104:46
+    102|     const base = await app({ env: { LIVE_READS_PER_HOUR: "5" } });
+    103|     const res = await postJson(`${base}/api/live/read`, liveBody());
+    104|     expect(res.headers.get("cache-control")).toBe("no-store");
+       |                                              ^
+    105|     const j = await res.json();
+    106|     expect(j.counted).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  1 failed | 245 passed (246)
+   Start at  21:18:56
+   Duration  4.43s (tests 93%, import 4%, transform 3%)
+

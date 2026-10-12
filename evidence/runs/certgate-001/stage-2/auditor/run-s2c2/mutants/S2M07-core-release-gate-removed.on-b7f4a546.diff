@@ -1,0 +1,13 @@
+diff --git a/src/pipeline.ts b/src/pipeline.ts
+index 2860079..6f189df 100644
+--- a/src/pipeline.ts
++++ b/src/pipeline.ts
+@@ -195,7 +195,7 @@ export function recordHumanDecision(
+ ): CaseResult {
+   if (!["release", "block", "request_new_certificate"].includes(d.action)) throw new HumanDecisionError(`unknown action ${d.action}`);
+   // Release is only possible when the current proposal is release (register B-14): enforced here, below any UI.
+-  if (d.action === "release" && result.decision.proposal !== "release") {
++  if (false && d.action === "release" && result.decision.proposal !== "release") {
+     throw new HumanDecisionError(`release is not allowed while the proposal is ${result.decision.proposal}`);
+   }
+   if (!d.reason?.trim()) throw new HumanDecisionError("a human decision needs a reason");

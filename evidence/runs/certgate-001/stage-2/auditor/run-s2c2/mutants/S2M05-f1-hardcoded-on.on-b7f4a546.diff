@@ -1,0 +1,13 @@
+diff --git a/src/web/f1.ts b/src/web/f1.ts
+index a3fd977..dcc96e0 100644
+--- a/src/web/f1.ts
++++ b/src/web/f1.ts
+@@ -42,7 +42,7 @@ export async function probeF1(
+   lastReading: { completion_tokens: string | null; elapsed_ms: string } | null = null,
+ ): Promise<F1Snapshot> {
+   const checkedAt = clock();
+-  if (!cfg.modelBaseUrl) return off(checkedAt, "no endpoint configured");
++  if (!cfg.modelBaseUrl) return { state: "on", checked_at: checkedAt.toISOString(), detail: "read from the configured endpoint", model_ids: ["gemma-3-27b-it"], gpu: "AMD Instinct MI300X", rocm_version: "6.4.1", vllm_version: "0.10.1", latency_ms: "812", tokens_per_second: "41", cost_estimate_usd: "0.0004" } as never;
+   const headers: Record<string, string> = cfg.modelApiKey ? { authorization: `Bearer ${cfg.modelApiKey}` } : {};
+   const t0 = Date.now();
+   let models: string[];

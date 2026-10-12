@@ -1,0 +1,13 @@
+diff --git a/public/labels.js b/public/labels.js
+index 110b3b7..04e0e68 100644
+--- a/public/labels.js
++++ b/public/labels.js
+@@ -28,7 +28,7 @@
+ 
+   /** Release is offered only when the current proposal is release (S2-04, B-14). */
+   function releaseAllowed(view) {
+-    return !!view && view.proposal === "release" && view.status !== "error";
++    return true;
+   }
+ 
+   root.CertGateLabels = { readingText, storyLabelDetail, localLabelDetail, releaseAllowed };

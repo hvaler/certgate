@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 307ms
+   ❯ inclusive spec limits, no rounding (D1-07, S1-27, A-22) (7)
+     × A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release
+AssertionError: expected 'release' to be 'block' // Object.is equality
+
+Expected: "block"
+Received: "release"
+
+ ❯ test/rules.test.ts:45:33
+     43|   it("A26: P 0.02500000000000000001 is above 0.025 and blocks; float w…
+     44|     const e = evalWith({ overrides: { "chemistry.P": { value: "0.02500…
+     45|     expect(e.decision.proposal).toBe("block");
+       |                                 ^
+     46|     expect(codes(e)).toContain("RULE_FAIL:P");
+     47|     expect(ok("mechanical.ReH", "354.99999999999999999", "MPa")).toBe(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  1 failed | 245 passed (246)
+   Start at  21:17:50
+   Duration  4.22s (tests 92%, import 4%, transform 3%, worker 1%)
+

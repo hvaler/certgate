@@ -1,0 +1,21 @@
+{
+  "endpoint_models": [
+    "certgate-test-stub"
+  ],
+  "f1_model_ids": [
+    "certgate-test-stub"
+  ],
+  "receipt_reader_model_id": "certgate-test-stub",
+  "receipt_model_version": "as reported by the endpoint",
+  "summary_note": "CertGate only proposes. A person decides. All data is fictitious. The reading came from the live endpoint; model as reported by the endpoint: certgate-test-stub (requested: configured-name-not-from-endpoint).",
+  "proposal": "block",
+  "reading_source": "live",
+  "view_explanation": {
+    "available": false,
+    "text": null,
+    "note": "The model returned a text, but it is withheld: it has no references to verifiable input. It is kept in the receipt only as untrusted model text and never used for the decision."
+  }
+}
+ADV-S2-F01 reproduced: false
+ADV-S2-F03 reproduced: false
+exit=0

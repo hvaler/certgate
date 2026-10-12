@@ -1,0 +1,13 @@
+diff --git a/src/evaluate.ts b/src/evaluate.ts
+index ee6e061..8c77d12 100644
+--- a/src/evaluate.ts
++++ b/src/evaluate.ts
+@@ -303,7 +303,7 @@ const KV_REFS = ["mechanical.KV_1", "mechanical.KV_2", "mechanical.KV_3"];
+  * rules become information); otherwise block > review > release. Release only when no I5 condition holds.
+  */
+ export function propose(reasons: ReasonEntry[], pendingConfirmation: string[] = []): Decision {
+-  const heatMismatch = reasons.some((r) => r.code === "HEAT_MISMATCH");
++  const heatMismatch = false;
+   const list = heatMismatch ? reasons.map((r) => (r.effect === "block" ? { ...r, effect: "info" as const } : r)) : reasons;
+   let proposal: Proposal = "release";
+   if (list.some((r) => r.effect === "block")) proposal = "block";

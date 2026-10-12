@@ -1,0 +1,13 @@
+diff --git a/src/evaluate.ts b/src/evaluate.ts
+index ee6e061..f20ac78 100644
+--- a/src/evaluate.ts
++++ b/src/evaluate.ts
+@@ -223,7 +223,7 @@ export function evaluate(input: EvaluationInput): Evaluation {
+     reasons.add("KV_TEMPERATURE_MISMATCH", "review",
+       `impact test at ${kvt.value ?? "unstated"} °C; required ${input.spec.kv_temperature} °C`);
+   }
+-  if (get("inspection_stamp").state === "absent") reasons.add("STAMP_MISSING", "review", "no inspection stamp on the certificate");
++  /* mutant: stamp check removed */
+ 
+   // CEV: exact recomputation; coherence with the printed value (C9, A-20).
+   const chem: Record<string, string | null> = Object.fromEntries(CHEMISTRY.map((e) => [e, known(`chemistry.${e}`)]));

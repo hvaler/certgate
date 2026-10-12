@@ -1,0 +1,164 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/web.test.ts (38 tests | 12 failed) 3639ms
+   ❯ live reading without an endpoint (S2-15, S2-20, S2-31, B-13) (4)
+     × an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted 809ms
+     × invalid input is rejected before anything is counted 27ms
+   ❯ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     × limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour 170ms
+     × check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings 218ms
+     × a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04) 196ms
+     × model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03) 110ms
+     × access code: wrong code rejected without consuming; throttled after repeated failures; never echoed 55ms
+     × C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret 958ms
+     × C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret 89ms
+     × C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret 84ms
+     × C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret 43ms
+     × C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret 55ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected '4' to be '5' // Object.is equality
+
+Expected: "5"
+Received: "4"
+
+ ❯ test/web.test.ts:117:89
+    115|     expect(j.view.explanation.note).toMatch(/live attempt and nothing …
+    116|     expect(j.view.explanation.note).not.toMatch(/mock/);
+    117|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    118|   });
+    119|   it("web upload limit is below the Vercel body limit and enforced (B-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > invalid input is rejected before anything is counted
+AssertionError: expected '1' to be '2' // Object.is equality
+
+Expected: "2"
+Received: "1"
+
+ ❯ test/web.test.ts:134:89
+    132|     const res = await postJson(`${base}/api/live/read`, { certificate_…
+    133|     expect(res.status).toBe(400);
+    134|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    135|     expect(s.state.chatCalls).toBe(0);
+    136|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour
+AssertionError: expected 429 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 429
+
+ ❯ test/web.test.ts:161:74
+    159|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2…
+    160|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+    161|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+       |                                                                          ^
+    162|     const third = await postJson(`${base}/api/live/read`, liveBody());
+    163|     expect(third.status).toBe(429);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ test/web.test.ts:175:60
+    173|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3…
+    174|     const results = await Promise.all(Array.from({ length: 8 }, () => …
+    175|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    176|     expect(results.filter((r) => r.status === 429).length).toBe(5);
+    177|     expect(s.state.chatCalls).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ test/web.test.ts:194:60
+    192|     const results = await Promise.all(Array.from({ length: 10 }, () =>
+    193|       postJson(`${base}/api/live/read`, liveBody({ remaining_this_hour…
+    194|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    195|     expect(s.state.chatCalls).toBe(3);
+    196|     const st = await (await fetch(`${base}/api/live/status`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)
+TypeError: Cannot read properties of undefined (reading 'receipt')
+ ❯ test/web.test.ts:211:19
+    209|     s.state.omitModel = true;
+    210|     const k = await (await postJson(`${base}/api/live/read`, liveBody(…
+    211|     expect(k.view.receipt.reader.model_id).toMatch(/^unknown/);
+       |                   ^
+    212|   });
+    213|   it("an explanation without verifiable references is withheld; kept o…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+AssertionError: expected '0' to be '2' // Object.is equality
+
+Expected: "2"
+Received: "0"
+
+ ❯ test/web.test.ts:256:89
+    254|     const throttled = await postJson(`${base}/api/live/read`, liveBody…
+    255|     expect(throttled.status).toBe(429);
+    256|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    257|     expect(s.state.chatCalls).toBe(0);
+    258|     const ok = await postJson(`${base}/api/live/read`, liveBody({ acce…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret
+AssertionError: expected '3' to be '4' // Object.is equality
+
+Expected: "4"
+Received: "3"
+
+ ❯ test/web.test.ts:277:91
+    275|       expect(s.state.chatCalls).toBe(calls);
+    276|       expect(text).not.toContain("sk-stub-secret-123");
+    277|       expect((await (await fetch(`${base}/api/live/status`)).json()).r…
+       |                                                                                           ^
+    278|     });
+    279|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  12 failed | 234 passed (246)
+   Start at  21:19:08
+   Duration  4.04s (tests 92%, import 5%, transform 3%)
+

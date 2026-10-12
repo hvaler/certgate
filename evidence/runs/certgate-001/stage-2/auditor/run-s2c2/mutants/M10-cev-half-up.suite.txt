@@ -1,0 +1,44 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 2 failed) 431ms
+   ❯ CEV (A-02, A-20, A-22) (8)
+     × coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44 6ms
+     × A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); printed 0.43 is not 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44
+AssertionError: expected '0.43' to be '0.42' // Object.is equality
+
+Expected: "0.42"
+Received: "0.43"
+
+ ❯ test/rules.test.ts:100:63
+     98|   });
+     99|   it("coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44", () =>…
+    100|     expect(roundCevForCoherence(new Dec("0.425")).toFixed(2)).toBe("0.…
+       |                                                               ^
+    101|     expect(roundCevForCoherence(new Dec("0.435")).toFixed(2)).toBe("0.…
+    102|     expect(cevCoherent("0.42", new Dec("0.425"))).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); printed 0.43 is not
+AssertionError: expected [ 'CEV_MISMATCH' ] to not include 'CEV_MISMATCH'
+ ❯ test/rules.test.ts:130:26
+    128|   it("A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); p…
+    129|     const e = cevCase("0.175", "1.50", "0", "0.42");
+    130|     expect(codes(e)).not.toContain("CEV_MISMATCH");
+       |                          ^
+    131|     expect(e.decision.proposal).toBe("release");
+    132|     expect(codes(cevCase("0.175", "1.50", "0", "0.43"))).toContain("CE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  2 failed | 244 passed (246)
+   Start at  21:17:30
+   Duration  5.30s (tests 92%, import 4%, transform 3%)
+

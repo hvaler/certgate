@@ -1,0 +1,50 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 335ms
+   ❯ KV mean as an exact sum (D1-09, A-05) (3)
+     × sum exactly 81 passes, 80 fails, cert-01's 193 passes 16ms
+ ❯ test/dataset.test.ts (36 tests | 1 failed) 2337ms
+   ❯ every dataset case yields its expected outcome through the mock path (30)
+     × cg-009 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/rules.test.ts > KV mean as an exact sum (D1-09, A-05) > sum exactly 81 passes, 80 fails, cert-01's 193 passes
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:144:52
+    142|   });
+    143|   it("sum exactly 81 passes, 80 fails, cert-01's 193 passes", () => {
+    144|     expect(kv("27", "27", "27").decision.proposal).toBe("release");
+       |                                                    ^
+    145|     expect(kv("27", "27", "26").decision.proposal).toBe("block");
+    146|     expect(kv("64", "71", "58").rule_results.find((r) => r.rule_id.end…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  2 failed | 244 passed (246)
+   Start at  21:17:21
+   Duration  5.17s (tests 93%, import 4%, transform 3%)
+

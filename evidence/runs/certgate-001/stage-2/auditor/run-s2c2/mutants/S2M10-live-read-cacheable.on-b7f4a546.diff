@@ -1,0 +1,13 @@
+diff --git a/src/web/app.ts b/src/web/app.ts
+index 22e8bc3..ac28d38 100644
+--- a/src/web/app.ts
++++ b/src/web/app.ts
+@@ -241,7 +241,7 @@ export function createHandler(deps: AppDeps = {}) {
+       if (m === "GET" && p === "/api/f1") return send(res, 200, await probeF1(cfg, clock, lastLive), NO_STORE);
+       if (m === "GET" && p === "/api/live/status") return send(res, 200, liveStatus(), NO_STORE);
+       if (m === "POST" && p === "/api/live/read") {
+-        return send(res, 200, await liveRead((await readBody(req)) as Record<string, unknown>), NO_STORE);
++        return send(res, 200, await liveRead((await readBody(req)) as Record<string, unknown>), { "cache-control": "public, max-age=3600" });
+       }
+       const story = /^\/api\/stories\/([A-Za-z0-9_-]+)\/evaluate$/.exec(p);
+       if (m === "POST" && story) {

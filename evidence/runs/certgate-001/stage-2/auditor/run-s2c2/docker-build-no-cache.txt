@@ -1,0 +1,118 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.34kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 196B done
+#3 DONE 0.2s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [build 1/7] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#5 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 0.0s done
+#5 DONE 0.0s
+
+#6 [build 2/7] WORKDIR /app
+#6 CACHED
+
+#4 [internal] load build context
+#4 transferring context: 2.29MB 1.3s done
+#4 DONE 1.4s
+
+#7 [build 3/7] COPY package.json package-lock.json ./
+#7 DONE 0.6s
+
+#8 [build 4/7] RUN npm ci --no-audit --no-fund
+#8 6.809 
+#8 6.809 added 42 packages in 7s
+#8 6.812 npm notice
+#8 6.812 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#8 6.812 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#8 6.812 npm notice To update run: npm install -g npm@12.2.0
+#8 6.812 npm notice
+#8 DONE 7.0s
+
+#9 [stage-1  4/16] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#9 ...
+
+#10 [build 5/7] COPY tsconfig.json vitest.config.ts ./
+#10 DONE 0.0s
+
+#11 [build 6/7] COPY src ./src
+#11 DONE 0.0s
+
+#9 [stage-1  4/16] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#9 7.040 
+#9 7.040 added 42 packages in 7s
+#9 7.042 npm notice
+#9 7.042 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#9 7.042 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#9 7.042 npm notice To update run: npm install -g npm@12.2.0
+#9 7.042 npm notice
+#9 ...
+
+#12 [build 7/7] RUN npx tsc -p tsconfig.json
+#12 ...
+
+#9 [stage-1  4/16] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#9 7.160 npm warn using --force Recommended protections disabled.
+#9 DONE 7.5s
+
+#12 [build 7/7] RUN npx tsc -p tsconfig.json
+#12 DONE 2.1s
+
+#13 [stage-1  5/16] COPY --from=build /app/dist ./dist
+#13 DONE 0.0s
+
+#14 [stage-1  6/16] COPY tsconfig.json vitest.config.ts .env.example .gitignore README.md LICENSE ./
+#14 DONE 0.0s
+
+#15 [stage-1  7/16] COPY src ./src
+#15 DONE 0.0s
+
+#16 [stage-1  8/16] COPY test ./test
+#16 DONE 0.0s
+
+#17 [stage-1  9/16] COPY config ./config
+#17 DONE 0.0s
+
+#18 [stage-1 10/16] COPY data ./data
+#18 DONE 0.0s
+
+#19 [stage-1 11/16] COPY docs ./docs
+#19 DONE 0.0s
+
+#20 [stage-1 12/16] COPY tools ./tools
+#20 DONE 0.0s
+
+#21 [stage-1 13/16] COPY public ./public
+#21 DONE 0.0s
+
+#22 [stage-1 14/16] COPY api ./api
+#22 DONE 0.0s
+
+#23 [stage-1 15/16] COPY vercel.json ./
+#23 DONE 0.0s
+
+#24 [stage-1 16/16] RUN chown -R node:node /app
+#24 DONE 1.8s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 5.8s done
+#25 exporting manifest sha256:c5a56296610710e6e2c564b1e288c014b1d3f6b3e0d2ff41650c9ac70b0993c1 0.0s done
+#25 exporting config sha256:3e30cb18bab480835bdfb787257357735f7ef6c5d227e74a2c55a64a10951a68 0.0s done
+#25 exporting attestation manifest sha256:1d4c1a3251be9bfb2c34bf3213f8e3d679a3e11d54f1a8d48ebf29f8a0736394 0.0s done
+#25 exporting manifest list sha256:24afaac695066cec1fe6dfb3e095268abdc62231631dc625a2a6156a3d9dee5f 0.0s done
+#25 naming to docker.io/library/certgate-audit:b7f4a54 done
+#25 unpacking to docker.io/library/certgate-audit:b7f4a54
+#25 unpacking to docker.io/library/certgate-audit:b7f4a54 4.8s done
+#25 DONE 10.9s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/jebv66hjcgwath4yahx5a1i9p

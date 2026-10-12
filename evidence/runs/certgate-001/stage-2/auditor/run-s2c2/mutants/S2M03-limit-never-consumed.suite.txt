@@ -1,0 +1,139 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/web.test.ts (38 tests | 10 failed) 3620ms
+   ❯ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     × limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour 297ms
+     × check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings 298ms
+     × client headers, cookies or body fields cannot change the count 153ms
+     × a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04) 178ms
+     × access code: wrong code rejected without consuming; throttled after repeated failures; never echoed 29ms
+     × C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret 960ms
+     × C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret 74ms
+     × C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret 63ms
+     × C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret 50ms
+     × C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret 59ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour
+AssertionError: expected 200 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 200
+
+ ❯ test/web.test.ts:163:26
+    161|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+    162|     const third = await postJson(`${base}/api/live/read`, liveBody());
+    163|     expect(third.status).toBe(429);
+       |                          ^
+    164|     expect((await third.json()).reopens_at).toBe("2026-10-12T19:00:00.…
+    165|     const st = await (await fetch(`${base}/api/live/status`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings
+AssertionError: expected 8 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 8
+
+ ❯ test/web.test.ts:175:60
+    173|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3…
+    174|     const results = await Promise.all(Array.from({ length: 8 }, () => …
+    175|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    176|     expect(results.filter((r) => r.status === 429).length).toBe(5);
+    177|     expect(s.state.chatCalls).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > client headers, cookies or body fields cannot change the count
+AssertionError: expected 200 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 200
+
+ ❯ test/web.test.ts:187:22
+    185|       body: JSON.stringify(liveBody({ remaining: "99", limit: "99" })),
+    186|     });
+    187|     expect(r.status).toBe(429);
+       |                      ^
+    188|   });
+    189|   it("a client-sent remaining_this_hour is ignored: 10 parallel reads …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)
+AssertionError: expected 10 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 10
+
+ ❯ test/web.test.ts:194:60
+    192|     const results = await Promise.all(Array.from({ length: 10 }, () =>
+    193|       postJson(`${base}/api/live/read`, liveBody({ remaining_this_hour…
+    194|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    195|     expect(s.state.chatCalls).toBe(3);
+    196|     const st = await (await fetch(`${base}/api/live/status`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+AssertionError: expected 403 to be 429 // Object.is equality
+
+- Expected
++ Received
+
+- 429
++ 403
+
+ ❯ test/web.test.ts:255:30
+    253|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+    254|     const throttled = await postJson(`${base}/api/live/read`, liveBody…
+    255|     expect(throttled.status).toBe(429);
+       |                              ^
+    256|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+    257|     expect(s.state.chatCalls).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret
+AssertionError: expected '5' to be '4' // Object.is equality
+
+Expected: "4"
+Received: "5"
+
+ ❯ test/web.test.ts:277:91
+    275|       expect(s.state.chatCalls).toBe(calls);
+    276|       expect(text).not.toContain("sk-stub-secret-123");
+    277|       expect((await (await fetch(`${base}/api/live/status`)).json()).r…
+       |                                                                                           ^
+    278|     });
+    279|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  10 failed | 236 passed (246)
+   Start at  21:18:19
+   Duration  3.97s (tests 93%, import 5%, transform 2%, worker 1%)
+

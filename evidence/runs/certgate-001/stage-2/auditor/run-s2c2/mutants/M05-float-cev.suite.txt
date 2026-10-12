@@ -1,0 +1,161 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/rules.test.ts (35 tests | 1 failed) 318ms
+   ❯ CEV (A-02, A-20, A-22) (8)
+     × A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007 8ms
+ ❯ test/static.test.ts (44 tests | 1 failed) 583ms
+   ❯ no binary floating point in rules, coherence or units (I4, S1-25) (9)
+     × coherence.ts 11ms
+ ❯ test/web.test.ts (38 tests | 1 failed) 5646ms
+   ❯ stored stories (S2-14, B-12, B-23) (3)
+     × equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+AssertionError: expected '0.45000000000000007' to be '0.45' // Object.is equality
+
+Expected: "0.45"
+Received: "0.45000000000000007"
+
+ ❯ test/rules.test.ts:125:30
+    123|   it("A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the…
+    124|     const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    125|     expect(e.cev_recomputed).toBe("0.45");
+       |                              ^
+    126|     expect(e.decision.proposal).toBe("release");
+    127|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/static.test.ts > no binary floating point in rules, coherence or units (I4, S1-25) > coherence.ts
+AssertionError: expected '\nimport { readFileSync } from "node:…' not to match /\bparseFloat\b|\bNumber\s*\(|\bparseI…/
+
+- Expected:
+/\bparseFloat\b|\bNumber\s*\(|\bparseInt\b|\bMath\.(round|floor|ceil|trunc)\b|\+\s*"\s*\d/
+
++ Received:
+"
+import { readFileSync } from \"node:fs\";
+import path from \"node:path\";
+import { getConfigDir } from \"./config.js\";
+import { Dec, parseDecimal, roundCevForCoherence } from \"./decimal.js\";
+import { parseStrictJson } from \"./strict-json.js\";
+
+export const CEV_FORMULA_SOURCE =
+  \"IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md\";
+
+export const CEV_INPUTS = [\"C\", \"Mn\", \"Cr\", \"Mo\", \"V\", \"Ni\", \"Cu\"] as const;
+
+
+export function recomputeCev(chem: Record<string, string | null>): Dec | null {
+  const v: Record<string, Dec> = {};
+  for (const e of CEV_INPUTS) {
+    const d = parseDecimal(chem[e] ?? null);
+    if (d === null) return null;
+    v[e] = d;
+  }
+  const f = (d: Dec) => Number(d.toString());
+  return new Dec(String(f(v.C!) + f(v.Mn!) / 6 + (f(v.Cr!) + f(v.Mo!) + f(v.V!)) / 5 + (f(v.Cu!) + f(v.Ni!)) / 15));
+}
+
+
+export function cevCoherent(printed: string, recomputed: Dec): boolean {
+  const p = parseDecimal(printed);
+  return p !== null && roundCevForCoherence(recomputed).eq(p);
+}
+
+export interface PlausibilityRange {
+  min: string;
+  max: string;
+  unit: string;
+}
+
+export interface Plausibility {
+  version: string;
+  ranges: Record<string, PlausibilityRange>;
+}
+
+export function loadPlausibility(file = path.join(getConfigDir(), \"plausibility.v1.json\")): Plausibility {
+  const raw = parseStrictJson(readFileSync(file, \"utf8\"), \"plausibility ranges\") as {
+    version?: unknown;
+    ranges?: Record<string, PlausibilityRange>;
+  };
+  if (typeof raw.version !== \"string\" || !raw.ranges) throw new Error(\"plausibility ranges: missing version or ranges\");
+  for (const [k, r] of Object.entries(raw.ranges)) {
+    if (parseDecimal(r.min) === null || parseDecimal(r.max) === null) throw new Error(`plausibility ${k}: bad bounds`);
+  }
+  return { version: raw.version, ranges: raw.ranges };
+}
+
+export function plausible(p: Plausibility, key: string, value: Dec): boolean {
+  const r = p.ranges[key];
+  if (!r) return true;
+  return value.gte(new Dec(r.min)) && value.lte(new Dec(r.max));
+}
+
+
+export function heatMatches(certificateHeat: string, deliveryHeat: string): boolean {
+  return certificateHeat.trim() === deliveryHeat.trim();
+}
+"
+
+ ❯ test/static.test.ts:18:27
+     16|       // text-layer.ts uses item positions (layout geometry, never dat…
+     17|       const allowed = f === "text-layer.ts" ? code.replace(/\b(it|a|b|…
+     18|       expect(allowed).not.toMatch(/\bparseFloat\b|\bNumber\s*\(|\bpars…
+       |                           ^
+     19|     });
+     20|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/web.test.ts > stored stories (S2-14, B-12, B-23) > equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings
+AssertionError: expected { proposal: 'release', …(3) } to deeply equal { proposal: 'release', …(3) }
+
+- Expected
++ Received
+
+@@ -712,11 +712,11 @@
+            "chemistry.Mo",
+            "chemistry.V",
+            "chemistry.Ni",
+            "chemistry.Cu",
+          ],
+-         "observed": "0.4124",
++         "observed": "0.41240000000000004",
+          "outcome": "pass",
+          "reason": "within limit",
+          "rule_id": "ESP-014.r3.CEV.recomputed",
+        },
+        {
+@@ -1250,10 +1250,10 @@
+        "source": "computed from C, Mn, Cr, Ni, Mo, Cu, V (IIW formula, cited)",
+        "spec": "<= 0.45 %",
+        "state": "known",
+        "text_layer_value": null,
+        "unit": "%",
+-       "value": "0.4124",
++       "value": "0.412400…",
+        "value_source": "computed",
+      },
+    ],
+  }
+
+ ❯ test/web.test.ts:308:28
+    306|       const committed = JSON.parse(readFileSync(path.join(ROOT, "publi…
+    307|       const fresh = JSON.parse(readFileSync(path.join(dir, `${id}.json…
+    308|       expect(strip(fresh)).toEqual(strip(committed));
+       |                            ^
+    309|     }
+    310|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 8 passed (11)
+      Tests  3 failed | 243 passed (246)
+   Start at  21:16:55
+   Duration  6.04s (tests 94%, import 4%, transform 2%)
+

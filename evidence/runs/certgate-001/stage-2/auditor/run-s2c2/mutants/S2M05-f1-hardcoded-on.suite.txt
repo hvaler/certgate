@@ -1,0 +1,84 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/web.test.ts (38 tests | 3 failed) 3935ms
+   ❯ F1 panel (S2-11, S2-12, S2-36, B-06, B-19) (5)
+     × no endpoint configured: off with the server's real check time, a later load shows a later time 53ms
+     × request parameters, headers or body cannot set the endpoint (B-06) 24ms
+   ❯ live reading without an endpoint (S2-15, S2-20, S2-31, B-13) (4)
+     × an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted 975ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > no endpoint configured: off with the server's real check time, a later load shows a later time
+AssertionError: expected { state: 'on', …(9) } to match object { state: 'off', …(4) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "checked_at": "2026-10-12T18:20:00.000Z",
+-   "detail": "no endpoint configured",
+-   "gpu": null,
+-   "model_ids": [],
+-   "state": "off",
++   "detail": "read from the configured endpoint",
++   "gpu": "AMD Instinct MI300X",
++   "model_ids": [
++     "gemma-3-27b-it",
++   ],
++   "state": "on",
+  }
+
+ ❯ test/web.test.ts:54:15
+     52|     const base = await app({ env: {}, clock: c.now });
+     53|     const a = await (await fetch(`${base}/api/f1`)).json();
+     54|     expect(a).toMatchObject({ state: "off", detail: "no endpoint confi…
+       |               ^
+     55|     c.advance(61_000);
+     56|     const b = await (await fetch(`${base}/api/f1`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > request parameters, headers or body cannot set the endpoint (B-06)
+AssertionError: expected 'on' to be 'off' // Object.is equality
+
+Expected: "off"
+Received: "on"
+
+ ❯ test/web.test.ts:77:21
+     75|     const base = await app({ env: {} });
+     76|     const f = await (await fetch(`${base}/api/f1?base=${encodeURICompo…
+     77|     expect(f.state).toBe("off");
+       |                     ^
+     78|   });
+     79|   it("cost estimate uses only the configured price (S2-36)", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ test/web.test.ts:106:23
+    104|     expect(res.headers.get("cache-control")).toBe("no-store");
+    105|     const j = await res.json();
+    106|     expect(j.counted).toBe(false);
+       |                       ^
+    107|     expect(j.view.status).toBe("error");
+    108|     expect(j.view.proposal).toBe("review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  3 failed | 243 passed (246)
+   Start at  21:18:29
+   Duration  4.36s (tests 92%, import 5%, transform 3%, worker 1%)
+

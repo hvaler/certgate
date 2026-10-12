@@ -1,0 +1,19 @@
+node v24.19.0 npm 11.17.0 start 2026-10-12T19:14:30.7747703Z
+
+added 42 packages in 7s
+npm ci exit=0
+
+> certgate@0.1.0 build
+> tsc -p tsconfig.json
+
+build exit=0
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2
+
+
+ Test Files  11 passed (11)
+      Tests  246 passed (246)
+   Start at  21:14:40
+   Duration  5.30s (tests 86%, transform 8%, import 5%)
+
+vitest exit=0 end 2026-10-12T19:14:46.3234553Z

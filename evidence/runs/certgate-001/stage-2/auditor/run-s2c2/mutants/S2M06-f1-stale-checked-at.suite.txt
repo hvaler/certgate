@@ -1,0 +1,41 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s2c2-mut
+
+ ❯ test/web.test.ts (38 tests | 1 failed) 3501ms
+   ❯ F1 panel (S2-11, S2-12, S2-36, B-06, B-19) (5)
+     × no endpoint configured: off with the server's real check time, a later load shows a later time 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > no endpoint configured: off with the server's real check time, a later load shows a later time
+AssertionError: expected { state: 'off', …(9) } to match object { state: 'off', …(4) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "checked_at": "2026-10-12T18:20:00.000Z",
++   "checked_at": "2026-10-12T00:00:00.000Z",
+    "detail": "no endpoint configured",
+    "gpu": null,
+    "model_ids": [],
+    "state": "off",
+  }
+
+ ❯ test/web.test.ts:54:15
+     52|     const base = await app({ env: {}, clock: c.now });
+     53|     const a = await (await fetch(`${base}/api/f1`)).json();
+     54|     expect(a).toMatchObject({ state: "off", detail: "no endpoint confi…
+       |               ^
+     55|     c.advance(61_000);
+     56|     const b = await (await fetch(`${base}/api/f1`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  1 failed | 245 passed (246)
+   Start at  21:18:35
+   Duration  3.83s (tests 92%, import 5%, transform 2%, worker 1%)
+

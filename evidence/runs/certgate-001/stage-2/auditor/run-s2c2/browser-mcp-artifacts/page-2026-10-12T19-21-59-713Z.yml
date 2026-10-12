@@ -1,0 +1,114 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - generic [ref=f2e3]:
+      - link "CertGate" [ref=f2e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f2e8]:
+        - link "Cases" [ref=f2e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f2e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f2e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f2e12]: "Model endpoint: off · last check 2026-10-12T19:21:59.677Z"
+  - note [ref=f2e15]:
+    - generic [ref=f2e16]:
+      - strong [ref=f2e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f2e18]:
+    - generic [ref=f2e19]:
+      - region [ref=f2e1171]:
+        - generic [ref=f2e1172]: FOR QUALITY ENGINEERS RECEIVING CERTIFIED STEEL
+        - heading "Catch the out-of-spec batch before it enters production" [level=1] [ref=f2e1173]
+        - paragraph [ref=f2e1174]:
+          - text: "Every batch of steel arrives with a mill certificate. Someone in Quality checks it by hand against the purchase spec: different mills, different layouts, often scanned. CertGate puts every value next to the spec and its place in the document, and proposes release, block or review."
+          - strong [ref=f2e1175]: A person decides.
+        - paragraph [ref=f2e1176]:
+          - text: "Where AMD fits: reading each certificate and explaining the result is meant to be done by an open model that vLLM serves from an AMD GPU."
+          - strong [ref=f2e1177]: "In this build no AMD hardware is used:"
+          - text: no model and no endpoint are used, and every reading shown here is a mock reading prepared with the fictitious dataset.
+        - generic [ref=f2e1178]:
+          - link "See the case it refuses to release" [ref=f2e1179] [cursor=pointer]:
+            - /url: "#/story/cg-003"
+          - link "All three stored runs" [ref=f2e1180] [cursor=pointer]:
+            - /url: "#/judge"
+      - region [ref=f2e1181]:
+        - heading "MEASURED ON [N] FICTITIOUS CERTIFICATES" [level=2] [ref=f2e1182]
+        - generic [ref=f2e1183]:
+          - generic [ref=f2e1184]:
+            - generic [ref=f2e1185]: "[n]"
+            - generic [ref=f2e1186]: false conforming (released when it should not) · of [N]
+          - generic [ref=f2e1187]:
+            - generic [ref=f2e1188]: "[n / N]"
+            - generic [ref=f2e1189]: non-conformities caught
+          - generic [ref=f2e1190]:
+            - generic [ref=f2e1191]: "[s]"
+            - generic [ref=f2e1192]: seconds per certificate
+          - generic [ref=f2e1193]:
+            - generic [ref=f2e1194]: "[USD]"
+            - generic [ref=f2e1195]: cost per certificate
+        - paragraph [ref=f2e1196]: Placeholders. These figures are filled only from an evaluation run, with their denominators. No evaluation has run in this build.
+      - region [ref=f2e1197]:
+        - heading "Judge mode · three stored runs (mock readings, no model)" [level=2] [ref=f2e1198]
+        - paragraph [ref=f2e1199]: Stored results, each with its receipt. They are not re-read live. Judge mode has no limit.
+        - generic [ref=f2e1200]:
+          - link "RELEASE PROPOSED Conforming conforming digital certificate cg-001 · stored · mock reading, no model · 2026-10-12T19:05:49.048Z" [ref=f2e1201] [cursor=pointer]:
+            - /url: "#/story/cg-001"
+            - generic [ref=f2e1202]: RELEASE PROPOSED
+            - strong [ref=f2e1203]: Conforming
+            - generic [ref=f2e1204]: conforming digital certificate
+            - generic [ref=f2e1205]: cg-001 · stored · mock reading, no model · 2026-10-12T19:05:49.048Z
+          - link "BLOCK Out of spec scanned certificate out of spec cg-002 · stored · mock reading, no model · 2026-10-12T19:05:49.057Z" [ref=f2e1206] [cursor=pointer]:
+            - /url: "#/story/cg-002"
+            - generic [ref=f2e1207]: BLOCK
+            - strong [ref=f2e1208]: Out of spec
+            - generic [ref=f2e1209]: scanned certificate out of spec
+            - generic [ref=f2e1210]: cg-002 · stored · mock reading, no model · 2026-10-12T19:05:49.057Z
+          - link "REVIEW The scan it refuses to release ambiguous scan cg-003 · stored · mock reading, no model · 2026-10-12T19:05:49.062Z" [ref=f2e1211] [cursor=pointer]:
+            - /url: "#/story/cg-003"
+            - generic [ref=f2e1212]: REVIEW
+            - strong [ref=f2e1213]: The scan it refuses to release
+            - generic [ref=f2e1214]: ambiguous scan
+            - generic [ref=f2e1215]: cg-003 · stored · mock reading, no model · 2026-10-12T19:05:49.062Z
+      - region [ref=f2e1216]:
+        - generic [ref=f2e1217]:
+          - heading "Read a certificate live" [level=2] [ref=f2e1218]
+          - generic [ref=f2e1219]: LIVE · needs the model endpoint
+        - paragraph [ref=f2e1220]:
+          - text: "When the endpoint is off, live reading opens during the announced windows:"
+          - strong [ref=f2e1221]: no live window is announced
+          - text: . The three stored runs work at any time.
+        - generic [ref=f2e1222]:
+          - generic [ref=f2e1223]:
+            - generic [ref=f2e1224]: Mill certificate (PDF)
+            - button "Mill certificate (PDF)" [ref=f2e1225]
+          - generic [ref=f2e1226]:
+            - generic [ref=f2e1227]: Delivery note (CSV)
+            - button "Delivery note (CSV)" [ref=f2e1228]
+          - generic [ref=f2e1229]:
+            - generic [ref=f2e1230]: Delivery note line (partida)
+            - textbox "Delivery note line (partida)" [ref=f2e1231]:
+              - /placeholder: e.g. 1
+        - paragraph [ref=f2e1232]:
+          - text: Live readings are limited to
+          - strong [ref=f2e1233]: "0"
+          - text: "per hour for everyone, counted on the server, per server instance in this build. Remaining this hour:"
+          - strong [ref=f2e1234]: "0"
+          - text: . Judge mode has no limit.
+        - paragraph [ref=f2e1235]: Live reading is disabled on this server (no hourly limit configured).
+        - button "Read live" [disabled] [ref=f2e1237]
+        - status
+      - region [ref=f2e1238]:
+        - heading "What decides, what reads, who signs" [level=2] [ref=f2e1239]
+        - paragraph [ref=f2e1240]:
+          - strong [ref=f2e1241]: The model
+          - text: reads the certificate and explains, with the source of every value. An AMD GPU is meant to serve it; in this build a mock reader stands in for it and says so everywhere.
+        - paragraph [ref=f2e1242]:
+          - strong [ref=f2e1243]: The text layer
+          - text: ", read without any model, checks the critical fields when the PDF has one."
+        - paragraph [ref=f2e1244]:
+          - strong [ref=f2e1245]: Versioned rules
+          - text: compare each value with spec ESP-014 in exact decimals.
+        - paragraph [ref=f2e1246]:
+          - strong [ref=f2e1247]: A person
+          - text: releases, blocks or asks for a new certificate.
