@@ -88,6 +88,12 @@ describe("CLI", () => {
     expect(j.receipt.human_decision.action).toBe("block");
     expect(j.receipt.confirmations[0].field).toBe("mechanical.ReH");
   });
+  it("the CLI rejects release while the proposal is not release (B-14): exit 2", async () => {
+    const r = await cli(["process", "--case", "cg-002", "--decide", "release", "--reason", "force", "--decided-by", "x"]);
+    expect(r.code).toBe(EXIT.rejected);
+    expect(JSON.parse(r.out).error).toMatch(/release is not allowed while the proposal is block/);
+    expect((await cli(["process", "--case", "cg-001", "--decide", "release", "--reason", "ok", "--decided-by", "q"])).code).toBe(EXIT.processed);
+  });
   it("writes the output file with --out", async () => {
     const f = path.join(mkdtempSync(path.join(tmpdir(), "certgate-out-")), "r.json");
     await cli(["process", "--case", "cg-001", "--receipt-only", "--out", f]);
