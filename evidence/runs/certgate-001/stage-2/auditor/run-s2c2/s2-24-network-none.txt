@@ -1,0 +1,24 @@
+{
+ "/": "200 csp",
+ "/app.js": "200 csp",
+ "/labels.js": "200 csp",
+ "/styles.css": "200 csp",
+ "/stories/index.json": "200 csp",
+ "f1": {
+  "state": "off",
+  "detail": "no endpoint configured",
+  "checked_at": "2026-10-12T19:34:20.974Z",
+  "model_ids": []
+ },
+ "live": {
+  "enabled": false,
+  "reason": "live reading disabled: LIVE_READS_PER_HOUR not set or 0"
+ },
+ "cg003": {
+  "proposal": "review",
+  "reading_source": "mock"
+ },
+ "externalUrlsInIndex": []
+}
+--- server log
+CertGate listening on http://localhost:3000 (mode mock)

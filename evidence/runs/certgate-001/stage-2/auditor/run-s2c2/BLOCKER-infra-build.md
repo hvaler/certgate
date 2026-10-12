@@ -17,3 +17,8 @@
   
   The checks that need no new build are run locally instead (see the run files in this folder). Any verdict states this limitation.
 - **Raised in the room:** `f1e2af49` (status), `5e1d8ea3` (reply to serialization).
+
+## Resolution
+
+- 2026-10-12T19:3xZ: the operator freed memory (about 13 GB free) and gave the infrastructure go. Retry 1 of 2 ran in the foreground 19:33:10-19:33:39Z, exit 0, image `sha256:26cb4fde389cb18d19380533b789540da830e3fd0a3102f6676d70285753e291` (`docker-build-no-cache-retry1.txt`). The container checks were then run by the auditor. The blocker is resolved; retry 2 was not used.
+
