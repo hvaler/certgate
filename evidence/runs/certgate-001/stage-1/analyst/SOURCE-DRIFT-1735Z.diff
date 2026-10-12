@@ -1,0 +1,64 @@
+diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03new.md"
+index 1f67832..a4841db 100644
+--- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03old.md"
++++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03new.md"
+@@ -178,11 +178,13 @@ denominadores. Mientras no existan, se muestran sus marcadores, nunca cifras inv
+ 
+ Nunca se presenta como lectura en vivo una respuesta guardada: la pantalla dice cuál es cuál.
+ 
+-**F3 · Modelo de Google servido en AMD (condicionada).** Hay 5.000 USD de Google y *«Google and Evolus technologies
+-are optional»*, pero la página no dice qué tecnología de Google cuenta (duda 6). Si el modelo abierto elegido en
+-A3 es de la familia **Gemma** (de Google) y lee bien los certificados, el mismo modelo podría cumplir el requisito
+-de AMD (servido con vLLM en ROCm) y optar al premio de Google. **No se elige Gemma solo por eso**: primero que
+-lea bien en la mini prueba, y que la organización confirme que cuenta.
++**F3 · Gemma servido en AMD (confirmado en el kickoff, 12/10).** Google pone 5.000 USD y en el kickoff aclaró que es
++*«the best use of Gemma models challenge, which is the use of Gemma models within AMD GPUs and on Fireworks AI»*
++(`01-REGLAS.md`, «Kickoff en directo»). Por tanto, si el modelo abierto de A3 es **Gemma** (Gemma 4 es multimodal:
++puede leer el certificado escaneado como imagen), un solo modelo cumple el requisito de AMD y opta al premio de
++Google. **Gemma pasa a ser el primer candidato de la mini prueba**, pero sigue sin elegirse solo por eso: si otro
++modelo lee claramente mejor los certificados, manda la calidad de lectura, porque un falso conforme cuesta más que
++un premio.
+ 
+ **F4 · Encaje con Vercel.** La web y las funciones del backend van en Vercel. Implica:
+ - **sin SQLite local**: los relatos del modo jurado son ficheros estáticos versionados en el repositorio, y los
+diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02new.md"
+index ff1a03b..830a415 100644
+--- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02old.md"
++++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02new.md"
+@@ -66,6 +66,12 @@ Consecuencias de calendario:
+ fiable, memoria que necesita y si vLLM lo soporta en ROCm según la documentación oficial. **No elegirlo por fama
+ ni por catálogo genérico**: probarlo con dos o tres certificados sintéticos (uno escaneado) antes de fijarlo.
+ 
++**[12/10, tras el kickoff] Orden de prueba.** Primer candidato: **un modelo Gemma 4 multimodal**, porque el premio de
++Google es *«the best use of Gemma models challenge, which is the use of Gemma models within AMD GPUs»*. Si lee
++peor que otro modelo abierto en la mini prueba, gana el que lea mejor. Al arrancar vLLM, **activar la llamada a
++herramientas** (*«Start it with tool calling turned on. Agents need it.»*, kickoff [11:12]); CertGate no la necesita,
++pero Evolus sí, y así el mismo endpoint sirve para los dos.
++
+ **Gate de arranque del producto:** no dar por cerrada la arquitectura hasta que A3 y A4 tengan una prueba real.
+ Si el 12 de octubre a las 17:00 no la tienen, se aplica la regla de `05-BANDA-Y-CALENDARIO.md`.
+ 
+diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01new.md"
+index d757f9d..8510bba 100644
+--- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01old.md"
++++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01new.md"
+@@ -29,12 +29,17 @@ historial, con su estado. Una cita que no esté aquí no es una regla vigente.
+ | Intelligent Industry: demo | «Show your product processing realistic industrial data and producing a useful alert, explanation, recommendation, or action. Make it clear who would use the product and what result it improves.» | pagina | 2026-10-12 | entrega |
+ | Reinvent Commerce: previsiones | «Do not use a language model as the only forecasting method.» | pagina | 2026-10-12 | tecnico |
+ | Health and Wellbeing: seguridad | «The product must not present autonomous diagnosis or treatment as medical advice.» | pagina | 2026-10-12 | tecnico |
++| Premio de Google | «We're super excited to sponsor the best use of Gemma models challenge, which is the use of Gemma models within AMD GPUs and on Fireworks AI. So you can access those through the Fireworks AI credits or the AMD developer cloud» | kickoff-stream | 2026-10-12 | premio, tecnico |
++| Duración del vídeo | «Two, your presentation, which must be no longer than five minutes.» | kickoff-stream | 2026-10-12 | entrega |
++| Explicar la parte en AMD | «When you explain your project, make it clear which part runs on AMD and what that part does.» | kickoff-stream | 2026-10-12 | entrega, tecnico |
++| Edición del envío | «You are able to edit the submission as long as the event is still ongoing.» | kickoff-stream | 2026-10-12 | entrega, plazo |
++| Evolus: código del evento | «enter the event code AMDACT3» | kickoff-stream | 2026-10-12 | tecnico, premio |
+ 
+ **Pendientes de aclaración** — no se dan por vigentes ni por descartadas:
+ 
+ - Plazo de entrega: «Oct 18 12:00 PM Central European Summer Time Submission Deadline» (pagina; afecta a plazo)
+ - Plazo de entrega: «You have until Oct 18, 2026, 15:00 UTC to submit.» (panel; afecta a plazo)
++- Evolus: caducidad del workspace: «Your workspace is free until November 15th so the judges can try your demo.» (kickoff-stream; afecta a tecnico, premio)
++- Evolus: caducidad del workspace: «a free workspace until October 31, 2026, for up to 6 team members, with 50,000 platform credits and no credit card.» (pagina; afecta a tecnico, premio)
+ 
+ Sustituidas: 8 (ver historial).
+-<!-- lz:vigentes:fin -->
+-
