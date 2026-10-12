@@ -1,0 +1,9 @@
+{
+  "case_id": "cg-004",
+  "certificate": "certificate.pdf",
+  "certificate_kind": "digital",
+  "layout_id": "B",
+  "delivery_note": "delivery/ALB-2026-1003.csv",
+  "delivery_line": "1",
+  "provenance": "generated in run certgate-001 by tools/dataset/generate.py"
+}

@@ -1,0 +1,130 @@
+[
+  {
+    "fichero": "cert-01-digital-conforme.pdf",
+    "modo": "digital",
+    "capa_de_texto": true,
+    "verdad": {
+      "numero": "SV-2026-118204",
+      "fecha": "2026-09-14",
+      "colada": "24-71830",
+      "calidad": "TRN-355",
+      "producto": "Chapa 20 x 2000 x 6000 mm",
+      "quimica": {
+        "C": "0.16",
+        "Si": "0.21",
+        "Mn": "1.42",
+        "P": "0.012",
+        "S": "0.006",
+        "Cr": "0.04",
+        "Ni": "0.03",
+        "Mo": "0.01",
+        "Cu": "0.05",
+        "V": "0.002"
+      },
+      "CEV_impreso": "0.41",
+      "ReH": "392",
+      "Rm": "538",
+      "A": "26",
+      "KV": [
+        "64",
+        "71",
+        "58"
+      ],
+      "sello": "QA-07"
+    },
+    "colada_coincide_albaran": true,
+    "fallos_especificacion": [],
+    "propuesta_esperada": "release",
+    "motivo": "Todos los valores dentro de ESP-014; colada coincide con el albarán. Decide Calidad.",
+    "notas": "Dos canales disponibles (capa de texto y modelo)."
+  },
+  {
+    "fichero": "cert-02-escaneado-fuera-especificacion.pdf",
+    "modo": "escaneado",
+    "capa_de_texto": false,
+    "verdad": {
+      "numero": "SV-2026-118377",
+      "fecha": "2026-09-16",
+      "colada": "24-71902",
+      "calidad": "TRN-355",
+      "producto": "Chapa 15 x 2000 x 6000 mm",
+      "quimica": {
+        "C": "0.17",
+        "Si": "0.24",
+        "Mn": "1.68",
+        "P": "0.014",
+        "S": "0.008",
+        "Cr": "0.03",
+        "Ni": "0.02",
+        "Mo": "0.01",
+        "Cu": "0.06",
+        "V": "0.003"
+      },
+      "CEV_impreso": "0.46",
+      "ReH": "401",
+      "Rm": "556",
+      "A": "24",
+      "KV": [
+        "52",
+        "48",
+        "55"
+      ],
+      "sello": "QA-07"
+    },
+    "colada_coincide_albaran": true,
+    "fallos_especificacion": [
+      {
+        "campo": "Mn",
+        "observado": "1.68",
+        "max": "1.60"
+      },
+      {
+        "campo": "CEV",
+        "observado": "0.46",
+        "max": "0.45"
+      }
+    ],
+    "propuesta_esperada": "block",
+    "motivo": "Fuera de especificación ESP-014: Mn, CEV",
+    "notas": "Sin capa de texto: campos críticos con confirmación humana."
+  },
+  {
+    "fichero": "cert-03-escaneado-ambiguo.pdf",
+    "modo": "escaneado",
+    "capa_de_texto": false,
+    "verdad": {
+      "numero": "SV-2026-118512",
+      "fecha": "2026-09-19",
+      "colada": "24-72015",
+      "calidad": "TRN-355",
+      "producto": "Chapa 25 x 2000 x 6000 mm",
+      "quimica": {
+        "C": "0.15",
+        "Si": "0.19",
+        "Mn": "1.38",
+        "P": "0.011",
+        "S": "0.005",
+        "Cr": "0.05",
+        "Ni": "0.04",
+        "Mo": "0.01",
+        "Cu": "0.07",
+        "V": "0.002"
+      },
+      "CEV_impreso": "0.40",
+      "ReH": "358",
+      "Rm": "529",
+      "A": "27",
+      "KV": [
+        "61",
+        "57",
+        "66"
+      ],
+      "sello": "QA-07"
+    },
+    "colada_coincide_albaran": true,
+    "fallos_especificacion": [],
+    "propuesta_esperada": "review",
+    "motivo": "ReH ilegible (segundo dígito manchado): podría leerse 338 (< 355, fuera) o 358 (dentro). Confirmación humana.",
+    "notas": "Sin capa de texto: campos críticos con confirmación humana."
+  }
+]

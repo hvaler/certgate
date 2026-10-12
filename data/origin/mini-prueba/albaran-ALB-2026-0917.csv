@@ -1,0 +1,4 @@
+albaran,fecha,proveedor,pedido_cliente,partida,colada,calidad,producto,piezas,masa_kg,aviso
+ALB-2026-0917,2026-09-21,Siderúrgica Valdemora S.A.,PC-2026-0412,1,24-71830,TRN-355,Chapa 20 x 2000 x 6000 mm,12,22608,FICTICIO
+ALB-2026-0917,2026-09-21,Siderúrgica Valdemora S.A.,PC-2026-0412,2,24-71902,TRN-355,Chapa 15 x 2000 x 6000 mm,16,22608,FICTICIO
+ALB-2026-0917,2026-09-21,Siderúrgica Valdemora S.A.,PC-2026-0412,3,24-72015,TRN-355,Chapa 25 x 2000 x 6000 mm,10,23550,FICTICIO

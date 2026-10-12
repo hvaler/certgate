@@ -1,0 +1,252 @@
+{
+  "case_id": "cg-004",
+  "acceptance_cases": [
+    "C1"
+  ],
+  "expected_status": "ok",
+  "expected_proposal": "release",
+  "reasons_must_include": [],
+  "rule_failures": [],
+  "planted_fault": "none (conforming digital certificate, layout B)",
+  "notes": "",
+  "correct_reading": {
+    "issuer": {
+      "value": "Siderúrgica Valdemora S.A.",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "letterhead"
+      }
+    },
+    "certificate_no": {
+      "value": "SV-2026-118601",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Certificate number"
+      }
+    },
+    "certificate_type": {
+      "value": "3.1",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "document title"
+      }
+    },
+    "date": {
+      "value": "2026-09-28",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Issue date"
+      }
+    },
+    "heat_or_lot": {
+      "value": "24-73104",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Heat number"
+      }
+    },
+    "grade": {
+      "value": "TRN-355",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Steel grade"
+      }
+    },
+    "dimensions": {
+      "value": "Chapa 12 x 2000 x 6000 mm",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Product"
+      }
+    },
+    "chemistry": {
+      "C": {
+        "value": "0.14",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column C"
+        }
+      },
+      "Si": {
+        "value": "0.25",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Si"
+        }
+      },
+      "Mn": {
+        "value": "1.35",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Mn"
+        }
+      },
+      "P": {
+        "value": "0.010",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column P"
+        }
+      },
+      "S": {
+        "value": "0.004",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column S"
+        }
+      },
+      "Cr": {
+        "value": "0.06",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Cr"
+        }
+      },
+      "Ni": {
+        "value": "0.05",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Ni"
+        }
+      },
+      "Mo": {
+        "value": "0.02",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Mo"
+        }
+      },
+      "Cu": {
+        "value": "0.08",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column Cu"
+        }
+      },
+      "V": {
+        "value": "0.003",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "chemical composition table, column V"
+        }
+      }
+    },
+    "cev_printed": {
+      "value": "0.39",
+      "unit": "%",
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "chemical composition table, column CEV"
+      }
+    },
+    "mechanical": {
+      "ReH": {
+        "value": "381",
+        "unit": "MPa",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "tensile test table, column ReH"
+        }
+      },
+      "Rm": {
+        "value": "512",
+        "unit": "MPa",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "tensile test table, column Rm"
+        }
+      },
+      "A": {
+        "value": "28",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "tensile test table, column A"
+        }
+      },
+      "KV_1": {
+        "value": "88",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Specimen 1"
+        }
+      },
+      "KV_2": {
+        "value": "92",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Specimen 2"
+        }
+      },
+      "KV_3": {
+        "value": "85",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Specimen 3"
+        }
+      }
+    },
+    "kv_temperature": {
+      "value": "-20",
+      "unit": "°C",
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "impact test heading"
+      }
+    },
+    "inspection_stamp": {
+      "value": "QA-07",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "inspection block, Stamp"
+      }
+    }
+  }
+}

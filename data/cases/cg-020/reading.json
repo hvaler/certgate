@@ -1,0 +1,247 @@
+{
+  "schema": "certgate.mock-model-output/1",
+  "case_id": "cg-020",
+  "note": "MOCK model output for the offline pipeline. It is the dataset's correct reading, except for the deviations listed in 'planted'. It is NOT the output of any model.",
+  "fields": {
+    "issuer": {
+      "value": "Siderúrgica Valdemora S.A.",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "letterhead"
+      }
+    },
+    "certificate_no": {
+      "value": "SV-2026-118767",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Nº certificado / Certificate no."
+      }
+    },
+    "certificate_type": {
+      "value": "3.1",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "document title"
+      }
+    },
+    "date": {
+      "value": "2026-10-03",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Fecha / Date"
+      }
+    },
+    "heat_or_lot": {
+      "value": "24-73289",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Colada / Heat no."
+      }
+    },
+    "grade": {
+      "value": "TRN-355",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Calidad / Grade"
+      }
+    },
+    "dimensions": {
+      "value": "Chapa 20 x 2000 x 6000 mm",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "Producto / Product"
+      }
+    },
+    "chemistry": {
+      "C": {
+        "value": "0.18",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column C"
+        }
+      },
+      "Si": {
+        "value": "0.21",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Si"
+        }
+      },
+      "Mn": {
+        "value": "1.55",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Mn"
+        }
+      },
+      "P": {
+        "value": "0.012",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column P"
+        }
+      },
+      "S": {
+        "value": "0.006",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column S"
+        }
+      },
+      "Cr": {
+        "value": "0.05",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Cr"
+        }
+      },
+      "Ni": {
+        "value": "0.05",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Ni"
+        }
+      },
+      "Mo": {
+        "value": "0.02",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Mo"
+        }
+      },
+      "Cu": {
+        "value": "0.10",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column Cu"
+        }
+      },
+      "V": {
+        "value": "0.003",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "heat analysis table, column V"
+        }
+      }
+    },
+    "cev_printed": {
+      "value": "0.44",
+      "unit": "%",
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "heat analysis table, column CEV"
+      }
+    },
+    "mechanical": {
+      "ReH": {
+        "value": "392",
+        "unit": "MPa",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "mechanical tests table, column ReH"
+        }
+      },
+      "Rm": {
+        "value": "538",
+        "unit": "MPa",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "mechanical tests table, column Rm"
+        }
+      },
+      "A": {
+        "value": "26",
+        "unit": "%",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "mechanical tests table, column A"
+        }
+      },
+      "KV_1": {
+        "value": "64",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Probeta 1"
+        }
+      },
+      "KV_2": {
+        "value": "71",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Probeta 2"
+        }
+      },
+      "KV_3": {
+        "value": "58",
+        "unit": "J",
+        "status": "read",
+        "source_ref": {
+          "page": "1",
+          "fragment": "impact test table, Probeta 3"
+        }
+      }
+    },
+    "kv_temperature": {
+      "value": "-20",
+      "unit": "°C",
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "impact test heading"
+      }
+    },
+    "inspection_stamp": {
+      "value": "QA-07",
+      "unit": null,
+      "status": "read",
+      "source_ref": {
+        "page": "1",
+        "fragment": "signature block, Sello"
+      }
+    }
+  },
+  "explanation": null,
+  "planted": []
+}

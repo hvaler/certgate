@@ -1,0 +1,27 @@
+{
+  "_aviso": "Especificación FICTICIA de la empresa ficticia Talleres Ribera Norte S.L. Los límites son inventados para la demo y no son los de ninguna norma real.",
+  "id": "ESP-014",
+  "revision": 3,
+  "calidad": "TRN-355",
+  "producto": "Chapa de acero laminada en caliente",
+  "certificado_exigido": "Certificado de inspección 3.1 (EN 10204), con colada, análisis de colada, ensayos mecánicos y de choque, y sello de inspección",
+  "limites": {
+    "C": { "max": "0.20", "unidad": "%" },
+    "Si": { "max": "0.55", "unidad": "%" },
+    "Mn": { "max": "1.60", "unidad": "%" },
+    "P": { "max": "0.025", "unidad": "%" },
+    "S": { "max": "0.025", "unidad": "%" },
+    "Cu": { "max": "0.55", "unidad": "%" },
+    "CEV": { "max": "0.45", "unidad": "%" },
+    "ReH": { "min": "355", "unidad": "MPa" },
+    "Rm": { "min": "470", "max": "630", "unidad": "MPa" },
+    "A": { "min": "20", "unidad": "%" },
+    "KV_media": { "min": "27", "unidad": "J", "temperatura": "-20 °C" }
+  },
+  "reglas_de_documento": [
+    "La colada del certificado debe coincidir con la del albarán para esa partida.",
+    "La calidad certificada debe ser TRN-355.",
+    "Debe figurar el sello de inspección.",
+    "El CEV impreso, si figura, debe coincidir con el recalculado a partir de la composición (redondeo a 0,01)."
+  ]
+}

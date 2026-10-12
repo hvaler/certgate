@@ -1,0 +1,3 @@
+# Pre-kickoff files are kept byte-identical to their source (esperado.json has CRLF line endings).
+# Git must never normalise them.
+* -text

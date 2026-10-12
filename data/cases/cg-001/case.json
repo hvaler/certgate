@@ -1,0 +1,9 @@
+{
+  "case_id": "cg-001",
+  "certificate": "certificate.pdf",
+  "certificate_kind": "digital",
+  "layout_id": "A",
+  "delivery_note": "delivery/ALB-2026-0917.csv",
+  "delivery_line": "1",
+  "provenance": "pre-kickoff: data/origin/mini-prueba/cert-01-digital-conforme.pdf"
+}

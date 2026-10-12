@@ -1,0 +1,9 @@
+{
+  "case_id": "cg-002",
+  "certificate": "certificate.pdf",
+  "certificate_kind": "scan",
+  "layout_id": "A",
+  "delivery_note": "delivery/ALB-2026-0917.csv",
+  "delivery_line": "2",
+  "provenance": "pre-kickoff: data/origin/mini-prueba/cert-02-escaneado-fuera-especificacion.pdf"
+}
