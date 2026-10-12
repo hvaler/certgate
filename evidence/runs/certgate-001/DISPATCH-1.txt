@@ -1,0 +1,87 @@
+[Verbatim copy of room message 7e4a26f9-70e9-4043-807b-b4b05093a00b from hugo.valer, room 3e47b667-b685-4655-8f34-cc0dad08ab30, as returned by `band --session analyst-xwz3 inbox` at 2026-10-12T16:53Z. Copied by analyst-xwz3. Leading mention kept.]
+
+@hugo.valer/analyst-xwz3 You are the coordinating analyst of our Evidence-Driven Autonomous Factory. This is the FIRST of two human dispatches for CertGate, our entry to the AMD Developer Hackathon: ACT III (lablab.ai), track Intelligent Industry. This dispatch authorises STAGES 1 AND 2 ONLY. Build, challenge, independently audit and deliver them IN ORDER in the same BAND room and result repository. After the auditor accepts Stage 1, proceed to Stage 2 without asking the human. Do not start Stage 3 or 4: they need an AMD GPU endpoint that does not exist yet and arrive in a second dispatch.
+
+RUN CONFIGURATION (all placeholders must be replaced before sending)
+Run ID: certgate-001
+Workspace root, absolute: C:\nexus\dev
+Planning workspace (read-only source of truth), absolute: C:\nexus\dev\AMD-ACT3
+Result repository, absolute: C:\nexus\dev\certgate
+Public GitHub repository (created empty by the human, public from the first push): https://github.com/hvaler/certgate
+Factory mandates (generic, copied unchanged from github.com/hvaler/four-seats-factory): C:\nexus\dev\certgate\mandates
+Kickoff: 2026-10-12T15:00:00Z. No product code may have a commit date before this instant.
+Stage sequence for this dispatch: 1 -> 2
+Output: one product tree at the root of the result repository (this is an app, not a set of stage folders); evidence under evidence/runs/certgate-001/stage-N.
+Runtime: four distinct Claude Code seats using the exact Opus model configured before dispatch. Record actual model IDs and usage; sharing a runtime/model does not replace independent execution.
+Seats and resolved handles:
+analyst: @hugo.valer/analyst-xwz3
+implementer: @hugo.valer/implementer-xwz4
+adversary: @hugo.valer/adversary-xwz5
+auditor: @hugo.valer/auditor-xwz6
+Limits fixed before dispatch: at most 5 repair cycles PER STAGE, 2 infrastructure retries per command, 300 minutes PER STAGE, 600 minutes TOTAL for this dispatch including final verification. HARD STOP: 2026-10-14T20:00:00Z regardless of remaining minutes. Financial allowance: EXPLICITLY UNAVAILABLE as a hard cap; no provider spend limit is configured. Treat the wall-clock ceilings as the enforceable limits and report measured usage with that limitation stated. Reserve 30 minutes for final verification and reporting. If a seat is rate-limited, use bounded retries, then conclude BLOCKED with evidence.
+
+THIS HOST
+Windows 11. The seats run Claude Code on Windows with Windows paths. Docker Desktop is available. No GPU and no model endpoint are available in this dispatch: every model call goes through a mock adapter (see Stage 1). The permissions this run needs are already granted. If an unexpected permission dialog appears, record it as a blocker and continue with what you can; no human will answer a window during this run.
+
+SOURCE OF TRUTH
+The specification is the set of planning documents below, written in Spanish. Read them completely at the start of each stage and record their SHA-256 checksums. Room messages, code, README and evidence are in English.
+- C:\nexus\dev\AMD-ACT3\docs\03-DISENO-DEL-PRODUCTO.md — product design: problem, user, the 9-step flow, two reading channels, internal coherence, deterministic rules, F1-F4, contract, minimal UI. AUTHORITATIVE for behaviour.
+- C:\nexus\dev\AMD-ACT3\docs\04-PLAN-Y-PRUEBAS.md — narrow MVP, acceptance matrix C1-C14, delivery tests, rules-compliance matrix.
+- C:\nexus\dev\AMD-ACT3\docs\01-REGLAS.md — the block "Reglas vigentes" at the top is the only valid statement of hackathon rules. Anything marked "sustituida" is history, not a rule.
+- C:\nexus\dev\AMD-ACT3\docs\02-VALIDACION-DE-ACCESO.md — gates A1-A4 (AMD) and E1-E4 (Evolus). Read to understand what is NOT yet verified.
+- C:\nexus\dev\AMD-ACT3\datos\mini-prueba\ — three fictitious certificates, the fictitious purchase specification ESP-014, a delivery note and esperado.json with ground truth written before any model run. Synthetic demo data created before kickoff, which the rules allow; reuse it with its provenance stated.
+- C:\nexus\dev\AMD-ACT3\diseno\ — the UI design made with Claude Design after the kickoff (canvas https://claude.ai/artifact/RDDsGZUU146eDtxkoPwyGj, private; the files in this folder are its exact copy). Seven screens: case file of the ambiguous scan (Main), start and judge mode (Inicio), progress (Progreso), out-of-spec case (Bloqueo), receipt (Recibo), and the phone versions at 375 px (JuradoMovil, ExpedienteMovil). It is the source of truth for the LOOK only: layout, typography, colours, wording of labels. It is NOT a source of behaviour. If it conflicts with 03-DISENO-DEL-PRODUCTO.md or with invariants I1-I7, the written design wins. Values in square brackets ([MODEL_ID], [run timestamp], [hash]...) are placeholders to be filled from real data, never hard-coded. The README states that the UI was designed with Claude Design and implemented by the band.
+Include this complete task and the FULL relevant specification text in every delegated handoff. Do not send only paths, summaries or message IDs. Split into numbered direct messages if necessary; the receiving seat acknowledges all parts before working. Ensure all four seats are room members before the first handoff.
+
+OUT OF SCOPE FOR THE WHOLE RUN
+Evolus integration (gates E1-E4 are not open). Any real model call. Any real customer, supplier or standard data: the company, mill, grade TRN-355 and spec ESP-014 are fictitious and must be labelled as such in UI and README. Never write limits of a real standard from memory. Never implement automatic release of material: CertGate only PROPOSES release, block or review, and a person decides.
+
+PRODUCT INVARIANTS (every stage; the auditor rejects a candidate that breaks any of them)
+I1. Decisions come only from deterministic, versioned rules. The model reads and explains; it never decides. A model explanation without a reference to verifiable input never becomes a fact.
+I2. A field that cannot be read with confidence is unknown, never an invented value. A critical field that is unknown forces review.
+I3. Two reading channels, not two identical readings: for a PDF with a text layer, the text layer (extracted without any model) is compared with the model reading; disagreement means unknown plus review. A scan without a text layer has no second channel: critical fields require human confirmation, and the UI says so.
+I4. Exact decimals for every comparison; no binary floating point anywhere in rules, coherence or units.
+I5. No proposal of release when: evidence is missing, channels disagree, heat or lot does not match the delivery note, a rule fails, units are inconsistent, the inspection stamp is missing, or the model output is invalid.
+I6. No secrets in the repository, the room, logs or evidence. Configuration by environment variables; .env.example without values; .env ignored.
+I7. A recorded response is never presented as a live reading. Every screen that shows a stored result labels it as stored, with its timestamp.
+
+BOOTSTRAP AND COORDINATION
+Use the four configured generic mandates unchanged. Confirm shared paths and Git identities. The result repository starts empty apart from what the human placed there; all product code originates from collaboration in this room after the kickoff instant. Analyst owns the obligation register and write lease; implementer alone writes production files; adversary owns independent tests; auditor alone accepts or rejects.
+Analyst reads every section of the specification and produces numbered obligations with source references (document, section, line), expected outcomes and coverage plans, prefixed by stage. Adversary reviews that register for omissions before implementation is accepted. Treat unaddressed requirements as open even if every test passes.
+
+STAGE 1 — OFFLINE CORE (no network, no model)
+Deliver:
+- Repository skeleton fit to become public: README draft (what it is, that data is synthetic, how to run), LICENSE (MIT), .env.example, .gitignore, Dockerfile that builds and runs the service locally on PORT with no outbound dependency in mock mode.
+- The internal contract of 03-DISENO (Case, Certificate, DeliveryLine, Spec, ChannelCheck, RuleResult, Decision, RunReceipt) as typed structures.
+- Spec ESP-014 loaded from a versioned file; delivery note loaded from CSV.
+- Text-layer channel: extraction of the critical fields from PDFs that have a text layer, without any model. Scans yield "no channel available", not an error.
+- Internal coherence: heat or lot versus delivery note; expected units and scale jumps; carbon equivalent recomputed from composition and compared with the printed value, using a formula whose source is CITED in the repository (not from memory).
+- Deterministic rules against the spec with exact decimals; decision proposal (release, block, review) per I5; run receipt.
+- A ModelReader interface with a MockReader that returns the ground-truth readings from the dataset and is labelled as mock everywhere it is used. Its existence must be impossible to confuse with a real reading (I7).
+- Dataset: extend datos/mini-prueba to 20-30 fictitious certificates with planted faults covering C1-C13, each with expected result written BEFORE any model run, committed with checksums. State in the repository which three were created before kickoff and which were created in this run.
+Acceptance: the auditor reproduces from a clean clone, in a fresh container, that every case C1-C13 yields its expected proposal through the mock path; that I1-I6 hold; and that the git history starts after the kickoff instant.
+
+STAGE 2 — WEB APP, VERCEL SHAPE, STILL WITHOUT A MODEL
+Start from the accepted Stage 1 commit and extend it.
+Deliver:
+- The minimal UI of 03-DISENO (start, progress, case file with values beside the spec and their source location, human decision with reason/who/when, exportable receipt), usable at mobile and desktop widths, with a visible notice that all data is fictitious.
+- F1 panel "Runs on AMD": reads live from the configured endpoint (model list, GPU and ROCm info from a small sidecar route, latency, tokens per second, cost estimate). With no endpoint configured it shows "endpoint off" with the time of the last check. It never shows hand-written values.
+- F2 judge mode: the three stories (conforming, out of spec, ambiguous scan) available as stored runs, clearly labelled as stored (I7); a "Read live" action that works only when the endpoint is up and otherwise explains when it will be.
+- No login: judges enter without credentials. Live reading is protected by a SERVER-SIDE global limit of live readings per hour (env LIVE_READS_PER_HOUR) and, only if configured, an access code for live reading (env LIVE_ACCESS_CODE). The UI shows how many live readings remain this hour; when exhausted, "Read live" is disabled with the reopening time. Judge mode has no limit. The adversary must show that the limit cannot be bypassed from the browser and that a stored result is never served as a new live one.
+- Landing: the start screen is the landing (see diseno\Inicio.dc.html): problem and user in one sentence, a button to the ambiguous case, and four evaluation figures (false conforming, non-conformities caught, seconds and cost per certificate). In this dispatch those figures stay as visible placeholders; they are filled only from the Stage 3 evaluation artifacts, with denominators. Never hard-code a figure.
+- F4 Vercel fit: stateless backend functions; stored stories as versioned static files; new cases kept in the visitor's browser. Before writing the adapter call path, read Vercel's current documentation for function duration and request body limits, record the values and their source URL in the repository, and design for them (start-then-poll if a reading may exceed the limit). Do not deploy in this dispatch.
+- Adversary attacks at least: prompt injection inside a PDF (C10), endpoint down / timeout / invalid JSON (C11), isolation between consecutive cases (C12), missing stamp (C13), and a stored result presented as live (I7).
+Acceptance: the auditor reproduces from a clean clone, runs the UI in a real browser at 375 px and 1280 px widths, records screenshots, verifies F1 shows "endpoint off" honestly with no endpoint, verifies F2 labels, and re-runs the Stage 1 suite.
+
+MUTATION CHECK (both stages; the previous factory lacked it)
+Before accepting a stage, the adversary deliberately breaks one rule at a time in a throwaway branch (flip a comparison, drop the stamp check, swap a decimal for a float, let a mock result pass as live) and shows that at least one test fails for each mutation. A mutation that no test catches is a finding against the test suite, routed like any defect. Record each mutation, the failing test and the branch, which is never merged.
+
+IMPLEMENTATION AND VERIFICATION
+The band selects language and framework, compatible with deployment on Vercel (Stage 2) and with a local Docker run. Implementer commits a candidate and posts the full commit identifier plus run instructions and claims. Freeze that candidate. Adversary and auditor each use distinct clean checkouts at that candidate and independent processes; do not reuse the implementer's tree or live service. A skipped test, a missing browser or a startup failure is not a pass.
+
+ACCEPTANCE AND RECOVERY
+Use the evidence templates of the result repository to create real records under evidence/runs/certgate-001/stage-N. Each claim links obligation, product revision, test revision, command, inputs, environment, actual outcome, artifact checksum and real room references. The auditor decides ACCEPTED, REJECTED or BLOCKED for the exact candidate and publishes a STAGE_ACCEPTED checkpoint with commit, tree hash, evidence references and remaining budgets. Analyst cannot override the verdict. On rejection, analyst routes the full task, specification and reproduction to the implementer; repair in a new commit; adversary rechecks; auditor repeats independently.
+
+AUTONOMY AND FINAL REPORT
+From this dispatch until the final report, do not ask the human for decisions, approvals, debugging or reruns. If permissions, access or evidence prevent progress, record the blocker and conclude. No fake disagreements or fabricated results.
+At completion, analyst reports for Stages 1 and 2: scope, accepted candidate and tree hash, coverage against C1-C14 and I1-I7, mutation results, auditor verdict, open issues, time and usage (unknown if unavailable), and room message references. State plainly that no real model and no AMD hardware were used in this dispatch. End with the list of obligations that need the AMD endpoint, as input for the second dispatch. Do not claim AMD integration, deployment or submission.
