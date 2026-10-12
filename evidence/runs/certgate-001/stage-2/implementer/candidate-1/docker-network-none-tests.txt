@@ -1,0 +1,29 @@
+
+ RUN  v5.0.4 /app
+
+ ✓ test/rules.test.ts (35 tests) 141ms
+ ✓ test/inputs.test.ts (15 tests) 790ms
+   ✓ spec ESP-014 from its versioned file (S1-12) (4)
+     ✓ puts spec id, revision and file hash into every receipt 630ms
+ ✓ test/reader.test.ts (22 tests) 819ms
+   ✓ failure injection and bounded retry (C11) (14)
+     ✓ cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt 454ms
+ ✓ test/entrypoints.test.ts (11 tests) 846ms
+   ✓ CLI (10)
+     ✓ processes a named dataset case and prints proposal and receipt (exit 0) 411ms
+ ✓ test/static.test.ts (44 tests) 50ms
+ ✓ test/channels.test.ts (23 tests) 621ms
+   ✓ text-layer extraction without any model (19)
+     ✓ cg-001: every critical field equals the correct reading 301ms
+ ✓ test/human.test.ts (9 tests) 349ms
+ ✓ test/dataset.test.ts (36 tests) 559ms
+ ✓ test/isolation.test.ts (3 tests) 281ms
+ ✓ test/web.test.ts (34 tests) 2235ms
+   ✓ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (10)
+     ✓ C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret 927ms
+
+ Test Files  10 passed (10)
+      Tests  232 passed (232)
+   Start at  18:42:08
+   Duration  3.17s (tests 71%, transform 20%, import 9%, worker 1%)
+

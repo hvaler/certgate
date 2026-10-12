@@ -1,0 +1,35 @@
+CertGate listening on http://localhost:3000 (mode mock)
+{
+  "state": "off",
+  "checked_at": "2026-10-12T18:42:26.946Z",
+  "detail": "no endpoint configured",
+  "model_ids": [],
+  "gpu": null,
+  "rocm_version": null,
+  "vllm_version": null,
+  "latency_ms": null,
+  "tokens_per_second": null,
+  "cost_estimate_usd": null
+}
+
+{
+  "enabled": false,
+  "reason": "live reading disabled: LIVE_READS_PER_HOUR not set or 0",
+  "limit_per_hour": "0",
+  "remaining_this_hour": "0",
+  "reopens_at": "2026-10-12T19:00:00.000Z",
+  "access_code_required": false,
+  "endpoint_configured": false,
+  "windows": null,
+  "windows_note": "no live window is announced",
+  "scope_note": "The limit is counted on the server, per server instance in this build.",
+  "checked_at": "2026-10-12T18:42:26.948Z"
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CertGate · mill certificate review</title>
+<link rel="stylesh
