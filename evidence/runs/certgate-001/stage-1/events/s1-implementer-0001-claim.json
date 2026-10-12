@@ -1,0 +1,53 @@
+{
+  "schema_version": "1",
+  "event_id": "s1-implementer-0001-claim",
+  "sequence": null,
+  "run_id": "certgate-001",
+  "stage": "1",
+  "timestamp_utc": "2026-10-12T17:45:00Z",
+  "event_type": "CLAIM",
+  "requirement": {
+    "id": "S1-01..S1-39, S1-44, S1-46..S1-49 (implementer rows of register R1.5)",
+    "spec_path": "C:\\nexus\\dev\\certgate\\evidence\\runs\\certgate-001\\stage-1\\OBLIGATIONS.md",
+    "spec_sha256": "fd836c91580ee61b58fd18d28a88418e10e6fbb552e9e6a98fcbe31b0412a404",
+    "section": "Obligations; R1.2-R1.5 amendments",
+    "obligation": "Stage 1 offline core on the mock path"
+  },
+  "actor": { "role": "implementer", "seat_id": "implementer-xwz4", "handle": "@hugo.valer/implementer-xwz4" },
+  "claim": "Candidate 31335ee1 implements the implementer rows of R1.5; every dataset case yields its expected proposal through the mock path; the suite passes offline inside the built image. This is a claim, not acceptance.",
+  "candidate_commit": "31335ee13944563a0eb559f6d1125efe94f598c9",
+  "candidate_product_tree": "5a2efc6d37dabff1b0376c261f0d47f8bd9132b6",
+  "test_commit": "31335ee13944563a0eb559f6d1125efe94f598c9",
+  "evidence_commit": null,
+  "execution": {
+    "cwd": "clean clone of C:\\nexus\\dev\\certgate at 31335ee1 (scratch directory of implementer-xwz4)",
+    "command": "npm ci && npm run build && npx vitest run ; docker build --no-cache -t certgate:31335ee . ; docker run --rm --network none certgate:31335ee npx vitest run",
+    "environment": "Windows 11 host, Docker Desktop (linux engine)",
+    "tool_versions": { "node_host": "v24.19.0", "npm": "11.17.0", "docker": "29.8.0", "image_base": "node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20", "typescript": "5.9.3", "vitest": "5.0.4", "decimal.js": "10.6.0", "pdfjs-dist": "6.4.299" },
+    "container_image_digest": "sha256:e87869bca0100f301fcc334a4f7f8db8c6911290bf5d2743bdc749fac4e01454",
+    "mode": "mock, --network none",
+    "input_artifact": "data/CHECKSUMS.sha256 (dataset commit 4ebd95333e3bb486cb79c62fc6bd7a2e025379e9)",
+    "random_seed": null,
+    "concurrency": "vitest default",
+    "started_utc": "2026-10-12T17:36:25Z",
+    "finished_utc": "2026-10-12T17:37:10Z",
+    "exit_code": "0",
+    "counts": { "passed": "175", "failed": "0", "skipped": "0", "collected": "175" }
+  },
+  "expected": "30/30 dataset cases with expected proposal and status; all implementer tests pass offline",
+  "observed": "175 passed, 0 failed, 0 skipped (local clean clone and inside the image with --network none)",
+  "result": "PASS",
+  "artifacts": [
+    { "path": "evidence/runs/certgate-001/stage-1/implementer/local-clean-clone-tests.log", "sha256": "007abfacbe0c55265cc4b454b48c3c7d2178388ab14f4420fcddcc1b58bbc5ab" },
+    { "path": "evidence/runs/certgate-001/stage-1/implementer/docker-build-no-cache.log", "sha256": "d3480ea24fb69b0e59ca3f40b12e0e5a4dc820c809fe036ce22e699d000b8cb5" },
+    { "path": "evidence/runs/certgate-001/stage-1/implementer/docker-network-none-tests.log", "sha256": "3c3598f5fe14c7e651d330e24ea66572f377a2b8d0ffbb89c5ae1dce0a636ad8" },
+    { "path": "evidence/runs/certgate-001/stage-1/implementer/docker-network-none-cg-003.json", "sha256": "f68b7e6831b317f74b92e92e68f4ff48bab86a5a6c9282988dae39347a2d6cac" },
+    { "path": "evidence/runs/certgate-001/stage-1/implementer/docker-network-none-health.log", "sha256": "62ee11a03358867a2aa1f726bb2aa1e437035d0b5627010ecdf5e1dcb5c9330e" }
+  ],
+  "audit": { "reproduced": null, "reproduction_event_id": null, "limitations": "Implementer's own run; not independent verification. Mock path only; no real model, no AMD hardware." },
+  "state": "CLAIMED",
+  "room_message_ids": [],
+  "supersedes_event_id": null,
+  "related_event_ids": [],
+  "reason": "Stage 1 candidate 1 handoff"
+}
