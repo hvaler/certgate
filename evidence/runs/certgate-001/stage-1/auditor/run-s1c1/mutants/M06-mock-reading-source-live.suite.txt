@@ -1,0 +1,137 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 325[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 392[2mms[22m[39m
+ [31m❯[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 383[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(7)[22m
+     [32m✓[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[32m 177[2mms[22m[39m
+     [32m✓[39m cg-024 timeout: status error, review, exactly 3 reader call(s), error class in receipt[32m 29[2mms[22m[39m
+     [32m✓[39m cg-025 http_429: status error, review, exactly 3 reader call(s), error class in receipt[32m 6[2mms[22m[39m
+     [32m✓[39m cg-026 http_5xx: status error, review, exactly 3 reader call(s), error class in receipt[32m 23[2mms[22m[39m
+     [32m✓[39m cg-027 invalid_json: status error, review, exactly 1 reader call(s), error class in receipt[32m 19[2mms[22m[39m
+     [32m✓[39m a model output that breaks the reading schema is invalid output: review[32m 1[2mms[22m[39m
+     [32m✓[39m a JSON number in the model output is rejected (S1-25)[32m 3[2mms[22m[39m
+   [32m✓[39m real mode without an endpoint (S1-19, D1-15) [2m(1)[22m
+     [32m✓[39m fails visibly and never falls back to the mock[32m 10[2mms[22m[39m
+   [31m❯[39m mock label everywhere (I7, S1-18, A-18) [2m(3)[22m
+[31m     [31m×[31m receipt of a mock run carries the mock label and reading_source[39m[32m 19[2mms[22m[39m
+[31m     [31m×[31m planted deviations are labelled planted in the receipt (D1-20)[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m the exporter rejects a receipt without reading_source or without the mock label[39m[32m 13[2mms[22m[39m
+   [32m✓[39m receipt content (S1-33, A-15, A-19) [2m(2)[22m
+     [32m✓[39m has case id, versions, hashes, spec id and revision, timings; no JSON numbers[32m 17[2mms[22m[39m
+     [32m✓[39m contains no secret environment value and no absolute path[32m 11[2mms[22m[39m
+   [32m✓[39m the model explains, it never decides (I1, S1-32, C10) [2m(2)[22m
+     [32m✓[39m contaminated explanation text has no effect on the proposal[32m 14[2mms[22m[39m
+     [32m✓[39m adding or changing an explanation never changes the proposal[32m 30[2mms[22m[39m
+ [31m❯[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 297[2mms[22m[39m
+   [31m❯[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [32m✓[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[32m 144[2mms[22m[39m
+     [32m✓[39m (b) cert-03 with only ReH confirmed as 358 stays review: no second channel[32m 6[2mms[22m[39m
+     [32m✓[39m (c) ReH confirmed as 338 blocks, even with other fields unconfirmed[32m 12[2mms[22m[39m
+[31m     [31m×[31m a confirmation may change a confident reading; the receipt keeps both values[39m[32m 13[2mms[22m[39m
+     [32m✓[39m confirming a field resolves a channel disagreement on a digital certificate[32m 64[2mms[22m[39m
+     [32m✓[39m rejects a confirmation without who, when, or with a non-decimal value[32m 13[2mms[22m[39m
+   [32m✓[39m human decision: release, block or request a new certificate (S1-09, S1-10) [2m(3)[22m
+     [32m✓[39m records who, when and why without changing the proposal[32m 4[2mms[22m[39m
+     [32m✓[39m without a human decision the case stays proposal-only[32m 17[2mms[22m[39m
+     [32m✓[39m rejects a decision without a reason, a person or a valid action[32m 22[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 550[2mms[22m[39m
+ [31m❯[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 240[2mms[22m[39m
+   [32m✓[39m CLI [2m(6)[22m
+     [32m✓[39m processes a named dataset case and prints proposal and receipt (exit 0)[32m 112[2mms[22m[39m
+     [32m✓[39m a reader failure is still a processed case (exit 0) with status error[32m 44[2mms[22m[39m
+     [32m✓[39m processes an external case directory[32m 27[2mms[22m[39m
+     [32m✓[39m rejects bad input with exit 2[32m 2[2mms[22m[39m
+     [32m✓[39m confirmation and human decision from the CLI[32m 5[2mms[22m[39m
+     [32m✓[39m writes the output file with --out[32m 11[2mms[22m[39m
+   [31m❯[39m HTTP service [2m(1)[22m
+[31m     [31m×[31m answers /health and processes a dataset case[39m[32m 37[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 282[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m)[22m[33m 614[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/entrypoints.test.ts > HTTP service > answers /health and processes a dataset case
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/entrypoints.test.ts:80:40
+     78|       const j = await res.json();
+     79|       expect(j.summary.proposal).toBe("review");
+     80|       expect(j.receipt.reading_source).toBe("mock");
+       |                                        ^
+     81|       expect((await fetch(`http://127.0.0.1:${port}/api/cases/zz/proce…
+     82|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > a confirmation may change a confident reading; the receipt keeps both values
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/human.test.ts:47:30
+     45|     expect(c.confirmed_by).toBe("quality.tech");
+     46|     expect(c.confirmed_at).toBe(AT);
+     47|     expect(c.reading_source).toBe("mock");
+       |                              ^
+     48|     expect(r.receipt.values.find((v) => v.field === "chemistry.Mn")!.s…
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > receipt of a mock run carries the mock label and reading_source
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/reader.test.ts:65:38
+     63|   it("receipt of a mock run carries the mock label and reading_source"…
+     64|     const r = await runCase("cg-001");
+     65|     expect(r.receipt.reading_source).toBe("mock");
+       |                                      ^
+     66|     expect(r.receipt.reader.model_id).toMatch(/^MOCK/);
+     67|     expect(r.receipt.reader.vllm_version).toBe("not applicable (mock)"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > planted deviations are labelled planted in the receipt (D1-20)
+AssertionError: expected 'live' to be 'planted' // Object.is equality
+
+Expected: "planted"
+Received: "live"
+
+ ❯ test/reader.test.ts:72:38
+     70|   it("planted deviations are labelled planted in the receipt (D1-20)",…
+     71|     const r = await runCase("cg-018");
+     72|     expect(r.receipt.reading_source).toBe("planted");
+       |                                      ^
+     73|     expect(r.receipt.planted).toEqual([expect.objectContaining({ kind:…
+     74|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > the exporter rejects a receipt without reading_source or without the mock label
+AssertionError: expected function to throw an error, but it didn't
+ ❯ test/reader.test.ts:79:103
+     77|     const { reading_source: _, ...noSource } = r.receipt;
+     78|     expect(() => exportReceipt(noSource as never)).toThrow(ReceiptExpo…
+     79|     expect(() => exportReceipt({ ...r.receipt, reader: { ...r.receipt.…
+       |                                                                                                       ^
+     80|   });
+     81| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m170 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:55:36
+[2m   Duration [22m 1.45s[2m (tests 70%, transform 23%, import 7%, worker 1%)[22m
+

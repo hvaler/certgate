@@ -1,0 +1,642 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [31m❯[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m | [22m[31m17 failed[39m[2m)[22m[32m 143[2mms[22m[39m
+   [32m✓[39m exact decimals (I4) [2m(1)[22m
+     [32m✓[39m parses strings to decimals and normalises representation[32m 5[2mms[22m[39m
+   [31m❯[39m inclusive spec limits, no rounding (D1-07, S1-27, A-22) [2m(6)[22m
+[31m     [31m×[31m ReH 355 passes, 354.9 and 354 fail[39m[32m 24[2mms[22m[39m
+[31m     [31m×[31m Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)[39m[32m 5[2mms[22m[39m
+[31m     [31m×[31m Rm 470 and 630 pass, 469 and 631 fail[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails[39m[32m 1[2mms[22m[39m
+     [32m✓[39m each spec limit is a rule naming field, observed value and limit (S1-26)[32m 1[2mms[22m[39m
+[31m     [31m×[31m a rule on an unknown value is not_evaluable, never pass[39m[32m 8[2mms[22m[39m
+   [31m❯[39m CEV (A-02, A-20, A-22) [2m(6)[22m
+     [32m✓[39m spec CEV maximum is 0.45 and applies to the exact recomputed value without rounding[32m 7[2mms[22m[39m
+     [32m✓[39m printed CEV 0.45 passes, 0.46 fails[32m 1[2mms[22m[39m
+     [32m✓[39m coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44[32m 0[2mms[22m[39m
+[31m     [31m×[31m printed CEV that does not match the composition is a review trigger (C9)[39m[32m 1[2mms[22m[39m
+     [32m✓[39m printed 0.44 passing with recomputed above 0.45 blocks (A-03)[32m 1[2mms[22m[39m
+     [32m✓[39m an unknown CEV input makes the recomputed CEV unknown[32m 0[2mms[22m[39m
+   [31m❯[39m KV mean as an exact sum (D1-09, A-05) [2m(3)[22m
+[31m     [31m×[31m sum exactly 81 passes, 80 fails, cert-01's 193 passes[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m fewer than three known values is not evaluable (review)[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m impact temperature must be -20 °C; other or missing values give review[39m[32m 2[2mms[22m[39m
+   [31m❯[39m document rules [2m(3)[22m
+     [32m✓[39m wrong grade blocks with both grades shown (C5)[32m 1[2mms[22m[39m
+[31m     [31m×[31m missing stamp gives review; illegible stamp gives review (C13, S1-30)[39m[32m 7[2mms[22m[39m
+[31m     [31m×[31m certificate type 2.2 or absent gives review (A-06)[39m[32m 11[2mms[22m[39m
+   [31m❯[39m heat or lot against the delivery line (S1-21, A-04, A-12, D1-14) [2m(5)[22m
+     [32m✓[39m mismatch gives review with both heats visible[32m 5[2mms[22m[39m
+     [32m✓[39m heat mismatch means review even when a rule fails or the grade is wrong (A-04)[32m 2[2mms[22m[39m
+     [32m✓[39m scan with a heat mismatch gives review[32m 1[2mms[22m[39m
+[31m     [31m×[31m whitespace is trimmed, nothing else is normalised[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m no paired delivery line is missing evidence: review[39m[32m 1[2mms[22m[39m
+   [31m❯[39m units and scale jumps (S1-22, S1-23, A-08, A-11) [2m(3)[22m
+[31m     [31m×[31m MPa and N/mm² are accepted; ksi or no unit gives review without conversion[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m a value outside the plausibility range is a scale jump: review, not block[39m[32m 2[2mms[22m[39m
+     [32m✓[39m every plausibility range strictly contains its spec limits[32m 5[2mms[22m[39m
+   [31m❯[39m decision precedence and I5 (S1-31, D1-03) [2m(5)[22m
+     [32m✓[39m block > review > release, and human_required is always true[32m 0[2mms[22m[39m
+     [32m✓[39m each I5 trigger alone prevents release[32m 3[2mms[22m[39m
+[31m     [31m×[31m a scan with every value in spec is review, never release (D1-04)[39m[32m 1[2mms[22m[39m
+     [32m✓[39m a scan with a known failing value blocks (D1-03)[32m 6[2mms[22m[39m
+[31m     [31m×[31m an unknown critical field forces review and names the field (S1-17)[39m[32m 9[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 537[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 341[2mms[22m[39m
+ [31m❯[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 841[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 415[2mms[22m[39m
+     [32m✓[39m cg-004: every critical field equals the correct reading[32m 55[2mms[22m[39m
+     [32m✓[39m cg-005: every critical field equals the correct reading[32m 22[2mms[22m[39m
+     [32m✓[39m cg-009: every critical field equals the correct reading[32m 23[2mms[22m[39m
+     [32m✓[39m cg-014: every critical field equals the correct reading[32m 20[2mms[22m[39m
+     [32m✓[39m cg-019: every critical field equals the correct reading[32m 14[2mms[22m[39m
+     [32m✓[39m cg-028: every critical field equals the correct reading[32m 26[2mms[22m[39m
+     [32m✓[39m cg-029: every critical field equals the correct reading[32m 24[2mms[22m[39m
+     [32m✓[39m cg-030: every critical field equals the correct reading[32m 17[2mms[22m[39m
+     [32m✓[39m layout B uses a decimal comma, which is normalised (A-10)[32m 15[2mms[22m[39m
+     [32m✓[39m units printed in headers apply to the values under them (A-11)[32m 17[2mms[22m[39m
+     [32m✓[39m a spoofed duplicate field in free text is a conflict (A-16)[32m 14[2mms[22m[39m
+     [32m✓[39m an approval instruction in the text layer never becomes a field value (C10)[32m 20[2mms[22m[39m
+     [32m✓[39m the C8 text-layer Mn comes from the PDF bytes, not from the planted misread (D1-20)[32m 21[2mms[22m[39m
+     [32m✓[39m cg-002: a scan yields "no channel available", not an error (S1-15)[32m 22[2mms[22m[39m
+     [32m✓[39m cg-003: a scan yields "no channel available", not an error (S1-15)[32m 13[2mms[22m[39m
+     [32m✓[39m cg-016: a scan yields "no channel available", not an error (S1-15)[32m 23[2mms[22m[39m
+     [32m✓[39m cg-017: a scan yields "no channel available", not an error (S1-15)[32m 9[2mms[22m[39m
+     [32m✓[39m cg-025: a scan yields "no channel available", not an error (S1-15)[32m 9[2mms[22m[39m
+   [31m❯[39m channel comparison (I3) [2m(4)[22m
+[31m     [31m×[31m disagreement makes the field unknown, keeps both readings and proposes review (C8)[39m[32m 40[2mms[22m[39m
+[31m     [31m×[31m equality is exact-decimal, not string equality[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m a field missing from the text layer is not corroborated: review[39m[32m 3[2mms[22m[39m
+     [32m✓[39m an unknown model value is never replaced by the text layer's value (I2)[32m 1[2mms[22m[39m
+ [31m❯[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 903[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(7)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 539[2mms[22m[39m
+     [32m✓[39m cg-024 timeout: status error, review, exactly 3 reader call(s), error class in receipt[32m 58[2mms[22m[39m
+     [32m✓[39m cg-025 http_429: status error, review, exactly 3 reader call(s), error class in receipt[32m 28[2mms[22m[39m
+     [32m✓[39m cg-026 http_5xx: status error, review, exactly 3 reader call(s), error class in receipt[32m 27[2mms[22m[39m
+     [32m✓[39m cg-027 invalid_json: status error, review, exactly 1 reader call(s), error class in receipt[32m 28[2mms[22m[39m
+     [32m✓[39m a model output that breaks the reading schema is invalid output: review[32m 2[2mms[22m[39m
+     [32m✓[39m a JSON number in the model output is rejected (S1-25)[32m 1[2mms[22m[39m
+   [32m✓[39m real mode without an endpoint (S1-19, D1-15) [2m(1)[22m
+     [32m✓[39m fails visibly and never falls back to the mock[32m 15[2mms[22m[39m
+   [32m✓[39m mock label everywhere (I7, S1-18, A-18) [2m(3)[22m
+     [32m✓[39m receipt of a mock run carries the mock label and reading_source[32m 32[2mms[22m[39m
+     [32m✓[39m planted deviations are labelled planted in the receipt (D1-20)[32m 21[2mms[22m[39m
+     [32m✓[39m the exporter rejects a receipt without reading_source or without the mock label[32m 25[2mms[22m[39m
+   [32m✓[39m receipt content (S1-33, A-15, A-19) [2m(2)[22m
+     [32m✓[39m has case id, versions, hashes, spec id and revision, timings; no JSON numbers[32m 23[2mms[22m[39m
+     [32m✓[39m contains no secret environment value and no absolute path[32m 20[2mms[22m[39m
+   [31m❯[39m the model explains, it never decides (I1, S1-32, C10) [2m(2)[22m
+     [32m✓[39m contaminated explanation text has no effect on the proposal[32m 17[2mms[22m[39m
+[31m     [31m×[31m adding or changing an explanation never changes the proposal[39m[32m 63[2mms[22m[39m
+ [31m❯[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 553[2mms[22m[39m
+   [31m❯[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+[31m     [31m×[31m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[39m[33m 357[2mms[22m[39m
+[31m     [31m×[31m (b) cert-03 with only ReH confirmed as 358 stays review: no second channel[39m[32m 5[2mms[22m[39m
+[31m     [31m×[31m (c) ReH confirmed as 338 blocks, even with other fields unconfirmed[39m[32m 14[2mms[22m[39m
+     [32m✓[39m a confirmation may change a confident reading; the receipt keeps both values[32m 6[2mms[22m[39m
+[31m     [31m×[31m confirming a field resolves a channel disagreement on a digital certificate[39m[32m 107[2mms[22m[39m
+     [32m✓[39m rejects a confirmation without who, when, or with a non-decimal value[32m 4[2mms[22m[39m
+   [31m❯[39m human decision: release, block or request a new certificate (S1-09, S1-10) [2m(3)[22m
+     [32m✓[39m records who, when and why without changing the proposal[32m 3[2mms[22m[39m
+[31m     [31m×[31m without a human decision the case stays proposal-only[39m[32m 19[2mms[22m[39m
+     [32m✓[39m rejects a decision without a reason, a person or a valid action[32m 35[2mms[22m[39m
+ [31m❯[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m | [22m[31m16 failed[39m[2m)[22m[33m 1311[2mms[22m[39m
+   [32m✓[39m dataset composition [2m(6)[22m
+     [32m✓[39m has 20-30 cases, digital and scanned, covering C1-C13[32m 14[2mms[22m[39m
+     [32m✓[39m matches CHECKSUMS.sha256 for every dataset file[32m 14[2mms[22m[39m
+     [32m✓[39m keeps the three pre-kickoff certificates byte-identical (S1-38)[32m 1[2mms[22m[39m
+     [32m✓[39m stores every numeric value in inputs as a JSON string (S1-25)[32m 30[2mms[22m[39m
+     [32m✓[39m mock output equals the correct reading except for labelled planted deviations (A-01, D1-20)[32m 42[2mms[22m[39m
+     [32m✓[39m prints CEV as the half-even rounding of the exact recomputed value, except planted cases (A-20, A-23)[32m 14[2mms[22m[39m
+   [31m❯[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+[31m     [31m×[31m cg-001[39m[33m 511[2mms[22m[39m
+     [32m✓[39m cg-002[32m 10[2mms[22m[39m
+[31m     [31m×[31m cg-003[39m[32m 16[2mms[22m[39m
+[31m     [31m×[31m cg-004[39m[32m 21[2mms[22m[39m
+     [32m✓[39m cg-005[32m 47[2mms[22m[39m
+     [32m✓[39m cg-006[32m 27[2mms[22m[39m
+     [32m✓[39m cg-007[32m 24[2mms[22m[39m
+[31m     [31m×[31m cg-008[39m[32m 30[2mms[22m[39m
+[31m     [31m×[31m cg-009[39m[32m 40[2mms[22m[39m
+     [32m✓[39m cg-010[32m 30[2mms[22m[39m
+     [32m✓[39m cg-011[32m 75[2mms[22m[39m
+     [32m✓[39m cg-012[32m 31[2mms[22m[39m
+[31m     [31m×[31m cg-013[39m[32m 16[2mms[22m[39m
+[31m     [31m×[31m cg-014[39m[32m 26[2mms[22m[39m
+[31m     [31m×[31m cg-015[39m[32m 20[2mms[22m[39m
+[31m     [31m×[31m cg-016[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m cg-017[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m cg-018[39m[32m 27[2mms[22m[39m
+[31m     [31m×[31m cg-019[39m[32m 40[2mms[22m[39m
+     [32m✓[39m cg-020[32m 21[2mms[22m[39m
+     [32m✓[39m cg-021[32m 27[2mms[22m[39m
+[31m     [31m×[31m cg-022[39m[32m 14[2mms[22m[39m
+     [32m✓[39m cg-023[32m 19[2mms[22m[39m
+     [32m✓[39m cg-024[32m 17[2mms[22m[39m
+     [32m✓[39m cg-025[32m 2[2mms[22m[39m
+     [32m✓[39m cg-026[32m 17[2mms[22m[39m
+     [32m✓[39m cg-027[32m 10[2mms[22m[39m
+[31m     [31m×[31m cg-028[39m[32m 13[2mms[22m[39m
+[31m     [31m×[31m cg-029[39m[32m 28[2mms[22m[39m
+[31m     [31m×[31m cg-030[39m[32m 16[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 544[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 416[2mms[22m[39m
+ [31m❯[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 397[2mms[22m[39m
+   [32m✓[39m CLI [2m(6)[22m
+     [32m✓[39m processes a named dataset case and prints proposal and receipt (exit 0)[32m 193[2mms[22m[39m
+     [32m✓[39m a reader failure is still a processed case (exit 0) with status error[32m 59[2mms[22m[39m
+     [32m✓[39m processes an external case directory[32m 36[2mms[22m[39m
+     [32m✓[39m rejects bad input with exit 2[32m 9[2mms[22m[39m
+     [32m✓[39m confirmation and human decision from the CLI[32m 5[2mms[22m[39m
+     [32m✓[39m writes the output file with --out[32m 30[2mms[22m[39m
+   [31m❯[39m HTTP service [2m(1)[22m
+[31m     [31m×[31m answers /health and processes a dataset case[39m[32m 62[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m)[22m[33m 4266[2mms[22m[39m
+   [32m✓[39m product code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7) [2m(19)[22m
+     [33m[2m✓[22m[39m cases.ts[33m 711[2mms[22m[39m
+     [33m[2m✓[22m[39m cli.ts[33m 1263[2mms[22m[39m
+     [33m[2m✓[22m[39m coherence.ts[33m 469[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 43 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/channels.test.ts > channel comparison (I3) > disagreement makes the field unknown, keeps both readings and proposes review (C8)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/channels.test.ts:98:33
+     96|     expect(check.text_layer_value).toBe("1.43");
+     97|     expect(r.evaluation!.fields.get("chemistry.Mn")!.value).toBeNull();
+     98|     expect(r.decision.proposal).toBe("review");
+       |                                 ^
+     99|     expect(r.receipt.channel_checks.find((c) => c.field === "chemistry…
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/43]⎯
+
+ FAIL  test/channels.test.ts > channel comparison (I3) > equality is exact-decimal, not string equality
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/channels.test.ts:107:33
+    105|     const tl = agreeingTextLayer(withOverrides(model, { "chemistry.P":…
+    106|     const e = evaluate({ model, textLayer: tl, deliveryLine: deliveryL…
+    107|     expect(e.decision.proposal).toBe("release");
+       |                                 ^
+    108|     const tl2 = agreeingTextLayer(withOverrides(model, { "chemistry.P"…
+    109|     const e2 = evaluate({ model, textLayer: tl2, deliveryLine: deliver…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/43]⎯
+
+ FAIL  test/channels.test.ts > channel comparison (I3) > a field missing from the text layer is not corroborated: review
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/channels.test.ts:120:33
+    118|     const e = evaluate({ model, textLayer: tl, deliveryLine: deliveryL…
+    119|     expect(codes(e)).toContain("TEXT_LAYER_MISSING:Rm");
+    120|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    121|   });
+    122|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/43]⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-001
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-004
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-008
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-014
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/43]⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-003
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-013
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-015
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-016
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-017
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-018
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-019
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-022
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-028
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-029
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-030
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/43]⎯
+
+ FAIL  test/entrypoints.test.ts > HTTP service > answers /health and processes a dataset case
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/entrypoints.test.ts:79:34
+     77|       const res = await fetch(`http://127.0.0.1:${port}/api/cases/cg-0…
+     78|       const j = await res.json();
+     79|       expect(j.summary.proposal).toBe("review");
+       |                                  ^
+     80|       expect(j.receipt.reading_source).toBe("mock");
+     81|       expect((await fetch(`http://127.0.0.1:${port}/api/cases/zz/proce…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/43]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > (a) cert-03 with every critical field confirmed and ReH 358 proposes release
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/human.test.ts:25:33
+     23|   it("(a) cert-03 with every critical field confirmed and ReH 358 prop…
+     24|     const r = confirmFields(await runCase("cg-003"), confirmAll("cg-00…
+     25|     expect(r.decision.proposal).toBe("release");
+       |                                 ^
+     26|     expect(r.decision.human_confirmation_required).toEqual([]);
+     27|     expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/43]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > (b) cert-03 with only ReH confirmed as 358 stays review: no second channel
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/human.test.ts:31:33
+     29|   it("(b) cert-03 with only ReH confirmed as 358 stays review: no seco…
+     30|     const r = confirmFields(await runCase("cg-003"), [confirm("mechani…
+     31|     expect(r.decision.proposal).toBe("review");
+       |                                 ^
+     32|     expect(r.decision.reasons.map((x) => x.code)).toContain("NO_SECOND…
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/43]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > (c) ReH confirmed as 338 blocks, even with other fields unconfirmed
+AssertionError: expected [ 'NO_SECOND_CHANNEL', …(2) ] to include 'RULE_FAIL:ReH'
+ ❯ test/human.test.ts:37:51
+     35|     const r = confirmFields(await runCase("cg-003"), [confirm("mechani…
+     36|     expect(r.decision.proposal).toBe("block");
+     37|     expect(r.decision.reasons.map((x) => x.code)).toContain("RULE_FAIL…
+       |                                                   ^
+     38|   });
+     39|   it("a confirmation may change a confident reading; the receipt keeps…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/43]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > confirming a field resolves a channel disagreement on a digital certificate
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/human.test.ts:52:33
+     50|   it("confirming a field resolves a channel disagreement on a digital …
+     51|     const r = confirmFields(await runCase("cg-018"), [confirm("chemist…
+     52|     expect(r.decision.proposal).toBe("release");
+       |                                 ^
+     53|   });
+     54|   it("rejects a confirmation without who, when, or with a non-decimal …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/43]⎯
+
+ FAIL  test/human.test.ts > human decision: release, block or request a new certificate (S1-09, S1-10) > without a human decision the case stays proposal-only
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/human.test.ts:76:33
+     74|   it("without a human decision the case stays proposal-only", async ()…
+     75|     const r = await runCase("cg-001");
+     76|     expect(r.decision.proposal).toBe("release");
+       |                                 ^
+     77|     expect(r.decision.human_decision).toBeNull();
+     78|     expect(r.receipt.human_decision).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/43]⎯
+
+ FAIL  test/reader.test.ts > the model explains, it never decides (I1, S1-32, C10) > adding or changing an explanation never changes the proposal
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/reader.test.ts:116:35
+    114|       const input = loadDatasetCase("cg-001", getShared());
+    115|       const r = await processCase({ ...input, reader: new MockReader(J…
+    116|       expect(r.decision.proposal).toBe("release");
+       |                                   ^
+    117|     }
+    118|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/43]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > ReH 355 passes, 354.9 and 354 fail
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:26:48
+     24|     proposal({ overrides: { [field]: { value, unit } } });
+     25|   it("ReH 355 passes, 354.9 and 354 fail", () => {
+     26|     expect(ok("mechanical.ReH", "355", "MPa")).toBe("release");
+       |                                                ^
+     27|     expect(ok("mechanical.ReH", "354.9", "MPa")).toBe("block");
+     28|     expect(ok("mechanical.ReH", "354", "MPa")).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/43]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)
+AssertionError: expected 'block' not to be 'block' // Object.is equality
+ ❯ test/rules.test.ts:31:44
+     29|   });
+     30|   it("Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ra…
+     31|     expect(ok("chemistry.Mn", "1.60")).not.toBe("block");
+       |                                            ^
+     32|     const e161 = evalWith({ overrides: { "chemistry.Mn": { value: "1.6…
+     33|     expect(e161.decision.proposal).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/43]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Rm 470 and 630 pass, 469 and 631 fail
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:38:47
+     36|   });
+     37|   it("Rm 470 and 630 pass, 469 and 631 fail", () => {
+     38|     expect(ok("mechanical.Rm", "470", "MPa")).toBe("release");
+       |                                               ^
+     39|     expect(ok("mechanical.Rm", "630", "MPa")).toBe("release");
+     40|     expect(ok("mechanical.Rm", "469", "MPa")).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/43]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:44:38
+     42|   });
+     43|   it("A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails", () => {
+     44|     expect(ok("mechanical.A", "20")).toBe("release");
+       |                                      ^
+     45|     expect(ok("mechanical.A", "19.9")).toBe("block");
+     46|     expect(ok("chemistry.P", "0.025")).toBe("release");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/43]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > a rule on an unknown value is not_evaluable, never pass
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:60:33
+     58|     const e = evalWith({ overrides: { "chemistry.Si": { value: null, s…
+     59|     expect(e.rule_results.find((x) => x.rule_id === "ESP-014.r3.Si")!.…
+     60|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+     61|   });
+     62| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/43]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > printed CEV that does not match the composition is a review trigger (C9)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:102:33
+    100|     const e = evalWith({ overrides: { cev_printed: { value: "0.38", un…
+    101|     expect(codes(e)).toContain("CEV_MISMATCH");
+    102|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    103|   });
+    104|   it("printed 0.44 passing with recomputed above 0.45 blocks (A-03)", …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/43]⎯
+
+ FAIL  test/rules.test.ts > KV mean as an exact sum (D1-09, A-05) > sum exactly 81 passes, 80 fails, cert-01's 193 passes
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:119:52
+    117|   });
+    118|   it("sum exactly 81 passes, 80 fails, cert-01's 193 passes", () => {
+    119|     expect(kv("27", "27", "27").decision.proposal).toBe("release");
+       |                                                    ^
+    120|     expect(kv("27", "27", "26").decision.proposal).toBe("block");
+    121|     expect(kv("64", "71", "58").rule_results.find((r) => r.rule_id.end…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/43]⎯
+
+ FAIL  test/rules.test.ts > KV mean as an exact sum (D1-09, A-05) > fewer than three known values is not evaluable (review)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:126:33
+    124|     const e = evalWith({ overrides: { "mechanical.KV_3": { value: null…
+    125|     expect(e.rule_results.find((r) => r.rule_id.endsWith("KV_media"))!…
+    126|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    127|   });
+    128|   it("impact temperature must be -20 °C; other or missing values give …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/43]⎯
+
+ FAIL  test/rules.test.ts > KV mean as an exact sum (D1-09, A-05) > impact temperature must be -20 °C; other or missing values give review
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:129:115
+    127|   });
+    128|   it("impact temperature must be -20 °C; other or missing values give …
+    129|     for (const v of ["-20", "−20"]) expect(proposal({ overrides: { kv_…
+       |                                                                                                                   ^
+    130|     const e = evalWith({ overrides: { kv_temperature: { value: "0", un…
+    131|     expect(codes(e)).toContain("KV_TEMPERATURE_MISMATCH");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/43]⎯
+
+ FAIL  test/rules.test.ts > document rules > missing stamp gives review; illegible stamp gives review (C13, S1-30)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:147:95
+    145|   it("missing stamp gives review; illegible stamp gives review (C13, S…
+    146|     expect(codes(evalWith({ overrides: { inspection_stamp: { value: nu…
+    147|     expect(proposal({ overrides: { inspection_stamp: { value: null, st…
+       |                                                                                               ^
+    148|     expect(proposal({ scan: true, overrides: { inspection_stamp: { val…
+    149|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/43]⎯
+
+ FAIL  test/rules.test.ts > document rules > certificate type 2.2 or absent gives review (A-06)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:152:94
+    150|   it("certificate type 2.2 or absent gives review (A-06)", () => {
+    151|     expect(codes(evalWith({ overrides: { certificate_type: { value: "2…
+    152|     expect(proposal({ overrides: { certificate_type: { value: null, st…
+       |                                                                                              ^
+    153|   });
+    154| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/43]⎯
+
+ FAIL  test/rules.test.ts > heat or lot against the delivery line (S1-21, A-04, A-12, D1-14) > whitespace is trimmed, nothing else is normalised
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:173:79
+    171|   });
+    172|   it("whitespace is trimmed, nothing else is normalised", () => {
+    173|     expect(proposal({ overrides: { heat_or_lot: { value: " 24-71830 " …
+       |                                                                               ^
+    174|     expect(proposal({ overrides: { heat_or_lot: { value: "24-71830A" }…
+    175|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/43]⎯
+
+ FAIL  test/rules.test.ts > heat or lot against the delivery line (S1-21, A-04, A-12, D1-14) > no paired delivery line is missing evidence: review
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:179:33
+    177|     const e = evalWith({ line: null });
+    178|     expect(codes(e)).toContain("EVIDENCE_MISSING:delivery_line");
+    179|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    180|   });
+    181| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/43]⎯
+
+ FAIL  test/rules.test.ts > units and scale jumps (S1-22, S1-23, A-08, A-11) > MPa and N/mm² are accepted; ksi or no unit gives review without conversion
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:185:92
+    183| describe("units and scale jumps (S1-22, S1-23, A-08, A-11)", () => {
+    184|   it("MPa and N/mm² are accepted; ksi or no unit gives review without …
+    185|     expect(proposal({ overrides: { "mechanical.ReH": { value: "392", u…
+       |                                                                                            ^
+    186|     const e = evalWith({ overrides: { "mechanical.ReH": { value: "56.9…
+    187|     expect(codes(e)).toContain("UNIT_UNEXPECTED:ReH");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/43]⎯
+
+ FAIL  test/rules.test.ts > units and scale jumps (S1-22, S1-23, A-08, A-11) > a value outside the plausibility range is a scale jump: review, not block
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:194:33
+    192|     const e = evalWith({ overrides: { "chemistry.C": { value: "16", un…
+    193|     expect(codes(e)).toContain("IMPLAUSIBLE:C");
+    194|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    195|   });
+    196|   it("every plausibility range strictly contains its spec limits", () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/43]⎯
+
+ FAIL  test/rules.test.ts > decision precedence and I5 (S1-31, D1-03) > a scan with every value in spec is review, never release (D1-04)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:230:33
+    228|   it("a scan with every value in spec is review, never release (D1-04)…
+    229|     const e = evalWith({ scan: true });
+    230|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    231|     expect(codes(e)).toContain("NO_SECOND_CHANNEL");
+    232|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/43]⎯
+
+ FAIL  test/rules.test.ts > decision precedence and I5 (S1-31, D1-03) > an unknown critical field forces review and names the field (S1-17)
+AssertionError: expected 'block' to be 'review' // Object.is equality
+
+Expected: "review"
+Received: "block"
+
+ ❯ test/rules.test.ts:238:33
+    236|   it("an unknown critical field forces review and names the field (S1-…
+    237|     const e = evalWith({ overrides: { "mechanical.ReH": { value: null,…
+    238|     expect(e.decision.proposal).toBe("review");
+       |                                 ^
+    239|     expect(codes(e)).toContain("CRITICAL_UNKNOWN:ReH");
+    240|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/43]⎯
+
+
+[2m Test Files [22m [1m[31m6 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m43 failed[39m[22m[2m | [22m[1m[32m132 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:55:17
+[2m   Duration [22m 5.84s[2m (tests 70%, transform 25%, import 5%, worker 1%)[22m
+

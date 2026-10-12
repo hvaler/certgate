@@ -1,0 +1,14 @@
+M01-flip-max-inclusive 622d2a0480 exit=1 KILLED | [2m   Duration [22m 6.03s[2m (tests 72%, transform 24%, import 4%, worker 1%)[22m
+M02-flip-min-direction ded7050e9a exit=1 KILLED | [2m   Duration [22m 5.84s[2m (tests 70%, transform 25%, import 5%, worker 1%)[22m
+M03-drop-stamp-check eae17fa77e exit=1 KILLED | [2m   Duration [22m 2.79s[2m (tests 75%, transform 18%, import 7%, worker 1%)[22m
+M04-float-limits f644d9b0df exit=1 KILLED | [2m   Duration [22m 3.91s[2m (tests 70%, transform 24%, import 6%, worker 1%)[22m
+M05-float-cev 0168f3dcf3 exit=1 KILLED | [2m   Duration [22m 1.85s[2m (tests 64%, transform 27%, import 8%, worker 1%)[22m
+M06-mock-reading-source-live 364355cbdf exit=1 KILLED | [2m   Duration [22m 1.45s[2m (tests 70%, transform 23%, import 7%, worker 1%)[22m
+M07-mock-model-id-real-looking 17492b9a65 exit=1 KILLED | [2m   Duration [22m 2.00s[2m (tests 74%, transform 19%, import 6%, worker 1%)[22m
+M08-heat-override-removed c8f441d1d4 exit=1 KILLED | [2m   Duration [22m 1.42s[2m (tests 70%, transform 22%, import 7%, worker 1%)[22m
+M09-kv-sum-strict 3fe5776c9d exit=1 KILLED | [2m   Duration [22m 1.67s[2m (tests 70%, transform 23%, import 7%, worker 1%)[22m
+M10-cev-half-up f213a0ca9b exit=1 KILLED | [2m   Duration [22m 3.15s[2m (tests 69%, transform 22%, import 8%, worker 1%)[22m
+M11-channel-disagree-ignored c2fc125c5e exit=1 KILLED | [2m   Duration [22m 1.49s[2m (tests 69%, transform 23%, import 7%, worker 1%)[22m
+M12-no-second-channel-ignored a019599ab3 exit=1 KILLED | [2m   Duration [22m 2.18s[2m (tests 74%, transform 19%, import 7%, worker 1%)[22m
+M13-stealth-float-limits ea0f1758a2 exit=0 SURVIVED | [2m   Duration [22m 3.97s[2m (tests 66%, transform 23%, import 10%, worker 1%)[22m
+M14-stealth-float-cev b83cf2d1f5 exit=0 SURVIVED | [2m   Duration [22m 1.57s[2m (tests 68%, transform 24%, import 6%, worker 1%)[22m

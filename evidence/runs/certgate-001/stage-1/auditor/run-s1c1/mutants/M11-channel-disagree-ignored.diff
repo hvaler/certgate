@@ -1,0 +1,15 @@
+diff --git a/src/evaluate.ts b/src/evaluate.ts
+index ee6e061..8a5a031 100644
+--- a/src/evaluate.ts
++++ b/src/evaluate.ts
+@@ -127,9 +127,7 @@ function resolveChannels(input: EvaluationInput, reasons: Reasons) {
+       fields.set(key, unknownField());
+     } else {
+       check.issue = "disagree";
+-      reasons.add(`CHANNEL_DISAGREE:${label(key)}`, "review",
+-        `${key}: model ${m.value ?? m.status} ${m.unit ?? ""} vs text layer ${t?.value ?? t?.status ?? "none"} ${t?.unit ?? ""}`.trim());
+-      fields.set(key, unknownField());
++      fields.set(key, { ...fromModel(), source: "model+text_layer", refs: check.source_refs });
+     }
+     checks.push(check);
+   }

@@ -1,0 +1,13 @@
+diff --git a/src/reader.ts b/src/reader.ts
+index 14d7723..48124bf 100644
+--- a/src/reader.ts
++++ b/src/reader.ts
+@@ -40,7 +40,7 @@ export interface ModelReader {
+   readonly calls: number;
+ }
+ 
+-export const MOCK_LABEL = "MOCK (no model; dataset reading)";
++export const MOCK_LABEL = "Qwen2.5-VL-72B-Instruct";
+ const NOT_APPLICABLE = "not applicable (mock)";
+ 
+ const FAILURE_CLASSES = new Set(["endpoint_off", "timeout", "http_429", "http_5xx", "invalid_json"]);

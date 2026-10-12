@@ -1,0 +1,13 @@
+diff --git a/src/pipeline.ts b/src/pipeline.ts
+index 164d747..17dd239 100644
+--- a/src/pipeline.ts
++++ b/src/pipeline.ts
+@@ -199,7 +199,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
+   const rd = r.readings;
+   const planted = rd.model?.planted ?? [];
+   const readingSource: RunReceipt["reading_source"] =
+-    rd.reader.kind === "live" ? "live" : planted.length > 0 ? "planted" : "mock";
++    rd.reader.kind === "mock" ? "live" : planted.length > 0 ? "planted" : "mock";
+   const fields = r.evaluation?.fields;
+   return {
+     receipt_schema: "certgate.receipt/1",

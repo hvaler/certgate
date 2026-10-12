@@ -1,0 +1,13 @@
+diff --git a/src/evaluate.ts b/src/evaluate.ts
+index ee6e061..8323c34 100644
+--- a/src/evaluate.ts
++++ b/src/evaluate.ts
+@@ -263,7 +263,7 @@ export function evaluate(input: EvaluationInput): Evaluation {
+       rules.push({ rule_id, input_field_refs: KV_REFS, outcome: "not_evaluable", expected, observed: null, reason: "an impact value is unknown" });
+     } else {
+       const sum = kv.reduce((a, b) => a!.plus(b!), new Dec(0))!;
+-      const ok = sum.gte(new Dec(l.min!).times(3));
++      const ok = sum.gt(new Dec(l.min!).times(3));
+       rules.push({ rule_id, input_field_refs: KV_REFS, outcome: ok ? "pass" : "fail", expected, observed: `sum ${sum.toString()}`,
+         reason: ok ? "within limit" : `KV sum ${sum.toString()} is below 3 x ${l.min} J` });
+     }

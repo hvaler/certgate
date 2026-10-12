@@ -1,0 +1,144 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 375[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 484[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 560[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 660[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 378[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 315[2mms[22m[39m
+ [31m❯[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 717[2mms[22m[39m
+   [31m❯[39m no binary floating point in rules, coherence or units (I4, S1-25) [2m(9)[22m
+     [32m✓[39m evaluate.ts[32m 10[2mms[22m[39m
+[31m     [31m×[31m coherence.ts[39m[32m 24[2mms[22m[39m
+     [32m✓[39m decimal.ts[32m 9[2mms[22m[39m
+     [32m✓[39m fields.ts[32m 4[2mms[22m[39m
+     [32m✓[39m spec.ts[32m 5[2mms[22m[39m
+     [32m✓[39m text-layer.ts[32m 4[2mms[22m[39m
+     [32m✓[39m delivery.ts[32m 3[2mms[22m[39m
+     [32m✓[39m model-output.ts[32m 4[2mms[22m[39m
+     [32m✓[39m strict-json.ts[32m 8[2mms[22m[39m
+   [32m✓[39m product code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7) [2m(19)[22m
+     [32m✓[39m cases.ts[32m 32[2mms[22m[39m
+     [32m✓[39m cli.ts[32m 41[2mms[22m[39m
+     [32m✓[39m coherence.ts[32m 25[2mms[22m[39m
+     [32m✓[39m config.ts[32m 34[2mms[22m[39m
+     [32m✓[39m decimal.ts[32m 24[2mms[22m[39m
+     [32m✓[39m delivery.ts[32m 26[2mms[22m[39m
+     [32m✓[39m evaluate.ts[32m 31[2mms[22m[39m
+     [32m✓[39m fields.ts[32m 42[2mms[22m[39m
+     [32m✓[39m input-file.ts[32m 39[2mms[22m[39m
+     [32m✓[39m model-output.ts[32m 38[2mms[22m[39m
+     [32m✓[39m pdf.ts[32m 35[2mms[22m[39m
+     [32m✓[39m pipeline.ts[32m 35[2mms[22m[39m
+     [32m✓[39m reader.ts[32m 23[2mms[22m[39m
+     [32m✓[39m receipt.ts[32m 22[2mms[22m[39m
+     [32m✓[39m server.ts[32m 27[2mms[22m[39m
+     [32m✓[39m spec.ts[32m 25[2mms[22m[39m
+     [32m✓[39m strict-json.ts[32m 21[2mms[22m[39m
+     [32m✓[39m text-layer.ts[32m 23[2mms[22m[39m
+     [32m✓[39m types.ts[32m 23[2mms[22m[39m
+   [32m✓[39m configuration by environment only; .env.example lists every variable without values (I6, S1-03) [2m(2)[22m
+     [32m✓[39m env reads in src equal the .env.example keys[32m 38[2mms[22m[39m
+     [32m✓[39m .env is ignored by .gitignore (verified with git check-ignore in the handoff)[32m 0[2mms[22m[39m
+   [32m✓[39m no automatic release (S1-10) [2m(1)[22m
+     [32m✓[39m only recordHumanDecision sets human_decision to a value[32m 36[2mms[22m[39m
+   [32m✓[39m dataset generator does not import product code (A-09) [2m(1)[22m
+     [32m✓[39m imports only the standard library, reportlab and Pillow[32m 1[2mms[22m[39m
+   [32m✓[39m fictitious data is labelled; repository files (S1-01, S1-02, S1-39) [2m(3)[22m
+     [32m✓[39m README states fictitious data, mock-only status and how to run[32m 0[2mms[22m[39m
+     [32m✓[39m LICENSE is MIT[32m 0[2mms[22m[39m
+     [32m✓[39m the spec file and every certificate say they are fictitious[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/static.test.ts > no binary floating point in rules, coherence or units (I4, S1-25) > coherence.ts
+AssertionError: expected '\nimport { readFileSync } from "node:…' not to match /\bparseFloat\b|\bNumber\s*\(|\bparseI…/
+
+- Expected:
+/\bparseFloat\b|\bNumber\s*\(|\bparseInt\b|\bMath\.(round|floor|ceil|trunc)\b|\+\s*"\s*\d/
+
++ Received:
+"
+import { readFileSync } from \"node:fs\";
+import path from \"node:path\";
+import { getConfigDir } from \"./config.js\";
+import { Dec, parseDecimal, roundCevForCoherence } from \"./decimal.js\";
+import { parseStrictJson } from \"./strict-json.js\";
+
+export const CEV_FORMULA_SOURCE =
+  \"IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md\";
+
+export const CEV_INPUTS = [\"C\", \"Mn\", \"Cr\", \"Mo\", \"V\", \"Ni\", \"Cu\"] as const;
+
+
+export function recomputeCev(chem: Record<string, string | null>): Dec | null {
+  const v: Record<string, Dec> = {};
+  for (const e of CEV_INPUTS) {
+    const d = parseDecimal(chem[e] ?? null);
+    if (d === null) return null;
+    v[e] = d;
+  }
+  const f = (d: Dec) => Number(d.toString());
+  return new Dec(String(f(v.C!) + f(v.Mn!) / 6 + (f(v.Cr!) + f(v.Mo!) + f(v.V!)) / 5 + (f(v.Cu!) + f(v.Ni!)) / 15));
+}
+
+
+export function cevCoherent(printed: string, recomputed: Dec): boolean {
+  const p = parseDecimal(printed);
+  return p !== null && roundCevForCoherence(recomputed).eq(p);
+}
+
+export interface PlausibilityRange {
+  min: string;
+  max: string;
+  unit: string;
+}
+
+export interface Plausibility {
+  version: string;
+  ranges: Record<string, PlausibilityRange>;
+}
+
+export function loadPlausibility(file = path.join(getConfigDir(), \"plausibility.v1.json\")): Plausibility {
+  const raw = parseStrictJson(readFileSync(file, \"utf8\"), \"plausibility ranges\") as {
+    version?: unknown;
+    ranges?: Record<string, PlausibilityRange>;
+  };
+  if (typeof raw.version !== \"string\" || !raw.ranges) throw new Error(\"plausibility ranges: missing version or ranges\");
+  for (const [k, r] of Object.entries(raw.ranges)) {
+    if (parseDecimal(r.min) === null || parseDecimal(r.max) === null) throw new Error(`plausibility ${k}: bad bounds`);
+  }
+  return { version: raw.version, ranges: raw.ranges };
+}
+
+export function plausible(p: Plausibility, key: string, value: Dec): boolean {
+  const r = p.ranges[key];
+  if (!r) return true;
+  return value.gte(new Dec(r.min)) && value.lte(new Dec(r.max));
+}
+
+
+export function heatMatches(certificateHeat: string, deliveryHeat: string): boolean {
+  return certificateHeat.trim() === deliveryHeat.trim();
+}
+"
+
+ ❯ test/static.test.ts:18:27
+     16|       // text-layer.ts uses item positions (layout geometry, never dat…
+     17|       const allowed = f === "text-layer.ts" ? code.replace(/\b(it|a|b|…
+     18|       expect(allowed).not.toMatch(/\bparseFloat\b|\bNumber\s*\(|\bpars…
+       |                           ^
+     19|     });
+     20|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m174 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:55:33
+[2m   Duration [22m 1.85s[2m (tests 64%, transform 27%, import 8%, worker 1%)[22m
+

@@ -1,0 +1,421 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 124[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 651[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 423[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 836[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(7)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 454[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 1004[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 471[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 1039[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 454[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 425[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 631[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 420[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 543[2mms[22m[39m
+ [31m❯[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2263[2mms[22m[39m
+   [31m❯[39m no binary floating point in rules, coherence or units (I4, S1-25) [2m(9)[22m
+[31m     [31m×[31m evaluate.ts[39m[32m 22[2mms[22m[39m
+     [32m✓[39m coherence.ts[32m 10[2mms[22m[39m
+     [32m✓[39m decimal.ts[32m 7[2mms[22m[39m
+     [32m✓[39m fields.ts[32m 11[2mms[22m[39m
+     [32m✓[39m spec.ts[32m 7[2mms[22m[39m
+     [32m✓[39m text-layer.ts[32m 11[2mms[22m[39m
+     [32m✓[39m delivery.ts[32m 3[2mms[22m[39m
+     [32m✓[39m model-output.ts[32m 3[2mms[22m[39m
+     [32m✓[39m strict-json.ts[32m 4[2mms[22m[39m
+   [32m✓[39m product code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7) [2m(19)[22m
+     [32m✓[39m cases.ts[32m 66[2mms[22m[39m
+     [32m✓[39m cli.ts[32m 234[2mms[22m[39m
+     [32m✓[39m coherence.ts[32m 66[2mms[22m[39m
+     [33m[2m✓[22m[39m config.ts[33m 898[2mms[22m[39m
+     [32m✓[39m decimal.ts[32m 73[2mms[22m[39m
+     [32m✓[39m delivery.ts[32m 124[2mms[22m[39m
+     [32m✓[39m evaluate.ts[32m 82[2mms[22m[39m
+     [32m✓[39m fields.ts[32m 40[2mms[22m[39m
+     [32m✓[39m input-file.ts[32m 37[2mms[22m[39m
+     [32m✓[39m model-output.ts[32m 47[2mms[22m[39m
+     [32m✓[39m pdf.ts[32m 33[2mms[22m[39m
+     [32m✓[39m pipeline.ts[32m 59[2mms[22m[39m
+     [32m✓[39m reader.ts[32m 37[2mms[22m[39m
+     [32m✓[39m receipt.ts[32m 33[2mms[22m[39m
+     [32m✓[39m server.ts[32m 50[2mms[22m[39m
+     [32m✓[39m spec.ts[32m 31[2mms[22m[39m
+     [32m✓[39m strict-json.ts[32m 34[2mms[22m[39m
+     [32m✓[39m text-layer.ts[32m 36[2mms[22m[39m
+     [32m✓[39m types.ts[32m 36[2mms[22m[39m
+   [32m✓[39m configuration by environment only; .env.example lists every variable without values (I6, S1-03) [2m(2)[22m
+     [32m✓[39m env reads in src equal the .env.example keys[32m 64[2mms[22m[39m
+     [32m✓[39m .env is ignored by .gitignore (verified with git check-ignore in the handoff)[32m 1[2mms[22m[39m
+   [32m✓[39m no automatic release (S1-10) [2m(1)[22m
+     [32m✓[39m only recordHumanDecision sets human_decision to a value[32m 95[2mms[22m[39m
+   [32m✓[39m dataset generator does not import product code (A-09) [2m(1)[22m
+     [32m✓[39m imports only the standard library, reportlab and Pillow[32m 1[2mms[22m[39m
+   [32m✓[39m fictitious data is labelled; repository files (S1-01, S1-02, S1-39) [2m(3)[22m
+     [32m✓[39m README states fictitious data, mock-only status and how to run[32m 0[2mms[22m[39m
+     [32m✓[39m LICENSE is MIT[32m 0[2mms[22m[39m
+     [32m✓[39m the spec file and every certificate say they are fictitious[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/static.test.ts > no binary floating point in rules, coherence or units (I4, S1-25) > evaluate.ts
+AssertionError: expected '\n\nimport { cevCoherent, heatMatches…' not to match /\bparseFloat\b|\bNumber\s*\(|\bparseI…/
+
+- Expected:
+/\bparseFloat\b|\bNumber\s*\(|\bparseInt\b|\bMath\.(round|floor|ceil|trunc)\b|\+\s*"\s*\d/
+
++ Received:
+"
+
+import { cevCoherent, heatMatches, plausible, recomputeCev, type Plausibility } from \"./coherence.js\";
+import { Dec, decimalTextEqual, parseDecimal, roundCevForCoherence } from \"./decimal.js\";
+import {
+  CHEMISTRY, CRITICAL_FIELDS, EXPECTED_UNITS, MAY_BE_ABSENT, MECHANICAL, NUMERIC_FIELDS, normaliseUnit,
+  unitsEquivalent, type FieldValue,
+} from \"./fields.js\";
+import { limitOf } from \"./spec.js\";
+import type { TextLayerResult } from \"./text-layer.js\";
+import type {
+  Certificate, ChannelCheck, Decision, DeliveryLine, FieldConfirmation, Proposal, ReasonEntry, RuleResult, SourceRef, Spec,
+} from \"./types.js\";
+
+export const RULES_VERSION = \"certgate-rules-1.0.0\";
+
+export interface EffectiveField {
+  key: string;
+  value: string | null;
+  unit: string | null;
+  state: \"known\" | \"unknown\" | \"absent\";
+  source: \"model+text_layer\" | \"model\" | \"human_confirmed\";
+  read_value: string | null;
+  refs: SourceRef[];
+}
+
+export interface EvaluationInput {
+  model: Map<string, FieldValue>;
+  textLayer: TextLayerResult;
+  deliveryLine: DeliveryLine | null;
+  spec: Spec;
+  plausibility: Plausibility;
+  confirmations: FieldConfirmation[];
+}
+
+export interface Evaluation {
+  fields: Map<string, EffectiveField>;
+  certificate: Certificate;
+  channel_checks: ChannelCheck[];
+  rule_results: RuleResult[];
+  cev_recomputed: string | null;
+  decision: Decision;
+}
+
+
+export const label = (key: string) => key.split(\".\").pop()!;
+
+const valuesEqual = (key: string, a: string, b: string) =>
+  NUMERIC_FIELDS.has(key) ? decimalTextEqual(a, b) : a.trim() === b.trim();
+
+class Reasons {
+  list: ReasonEntry[] = [];
+  add(code: string, effect: ReasonEntry[\"effect\"], detail: string) {
+    if (!this.list.some((r) => r.code === code)) this.list.push({ code, effect, detail });
+  }
+}
+
+function resolveChannels(input: EvaluationInput, reasons: Reasons) {
+  const { model, textLayer } = input;
+  const fields = new Map<string, EffectiveField>();
+  const checks: ChannelCheck[] = [];
+  const confirmed = new Map(input.confirmations.map((c) => [c.field, c]));
+  const pendingConfirmation: string[] = [];
+
+  for (const [key, m] of model) {
+    const critical = CRITICAL_FIELDS.includes(key);
+    const t = textLayer.fields.get(key);
+    const conflict = textLayer.conflicts.get(key);
+    const readValue = m.status === \"read\" ? m.value : null;
+    const check: ChannelCheck = {
+      field: key, model_value: m.value, model_unit: m.unit, text_layer_value: t?.value ?? null,
+      text_layer_unit: t?.unit ?? null, agree: false, channel_available: textLayer.channel_available,
+      issue: null, human_confirmed: false, source_refs: [m.source_ref, ...(t ? [t.source_ref] : [])],
+    };
+    const c = confirmed.get(key);
+    if (c) {
+      
+      check.human_confirmed = true;
+      check.agree = true;
+      
+      
+      fields.set(key, {
+        key, value: c.value, unit: c.unit ?? (EXPECTED_UNITS[key]?.[0] ?? m.unit), state: c.value === null ? \"absent\" : \"known\", source: \"human_confirmed\",
+        read_value: readValue,
+        refs: [{ channel: \"human\", page: null, fragment: `confirmed by ${c.confirmed_by} at ${c.confirmed_at}` }],
+      });
+      if (critical) checks.push(check);
+      continue;
+    }
+    const fromModel = (): EffectiveField => ({
+      key, value: m.status === \"read\" ? m.value : null, unit: m.unit,
+      state: m.status === \"read\" ? \"known\" : m.status === \"absent\" ? \"absent\" : \"unknown\",
+      source: \"model\", read_value: readValue, refs: [m.source_ref],
+    });
+    if (!critical) {
+      fields.set(key, fromModel());
+      continue;
+    }
+    if (!textLayer.channel_available) {
+      
+      check.issue = \"no_second_channel\";
+      pendingConfirmation.push(key);
+      fields.set(key, fromModel());
+      checks.push(check);
+      continue;
+    }
+    const unknownField = (): EffectiveField => ({
+      key, value: null, unit: null, state: \"unknown\", source: \"model+text_layer\", read_value: readValue,
+      refs: check.source_refs,
+    });
+    if (conflict) {
+      check.issue = \"text_layer_conflict\";
+      reasons.add(`TEXT_LAYER_CONFLICT:${label(key)}`, \"review\", `text layer states several values for ${key}: ${conflict.join(\", \")}`);
+      fields.set(key, unknownField());
+    } else if (m.status === \"unknown\") {
+      fields.set(key, unknownField());
+    } else if (m.status === \"absent\" && (!t || t.status === \"absent\") && MAY_BE_ABSENT.has(key)) {
+      check.agree = true;
+      fields.set(key, { ...fromModel(), source: \"model+text_layer\", refs: check.source_refs });
+    } else if (m.status === \"read\" && t && t.status === \"read\" && t.value !== null &&
+               valuesEqual(key, m.value!, t.value) && (!NUMERIC_FIELDS.has(key) || unitsEquivalent(m.unit, t.unit))) {
+      check.agree = true;
+      fields.set(key, { ...fromModel(), source: \"model+text_layer\", refs: check.source_refs });
+    } else if (m.status === \"read\" && (!t || t.status === \"unknown\")) {
+      check.issue = \"text_layer_missing\";
+      reasons.add(`TEXT_LAYER_MISSING:${label(key)}`, \"review\", `${key} not found in the text layer; model reading not corroborated`);
+      fields.set(key, unknownField());
+    } else {
+      check.issue = \"disagree\";
+      reasons.add(`CHANNEL_DISAGREE:${label(key)}`, \"review\",
+        `${key}: model ${m.value ?? m.status} ${m.unit ?? \"\"} vs text layer ${t?.value ?? t?.status ?? \"none\"} ${t?.unit ?? \"\"}`.trim());
+      fields.set(key, unknownField());
+    }
+    checks.push(check);
+  }
+  return { fields, checks, pendingConfirmation };
+}
+
+function checkUnitsAndPlausibility(fields: Map<string, EffectiveField>, p: Plausibility, reasons: Reasons) {
+  for (const f of fields.values()) {
+    if (!NUMERIC_FIELDS.has(f.key) || f.state !== \"known\") continue;
+    const d = parseDecimal(f.value);
+    if (d === null) {
+      reasons.add(`NOT_A_NUMBER:${label(f.key)}`, \"review\", `${f.key} value \"${f.value}\" is not a decimal number`);
+      f.state = \"unknown\";
+      f.value = null;
+      continue;
+    }
+    const unit = normaliseUnit(f.unit);
+    const expected = EXPECTED_UNITS[f.key] ?? [];
+    if (unit === null || !expected.includes(unit)) {
+      reasons.add(`UNIT_UNEXPECTED:${label(f.key)}`, \"review\",
+        `${f.key} in ${unit ?? \"no unit\"}; expected ${expected.join(\" or \")}; not converted`);
+      f.state = \"unknown\";
+      f.value = null;
+      continue;
+    }
+    if (!plausible(p, f.key, d)) {
+      reasons.add(`IMPLAUSIBLE:${label(f.key)}`, \"review\",
+        `${f.key} = ${f.value} ${unit} is outside the band-defined plausibility range (possible scale jump)`);
+      f.state = \"unknown\";
+      f.value = null;
+    }
+  }
+}
+
+function limitRule(spec: Spec, field: string, key: string, value: Dec | null, observed: string | null, refs: string[]): RuleResult {
+  const l = limitOf(spec, field)!;
+  const expected = [l.min !== null ? `>= ${l.min}` : null, l.max !== null ? `<= ${l.max}` : null].filter(Boolean).join(\" and \") + ` ${l.unit}`;
+  const rule_id = `${spec.spec_id}.r${spec.version}.${field}`;
+  if (value === null) {
+    return { rule_id, input_field_refs: refs, outcome: \"not_evaluable\", expected, observed: null, reason: `${key} unknown` };
+  }
+  
+  const belowMin = l.min !== null && parseFloat(value.toString()) < parseFloat(l.min);
+  const aboveMax = l.max !== null && parseFloat(value.toString()) > parseFloat(l.max);
+  const outcome = belowMin || aboveMax ? \"fail\" : \"pass\";
+  const reason = outcome === \"pass\" ? \"within limit\"
+    : belowMin ? `${field} ${observed} is below the minimum ${l.min} ${l.unit}` : `${field} ${observed} is above the maximum ${l.max} ${l.unit}`;
+  return { rule_id, input_field_refs: refs, outcome, expected, observed, reason };
+}
+
+export function evaluate(input: EvaluationInput): Evaluation {
+  const reasons = new Reasons();
+  const { fields, checks, pendingConfirmation } = resolveChannels(input, reasons);
+  checkUnitsAndPlausibility(fields, input.plausibility, reasons);
+  const get = (k: string) => fields.get(k)!;
+  const known = (k: string) => (get(k).state === \"known\" ? get(k).value : null);
+
+  
+  for (const key of CRITICAL_FIELDS) {
+    const f = get(key);
+    if (f.state === \"unknown\") reasons.add(`CRITICAL_UNKNOWN:${label(key)}`, \"review\", `${key} could not be read with confidence`);
+    if (f.state === \"absent\" && !MAY_BE_ABSENT.has(key)) {
+      reasons.add(`CRITICAL_UNKNOWN:${label(key)}`, \"review\", `${key} is not on the certificate`);
+    }
+  }
+
+  
+  if (pendingConfirmation.length > 0) {
+    reasons.add(\"NO_SECOND_CHANNEL\", \"review\",
+      `no text layer: ${pendingConfirmation.length} critical field(s) need human confirmation`);
+  }
+
+  
+  const line = input.deliveryLine;
+  if (!line) reasons.add(\"EVIDENCE_MISSING:delivery_line\", \"review\", \"no paired delivery line\");
+  const heat = known(\"heat_or_lot\");
+  if (line && heat !== null && !heatMatches(heat, line.heat_or_lot)) {
+    reasons.add(\"HEAT_MISMATCH\", \"review\",
+      `certificate heat ${heat} does not match heat ${line.heat_or_lot} of delivery line ${line.line} (${line.delivery_note})`);
+  }
+
+  
+  const type = get(\"certificate_type\");
+  if (type.state === \"absent\" || (type.state === \"known\" && type.value!.trim() !== input.spec.required_certificate_type)) {
+    reasons.add(\"CERT_TYPE_NOT_3_1\", \"review\",
+      `certificate type ${type.value ?? \"not stated\"}; required ${input.spec.required_certificate_type} (EN 10204)`);
+  }
+  const kvt = get(\"kv_temperature\");
+  const kvtValue = kvt.state === \"known\" ? parseDecimal(kvt.value) : null;
+  if (kvt.state === \"absent\" || (kvtValue !== null && !kvtValue.eq(new Dec(input.spec.kv_temperature)))) {
+    reasons.add(\"KV_TEMPERATURE_MISMATCH\", \"review\",
+      `impact test at ${kvt.value ?? \"unstated\"} °C; required ${input.spec.kv_temperature} °C`);
+  }
+  if (get(\"inspection_stamp\").state === \"absent\") reasons.add(\"STAMP_MISSING\", \"review\", \"no inspection stamp on the certificate\");
+
+  
+  const chem: Record<string, string | null> = Object.fromEntries(CHEMISTRY.map((e) => [e, known(`chemistry.${e}`)]));
+  const cev = recomputeCev(chem);
+  const printed = known(\"cev_printed\");
+  if (printed !== null && cev !== null && !cevCoherent(printed, cev)) {
+    reasons.add(\"CEV_MISMATCH\", \"review\",
+      `printed CEV ${printed} differs from recomputed ${cev.toSignificantDigits(8).toString()} (rounded ${roundCevForCoherence(cev).toFixed(2)})`);
+  }
+
+  
+  const rules: RuleResult[] = [];
+  for (const e of [\"C\", \"Si\", \"Mn\", \"P\", \"S\", \"Cu\"]) {
+    const v = known(`chemistry.${e}`);
+    rules.push(limitRule(input.spec, e, `chemistry.${e}`, parseDecimal(v), v, [`chemistry.${e}`]));
+  }
+  for (const m of [\"ReH\", \"Rm\", \"A\"]) {
+    const v = known(`mechanical.${m}`);
+    rules.push(limitRule(input.spec, m, `mechanical.${m}`, parseDecimal(v), v, [`mechanical.${m}`]));
+  }
+  
+  if (printed !== null || cev === null) {
+    const r = limitRule(input.spec, \"CEV\", \"cev_printed\", parseDecimal(printed), printed, [\"cev_printed\"]);
+    rules.push({ ...r, rule_id: `${r.rule_id}.printed` });
+  }
+  {
+    const r = limitRule(input.spec, \"CEV\", \"CEV recomputed\", cev, cev?.toString() ?? null, CEV_REFS);
+    rules.push({ ...r, rule_id: `${r.rule_id}.recomputed` });
+  }
+  
+  {
+    const kv = MECHANICAL.filter((m) => m.startsWith(\"KV_\")).map((m) => parseDecimal(known(`mechanical.${m}`)));
+    const l = limitOf(input.spec, \"KV_media\")!;
+    const rule_id = `${input.spec.spec_id}.r${input.spec.version}.KV_media`;
+    const expected = `mean of 3 >= ${l.min} ${l.unit} (sum >= ${new Dec(l.min!).times(3).toString()})`;
+    if (kv.some((v) => v === null)) {
+      rules.push({ rule_id, input_field_refs: KV_REFS, outcome: \"not_evaluable\", expected, observed: null, reason: \"an impact value is unknown\" });
+    } else {
+      const sum = kv.reduce((a, b) => a!.plus(b!), new Dec(0))!;
+      const ok = sum.gte(new Dec(l.min!).times(3));
+      rules.push({ rule_id, input_field_refs: KV_REFS, outcome: ok ? \"pass\" : \"fail\", expected, observed: `sum ${sum.toString()}`,
+        reason: ok ? \"within limit\" : `KV sum ${sum.toString()} is below 3 x ${l.min} J` });
+    }
+  }
+  
+  {
+    const g = known(\"grade\");
+    const rule_id = `${input.spec.spec_id}.r${input.spec.version}.grade`;
+    const expected = `${input.spec.grade} (spec) and ${line?.grade_ordered ?? \"?\"} (ordered)`;
+    if (g === null || !line) {
+      rules.push({ rule_id, input_field_refs: [\"grade\"], outcome: \"not_evaluable\", expected, observed: g, reason: \"grade or delivery line unknown\" });
+    } else {
+      const ok = g.trim() === input.spec.grade && g.trim() === line.grade_ordered.trim();
+      rules.push({ rule_id, input_field_refs: [\"grade\", \"delivery_line.grade_ordered\"], outcome: ok ? \"pass\" : \"fail\", expected, observed: g,
+        reason: ok ? \"grade matches\" : `certified grade ${g}; ordered ${line.grade_ordered}; specified ${input.spec.grade}` });
+      if (!ok) reasons.add(\"GRADE_MISMATCH\", \"block\", `certified grade ${g}, ordered ${line.grade_ordered}, specified ${input.spec.grade}`);
+    }
+  }
+  for (const r of rules) {
+    const field = r.rule_id.split(\".\")[2]!;
+    if (r.outcome === \"fail\" && field !== \"grade\") reasons.add(`RULE_FAIL:${field}`, \"block\", r.reason);
+    if (r.outcome === \"not_evaluable\") reasons.add(`RULE_NOT_EVALUABLE:${field}`, \"review\", r.reason);
+  }
+
+  const decision = propose(reasons.list, pendingConfirmation);
+  return {
+    fields, certificate: toCertificate(fields), channel_checks: checks, rule_results: rules,
+    cev_recomputed: cev?.toString() ?? null, decision,
+  };
+}
+
+const CEV_REFS = [\"chemistry.C\", \"chemistry.Mn\", \"chemistry.Cr\", \"chemistry.Mo\", \"chemistry.V\", \"chemistry.Ni\", \"chemistry.Cu\"];
+const KV_REFS = [\"mechanical.KV_1\", \"mechanical.KV_2\", \"mechanical.KV_3\"];
+
+
+export function propose(reasons: ReasonEntry[], pendingConfirmation: string[] = []): Decision {
+  const heatMismatch = reasons.some((r) => r.code === \"HEAT_MISMATCH\");
+  const list = heatMismatch ? reasons.map((r) => (r.effect === \"block\" ? { ...r, effect: \"info\" as const } : r)) : reasons;
+  let proposal: Proposal = \"release\";
+  if (list.some((r) => r.effect === \"block\")) proposal = \"block\";
+  else if (list.some((r) => r.effect === \"review\")) proposal = \"review\";
+  return {
+    proposal, reasons: list, evidence_refs: list.map((r) => r.code), human_required: true,
+    human_confirmation_required: pendingConfirmation, human_decision: null, decided_by: null, decided_at: null,
+    decision_reason: null,
+  };
+}
+
+export function readerErrorDecision(errorClass: string, detail: string): Decision {
+  return propose([{ code: `READER_ERROR:${errorClass}`, effect: \"review\", detail }]);
+}
+
+function toCertificate(fields: Map<string, EffectiveField>): Certificate {
+  const v = (k: string) => fields.get(k)?.value ?? null;
+  const ref = (k: string): SourceRef => fields.get(k)?.refs[0] ?? { channel: \"model\", page: null, fragment: \"\" };
+  return {
+    issuer: v(\"issuer\"), certificate_no: v(\"certificate_no\"), certificate_type: v(\"certificate_type\"),
+    heat_or_lot: v(\"heat_or_lot\"), grade: v(\"grade\"), dimensions: v(\"dimensions\"),
+    chemistry: CHEMISTRY.map((e) => ({ element: e, value: v(`chemistry.${e}`), unit: fields.get(`chemistry.${e}`)?.unit ?? null, source_ref: ref(`chemistry.${e}`) })),
+    cev_printed: v(\"cev_printed\"),
+    mechanical: MECHANICAL.map((m) => ({ property: m, value: v(`mechanical.${m}`), unit: fields.get(`mechanical.${m}`)?.unit ?? null, source_ref: ref(`mechanical.${m}`) })),
+    kv_temperature: v(\"kv_temperature\"), inspection_stamp: v(\"inspection_stamp\"),
+  };
+}
+"
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m174 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:55:28
+[2m   Duration [22m 3.91s[2m (tests 70%, transform 24%, import 6%, worker 1%)[22m
+
+ ❯ test/static.test.ts:18:27
+     16|       // text-layer.ts uses item positions (layout geometry, never dat…
+     17|       const allowed = f === "text-layer.ts" ? code.replace(/\b(it|a|b|…
+     18|       expect(allowed).not.toMatch(/\bparseFloat\b|\bNumber\s*\(|\bpars…
+       |                           ^
+     19|     });
+     20|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

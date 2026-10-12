@@ -1,0 +1,18 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 104[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 312[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 439[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 518[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 317[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 623[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 243[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 293[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m)[22m[33m 689[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m175 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:56:05
+[2m   Duration [22m 1.57s[2m (tests 68%, transform 24%, import 6%, worker 1%)[22m
+
