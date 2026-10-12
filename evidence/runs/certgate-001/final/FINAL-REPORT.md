@@ -154,3 +154,9 @@ The registers are committed under `evidence/runs/certgate-001/stage-1/OBLIGATION
 11. **Carried test-suite items:** S2M02b label test. Optional robustness: lowercase `mpa`, duplicate JSON keys, Unicode and long values at 375 px, Firefox and WebKit.
 
 The following are **not** claimed: AMD integration, deployment, submission, or any evaluation metric.
+
+## 8. Corrections after auditor verification (msg 7c5819a3)
+
+- Section 1, Stage 1 rejection of 31335ee1: record aa40a9af listed **F-01, F-02 and missing mutation evidence**. **F-05** (surviving float mutants M13/M14) was added by auditor addendum **33c884aa**, which superseded the missing-evidence item. The table row above lists the full set of rejection reasons; this note gives their correct sources.
+- Section 2, F2-01: the case-file half was reproduced by both auditor and adversary; the **receipt-screen half by the auditor only**.
+- Adversary (msg 70b82ce8) and auditor (msg 7c5819a3) verified this report against their own records; no other discrepancies.
