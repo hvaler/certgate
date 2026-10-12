@@ -1,6 +1,6 @@
 # Obligation register — Stage 1 (offline core)
 
-Run: certgate-001 · Stage: 1 · Register version: **R1.4** (analyst-xwz3, 2026-10-12; R1.3 = commit 9d098336, SHA-256 cd2fbcb2b9d805b7e4e84853f95ae1d5eadc0b3a2992813c2432ff4aa4199a29; R1.4 adds A-21 and strikes stale CEV text (auditor msg 11ea6c43); R1.2 = commit 258825fe, SHA-256 11283e6fb853fa3b6d2db1311f63c830901363bc5669bb83795f705f66c30611; R1.3 adds A-20 (adversary msg ec4e03af, CH-20); R1.1 = commit 6e92e827, SHA-256 66b7eba7b567b2f6aed4f370c087183eda009d4a76b473f201db2e3d44ea0e95. R1.2 answers adversary challenge msg deb9efbf CH-01…CH-19 — see section "R1.2 amendments", which **supersedes** any earlier row text it names; R1.0 preserved byte-exact as `OBLIGATIONS-R1.0.md`, SHA-256 5ebea584fbe147a2b6f8949013d97c2f5ebf0d6d58291ff9e80d363b8e3e8779). R1.1 changes: D1-20 added (implementer msg 9ba1d522); auditor testability review msg cbb38820 items 1–9 applied to S1-05, S1-25, S1-27, S1-34, S1-41, S1-43, D1-04, D1-08, D1-20 and the case table · Base revision of result repo: `705c857875ee97b0d7bedf58375a0db7d749d9dd` (tree `2d0739970157a7d83514c0bf7dae0ecc64f10878`, human, factory material only).
+Run: certgate-001 · Stage: 1 · Register version: **R1.5** (analyst-xwz3, 2026-10-12; R1.4 = commit f65ad5b0, SHA-256 595ce62f04100c061f03472d4682e68a68ff45a5ae7de5208e035ce92c31e70b; R1.5 names dataset case IDs (dataset commit 4ebd9533, implementer msg 22813e0c) and adds A-23; R1.3 = commit 9d098336, SHA-256 cd2fbcb2b9d805b7e4e84853f95ae1d5eadc0b3a2992813c2432ff4aa4199a29; R1.4 adds A-21 and strikes stale CEV text (auditor msg 11ea6c43); R1.2 = commit 258825fe, SHA-256 11283e6fb853fa3b6d2db1311f63c830901363bc5669bb83795f705f66c30611; R1.3 adds A-20 (adversary msg ec4e03af, CH-20); R1.1 = commit 6e92e827, SHA-256 66b7eba7b567b2f6aed4f370c087183eda009d4a76b473f201db2e3d44ea0e95. R1.2 answers adversary challenge msg deb9efbf CH-01…CH-19 — see section "R1.2 amendments", which **supersedes** any earlier row text it names; R1.0 preserved byte-exact as `OBLIGATIONS-R1.0.md`, SHA-256 5ebea584fbe147a2b6f8949013d97c2f5ebf0d6d58291ff9e80d363b8e3e8779). R1.1 changes: D1-20 added (implementer msg 9ba1d522); auditor testability review msg cbb38820 items 1–9 applied to S1-05, S1-25, S1-27, S1-34, S1-41, S1-43, D1-04, D1-08, D1-20 and the case table · Base revision of result repo: `705c857875ee97b0d7bedf58375a0db7d749d9dd` (tree `2d0739970157a7d83514c0bf7dae0ecc64f10878`, human, factory material only).
 
 Owner of this file: analyst-xwz3. It is a planning record, not evidence of any result. Later versions add rows and decisions; they never delete a row (a withdrawn row is marked WITHDRAWN, with its reason).
 
@@ -221,3 +221,30 @@ C1 digital conforming (cert-01) · C2 scan out of spec (cert-02) + C2 digital el
 |---|---|---|---|---|
 | A-21 | Auditor msg 11ea6c43 item 1 — **accepted**; amends A-07 / S1-48 | On a scan, a release proposal requires **every** critical field (D1-10 + A-05 KV temperature + A-06 certificate type) to be human-confirmed. Required tests: (a) cert-03 with **all** critical fields confirmed and ReH = 358 ⇒ `release`; (b) cert-03 with **only** ReH confirmed as 358 ⇒ still `review` (no second channel); (c) ReH confirmed as 338 ⇒ `block` (known failing value, D1-03), even with other fields unconfirmed. A human confirmation **may change** a value the reader returned with confidence; the receipt keeps **both** the read value (with its `reading_source`) and the confirmed value (`human_confirmed`, who, when) | X:I3; D:L54-55; D:L31 | implementer |
 | A-22 | Auditor msg 11ea6c43 item 2 | Stale CEV text in S1-27 and D1-08 is struck. **Tests must follow A-02 + A-20.** A test asserting that exact recomputed 0.4549 passes the max is a REJECT finding | A-02 | implementer; adversary |
+### R1.5 amendment — dataset case IDs
+
+Dataset commit `4ebd95333e3bb486cb79c62fc6bd7a2e025379e9` (tree `9bddc672d9c72dc9252d5d2709bd447e927c6e70`, 2026-10-12T17:15:59Z, implementer-xwz4, no product code), 30 cases (25 digital: 16 layout A, 9 layout B; 5 scans). cg-001..003 = pre-kickoff mini-prueba copies; cg-004..030 created in this run. Mapping as reported by implementer (msg 22813e0c); expectations live in `data/expected/<id>.json` and are authoritative for the expected proposal of each case (auditor verifies they agree with this register):
+
+| C-case | Case IDs → expected proposal |
+|---|---|
+| C1 | cg-001 (layout A), cg-004 (layout B) → release |
+| C2 | cg-002 (scan), cg-005, cg-006, cg-007 → block |
+| C3 | cg-008 (digital, ReH = 355), cg-009 (all limits at bounds) → release |
+| C4 | cg-010 heat mismatch; cg-011 heat from another line (A-12) → review |
+| C5 | cg-012 → block |
+| C6 | cg-013 ksi, cg-015 scale jump → review; cg-014 N/mm² positive control → per its data |
+| C7 | cg-003 smudged ReH, cg-016 clean scan (D1-04), cg-017 smudged heat → review |
+| C8 | cg-018 planted misread → review |
+| C9 | cg-019 → review; cg-020 (A-03) → block |
+| C10 | **cg-021 approve-injection → block**; **cg-022 spoofed duplicate → review** (A-16) |
+| C11 | cg-023 endpoint_off, cg-024 timeout, cg-025 http_429 (scan), cg-026 http_5xx, cg-027 invalid_json → status error, review |
+| C12 | consecutive-run tests over dataset cases (S1-36 / A-13), no dedicated case |
+| C13 | cg-028 → review |
+| A-05 | cg-029 KV at 0 °C → review |
+| A-06 | cg-030 type 2.2 → review |
+
+Covered by unit tests instead of dataset cases (dataset capped at 30): ReH 354 negative boundary; scan with heat mismatch; scan without stamp.
+
+| ID | Answers | Amendment | Source / reason | Owner |
+|---|---|---|---|---|
+| A-23 | Implementer msg 22813e0c (cg-015) | The A-20 printed-CEV consistency test excepts **cg-019, cg-020 (planted C9) and cg-015** (scale jump: C printed as 16, printed CEV 0.41 from the true composition). In cg-015 the scale-jumped C is **unknown** (D1-11), so the recomputed CEV is unknown and cannot block (A-03 does not apply); expected `review` | D1-11, A-03 | implementer; adversary |
