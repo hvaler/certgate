@@ -1,0 +1,81 @@
+{
+  "summary": {
+    "case_id": "cg-027",
+    "status": "error",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "READER_ERROR:invalid_json"
+    ],
+    "human_confirmation_required": [],
+    "note": "CertGate only proposes. A person decides. All data is fictitious; the reading is MOCK (no model)."
+  },
+  "receipt": {
+    "receipt_schema": "certgate.receipt/1",
+    "case_id": "cg-027",
+    "run_id": "931219d1-0bf7-459d-8bd3-314100d0b286",
+    "created_at": "2026-10-12T17:45:19.552Z",
+    "mode": "mock",
+    "reading_source": "mock",
+    "reader": {
+      "reader_id": "mock-reader",
+      "reading_source": "mock",
+      "model_id": "MOCK (no model; dataset reading)",
+      "model_version": "not applicable (mock)",
+      "vllm_version": "not applicable (mock)",
+      "rocm_version": "not applicable (mock)",
+      "calls": "1"
+    },
+    "planted": [],
+    "status": "error",
+    "proposal": "review",
+    "reasons": [
+      {
+        "code": "READER_ERROR:invalid_json",
+        "effect": "review",
+        "detail": "model output: not valid JSON (Expected double-quoted property name in JSON at position 2914 (line 125 column 25))"
+      }
+    ],
+    "human_required": true,
+    "human_confirmation_required": [],
+    "human_decision": null,
+    "confirmations": [],
+    "channel_available": true,
+    "timings_ms": {
+      "validate": "152.607",
+      "text_layer": "5.041",
+      "model_reading": "0.333",
+      "evaluation": "0.068"
+    },
+    "errors": [
+      {
+        "class": "invalid_json",
+        "detail": "model output: not valid JSON (Expected double-quoted property name in JSON at position 2914 (line 125 column 25))"
+      }
+    ],
+    "hashes": {
+      "certificate_sha256": "38d85d3e053dd51325617cb41a7ef7ac6ab1ba9353ab0c4bdc214aeb356517cb",
+      "certificate_size": "3176",
+      "delivery_note_sha256": "701325f7befd6a4a31df652905f8c336978dedfc409c9e52d2f1e8af360e5962",
+      "model_output_sha256": null,
+      "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
+    },
+    "rules_version": "certgate-rules-1.0.0",
+    "plausibility_version": "plausibility-v1",
+    "cev_formula_source": "IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md",
+    "spec": {
+      "spec_id": "ESP-014",
+      "revision": "3",
+      "grade": "TRN-355"
+    },
+    "delivery": {
+      "delivery_note": "ALB-2026-1003",
+      "line": "24"
+    },
+    "values": [],
+    "channel_checks": [],
+    "rule_results": [],
+    "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
+  }
+}
