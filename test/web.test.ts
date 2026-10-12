@@ -111,6 +111,9 @@ describe("live reading without an endpoint (S2-15, S2-20, S2-31, B-13)", () => {
     expect(j.view.receipt.reader.reader_id).not.toMatch(/mock/);
     expect(j.view.receipt.errors[0].class).toBe("endpoint_off");
     expect(j.view.receipt.f1.state).toBe("off");
+    // F2-02: the explanation note follows the reading source; an upload never claims a mock reading.
+    expect(j.view.explanation.note).toMatch(/live attempt and nothing was read/);
+    expect(j.view.explanation.note).not.toMatch(/mock/);
     expect((await (await fetch(`${base}/api/live/status`)).json()).remaining_this_hour).toBe("5");
   });
   it("web upload limit is below the Vercel body limit and enforced (B-18)", async () => {

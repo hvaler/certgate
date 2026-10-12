@@ -319,16 +319,22 @@ async function storyScreen(id) {
   const r = await api(`/stories/${encodeURIComponent(id)}.json`);
   if (!r.ok) return render(h("p", { class: "error" }, "Unknown story."));
   const story = r.body;
-  session.story = { id, view: story.view, confirmations: [], by: "", evaluatedAt: null };
+  // storedAt is the static file's created_at and never changes, even after a server re-evaluation (F2-01, B-12).
+  session.story = { id, view: story.view, storedAt: story.view.receipt.created_at, confirmations: [], by: "", evaluatedAt: null };
   drawStory();
+}
+
+/** Label of a stored story: always its original stored time, plus the re-evaluation time when there is one (F2-01). */
+function storyLabelDetail(s) {
+  return s.evaluatedAt
+    ? `mock reading, no model · stored ${s.storedAt} · re-evaluated by the server at ${s.evaluatedAt} with the confirmations and decision given · not live`
+    : `mock reading, no model · stored ${s.storedAt} · not live`;
 }
 
 function drawStory() {
   const s = session.story;
   const view = s.view;
-  const ctx = s.evaluatedAt
-    ? { storedTitle: "Stored reading", storedDetail: `mock reading, no model · stored ${view.receipt.created_at} · re-evaluated by the server at ${s.evaluatedAt} with your confirmations · not live` }
-    : { storedTitle: "Stored reading", storedDetail: `mock reading, no model · ${view.receipt.created_at} · not live` };
+  const ctx = { storedTitle: "Stored reading", storedDetail: storyLabelDetail(s) };
   const evaluate = async (extra) => {
     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;
@@ -347,7 +353,7 @@ function drawStory() {
   } else {
     nodes.push(decisionForm(view, (d) => evaluate({ decision: d }), { clientTime: false }));
   }
-  nodes.push(h("p", {}, h("a", { href: "#/receipt", onclick: (e) => { e.preventDefault(); receiptScreen(view, { kind: "story" }); } }, "Open the receipt")));
+  nodes.push(h("p", {}, h("a", { href: "#/receipt", onclick: (e) => { e.preventDefault(); receiptScreen(view, { kind: "story", storyLabel: storyLabelDetail(s) }); } }, "Open the receipt")));
   render(...nodes);
 }
 
@@ -390,7 +396,8 @@ function receiptScreen(view, opts) {
     h("section", { class: "row between" },
       h("h1", {}, `Receipt · case ${rc.case_id}`),
       h("div", { class: "btns" }, h("button", { class: "btn primary", type: "button", onclick: download }, "Download JSON"))),
-    h("div", { class: "stored" }, h("strong", {}, opts.kind === "local" ? "Stored in this browser" : "Stored"), ` · ${readingText(rc)} · ${rc.created_at}`),
+    h("div", { class: "stored", "data-stored-label": "true" }, h("strong", {}, opts.kind === "local" ? "Stored in this browser" : "Stored reading"),
+      ` · ${opts.storyLabel ?? `${readingText(rc)} · ${rc.created_at} · not live`}`),
     h("section", { class: "row" },
       h("div", { class: "card side stack" }, h("div", { class: "eyebrow" }, "CERTGATE PROPOSED"), h("h2", {}, rc.proposal),
         h("p", { class: "small mono" }, rc.reasons.map((r) => r.code).join(" · ") || "no rule fails")),

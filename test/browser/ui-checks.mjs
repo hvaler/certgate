@@ -52,6 +52,21 @@ try {
   check("cg-003: Release enabled after every critical field confirmed with ReH 358", !(await page.locator("#release-btn").isDisabled()));
   await page.screenshot({ path: path.join(out, "cg-003-confirmed-1280.png"), fullPage: true });
 
+  // F2-01: after a server re-evaluation, every screen shows the ORIGINAL stored time and the re-evaluation time.
+  const storedAt = JSON.parse((await (await fetch(`${plain.base}/stories/cg-003.json`)).text())).view.receipt.created_at;
+  const caseLabel = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
+  check("F2-01: case file label keeps the original stored time and says re-evaluated", caseLabel.includes(`stored ${storedAt}`) && /re-evaluated by the server at /.test(caseLabel), caseLabel);
+  await page.fill("#who", "Q. Manager");
+  await page.fill("#why", "all critical fields confirmed on the original");
+  await page.click("#release-btn");
+  await page.waitForSelector("text=Decision recorded", { timeout: 5000 }).catch(() => {});
+  const afterDecision = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
+  check("F2-01: label after a decision keeps the original stored time", afterDecision.includes(`stored ${storedAt}`) && /re-evaluated/.test(afterDecision), afterDecision);
+  await page.click("text=Open the receipt");
+  await page.waitForSelector("text=Download JSON", { timeout: 5000 }).catch(() => {});
+  const receiptLabel = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
+  check("F2-01: receipt screen keeps the original stored time and says re-evaluated", receiptLabel.includes(`stored ${storedAt}`) && /re-evaluated by the server at /.test(receiptLabel), receiptLabel);
+
   // B-21: nothing entered on case A carries to case B
   await page.goto(`${plain.base}/#/story/cg-001`);
   await page.waitForSelector("#who");
@@ -71,12 +86,14 @@ try {
   await page.fill("#live-line", "1");
   await page.click("button:has-text('Read live')");
   await page.waitForFunction(() => location.hash.startsWith("#/local/") && document.querySelector("[data-stored-label]"), null, { timeout: 10000 });
-  const t1 = await page.locator("[data-stored-label]").innerText();
+  const t1 = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
   check("S2-20: upload with no endpoint is a live attempt with no reading, review", /live attempt · no reading/.test(t1) && /Review/.test(await page.locator("#proposal").innerText()), t1);
   await page.reload();
   await page.waitForSelector("[data-stored-label]");
-  const t2 = await page.locator("[data-stored-label]").innerText();
+  const t2 = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
   check("B-09: reopened from browser storage it is labelled stored, never live", /^Stored in this browser/.test(t2) && t1 === t2 && !/\blive reading\b/.test(t2), t2);
+  const expl = await page.locator("#expl-title").locator("xpath=..").innerText();
+  check("F2-02: an upload's explanation does not claim a mock reading", /live attempt and nothing was read/.test(expl) && !/mock/.test(expl), expl);
   check("B-17: no third-party request", external.length === 0, external.join(","));
   await page.close();
   await plain.close();

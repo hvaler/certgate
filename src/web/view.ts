@@ -167,7 +167,7 @@ export function toView(r: CaseResult): CaseView {
     steps,
     explanation: expl && reading === "live"
       ? { available: true, text: expl.text, note: "model explanation; it never decides (I1)" }
-      : { available: false, text: null, note: reading === "live" ? "the model gave no explanation" : "There is no model explanation: this is a mock reading, no model was used." },
+      : { available: false, text: null, note: explanationNote(reading) },
     receipt: r.receipt,
   };
 }
@@ -178,4 +178,14 @@ export function shortDecimal(s: string): string {
   const m = /^(-?\d+)\.(\d+)$/.exec(s);
   if (!m || m[2]!.length <= 6) return s;
   return `${m[1]}.${m[2]!.slice(0, 6)}…`;
+}
+
+/** The explanation note follows the reading source (F2-02): never "mock" for a live attempt. */
+export function explanationNote(src: RunReceipt["reading_source"]): string {
+  switch (src) {
+    case "mock": return "There is no model explanation: this is a mock reading, no model was used.";
+    case "planted": return "There is no model explanation: this is a mock reading (test case with a planted deviation), no model was used.";
+    case "live": return "The model gave no explanation for this reading.";
+    case "live_no_reading": return "There is no model explanation: this was a live attempt and nothing was read.";
+  }
 }
