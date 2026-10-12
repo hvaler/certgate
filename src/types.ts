@@ -142,7 +142,10 @@ export interface Decision {
 export interface ReaderInfo {
   reader_id: string;
   reading_source: ReadingSource;
+  /** For a mock: the MOCK label. For a live reading: the model id the endpoint reported, verbatim. */
   model_id: string;
+  /** Live readings: the configured model id that was requested; null otherwise. */
+  requested_model_id: string | null;
   model_version: string;
   vllm_version: string;
   rocm_version: string;
@@ -188,6 +191,8 @@ export interface RunReceipt {
   rule_results: RuleResult[];
   /** Copy of the F1 panel data at reading time (S2-13). */
   f1: F1Snapshot;
+  /** Free text from the model channel, kept only as untrusted text; never used by the decision (I1, F2-04). */
+  model_text: { text: string; references: string[]; planted: boolean; untrusted: true; used_for_decision: false } | null;
   notice: string;
 }
 

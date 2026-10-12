@@ -15,8 +15,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const STUB_MODEL_ID = "certgate-test-stub";
 
-export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null } = {}) {
-  const state = { mode, caseId, readingFile, chatCalls: 0, lastAuthorization: null, lastModel: null };
+export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null } = {}) {
+  // reportedModel: the "model" field of the chat reply (null => STUB_MODEL_ID; "" => omitted is not supported here).
+  const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null };
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://stub");
     const json = (status, body) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(body)); };
@@ -37,7 +38,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
           case "huge": res.writeHead(200, { "content-type": "application/json" }); return res.end("x".repeat(2 * 1024 * 1024));
           default: {
             const output = readFileSync(state.readingFile ?? path.join(ROOT, "data", "cases", state.caseId, "reading.json"), "utf8");
-            return json(200, { choices: [{ message: { role: "assistant", content: output } }], usage: { completion_tokens: 420 } });
+            return json(200, { ...(state.omitModel ? {} : { model: state.reportedModel ?? STUB_MODEL_ID }), choices: [{ message: { role: "assistant", content: output } }], usage: { completion_tokens: 420 } });
           }
         }
       });

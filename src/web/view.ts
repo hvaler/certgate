@@ -147,7 +147,6 @@ export function toView(r: CaseResult): CaseView {
   const results = rows.filter((x) => x.critical);
   const n = (k: ViewRow["result"]) => String(results.filter((x) => x.result === k).length);
   const cert = e?.certificate;
-  const expl = r.explanation;
   return {
     view_schema: "certgate.view/1",
     case_id: r.readings.case.case_id,
@@ -165,9 +164,7 @@ export function toView(r: CaseResult): CaseView {
     rows,
     counts: { checks: String(results.length), pass: n("pass"), fail: n("fail"), unknown: n("unknown") },
     steps,
-    explanation: expl && reading === "live"
-      ? { available: true, text: expl.text, note: "model explanation; it never decides (I1)" }
-      : { available: false, text: null, note: explanationNote(reading) },
+    explanation: explanationView(r, reading),
     receipt: r.receipt,
   };
 }
@@ -188,4 +185,22 @@ export function explanationNote(src: RunReceipt["reading_source"]): string {
     case "live": return "The model gave no explanation for this reading.";
     case "live_no_reading": return "There is no model explanation: this was a live attempt and nothing was read.";
   }
+}
+
+/**
+ * A model explanation is shown only when it comes from a live reading AND every one of its references names a
+ * field that was read with a source in the document (S2-10, I1, F2-04). Otherwise it is withheld; the receipt
+ * keeps it only as untrusted model text.
+ */
+export function explanationView(r: CaseResult, reading: RunReceipt["reading_source"]): CaseView["explanation"] {
+  const expl = r.explanation;
+  if (!expl || reading !== "live") return { available: false, text: null, note: explanationNote(reading) };
+  const fields = r.evaluation?.fields;
+  const verifiable = expl.references.length > 0 && expl.references.every((ref) => {
+    const f = fields?.get(ref);
+    return !!f && f.state === "known" && f.refs.some((s) => s.fragment.trim() !== "");
+  });
+  return verifiable
+    ? { available: true, text: expl.text, note: `model explanation, referencing ${expl.references.join(", ")}; it never decides (I1)` }
+    : { available: false, text: null, note: "The model returned a text, but it is withheld: it has no references to verifiable input. It is kept in the receipt only as untrusted model text and never used for the decision." };
 }

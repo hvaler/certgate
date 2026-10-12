@@ -54,8 +54,15 @@ export class LiveReader implements ModelReader {
     this.rocm_version = versions.rocm ?? "unknown";
   }
 
-  /** The model id reported to the user is the configured one, which the endpoint serves (shown verbatim). */
+  /** The model id the endpoint reported in its last reply, verbatim; never the configured one (F2-03, B-01). */
+  private reportedModel: string | null = null;
+
   get model_id() {
+    return this.reportedModel ?? "unknown (the endpoint reported no model id)";
+  }
+
+  /** The configured model id that was requested; shown only labelled as requested (F2-03). */
+  get requested_model_id() {
     return this.o.modelId;
   }
 
@@ -112,8 +119,9 @@ export class LiveReader implements ModelReader {
     let content: unknown;
     let usage: unknown;
     try {
-      const doc = JSON.parse(body) as { choices?: { message?: { content?: unknown } }[]; usage?: { completion_tokens?: unknown } };
+      const doc = JSON.parse(body) as { model?: unknown; choices?: { message?: { content?: unknown } }[]; usage?: { completion_tokens?: unknown } };
       content = doc.choices?.[0]?.message?.content;
+      this.reportedModel = typeof doc.model === "string" && doc.model.trim() !== "" && doc.model.length <= 200 ? doc.model : null;
       usage = doc.usage?.completion_tokens;
     } catch {
       throw new ReaderError("invalid_json", "endpoint reply is not JSON");

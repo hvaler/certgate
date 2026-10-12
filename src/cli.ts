@@ -45,7 +45,7 @@ function readingNote(r: CaseResult): string {
     case "live_no_reading":
       return `${base} Mode ${r.receipt.mode}: live attempt, no reading was obtained (${r.receipt.errors[0]?.class ?? "error"}); nothing was read by a model.`;
     case "live":
-      return `${base} The reading came from the live endpoint, model ${r.receipt.reader.model_id} (as reported by the endpoint).`;
+      return `${base} The reading came from the live endpoint; model as reported by the endpoint: ${r.receipt.reader.model_id} (requested: ${r.receipt.reader.requested_model_id ?? "none"}).`;
   }
 }
 

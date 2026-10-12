@@ -3,6 +3,8 @@
 // times come only from the server (B-02, B-15). New cases are kept in this browser's storage (F4).
 "use strict";
 
+const { readingText, storyLabelDetail, localLabelDetail, releaseAllowed } = window.CertGateLabels;
+
 const STORE_PREFIX = "certgate.case.";
 const $view = () => document.getElementById("view");
 
@@ -279,7 +281,7 @@ function decisionForm(view, onSubmit, opts) {
     if (!who.value.trim() || !why.value.trim()) { msg.textContent = "Name and reason are required."; return; }
     msg.textContent = await onSubmit({ action, decided_by: who.value.trim(), reason: why.value.trim() });
   };
-  const releaseOk = view.proposal === "release";
+  const releaseOk = releaseAllowed(view);
   return h("section", { class: "card stack", "aria-labelledby": "decide" },
     h("h2", { id: "decide" }, "Decision · a person decides"),
     h("p", { class: "muted small" }, "CertGate proposes; it never releases material. Your name and reason go into the receipt.", opts.clientTime ? " This case is held in your browser: the decision is recorded with your browser's time, not verified by a server." : " The time is stamped by the server."),
@@ -324,13 +326,6 @@ async function storyScreen(id) {
   drawStory();
 }
 
-/** Label of a stored story: always its original stored time, plus the re-evaluation time when there is one (F2-01). */
-function storyLabelDetail(s) {
-  return s.evaluatedAt
-    ? `mock reading, no model · stored ${s.storedAt} · re-evaluated by the server at ${s.evaluatedAt} with the confirmations and decision given · not live`
-    : `mock reading, no model · stored ${s.storedAt} · not live`;
-}
-
 function drawStory() {
   const s = session.story;
   const view = s.view;
@@ -361,14 +356,14 @@ function localScreen(key) {
   const held = loadLocal(key);
   if (!held) return render(h("p", { class: "error" }, "This case is not in this browser's storage."));
   const view = held.view;
-  const ctx = { storedTitle: "Stored in this browser", storedDetail: `${view.reading_label} · ${view.receipt.created_at} · not live` };
+  const ctx = { storedTitle: "Stored in this browser", storedDetail: localLabelDetail(view) };
   const nodes = [...caseFile(view, ctx)];
   if (held.decision) {
     nodes.push(h("section", { class: "card stack" }, h("h2", {}, "Decision recorded in this browser"),
       h("p", {}, `${held.decision.action} · by ${held.decision.by} · at ${held.decision.at} (browser time, not verified by a server) · reason: ${held.decision.reason}`)));
   } else {
     nodes.push(decisionForm(view, async (d) => {
-      if (d.action === "release" && view.proposal !== "release") return "Release is not allowed for this proposal.";
+      if (d.action === "release" && !releaseAllowed(view)) return "Release is not allowed for this proposal.";
       held.decision = { action: d.action, by: d.decided_by, reason: d.reason, at: new Date().toISOString(), time_source: "browser clock" };
       try { localStorage.setItem(STORE_PREFIX + key, JSON.stringify(held)); } catch { /* ignore */ }
       localScreen(key);
@@ -420,9 +415,6 @@ function receiptScreen(view, opts) {
   );
 }
 
-function readingText(rc) {
-  return { mock: "mock reading · no model", planted: "mock reading · planted deviation", live: "live reading from the configured endpoint", live_no_reading: "live attempt · no reading" }[rc.reading_source] || rc.reading_source;
-}
 
 async function amdScreen() {
   const f1 = await refreshF1();

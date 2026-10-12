@@ -1,8 +1,8 @@
 {
   "story_schema": "certgate.story/1",
   "stored": true,
-  "stored_at": "2026-10-12T18:35:51.727Z",
-  "stored_label": "stored · mock reading, no model · 2026-10-12T18:35:51.727Z",
+  "stored_at": "2026-10-12T19:05:49.048Z",
+  "stored_label": "stored · mock reading, no model · 2026-10-12T19:05:49.048Z",
   "title": "Conforming",
   "summary": {
     "case_id": "cg-001",
@@ -391,25 +391,25 @@
       {
         "name": "Case created",
         "status": "done",
-        "duration_ms": "410.269",
+        "duration_ms": "388.313",
         "note": "file type and size checked, hash recorded"
       },
       {
         "name": "Model reading · mock (no model)",
         "status": "done",
-        "duration_ms": "0.734",
+        "duration_ms": "0.775",
         "note": "mock reading · no model"
       },
       {
         "name": "Text layer",
         "status": "done",
-        "duration_ms": "7.334",
+        "duration_ms": "7.833",
         "note": "second channel, read without any model"
       },
       {
         "name": "Internal coherence and rules against ESP-014",
         "status": "done",
-        "duration_ms": "2.447",
+        "duration_ms": "2.060",
         "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
       },
       {
@@ -427,14 +427,15 @@
     "receipt": {
       "receipt_schema": "certgate.receipt/1",
       "case_id": "cg-001",
-      "run_id": "101c76b2-d884-4bd2-aab7-6593a51e5bd8",
-      "created_at": "2026-10-12T18:35:51.727Z",
+      "run_id": "c02fd9f8-1579-4dd4-8c13-6611f439fa9c",
+      "created_at": "2026-10-12T19:05:49.048Z",
       "mode": "mock",
       "reading_source": "mock",
       "reader": {
         "reader_id": "mock-reader",
         "reading_source": "mock",
         "model_id": "MOCK (no model; dataset reading)",
+        "requested_model_id": null,
         "model_version": "not applicable (mock)",
         "vllm_version": "not applicable (mock)",
         "rocm_version": "not applicable (mock)",
@@ -450,10 +451,10 @@
       "confirmations": [],
       "channel_available": true,
       "timings_ms": {
-        "validate": "410.269",
-        "text_layer": "7.334",
-        "model_reading": "0.734",
-        "evaluation": "2.447"
+        "validate": "388.313",
+        "text_layer": "7.833",
+        "model_reading": "0.775",
+        "evaluation": "2.060"
       },
       "errors": [],
       "hashes": {
@@ -1336,6 +1337,7 @@
         "tokens_per_second": null,
         "cost_estimate_usd": null
       },
+      "model_text": null,
       "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
     }
   }

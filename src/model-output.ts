@@ -12,7 +12,7 @@ export interface PlantedEntry {
 export interface ModelReading {
   fields: Map<string, FieldValue>;
   /** Model free text. Kept for the record; it never influences the proposal (invariant I1). */
-  explanation: { text: string; planted: boolean } | null;
+  explanation: { text: string; planted: boolean; references: string[] } | null;
   planted: PlantedEntry[];
 }
 
@@ -81,7 +81,8 @@ export function parseModelOutput(text: string): ModelReading {
   if (doc.explanation !== null && doc.explanation !== undefined) {
     const e = doc.explanation as Record<string, unknown>;
     if (typeof e.text !== "string") invalid("explanation.text");
-    explanation = { text: e.text, planted: e.planted === true };
+    const refs = Array.isArray(e.references) ? e.references.filter((r): r is string => typeof r === "string") : [];
+    explanation = { text: e.text, planted: e.planted === true, references: refs };
   }
   const planted: PlantedEntry[] = Array.isArray(doc.planted)
     ? doc.planted.map((p) => {

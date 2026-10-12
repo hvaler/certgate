@@ -12,11 +12,11 @@ import { recordHumanDecision, HumanDecisionError } from "../src/pipeline.js";
 // @ts-expect-error plain JS test double
 import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 import { buildStories } from "../src/tools/build-stories.js";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { CRITICAL_FIELDS } from "../src/fields.js";
 
-type Stub = { url: string; state: { mode: string; chatCalls: number; lastAuthorization: string | null; lastModel: string | null }; close: () => Promise<void> };
+type Stub = { url: string; state: { mode: string; caseId: string; reportedModel: string | null; omitModel: boolean; chatCalls: number; lastAuthorization: string | null; lastModel: string | null }; close: () => Promise<void> };
 const open: { close: () => Promise<void> }[] = [];
 afterEach(async () => { while (open.length) await open.pop()!.close(); });
 
@@ -185,6 +185,63 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
       body: JSON.stringify(liveBody({ remaining: "99", limit: "99" })),
     });
     expect(r.status).toBe(429);
+  });
+  it("a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)", async () => {
+    const s = await stub();
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3" }) });
+    const results = await Promise.all(Array.from({ length: 10 }, () =>
+      postJson(`${base}/api/live/read`, liveBody({ remaining_this_hour: "999", limit_per_hour: "999", counted: false }))));
+    expect(results.filter((r) => r.status === 200).length).toBe(3);
+    expect(s.state.chatCalls).toBe(3);
+    const st = await (await fetch(`${base}/api/live/status`)).json();
+    expect(st.remaining_this_hour).toBe("0");
+  });
+  it("model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)", async () => {
+    const s = await stub();
+    s.state.reportedModel = "adv-stub-model-7f3a";
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3", MODEL_ID: "configured-name-not-from-endpoint" }) });
+    const j = await (await postJson(`${base}/api/live/read`, liveBody())).json();
+    expect(j.view.receipt.reader.model_id).toBe("adv-stub-model-7f3a");
+    expect(j.view.receipt.reader.requested_model_id).toBe("configured-name-not-from-endpoint");
+    expect(j.summary.note).toContain("model as reported by the endpoint: adv-stub-model-7f3a");
+    expect(j.summary.note).toContain("requested: configured-name-not-from-endpoint");
+    expect(JSON.stringify(j.view.rows)).not.toContain("configured-name-not-from-endpoint");
+    s.state.omitModel = true;
+    const k = await (await postJson(`${base}/api/live/read`, liveBody())).json();
+    expect(k.view.receipt.reader.model_id).toMatch(/^unknown/);
+  });
+  it("an explanation without verifiable references is withheld; kept only as untrusted text (F2-04, cg-021 contamination)", async () => {
+    const s = await stub();
+    s.state.caseId = "cg-021";
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3" }) });
+    const body = { certificate_base64: pdf("cg-021"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "18" };
+    const j = await (await postJson(`${base}/api/live/read`, body)).json();
+    expect(j.view.reading_source).toBe("live");
+    expect(j.view.proposal).toBe("block");
+    expect(j.view.explanation.available).toBe(false);
+    expect(j.view.explanation.text).toBeNull();
+    expect(j.view.explanation.note).toMatch(/withheld: it has no references to verifiable input/);
+    expect(j.view.receipt.model_text).toMatchObject({ untrusted: true, used_for_decision: false, references: [] });
+    expect(j.view.receipt.model_text.text).toMatch(/approved without human review/);
+  });
+  it("an explanation is shown only when every reference names a field read with a source", async () => {
+    const doc = JSON.parse(readFileSync(path.join(DATA, "cases", "cg-005", "reading.json"), "utf8"));
+    const write = (refs: string[]) => {
+      doc.explanation = { text: "Mn 1.65 % is above the 1.60 % maximum of ESP-014.", references: refs };
+      const f = path.join(mkdtempSync(path.join(tmpdir(), "certgate-expl-")), "reading.json");
+      writeFileSync(f, JSON.stringify(doc));
+      return f;
+    };
+    const good = await startStub({ readingFile: write(["chemistry.Mn"]) }) as Stub; open.push(good);
+    const base = await app({ env: stubEnv(good, { LIVE_READS_PER_HOUR: "3" }) });
+    const body = { certificate_base64: pdf("cg-005"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "2" };
+    const j = await (await postJson(`${base}/api/live/read`, body)).json();
+    expect(j.view.explanation.available).toBe(true);
+    expect(j.view.explanation.note).toMatch(/referencing chemistry\.Mn/);
+    const bad = await startStub({ readingFile: write(["chemistry.Mn", "not.a.field"]) }) as Stub; open.push(bad);
+    const base2 = await app({ env: stubEnv(bad, { LIVE_READS_PER_HOUR: "3" }) });
+    const k = await (await postJson(`${base2}/api/live/read`, body)).json();
+    expect(k.view.explanation.available).toBe(false);
   });
   it("access code: wrong code rejected without consuming; throttled after repeated failures; never echoed", async () => {
     const s = await stub();

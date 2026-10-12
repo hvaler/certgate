@@ -38,7 +38,7 @@ export interface CaseReadings {
   reader_error: ReaderErrorRecord | null;
   /** Every failed reader attempt, including attempts a retry recovered from. */
   reader_errors: ReaderErrorRecord[];
-  reader: { reader_id: string; kind: "mock" | "live"; model_id: string; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
+  reader: { reader_id: string; kind: "mock" | "live"; model_id: string; requested_model_id: string | null; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
   timings: Record<string, string>;
   /** F1 snapshot taken at reading time (S2-13); null outside the live path. */
   f1: F1Snapshot | null;
@@ -53,7 +53,7 @@ export interface CaseResult {
   decision: Decision;
   confirmations: FieldConfirmation[];
   receipt: RunReceipt;
-  explanation: { text: string; planted: boolean; used_for_decision: false } | null;
+  explanation: { text: string; planted: boolean; references: string[]; used_for_decision: false } | null;
 }
 
 /** Elapsed milliseconds as a decimal string with microsecond precision (integer arithmetic only). */
@@ -132,7 +132,7 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
   const reader = input.reader;
   return {
     case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError, reader_errors: readerErrors,
-    reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, model_version: reader.model_version,
+    reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, requested_model_id: reader.requested_model_id ?? null, model_version: reader.model_version,
       vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls, planted: reader.planted },
     timings, f1: input.f1 ?? null, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
   };
@@ -234,7 +234,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     mode: rd.mode,
     reading_source: readingSource,
     reader: {
-      reader_id: rd.reader.reader_id, reading_source: readingSource, model_id: rd.reader.model_id,
+      reader_id: rd.reader.reader_id, reading_source: readingSource, model_id: rd.reader.model_id, requested_model_id: rd.reader.requested_model_id,
       model_version: rd.reader.model_version, vllm_version: rd.reader.vllm_version, rocm_version: rd.reader.rocm_version,
       calls: String(rd.reader.calls),
     },
@@ -269,6 +269,9 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     channel_checks: r.evaluation?.channel_checks ?? [],
     rule_results: r.evaluation?.rule_results ?? [],
     f1: rd.f1 ?? notApplicableF1(rd.reader.kind),
+    model_text: rd.model?.explanation
+      ? { text: rd.model.explanation.text, references: rd.model.explanation.references, planted: rd.model.explanation.planted, untrusted: true, used_for_decision: false }
+      : null,
     notice: FICTITIOUS_NOTICE,
   };
 }

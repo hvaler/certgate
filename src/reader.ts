@@ -32,6 +32,8 @@ export interface ModelReader {
   readonly kind: "mock" | "live";
   readonly reader_id: string;
   readonly model_id: string;
+  /** Live readers only: the configured model id that was requested (never shown as the reported one). */
+  readonly requested_model_id?: string;
   readonly model_version: string;
   readonly vllm_version: string;
   readonly rocm_version: string;
