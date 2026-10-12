@@ -24,6 +24,9 @@ COPY config ./config
 COPY data ./data
 COPY docs ./docs
 COPY tools ./tools
+COPY public ./public
+COPY api ./api
+COPY vercel.json ./
 # vitest writes a transient config bundle and a cache under /app when the suite runs inside the image.
 RUN chown -R node:node /app
 USER node

@@ -1,8 +1,8 @@
 {
   "story_schema": "certgate.story/1",
   "stored": true,
-  "stored_at": "2026-10-12T18:30:51.706Z",
-  "stored_label": "stored · mock reading, no model · 2026-10-12T18:30:51.706Z",
+  "stored_at": "2026-10-12T18:35:51.742Z",
+  "stored_label": "stored · mock reading, no model · 2026-10-12T18:35:51.742Z",
   "title": "The scan it refuses to release",
   "summary": {
     "case_id": "cg-003",
@@ -433,8 +433,8 @@
       },
       {
         "field": "cev_recomputed",
-        "label": "CEV (recomputed, exact)",
-        "value": "0.39973333333333333333333333333333333333333333333333",
+        "label": "CEV (recomputed; exact value in the receipt)",
+        "value": "0.399733…",
         "unit": "%",
         "state": "known",
         "value_source": "computed",
@@ -457,13 +457,13 @@
       {
         "name": "Case created",
         "status": "done",
-        "duration_ms": "1.738",
+        "duration_ms": "1.696",
         "note": "file type and size checked, hash recorded"
       },
       {
         "name": "Model reading · mock (no model)",
         "status": "done",
-        "duration_ms": "0.177",
+        "duration_ms": "0.169",
         "note": "mock reading · no model"
       },
       {
@@ -475,7 +475,7 @@
       {
         "name": "Internal coherence and rules against ESP-014",
         "status": "done",
-        "duration_ms": "0.369",
+        "duration_ms": "0.352",
         "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
       },
       {
@@ -493,8 +493,8 @@
     "receipt": {
       "receipt_schema": "certgate.receipt/1",
       "case_id": "cg-003",
-      "run_id": "56384d49-2fbb-4310-94e6-17ace517f6cd",
-      "created_at": "2026-10-12T18:30:51.706Z",
+      "run_id": "bf597b53-1cee-4d09-86bd-3bd8a8cd0214",
+      "created_at": "2026-10-12T18:35:51.742Z",
       "mode": "mock",
       "reading_source": "mock",
       "reader": {
@@ -555,10 +555,10 @@
       "confirmations": [],
       "channel_available": false,
       "timings_ms": {
-        "validate": "1.738",
+        "validate": "1.696",
         "text_layer": "0.007",
-        "model_reading": "0.177",
-        "evaluation": "0.369"
+        "model_reading": "0.169",
+        "evaluation": "0.352"
       },
       "errors": [],
       "hashes": {

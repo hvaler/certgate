@@ -4,6 +4,7 @@
 // model output of the dataset case named in the request (or cg-001), relabelled as stub output.
 //
 // Run:  node test/support/stub-endpoint.mjs --port 8001 [--mode ok|timeout|http_429|http_5xx|invalid_json|huge]
+//         [--case cg-001 | --reading <file with a mock model output>]
 // Then: MODEL_BASE_URL=http://127.0.0.1:8001 MODEL_ID=certgate-test-stub GPU_INFO_URL=http://127.0.0.1:8001/gpu-info \
 //       LIVE_READS_PER_HOUR=3 node dist/src/server.js
 import { readFileSync } from "node:fs";
@@ -14,8 +15,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const STUB_MODEL_ID = "certgate-test-stub";
 
-export function startStub({ port = 0, mode = "ok", caseId = "cg-001" } = {}) {
-  const state = { mode, caseId, chatCalls: 0, lastAuthorization: null, lastModel: null };
+export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null } = {}) {
+  const state = { mode, caseId, readingFile, chatCalls: 0, lastAuthorization: null, lastModel: null };
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://stub");
     const json = (status, body) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(body)); };
@@ -35,7 +36,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001" } = {}) {
           case "invalid_json": res.writeHead(200, { "content-type": "application/json" }); return res.end("{ not json");
           case "huge": res.writeHead(200, { "content-type": "application/json" }); return res.end("x".repeat(2 * 1024 * 1024));
           default: {
-            const output = readFileSync(path.join(ROOT, "data", "cases", state.caseId, "reading.json"), "utf8");
+            const output = readFileSync(state.readingFile ?? path.join(ROOT, "data", "cases", state.caseId, "reading.json"), "utf8");
             return json(200, { choices: [{ message: { role: "assistant", content: output } }], usage: { completion_tokens: 420 } });
           }
         }
@@ -51,6 +52,6 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001" } = {}) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ? process.argv[i + 1] : d; };
-  startStub({ port: Number.parseInt(arg("port", "8001"), 10), mode: arg("mode", "ok"), caseId: arg("case", "cg-001") })
+  startStub({ port: Number.parseInt(arg("port", "8001"), 10), mode: arg("mode", "ok"), caseId: arg("case", "cg-001"), readingFile: arg("reading", null) })
     .then((s) => process.stdout.write(`TEST STUB (not a model) listening on ${s.url}, mode ${s.state.mode}\n`));
 }

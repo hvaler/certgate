@@ -1,8 +1,8 @@
 {
   "story_schema": "certgate.story/1",
   "stored": true,
-  "stored_at": "2026-10-12T18:30:51.691Z",
-  "stored_label": "stored · mock reading, no model · 2026-10-12T18:30:51.691Z",
+  "stored_at": "2026-10-12T18:35:51.727Z",
+  "stored_label": "stored · mock reading, no model · 2026-10-12T18:35:51.727Z",
   "title": "Conforming",
   "summary": {
     "case_id": "cg-001",
@@ -367,7 +367,7 @@
       },
       {
         "field": "cev_recomputed",
-        "label": "CEV (recomputed, exact)",
+        "label": "CEV (recomputed; exact value in the receipt)",
         "value": "0.4124",
         "unit": "%",
         "state": "known",
@@ -391,25 +391,25 @@
       {
         "name": "Case created",
         "status": "done",
-        "duration_ms": "434.464",
+        "duration_ms": "410.269",
         "note": "file type and size checked, hash recorded"
       },
       {
         "name": "Model reading · mock (no model)",
         "status": "done",
-        "duration_ms": "0.706",
+        "duration_ms": "0.734",
         "note": "mock reading · no model"
       },
       {
         "name": "Text layer",
         "status": "done",
-        "duration_ms": "6.747",
+        "duration_ms": "7.334",
         "note": "second channel, read without any model"
       },
       {
         "name": "Internal coherence and rules against ESP-014",
         "status": "done",
-        "duration_ms": "2.381",
+        "duration_ms": "2.447",
         "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
       },
       {
@@ -427,8 +427,8 @@
     "receipt": {
       "receipt_schema": "certgate.receipt/1",
       "case_id": "cg-001",
-      "run_id": "239f1943-fe47-48db-a615-569c9728a4a1",
-      "created_at": "2026-10-12T18:30:51.691Z",
+      "run_id": "101c76b2-d884-4bd2-aab7-6593a51e5bd8",
+      "created_at": "2026-10-12T18:35:51.727Z",
       "mode": "mock",
       "reading_source": "mock",
       "reader": {
@@ -450,10 +450,10 @@
       "confirmations": [],
       "channel_available": true,
       "timings_ms": {
-        "validate": "434.464",
-        "text_layer": "6.747",
-        "model_reading": "0.706",
-        "evaluation": "2.381"
+        "validate": "410.269",
+        "text_layer": "7.334",
+        "model_reading": "0.734",
+        "evaluation": "2.447"
       },
       "errors": [],
       "hashes": {

@@ -118,7 +118,8 @@ export function toView(r: CaseResult): CaseView {
   if (e?.cev_recomputed) {
     const rr = ruleFor("CEV").find((x) => x.rule_id.endsWith(".recomputed"));
     rows.push({
-      field: "cev_recomputed", label: "CEV (recomputed, exact)", value: e.cev_recomputed, unit: "%", state: "known", value_source: "computed",
+      // Shown to 6 decimals for reading; the exact value is in the receipt (rule_results) and is what the rule uses.
+      field: "cev_recomputed", label: "CEV (recomputed; exact value in the receipt)", value: shortDecimal(e.cev_recomputed), unit: "%", state: "known", value_source: "computed",
       model_value: null, text_layer_value: null, channels: "n/a", spec: rr?.expected ?? "—",
       source: `computed from ${CHEMISTRY.filter((x) => ["C", "Mn", "Cr", "Mo", "V", "Ni", "Cu"].includes(x)).join(", ")} (IIW formula, cited)`,
       result: rr?.outcome === "fail" ? "fail" : rr?.outcome === "pass" ? "pass" : "unknown", critical: false,
@@ -169,4 +170,12 @@ export function toView(r: CaseResult): CaseView {
       : { available: false, text: null, note: reading === "live" ? "the model gave no explanation" : "There is no model explanation: this is a mock reading, no model was used." },
     receipt: r.receipt,
   };
+}
+
+
+/** Display form of an exact decimal: at most 6 decimals, marked when shortened. Display only, never compared. */
+export function shortDecimal(s: string): string {
+  const m = /^(-?\d+)\.(\d+)$/.exec(s);
+  if (!m || m[2]!.length <= 6) return s;
+  return `${m[1]}.${m[2]!.slice(0, 6)}…`;
 }

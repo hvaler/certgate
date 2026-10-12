@@ -5,21 +5,21 @@
       "title": "Conforming",
       "kind": "conforming digital certificate",
       "proposal": "release",
-      "stored_at": "2026-10-12T18:30:51.691Z"
+      "stored_at": "2026-10-12T18:35:51.727Z"
     },
     {
       "id": "cg-002",
       "title": "Out of spec",
       "kind": "scanned certificate out of spec",
       "proposal": "block",
-      "stored_at": "2026-10-12T18:30:51.701Z"
+      "stored_at": "2026-10-12T18:35:51.737Z"
     },
     {
       "id": "cg-003",
       "title": "The scan it refuses to release",
       "kind": "ambiguous scan",
       "proposal": "review",
-      "stored_at": "2026-10-12T18:30:51.706Z"
+      "stored_at": "2026-10-12T18:35:51.742Z"
     }
   ]
 }

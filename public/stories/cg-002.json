@@ -1,8 +1,8 @@
 {
   "story_schema": "certgate.story/1",
   "stored": true,
-  "stored_at": "2026-10-12T18:30:51.701Z",
-  "stored_label": "stored · mock reading, no model · 2026-10-12T18:30:51.701Z",
+  "stored_at": "2026-10-12T18:35:51.737Z",
+  "stored_label": "stored · mock reading, no model · 2026-10-12T18:35:51.737Z",
   "title": "Out of spec",
   "summary": {
     "case_id": "cg-002",
@@ -433,8 +433,8 @@
       },
       {
         "field": "cev_recomputed",
-        "label": "CEV (recomputed, exact)",
-        "value": "0.46393333333333333333333333333333333333333333333333",
+        "label": "CEV (recomputed; exact value in the receipt)",
+        "value": "0.463933…",
         "unit": "%",
         "state": "known",
         "value_source": "computed",
@@ -457,25 +457,25 @@
       {
         "name": "Case created",
         "status": "done",
-        "duration_ms": "3.147",
+        "duration_ms": "2.863",
         "note": "file type and size checked, hash recorded"
       },
       {
         "name": "Model reading · mock (no model)",
         "status": "done",
-        "duration_ms": "0.172",
+        "duration_ms": "0.173",
         "note": "mock reading · no model"
       },
       {
         "name": "Text layer",
         "status": "not_available",
-        "duration_ms": "0.009",
+        "duration_ms": "0.008",
         "note": "not available: scan, no text layer"
       },
       {
         "name": "Internal coherence and rules against ESP-014",
         "status": "done",
-        "duration_ms": "0.416",
+        "duration_ms": "0.624",
         "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
       },
       {
@@ -493,8 +493,8 @@
     "receipt": {
       "receipt_schema": "certgate.receipt/1",
       "case_id": "cg-002",
-      "run_id": "92033877-7e46-4078-ab2c-5b9e531cc115",
-      "created_at": "2026-10-12T18:30:51.701Z",
+      "run_id": "98257fca-a7f5-415b-bbd8-02382510f791",
+      "created_at": "2026-10-12T18:35:51.737Z",
       "mode": "mock",
       "reading_source": "mock",
       "reader": {
@@ -555,10 +555,10 @@
       "confirmations": [],
       "channel_available": false,
       "timings_ms": {
-        "validate": "3.147",
-        "text_layer": "0.009",
-        "model_reading": "0.172",
-        "evaluation": "0.416"
+        "validate": "2.863",
+        "text_layer": "0.008",
+        "model_reading": "0.173",
+        "evaluation": "0.624"
       },
       "errors": [],
       "hashes": {
