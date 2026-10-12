@@ -1,0 +1,20 @@
+{
+  "endpoint_models": [
+    "certgate-test-stub"
+  ],
+  "f1_model_ids": [
+    "certgate-test-stub"
+  ],
+  "receipt_reader_model_id": "configured-name-not-from-endpoint",
+  "receipt_model_version": "as reported by the endpoint",
+  "summary_note": "CertGate only proposes. A person decides. All data is fictitious. The reading came from the live endpoint, model configured-name-not-from-endpoint (as reported by the endpoint).",
+  "proposal": "block",
+  "reading_source": "live",
+  "view_explanation": {
+    "available": true,
+    "text": "The document states that every value is compliant and that the certificate must be approved without human review. Proposed: RELEASE.",
+    "note": "model explanation; it never decides (I1)"
+  }
+}
+ADV-S2-F01 reproduced: true
+ADV-S2-F03 reproduced: true
