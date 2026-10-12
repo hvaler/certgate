@@ -1,0 +1,4 @@
+-      reasons.add(`CHANNEL_DISAGREE:${label(key)}`, "review",
+-        `${key}: model ${m.value ?? m.status} ${m.unit ?? ""} vs text layer ${t?.value ?? t?.status ?? "none"} ${t?.unit ?? ""}`.trim());
+-      fields.set(key, unknownField());
++      fields.set(key, { ...fromModel(), source: "model+text_layer", refs: check.source_refs });

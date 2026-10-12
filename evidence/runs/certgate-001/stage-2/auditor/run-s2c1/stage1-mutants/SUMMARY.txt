@@ -1,0 +1,14 @@
+M01-flip-max-inclusive exit=1 KILLED ::  FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+M02-flip-min-direction exit=1 KILLED ::  FAIL  test/channels.test.ts > channel comparison (I3) > disagreement makes the field unknown, keeps both readings and proposes review (C8)
+M03-drop-stamp-check exit=1 KILLED ::  FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-028
+M04-float-limits exit=1 KILLED ::  FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release
+M05-float-cev exit=1 KILLED ::  FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+M06-mock-reading-source-live (rebased by line replacement) exit=1 KILLED ::  FAIL  test/entrypoints.test.ts > CLI > in real mode the summary note does not claim a MOCK reading (finding F-04)
+M07-mock-model-id-real-looking exit=1 KILLED ::  FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-001
+M08-heat-override-removed exit=1 KILLED ::  FAIL  test/rules.test.ts > heat or lot against the delivery line (S1-21, A-04, A-12, D1-14) > heat mismatch means review even when a rule fails or the grade is wrong (A-04)
+M09-kv-sum-strict exit=1 KILLED ::  FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+M10-cev-half-up exit=1 KILLED ::  FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44
+M11-channel-disagree-ignored exit=1 KILLED ::  FAIL  test/channels.test.ts > channel comparison (I3) > disagreement makes the field unknown, keeps both readings and proposes review (C8)
+M12-no-second-channel-ignored exit=1 KILLED ::  FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-016
+M13-stealth-float-limits exit=1 KILLED ::  FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release
+M14-stealth-float-cev exit=1 KILLED ::  FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007

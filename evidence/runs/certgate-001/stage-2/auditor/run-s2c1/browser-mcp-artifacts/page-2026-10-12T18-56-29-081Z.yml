@@ -1,0 +1,127 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - generic [ref=f2e3]:
+      - link "CertGate" [ref=f2e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f2e8]:
+        - link "Cases" [ref=f2e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f2e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f2e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f2e12]: "Model endpoint: off · last check 2026-10-12T18:56:04.190Z"
+  - note [ref=f2e15]:
+    - generic [ref=f2e16]:
+      - strong [ref=f2e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f2e18]:
+    - generic [ref=f2e19]:
+      - region [ref=f2e97]:
+        - generic [ref=f2e98]:
+          - generic [ref=f2e99]: Case upload-55c15e2e23d2 · Delivery note ALB-2026-0917 · line 1
+          - heading "Certificate unknown · heat unknown" [level=1] [ref=f2e100]
+          - generic [ref=f2e101]: digital PDF with a text layer
+        - generic [ref=f2e102]:
+          - strong [ref=f2e103]: Stored in this browser
+          - text: · live attempt · no reading · 2026-10-12T18:56:20.070Z · not live
+      - region [ref=f2e104]:
+        - generic [ref=f2e105]: CERTGATE PROPOSES
+        - heading "Review — CertGate will not propose release" [level=2] [ref=f2e106]
+        - paragraph [ref=f2e107]: "The reading failed: no value was read, nothing is guessed, and no positive proposal is made."
+        - list [ref=f2e108]:
+          - listitem [ref=f2e109]: "READER_ERROR:endpoint_off — no live endpoint: no endpoint configured"
+      - region [ref=f2e110]:
+        - generic [ref=f2e111]:
+          - heading "Steps of this run" [level=2] [ref=f2e112]
+          - generic [ref=f2e113]: live attempt · no reading
+        - list [ref=f2e114]:
+          - listitem [ref=f2e115]:
+            - generic [ref=f2e116]: Case created
+            - generic [ref=f2e117]: done
+            - generic [ref=f2e118]: 137.890 ms
+            - generic [ref=f2e119]: file type and size checked, hash recorded
+          - listitem [ref=f2e120]:
+            - generic [ref=f2e121]: Model reading · live endpoint
+            - generic [ref=f2e122]: error
+            - generic [ref=f2e123]: 0.229 ms
+            - generic [ref=f2e124]: "endpoint_off: no reading"
+          - listitem [ref=f2e125]:
+            - generic [ref=f2e126]: Text layer
+            - generic [ref=f2e127]: done
+            - generic [ref=f2e128]: 4.130 ms
+            - generic [ref=f2e129]: second channel, read without any model
+          - listitem [ref=f2e130]:
+            - generic [ref=f2e131]: Internal coherence and rules against ESP-014
+            - generic [ref=f2e132]: skipped
+            - generic [ref=f2e133]: 0.065 ms
+            - generic [ref=f2e134]: "skipped: no reading"
+          - listitem [ref=f2e135]:
+            - generic [ref=f2e136]: Proposal
+            - generic [ref=f2e137]: done
+            - generic [ref=f2e138]: —
+            - generic [ref=f2e139]: review · a person decides
+        - paragraph [ref=f2e140]: Durations are the measured timings of this run, from its receipt.
+      - generic [ref=f2e141]:
+        - region [ref=f2e142]:
+          - generic [ref=f2e143]:
+            - heading "Values against purchase spec ESP-014 rev. 3" [level=2] [ref=f2e144]
+            - generic [ref=f2e145]: 0 critical fields · 0 pass · 0 unknown · 0 fail
+          - table [ref=f2e147]:
+            - rowgroup [ref=f2e148]:
+              - row [ref=f2e149]:
+                - columnheader "FIELD" [ref=f2e150]
+                - columnheader "READ" [ref=f2e151]
+                - columnheader "CHANNELS" [ref=f2e152]
+                - columnheader "SPEC" [ref=f2e153]
+                - columnheader "SOURCE" [ref=f2e154]
+                - columnheader "RESULT" [ref=f2e155]
+            - rowgroup
+          - generic [ref=f2e156]:
+            - strong [ref=f2e157]: Reading channels.
+            - text: "live attempt · no reading. Text layer: available (read without any model)."
+        - complementary [ref=f2e158]:
+          - generic [ref=f2e159]:
+            - heading "Runs on AMD" [level=2] [ref=f2e160]
+            - generic [ref=f2e161]: ENDPOINT OFF
+          - paragraph [ref=f2e162]: Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand.
+          - generic [ref=f2e163]:
+            - term [ref=f2e164]: State
+            - definition [ref=f2e165]: off · no endpoint configured
+            - term [ref=f2e166]: Checked at
+            - definition [ref=f2e167]: 2026-10-12T18:56:19.928Z
+            - term [ref=f2e168]: Model(s) listed
+            - definition [ref=f2e169]: none
+            - term [ref=f2e170]: GPU
+            - definition [ref=f2e171]: unknown
+            - term [ref=f2e172]: ROCm · vLLM
+            - definition [ref=f2e173]: unknown · unknown
+            - term [ref=f2e174]: Latency (ms)
+            - definition [ref=f2e175]: unknown
+            - term [ref=f2e176]: Tokens / s
+            - definition [ref=f2e177]: unknown
+            - term [ref=f2e178]: Cost estimate (USD)
+            - definition [ref=f2e179]: unknown
+      - region [ref=f2e180]:
+        - heading "Explanation" [level=2] [ref=f2e181]
+        - paragraph [ref=f2e182]: "There is no model explanation: this is a mock reading, no model was used."
+      - region [ref=f2e183]:
+        - heading "Decision · a person decides" [level=2] [ref=f2e184]
+        - paragraph [ref=f2e185]: "CertGate proposes; it never releases material. Your name and reason go into the receipt. This case is held in your browser: the decision is recorded with your browser's time, not verified by a server."
+        - generic [ref=f2e187]:
+          - generic [ref=f2e188]: Your name and role
+          - textbox "Your name and role" [ref=f2e189]:
+            - /placeholder: "[Name] · Quality"
+        - generic [ref=f2e190]:
+          - generic [ref=f2e191]: Reason
+          - textbox "Reason" [ref=f2e192]:
+            - /placeholder: What you checked and why you decide this
+        - generic [ref=f2e193]:
+          - button "Block batch" [ref=f2e194] [cursor=pointer]
+          - button "Request new certificate" [ref=f2e195] [cursor=pointer]
+          - button "Release batch" [disabled] [ref=f2e196]
+        - paragraph [ref=f2e197]: Release is not offered while the proposal is not release. For a scan, every critical field must first be confirmed on the original.
+        - status
+      - paragraph [ref=f2e198]:
+        - link "Open the receipt" [ref=f2e199] [cursor=pointer]:
+          - /url: "#/receipt"

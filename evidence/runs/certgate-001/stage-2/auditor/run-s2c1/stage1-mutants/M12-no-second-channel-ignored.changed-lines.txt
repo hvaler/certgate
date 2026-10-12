@@ -1,0 +1,2 @@
+-    reasons.add("NO_SECOND_CHANNEL", "review",
++    reasons.add("NO_SECOND_CHANNEL", "info",

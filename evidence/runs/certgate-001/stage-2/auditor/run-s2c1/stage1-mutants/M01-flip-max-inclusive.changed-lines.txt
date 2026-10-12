@@ -1,0 +1,2 @@
+-  const aboveMax = l.max !== null && value.gt(new Dec(l.max));
++  const aboveMax = l.max !== null && value.gte(new Dec(l.max));

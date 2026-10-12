@@ -1,0 +1,2 @@
+-export const MOCK_LABEL = "MOCK (no model; dataset reading)";
++export const MOCK_LABEL = "Qwen2.5-VL-72B-Instruct";

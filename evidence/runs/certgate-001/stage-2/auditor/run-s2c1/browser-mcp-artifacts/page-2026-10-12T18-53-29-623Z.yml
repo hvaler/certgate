@@ -1,0 +1,287 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "CertGate" [ref=f1e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f1e8]:
+        - link "Cases" [ref=f1e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f1e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f1e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f1e12]: "Model endpoint: off · last check 2026-10-12T18:53:28.748Z"
+  - note [ref=f1e15]:
+    - generic [ref=f1e16]:
+      - strong [ref=f1e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f1e18]:
+    - generic [ref=f1e19]:
+      - region [ref=f1e440]:
+        - generic [ref=f1e441]:
+          - generic [ref=f1e442]: Case cg-001 · Delivery note ALB-2026-0917 · line 1
+          - heading "Certificate SV-2026-118204 · heat 24-71830" [level=1] [ref=f1e443]
+          - generic [ref=f1e444]: Siderúrgica Valdemora S.A. · Chapa 20 x 2000 x 6000 mm · digital PDF with a text layer
+        - generic [ref=f1e445]:
+          - strong [ref=f1e446]: Stored reading
+          - text: · mock reading, no model · 2026-10-12T18:35:51.727Z · not live
+      - region [ref=f1e447]:
+        - generic [ref=f1e448]: CERTGATE PROPOSES
+        - heading "Release proposed — a person decides" [level=2] [ref=f1e449]
+        - list
+        - paragraph [ref=f1e450]: No rule fails and no review trigger holds. A person in Quality still decides.
+      - region [ref=f1e451]:
+        - generic [ref=f1e452]:
+          - heading "Steps of this run" [level=2] [ref=f1e453]
+          - generic [ref=f1e454]: mock reading · no model
+        - list [ref=f1e455]:
+          - listitem [ref=f1e456]:
+            - generic [ref=f1e457]: Case created
+            - generic [ref=f1e458]: done
+            - generic [ref=f1e459]: 410.269 ms
+            - generic [ref=f1e460]: file type and size checked, hash recorded
+          - listitem [ref=f1e461]:
+            - generic [ref=f1e462]: Model reading · mock (no model)
+            - generic [ref=f1e463]: done
+            - generic [ref=f1e464]: 0.734 ms
+            - generic [ref=f1e465]: mock reading · no model
+          - listitem [ref=f1e466]:
+            - generic [ref=f1e467]: Text layer
+            - generic [ref=f1e468]: done
+            - generic [ref=f1e469]: 7.334 ms
+            - generic [ref=f1e470]: second channel, read without any model
+          - listitem [ref=f1e471]:
+            - generic [ref=f1e472]: Internal coherence and rules against ESP-014
+            - generic [ref=f1e473]: done
+            - generic [ref=f1e474]: 2.447 ms
+            - generic [ref=f1e475]: "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
+          - listitem [ref=f1e476]:
+            - generic [ref=f1e477]: Proposal
+            - generic [ref=f1e478]: done
+            - generic [ref=f1e479]: —
+            - generic [ref=f1e480]: release · a person decides
+        - paragraph [ref=f1e481]: Durations are the measured timings of this run, from its receipt.
+      - generic [ref=f1e482]:
+        - region [ref=f1e483]:
+          - generic [ref=f1e484]:
+            - heading "Values against purchase spec ESP-014 rev. 3" [level=2] [ref=f1e485]
+            - generic [ref=f1e486]: 22 critical fields · 18 pass · 0 unknown · 0 fail
+          - table [ref=f1e488]:
+            - rowgroup [ref=f1e489]:
+              - row [ref=f1e490]:
+                - columnheader "FIELD" [ref=f1e491]
+                - columnheader "READ" [ref=f1e492]
+                - columnheader "CHANNELS" [ref=f1e493]
+                - columnheader "SPEC" [ref=f1e494]
+                - columnheader "SOURCE" [ref=f1e495]
+                - columnheader "RESULT" [ref=f1e496]
+            - rowgroup [ref=f1e497]:
+              - row [ref=f1e498]:
+                - rowheader "Certificate type" [ref=f1e499]
+                - cell "3.1" [ref=f1e500]
+                - cell "model and text layer agree" [ref=f1e501]
+                - cell "3.1 (EN 10204)" [ref=f1e502]
+                - cell "page 1 · document title" [ref=f1e503]
+                - cell "✓ Pass" [ref=f1e504]
+              - row [ref=f1e505]:
+                - rowheader "Heat no." [ref=f1e506]
+                - cell "24-71830" [ref=f1e507]
+                - cell "model and text layer agree" [ref=f1e508]
+                - 'cell "= delivery line 1: 24-71830" [ref=f1e509]'
+                - cell "page 1 · Colada / Heat no." [ref=f1e510]
+                - cell "✓ Pass" [ref=f1e511]
+              - row [ref=f1e512]:
+                - rowheader "Grade" [ref=f1e513]
+                - cell "TRN-355" [ref=f1e514]
+                - cell "model and text layer agree" [ref=f1e515]
+                - cell "TRN-355 (ordered TRN-355)" [ref=f1e516]
+                - cell "page 1 · Calidad / Grade" [ref=f1e517]
+                - cell "✓ Pass" [ref=f1e518]
+              - row [ref=f1e519]:
+                - rowheader "CEV (printed)" [ref=f1e520]
+                - cell "0.41 %" [ref=f1e521]
+                - cell "model and text layer agree" [ref=f1e522]
+                - cell "≤ 0.45 %" [ref=f1e523]
+                - cell "page 1 · heat analysis table, column CEV" [ref=f1e524]
+                - cell "✓ Pass" [ref=f1e525]
+              - row [ref=f1e526]:
+                - rowheader "KV test temperature" [ref=f1e527]
+                - cell "-20 °C" [ref=f1e528]
+                - cell "model and text layer agree" [ref=f1e529]
+                - cell "-20 °C" [ref=f1e530]
+                - cell "page 1 · impact test heading" [ref=f1e531]
+                - cell "✓ Pass" [ref=f1e532]
+              - row [ref=f1e533]:
+                - rowheader "Inspection stamp" [ref=f1e534]
+                - cell "QA-07" [ref=f1e535]
+                - cell "model and text layer agree" [ref=f1e536]
+                - cell "required" [ref=f1e537]
+                - cell "page 1 · signature block, Sello" [ref=f1e538]
+                - cell "✓ Pass" [ref=f1e539]
+              - row [ref=f1e540]:
+                - rowheader "C (%)" [ref=f1e541]
+                - cell "0.16 %" [ref=f1e542]
+                - cell "model and text layer agree" [ref=f1e543]
+                - cell "≤ 0.20 %" [ref=f1e544]
+                - cell "page 1 · heat analysis table, column C" [ref=f1e545]
+                - cell "✓ Pass" [ref=f1e546]
+              - row [ref=f1e547]:
+                - rowheader "Si (%)" [ref=f1e548]
+                - cell "0.21 %" [ref=f1e549]
+                - cell "model and text layer agree" [ref=f1e550]
+                - cell "≤ 0.55 %" [ref=f1e551]
+                - cell "page 1 · heat analysis table, column Si" [ref=f1e552]
+                - cell "✓ Pass" [ref=f1e553]
+              - row [ref=f1e554]:
+                - rowheader "Mn (%)" [ref=f1e555]
+                - cell "1.42 %" [ref=f1e556]
+                - cell "model and text layer agree" [ref=f1e557]
+                - cell "≤ 1.60 %" [ref=f1e558]
+                - cell "page 1 · heat analysis table, column Mn" [ref=f1e559]
+                - cell "✓ Pass" [ref=f1e560]
+              - row [ref=f1e561]:
+                - rowheader "P (%)" [ref=f1e562]
+                - cell "0.012 %" [ref=f1e563]
+                - cell "model and text layer agree" [ref=f1e564]
+                - cell "≤ 0.025 %" [ref=f1e565]
+                - cell "page 1 · heat analysis table, column P" [ref=f1e566]
+                - cell "✓ Pass" [ref=f1e567]
+              - row [ref=f1e568]:
+                - rowheader "S (%)" [ref=f1e569]
+                - cell "0.006 %" [ref=f1e570]
+                - cell "model and text layer agree" [ref=f1e571]
+                - cell "≤ 0.025 %" [ref=f1e572]
+                - cell "page 1 · heat analysis table, column S" [ref=f1e573]
+                - cell "✓ Pass" [ref=f1e574]
+              - row [ref=f1e575]:
+                - rowheader "Cr (%)" [ref=f1e576]
+                - cell "0.04 %" [ref=f1e577]
+                - cell "model and text layer agree" [ref=f1e578]
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e579]
+                - cell "page 1 · heat analysis table, column Cr" [ref=f1e580]
+                - cell "info" [ref=f1e581]
+              - row [ref=f1e582]:
+                - rowheader "Ni (%)" [ref=f1e583]
+                - cell "0.03 %" [ref=f1e584]
+                - cell "model and text layer agree" [ref=f1e585]
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e586]
+                - cell "page 1 · heat analysis table, column Ni" [ref=f1e587]
+                - cell "info" [ref=f1e588]
+              - row [ref=f1e589]:
+                - rowheader "Mo (%)" [ref=f1e590]
+                - cell "0.01 %" [ref=f1e591]
+                - cell "model and text layer agree" [ref=f1e592]
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e593]
+                - cell "page 1 · heat analysis table, column Mo" [ref=f1e594]
+                - cell "info" [ref=f1e595]
+              - row [ref=f1e596]:
+                - rowheader "Cu (%)" [ref=f1e597]
+                - cell "0.05 %" [ref=f1e598]
+                - cell "model and text layer agree" [ref=f1e599]
+                - cell "≤ 0.55 %" [ref=f1e600]
+                - cell "page 1 · heat analysis table, column Cu" [ref=f1e601]
+                - cell "✓ Pass" [ref=f1e602]
+              - row [ref=f1e603]:
+                - rowheader "V (%)" [ref=f1e604]
+                - cell "0.002 %" [ref=f1e605]
+                - cell "model and text layer agree" [ref=f1e606]
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e607]
+                - cell "page 1 · heat analysis table, column V" [ref=f1e608]
+                - cell "info" [ref=f1e609]
+              - row [ref=f1e610]:
+                - rowheader "ReH (MPa)" [ref=f1e611]
+                - cell "392 MPa" [ref=f1e612]
+                - cell "model and text layer agree" [ref=f1e613]
+                - cell "≥ 355 MPa" [ref=f1e614]
+                - cell "page 1 · mechanical tests table, column ReH" [ref=f1e615]
+                - cell "✓ Pass" [ref=f1e616]
+              - row [ref=f1e617]:
+                - rowheader "Rm (MPa)" [ref=f1e618]
+                - cell "538 MPa" [ref=f1e619]
+                - cell "model and text layer agree" [ref=f1e620]
+                - cell "≥ 470 and ≤ 630 MPa" [ref=f1e621]
+                - cell "page 1 · mechanical tests table, column Rm" [ref=f1e622]
+                - cell "✓ Pass" [ref=f1e623]
+              - row [ref=f1e624]:
+                - rowheader "A (%)" [ref=f1e625]
+                - cell "26 %" [ref=f1e626]
+                - cell "model and text layer agree" [ref=f1e627]
+                - cell "≥ 20 %" [ref=f1e628]
+                - cell "page 1 · mechanical tests table, column A" [ref=f1e629]
+                - cell "✓ Pass" [ref=f1e630]
+              - row [ref=f1e631]:
+                - rowheader "KV specimen 1" [ref=f1e632]
+                - cell "64 J" [ref=f1e633]
+                - cell "model and text layer agree" [ref=f1e634]
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e635]
+                - cell "page 1 · impact test table, Probeta 1" [ref=f1e636]
+                - cell "✓ Pass" [ref=f1e637]
+              - row [ref=f1e638]:
+                - rowheader "KV specimen 2" [ref=f1e639]
+                - cell "71 J" [ref=f1e640]
+                - cell "model and text layer agree" [ref=f1e641]
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e642]
+                - cell "page 1 · impact test table, Probeta 2" [ref=f1e643]
+                - cell "✓ Pass" [ref=f1e644]
+              - row [ref=f1e645]:
+                - rowheader "KV specimen 3" [ref=f1e646]
+                - cell "58 J" [ref=f1e647]
+                - cell "model and text layer agree" [ref=f1e648]
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e649]
+                - cell "page 1 · impact test table, Probeta 3" [ref=f1e650]
+                - cell "✓ Pass" [ref=f1e651]
+              - row [ref=f1e652]:
+                - rowheader "CEV (recomputed; exact value in the receipt)" [ref=f1e653]
+                - cell "0.4124 %" [ref=f1e654]
+                - cell "—" [ref=f1e655]
+                - cell "<= 0.45 %" [ref=f1e656]
+                - cell "computed from C, Mn, Cr, Ni, Mo, Cu, V (IIW formula, cited)" [ref=f1e657]
+                - cell "✓ Pass" [ref=f1e658]
+          - generic [ref=f1e659]:
+            - strong [ref=f1e660]: Reading channels.
+            - text: "mock reading · no model. Text layer: available (read without any model)."
+        - complementary [ref=f1e661]:
+          - generic [ref=f1e662]:
+            - heading "Runs on AMD" [level=2] [ref=f1e663]
+            - generic [ref=f1e664]: NOT APPLICABLE · MOCK
+          - paragraph [ref=f1e665]: Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand.
+          - generic [ref=f1e666]:
+            - term [ref=f1e667]: State
+            - definition [ref=f1e668]: "not_applicable_mock · mock reading: no model and no endpoint were used"
+            - term [ref=f1e669]: Checked at
+            - definition [ref=f1e670]: unknown
+            - term [ref=f1e671]: Model(s) listed
+            - definition [ref=f1e672]: none
+            - term [ref=f1e673]: GPU
+            - definition [ref=f1e674]: unknown
+            - term [ref=f1e675]: ROCm · vLLM
+            - definition [ref=f1e676]: unknown · unknown
+            - term [ref=f1e677]: Latency (ms)
+            - definition [ref=f1e678]: unknown
+            - term [ref=f1e679]: Tokens / s
+            - definition [ref=f1e680]: unknown
+            - term [ref=f1e681]: Cost estimate (USD)
+            - definition [ref=f1e682]: unknown
+      - region [ref=f1e683]:
+        - heading "Explanation" [level=2] [ref=f1e684]
+        - paragraph [ref=f1e685]: "There is no model explanation: this is a mock reading, no model was used."
+      - region [ref=f1e686]:
+        - heading "Decision · a person decides" [level=2] [ref=f1e687]
+        - paragraph [ref=f1e688]: CertGate proposes; it never releases material. Your name and reason go into the receipt. The time is stamped by the server.
+        - generic [ref=f1e690]:
+          - generic [ref=f1e691]: Your name and role
+          - textbox "Your name and role" [ref=f1e692]:
+            - /placeholder: "[Name] · Quality"
+        - generic [ref=f1e693]:
+          - generic [ref=f1e694]: Reason
+          - textbox "Reason" [ref=f1e695]:
+            - /placeholder: What you checked and why you decide this
+        - generic [ref=f1e696]:
+          - button "Block batch" [ref=f1e697] [cursor=pointer]
+          - button "Request new certificate" [ref=f1e698] [cursor=pointer]
+          - button "Release batch" [ref=f1e699] [cursor=pointer]
+        - paragraph [ref=f1e700]: Release is available because the current proposal is release.
+        - status
+      - paragraph [ref=f1e701]:
+        - link "Open the receipt" [ref=f1e702] [cursor=pointer]:
+          - /url: "#/receipt"

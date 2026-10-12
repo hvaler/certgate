@@ -1,0 +1,4 @@
+cg-001: committed created_at=2026-10-12T18:35:51.727Z stored_at=2026-10-12T18:35:51.727Z label_has_ts=True | regenerated created_at=2026-10-12T18:48:45.546Z | proposal release == release | differences outside volatile keys: 0 | stored_at==created_at: True
+cg-002: committed created_at=2026-10-12T18:35:51.737Z stored_at=2026-10-12T18:35:51.737Z label_has_ts=True | regenerated created_at=2026-10-12T18:48:45.555Z | proposal block == block | differences outside volatile keys: 0 | stored_at==created_at: True
+cg-003: committed created_at=2026-10-12T18:35:51.742Z stored_at=2026-10-12T18:35:51.742Z label_has_ts=True | regenerated created_at=2026-10-12T18:48:45.558Z | proposal review == review | differences outside volatile keys: 0 | stored_at==created_at: True
+RESULT EQUAL

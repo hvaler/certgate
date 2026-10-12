@@ -1,0 +1,445 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 272[2mms[22m[39m
+ [31m❯[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[33m 550[2mms[22m[39m
+   [31m❯[39m failure injection and bounded retry (C11) [2m(14)[22m
+     [32m✓[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[32m 197[2mms[22m[39m
+[31m     [31m×[31m cg-023 endpoint_off: the receipt labels the injected failure as planted in structural fields (finding F-01)[39m[32m 31[2mms[22m[39m
+     [32m✓[39m cg-024 timeout: status error, review, exactly 3 reader call(s), error class in receipt[32m 17[2mms[22m[39m
+[31m     [31m×[31m cg-024 timeout: the receipt labels the injected failure as planted in structural fields (finding F-01)[39m[32m 23[2mms[22m[39m
+     [32m✓[39m cg-025 http_429: status error, review, exactly 3 reader call(s), error class in receipt[32m 3[2mms[22m[39m
+[31m     [31m×[31m cg-025 http_429: the receipt labels the injected failure as planted in structural fields (finding F-01)[39m[32m 9[2mms[22m[39m
+     [32m✓[39m cg-026 http_5xx: status error, review, exactly 3 reader call(s), error class in receipt[32m 18[2mms[22m[39m
+[31m     [31m×[31m cg-026 http_5xx: the receipt labels the injected failure as planted in structural fields (finding F-01)[39m[32m 17[2mms[22m[39m
+     [32m✓[39m cg-027 invalid_json: status error, review, exactly 1 reader call(s), error class in receipt[32m 9[2mms[22m[39m
+[31m     [31m×[31m cg-027 invalid_json: the receipt labels the injected failure as planted in structural fields (finding F-01)[39m[32m 13[2mms[22m[39m
+[31m     [31m×[31m a non-persistent injected failure succeeds on retry: 2 calls, normal proposal (optional O1)[39m[32m 50[2mms[22m[39m
+[31m     [31m×[31m a recovered injected failure stays labelled planted even if the output file lists nothing planted (ADV-S1-F04, probe P20)[39m[32m 18[2mms[22m[39m
+     [32m✓[39m a model output that breaks the reading schema is invalid output: review[32m 2[2mms[22m[39m
+     [32m✓[39m a JSON number in the model output is rejected (S1-25)[32m 1[2mms[22m[39m
+   [31m❯[39m real mode without an endpoint (S1-19, D1-15) [2m(1)[22m
+[31m     [31m×[31m fails visibly and never falls back to the mock[39m[32m 15[2mms[22m[39m
+   [31m❯[39m mock label everywhere (I7, S1-18, A-18) [2m(3)[22m
+[31m     [31m×[31m receipt of a mock run carries the mock label and reading_source[39m[32m 15[2mms[22m[39m
+[31m     [31m×[31m planted deviations are labelled planted in the receipt (D1-20)[39m[32m 23[2mms[22m[39m
+[31m     [31m×[31m the exporter rejects a receipt without reading_source or without the mock label[39m[32m 15[2mms[22m[39m
+   [32m✓[39m receipt content (S1-33, A-15, A-19) [2m(2)[22m
+     [32m✓[39m has case id, versions, hashes, spec id and revision, timings; no JSON numbers[32m 9[2mms[22m[39m
+     [32m✓[39m contains no secret environment value and no absolute path[32m 13[2mms[22m[39m
+   [32m✓[39m the model explains, it never decides (I1, S1-32, C10) [2m(2)[22m
+     [32m✓[39m contaminated explanation text has no effect on the proposal[32m 12[2mms[22m[39m
+     [32m✓[39m adding or changing an explanation never changes the proposal[32m 37[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 528[2mms[22m[39m
+ [31m❯[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 548[2mms[22m[39m
+   [31m❯[39m CLI [2m(10)[22m
+     [32m✓[39m processes a named dataset case and prints proposal and receipt (exit 0)[32m 157[2mms[22m[39m
+     [32m✓[39m a reader failure is still a processed case (exit 0) with status error[32m 85[2mms[22m[39m
+[31m     [31m×[31m in real mode the summary note does not claim a MOCK reading (finding F-04)[39m[32m 27[2mms[22m[39m
+[31m     [31m×[31m mock and planted notes say MOCK[39m[32m 41[2mms[22m[39m
+     [32m✓[39m processes an external case directory[32m 85[2mms[22m[39m
+     [32m✓[39m a mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02)[32m 24[2mms[22m[39m
+     [32m✓[39m rejects bad input with exit 2[32m 2[2mms[22m[39m
+     [32m✓[39m confirmation and human decision from the CLI[32m 7[2mms[22m[39m
+     [32m✓[39m the CLI rejects release while the proposal is not release (B-14): exit 2[32m 25[2mms[22m[39m
+     [32m✓[39m writes the output file with --out[32m 19[2mms[22m[39m
+   [31m❯[39m HTTP service [2m(1)[22m
+[31m     [31m×[31m answers /health and processes a dataset case[39m[32m 72[2mms[22m[39m
+ [31m❯[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 395[2mms[22m[39m
+   [31m❯[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [32m✓[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[32m 232[2mms[22m[39m
+     [32m✓[39m (b) cert-03 with only ReH confirmed as 358 stays review: no second channel[32m 8[2mms[22m[39m
+     [32m✓[39m (c) ReH confirmed as 338 blocks, even with other fields unconfirmed[32m 10[2mms[22m[39m
+[31m     [31m×[31m a confirmation may change a confident reading; the receipt keeps both values[39m[32m 15[2mms[22m[39m
+     [32m✓[39m confirming a field resolves a channel disagreement on a digital certificate[32m 78[2mms[22m[39m
+     [32m✓[39m rejects a confirmation without who, when, or with a non-decimal value[32m 5[2mms[22m[39m
+   [32m✓[39m human decision: release, block or request a new certificate (S1-09, S1-10) [2m(3)[22m
+     [32m✓[39m records who, when and why without changing the proposal[32m 4[2mms[22m[39m
+     [32m✓[39m without a human decision the case stays proposal-only[32m 23[2mms[22m[39m
+     [32m✓[39m rejects a decision without a reason, a person or a valid action[32m 17[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 778[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 331[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 418[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 338[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 963[2mms[22m[39m
+ [31m❯[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[33m 1960[2mms[22m[39m
+   [32m✓[39m F1 panel (S2-11, S2-12, S2-36, B-06, B-19) [2m(5)[22m
+     [32m✓[39m no endpoint configured: off with the server's real check time, a later load shows a later time[32m 35[2mms[22m[39m
+     [32m✓[39m unreachable endpoint: off[32m 22[2mms[22m[39m
+     [32m✓[39m with the test stub: shows exactly what the endpoint and sidecar report; cost unknown without a price[32m 22[2mms[22m[39m
+     [32m✓[39m request parameters, headers or body cannot set the endpoint (B-06)[32m 8[2mms[22m[39m
+     [32m✓[39m cost estimate uses only the configured price (S2-36)[32m 5[2mms[22m[39m
+   [31m❯[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [32m✓[39m status: disabled when LIVE_READS_PER_HOUR is unset, 0 or invalid (fail closed); no-store (B-05)[32m 23[2mms[22m[39m
+[31m     [31m×[31m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[39m[32m 259[2mms[22m[39m
+     [32m✓[39m web upload limit is below the Vercel body limit and enforced (B-18)[32m 85[2mms[22m[39m
+     [32m✓[39m invalid input is rejected before anything is counted[32m 11[2mms[22m[39m
+   [31m❯[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+[31m     [31m×[31m reads through the adapter: reading_source live, model id as reported by configuration, key only sent to the endpoint[39m[32m 79[2mms[22m[39m
+[31m     [31m×[31m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[39m[32m 56[2mms[22m[39m
+[31m     [31m×[31m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[39m[32m 186[2mms[22m[39m
+     [32m✓[39m client headers, cookies or body fields cannot change the count[32m 54[2mms[22m[39m
+[31m     [31m×[31m access code: wrong code rejected without consuming; throttled after repeated failures; never echoed[39m[32m 49[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[39m[33m 930[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret[39m[32m 13[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret[39m[32m 18[2mms[22m[39m
+   [31m❯[39m stored stories (S2-14, B-12, B-23) [2m(3)[22m
+     [32m✓[39m are versioned static files labelled stored and mock, with the run's own created_at[32m 1[2mms[22m[39m
+[31m     [31m×[31m equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings[39m[32m 25[2mms[22m[39m
+     [32m✓[39m the served story file keeps its timestamp across loads; stories may be cached, the API not[32m 9[2mms[22m[39m
+   [32m✓[39m confirmations and decisions through the API (S2-04, A-21, B-14, B-15) [2m(4)[22m
+     [32m✓[39m cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks[32m 18[2mms[22m[39m
+     [32m✓[39m release is rejected below the UI when the proposal is not release (API 409, core error)[32m 9[2mms[22m[39m
+     [32m✓[39m decided_at and confirmed_at are stamped by the server clock, not the client[32m 8[2mms[22m[39m
+     [32m✓[39m unknown story ids are not served[32m 2[2mms[22m[39m
+   [32m✓[39m static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20) [2m(8)[22m
+     [32m✓[39m no HTML injection sinks in the client (B-16)[32m 1[2mms[22m[39m
+     [32m✓[39m no third-party URL in any page or asset (B-17)[32m 1[2mms[22m[39m
+     [32m✓[39m no AMD-run claims: only the panel name 'Runs on AMD' (B-11, D2-02)[32m 1[2mms[22m[39m
+     [32m✓[39m the endpoint pill says on only when the server's F1 state is on (B-11)[32m 0[2mms[22m[39m
+     [32m✓[39m landing figures are placeholders with no digit in any figure slot (S2-01, B-20)[32m 0[2mms[22m[39m
+     [32m✓[39m states where AMD fits and that nothing runs on AMD in this build; limit is per instance (S2-30, B-08)[32m 0[2mms[22m[39m
+     [32m✓[39m every screen carries the fictitious-data notice (S2-07)[32m 0[2mms[22m[39m
+     [32m✓[39m the browser receives no key or code: none in static files; responses checked above (S2-26)[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > in real mode the summary note does not claim a MOCK reading (finding F-04)
+TypeError: Cannot read properties of undefined (reading 'reading_source')
+ ❯ test/entrypoints.test.ts:36:24
+     34|     try {
+     35|       const j = JSON.parse((await cli(["process", "--case", "cg-001"])…
+     36|       expect(j.summary.reading_source).toBe("live_no_reading"); // S2-…
+       |                        ^
+     37|       expect(j.summary.note).not.toMatch(/MOCK/);
+     38|       expect(j.summary.note).toMatch(/live attempt, no reading was obt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/26]⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > mock and planted notes say MOCK
+AssertionError: expected 'CertGate only proposes. A person deci…' to match /MOCK \(no model\)\.$/
+
+- Expected:
+/MOCK \(no model\)\.$/
+
++ Received:
+"CertGate only proposes. A person decides. All data is fictitious. The reading came from the live endpoint, model MOCK (no model; dataset reading) (as reported by the endpoint)."
+
+ ❯ test/entrypoints.test.ts:44:87
+     42|   });
+     43|   it("mock and planted notes say MOCK", async () => {
+     44|     expect(JSON.parse((await cli(["process", "--case", "cg-001"])).out…
+       |                                                                                       ^
+     45|     expect(JSON.parse((await cli(["process", "--case", "cg-023"])).out…
+     46|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/26]⎯
+
+ FAIL  test/entrypoints.test.ts > HTTP service > answers /health and processes a dataset case
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/entrypoints.test.ts:117:40
+    115|       const j = await res.json();
+    116|       expect(j.summary.proposal).toBe("review");
+    117|       expect(j.receipt.reading_source).toBe("mock");
+       |                                        ^
+    118|       expect((await fetch(`http://127.0.0.1:${port}/api/cases/zz/proce…
+    119|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/26]⎯
+
+ FAIL  test/human.test.ts > per-field human confirmation re-runs coherence and rules (A-07, A-21) > a confirmation may change a confident reading; the receipt keeps both values
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/human.test.ts:47:30
+     45|     expect(c.confirmed_by).toBe("quality.tech");
+     46|     expect(c.confirmed_at).toBe(AT);
+     47|     expect(c.reading_source).toBe("mock");
+       |                              ^
+     48|     expect(r.receipt.values.find((v) => v.field === "chemistry.Mn")!.s…
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/26]⎯
+
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-023 endpoint_off: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-024 timeout: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-025 http_429: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-026 http_5xx: the receipt labels the injected failure as planted in structural fields (finding F-01)
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > cg-027 invalid_json: the receipt labels the injected failure as planted in structural fields (finding F-01)
+AssertionError: expected 'live_no_reading' to be 'planted' // Object.is equality
+
+Expected: "planted"
+Received: "live_no_reading"
+
+ ❯ test/reader.test.ts:34:40
+     32|     it(`${id} ${cls}: the receipt labels the injected failure as plant…
+     33|       const r = await processCase(loadDatasetCase(id, getShared()));
+     34|       expect(r.receipt.reading_source).toBe("planted");
+       |                                        ^
+     35|       expect(r.receipt.reader.reading_source).toBe("planted");
+     36|       expect(r.receipt.planted).toEqual([expect.objectContaining({ kin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/26]⎯
+
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > a non-persistent injected failure succeeds on retry: 2 calls, normal proposal (optional O1)
+AssertionError: expected 'live' to be 'planted' // Object.is equality
+
+Expected: "planted"
+Received: "live"
+
+ ❯ test/reader.test.ts:53:38
+     51|     expect(r.readings.case.status).toBe("processed");
+     52|     expect(r.decision.proposal).toBe("release");
+     53|     expect(r.receipt.reading_source).toBe("planted");
+       |                                      ^
+     54|     expect(r.receipt.errors).toEqual([expect.objectContaining({ class:…
+     55|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/26]⎯
+
+ FAIL  test/reader.test.ts > failure injection and bounded retry (C11) > a recovered injected failure stays labelled planted even if the output file lists nothing planted (ADV-S1-F04, probe P20)
+AssertionError: expected 'live' to be 'planted' // Object.is equality
+
+Expected: "planted"
+Received: "live"
+
+ ❯ test/reader.test.ts:65:38
+     63|     expect(reader.calls).toBe(2);
+     64|     expect(r.decision.proposal).toBe("release");
+     65|     expect(r.receipt.reading_source).toBe("planted");
+       |                                      ^
+     66|     expect(r.receipt.planted).toEqual([expect.objectContaining({ kind:…
+     67|     expect(r.receipt.errors).toEqual([expect.objectContaining({ class:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/26]⎯
+
+ FAIL  test/reader.test.ts > real mode without an endpoint (S1-19, D1-15) > fails visibly and never falls back to the mock
+AssertionError: expected 'mock' to be 'live_no_reading' // Object.is equality
+
+Expected: "live_no_reading"
+Received: "mock"
+
+ ❯ test/reader.test.ts:96:38
+     94|     expect(r.receipt.reader.model_id).not.toMatch(/MOCK/);
+     95|     expect(r.readings.model).toBeNull();
+     96|     expect(r.receipt.reading_source).toBe("live_no_reading"); // S2-31…
+       |                                      ^
+     97|     expect(r.receipt.f1.state).toBe("off");
+     98|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/26]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > receipt of a mock run carries the mock label and reading_source
+AssertionError: expected 'live' to be 'mock' // Object.is equality
+
+Expected: "mock"
+Received: "live"
+
+ ❯ test/reader.test.ts:104:38
+    102|   it("receipt of a mock run carries the mock label and reading_source"…
+    103|     const r = await runCase("cg-001");
+    104|     expect(r.receipt.reading_source).toBe("mock");
+       |                                      ^
+    105|     expect(r.receipt.reader.model_id).toMatch(/^MOCK/);
+    106|     expect(r.receipt.reader.vllm_version).toBe("not applicable (mock)"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/26]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > planted deviations are labelled planted in the receipt (D1-20)
+AssertionError: expected 'live' to be 'planted' // Object.is equality
+
+Expected: "planted"
+Received: "live"
+
+ ❯ test/reader.test.ts:111:38
+    109|   it("planted deviations are labelled planted in the receipt (D1-20)",…
+    110|     const r = await runCase("cg-018");
+    111|     expect(r.receipt.reading_source).toBe("planted");
+       |                                      ^
+    112|     expect(r.receipt.planted).toEqual([expect.objectContaining({ kind:…
+    113|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/26]⎯
+
+ FAIL  test/reader.test.ts > mock label everywhere (I7, S1-18, A-18) > the exporter rejects a receipt without reading_source or without the mock label
+AssertionError: expected function to throw an error, but it didn't
+ ❯ test/reader.test.ts:118:103
+    116|     const { reading_source: _, ...noSource } = r.receipt;
+    117|     expect(() => exportReceipt(noSource as never)).toThrow(ReceiptExpo…
+    118|     expect(() => exportReceipt({ ...r.receipt, reader: { ...r.receipt.…
+       |                                                                                                       ^
+    119|   });
+    120| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/26]⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ test/web.test.ts:106:23
+    104|     expect(res.headers.get("cache-control")).toBe("no-store");
+    105|     const j = await res.json();
+    106|     expect(j.counted).toBe(false);
+       |                       ^
+    107|     expect(j.view.status).toBe("error");
+    108|     expect(j.view.proposal).toBe("review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/26]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > reads through the adapter: reading_source live, model id as reported by configuration, key only sent to the endpoint
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ test/web.test.ts:143:23
+    141|     const text = await res.text();
+    142|     const j = JSON.parse(text);
+    143|     expect(j.counted).toBe(true);
+       |                       ^
+    144|     expect(j.view.reading_source).toBe("live");
+    145|     expect(j.view.receipt.reader.model_id).toBe(STUB_MODEL_ID);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/26]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ ❯ test/web.test.ts:157:74
+    155|     const c = new Clock(new Date("2026-10-12T18:59:30.000Z"));
+    156|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2…
+    157|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+       |                                                                          ^
+    158|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+    159|     const third = await postJson(`${base}/api/live/read`, liveBody());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/26]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ test/web.test.ts:172:60
+    170|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3…
+    171|     const results = await Promise.all(Array.from({ length: 8 }, () => …
+    172|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    173|     expect(results.filter((r) => r.status === 429).length).toBe(5);
+    174|     expect(s.state.chatCalls).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/26]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+AssertionError: expected 500 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 500
+
+ ❯ test/web.test.ts:199:23
+    197|     expect(s.state.chatCalls).toBe(0);
+    198|     const ok = await postJson(`${base}/api/live/read`, liveBody({ acce…
+    199|     expect(ok.status).toBe(200);
+       |                       ^
+    200|     expect(await ok.text()).not.toContain("jury-code-77");
+    201|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/26]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ test/web.test.ts:209:25
+    207|       const text = await (await postJson(`${base}/api/live/read`, live…
+    208|       const j = JSON.parse(text);
+    209|       expect(j.counted).toBe(true);
+       |                         ^
+    210|       expect(j.view.status).toBe("error");
+    211|       expect(j.view.proposal).toBe("review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/26]⎯
+
+ FAIL  test/web.test.ts > stored stories (S2-14, B-12, B-23) > equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings
+AssertionError: expected { proposal: 'release', …(3) } to deeply equal { proposal: 'release', …(3) }
+
+- Expected
++ Received
+
+@@ -591,15 +591,15 @@
+      "reader": {
+        "calls": "1",
+        "model_id": "MOCK (no model; dataset reading)",
+        "model_version": "not applicable (mock)",
+        "reader_id": "mock-reader",
+-       "reading_source": "mock",
++       "reading_source": "live",
+        "rocm_version": "not applicable (mock)",
+        "vllm_version": "not applicable (mock)",
+      },
+-     "reading_source": "mock",
++     "reading_source": "live",
+      "reasons": [],
+      "receipt_schema": "certgate.receipt/1",
+      "rule_results": [
+        {
+          "expected": "<= 0.20 %",
+
+ ❯ test/web.test.ts:248:28
+    246|       const committed = JSON.parse(readFileSync(path.join(ROOT, "publi…
+    247|       const fresh = JSON.parse(readFileSync(path.join(dir, `${id}.json…
+    248|       expect(strip(fresh)).toEqual(strip(committed));
+       |                            ^
+    249|     }
+    250|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/26]⎯
+
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m26 failed[39m[22m[2m | [22m[1m[32m206 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 18:50:55
+[2m   Duration [22m 2.74s[2m (tests 71%, transform 22%, import 6%, worker 1%)[22m
+

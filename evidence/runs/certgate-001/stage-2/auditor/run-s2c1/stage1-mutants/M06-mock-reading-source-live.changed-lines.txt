@@ -1,0 +1,2 @@
+-    rd.reader.kind === "live" ? (rd.model === null ? "live_no_reading" : "live") : planted.length > 0 ? "planted" : "mock";
++    rd.reader.kind === "mock" ? (rd.model === null ? "live_no_reading" : "live") : planted.length > 0 ? "planted" : "mock";

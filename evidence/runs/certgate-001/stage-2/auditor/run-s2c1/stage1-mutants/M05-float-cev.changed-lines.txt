@@ -1,0 +1,5 @@
+-  return v.C!.plus(v.Mn!.div(6))
+-    .plus(v.Cr!.plus(v.Mo!).plus(v.V!).div(5))
+-    .plus(v.Cu!.plus(v.Ni!).div(15));
++  const f = (d: Dec) => Number(d.toString());
++  return new Dec(String(f(v.C!) + f(v.Mn!) / 6 + (f(v.Cr!) + f(v.Mo!) + f(v.V!)) / 5 + (f(v.Cu!) + f(v.Ni!)) / 15));

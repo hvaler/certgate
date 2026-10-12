@@ -1,0 +1,134 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 376[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 589[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 614[2mms[22m[39m
+ [31m❯[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 729[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 314[2mms[22m[39m
+     [32m✓[39m cg-004: every critical field equals the correct reading[32m 27[2mms[22m[39m
+     [32m✓[39m cg-005: every critical field equals the correct reading[32m 31[2mms[22m[39m
+     [32m✓[39m cg-009: every critical field equals the correct reading[32m 25[2mms[22m[39m
+     [32m✓[39m cg-014: every critical field equals the correct reading[32m 26[2mms[22m[39m
+     [32m✓[39m cg-019: every critical field equals the correct reading[32m 10[2mms[22m[39m
+     [32m✓[39m cg-028: every critical field equals the correct reading[32m 17[2mms[22m[39m
+     [32m✓[39m cg-029: every critical field equals the correct reading[32m 28[2mms[22m[39m
+     [32m✓[39m cg-030: every critical field equals the correct reading[32m 35[2mms[22m[39m
+     [32m✓[39m layout B uses a decimal comma, which is normalised (A-10)[32m 20[2mms[22m[39m
+     [32m✓[39m units printed in headers apply to the values under them (A-11)[32m 35[2mms[22m[39m
+     [32m✓[39m a spoofed duplicate field in free text is a conflict (A-16)[32m 14[2mms[22m[39m
+     [32m✓[39m an approval instruction in the text layer never becomes a field value (C10)[32m 17[2mms[22m[39m
+     [32m✓[39m the C8 text-layer Mn comes from the PDF bytes, not from the planted misread (D1-20)[32m 15[2mms[22m[39m
+     [32m✓[39m cg-002: a scan yields "no channel available", not an error (S1-15)[32m 30[2mms[22m[39m
+     [32m✓[39m cg-003: a scan yields "no channel available", not an error (S1-15)[32m 9[2mms[22m[39m
+     [32m✓[39m cg-016: a scan yields "no channel available", not an error (S1-15)[32m 13[2mms[22m[39m
+     [32m✓[39m cg-017: a scan yields "no channel available", not an error (S1-15)[32m 10[2mms[22m[39m
+     [32m✓[39m cg-025: a scan yields "no channel available", not an error (S1-15)[32m 10[2mms[22m[39m
+   [31m❯[39m channel comparison (I3) [2m(4)[22m
+[31m     [31m×[31m disagreement makes the field unknown, keeps both readings and proposes review (C8)[39m[32m 24[2mms[22m[39m
+[31m     [31m×[31m equality is exact-decimal, not string equality[39m[32m 12[2mms[22m[39m
+     [32m✓[39m a field missing from the text layer is not corroborated: review[32m 2[2mms[22m[39m
+     [32m✓[39m an unknown model value is never replaced by the text layer's value (I2)[32m 1[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 437[2mms[22m[39m
+ [31m❯[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 869[2mms[22m[39m
+   [32m✓[39m dataset composition [2m(6)[22m
+     [32m✓[39m has 20-30 cases, digital and scanned, covering C1-C13[32m 7[2mms[22m[39m
+     [32m✓[39m matches CHECKSUMS.sha256 for every dataset file[32m 22[2mms[22m[39m
+     [32m✓[39m keeps the three pre-kickoff certificates byte-identical (S1-38)[32m 2[2mms[22m[39m
+     [32m✓[39m stores every numeric value in inputs as a JSON string (S1-25)[32m 35[2mms[22m[39m
+     [32m✓[39m mock output equals the correct reading except for labelled planted deviations (A-01, D1-20)[32m 38[2mms[22m[39m
+     [32m✓[39m prints CEV as the half-even rounding of the exact recomputed value, except planted cases (A-20, A-23)[32m 8[2mms[22m[39m
+   [31m❯[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 311[2mms[22m[39m
+     [32m✓[39m cg-002[32m 13[2mms[22m[39m
+     [32m✓[39m cg-003[32m 15[2mms[22m[39m
+     [32m✓[39m cg-004[32m 23[2mms[22m[39m
+     [32m✓[39m cg-005[32m 33[2mms[22m[39m
+     [32m✓[39m cg-006[32m 16[2mms[22m[39m
+     [32m✓[39m cg-007[32m 24[2mms[22m[39m
+     [32m✓[39m cg-008[32m 12[2mms[22m[39m
+     [32m✓[39m cg-009[32m 19[2mms[22m[39m
+     [32m✓[39m cg-010[32m 17[2mms[22m[39m
+     [32m✓[39m cg-011[32m 29[2mms[22m[39m
+     [32m✓[39m cg-012[32m 22[2mms[22m[39m
+     [32m✓[39m cg-013[32m 9[2mms[22m[39m
+     [32m✓[39m cg-014[32m 18[2mms[22m[39m
+     [32m✓[39m cg-015[32m 16[2mms[22m[39m
+     [32m✓[39m cg-016[32m 3[2mms[22m[39m
+     [32m✓[39m cg-017[32m 4[2mms[22m[39m
+[31m     [31m×[31m cg-018[39m[32m 14[2mms[22m[39m
+     [32m✓[39m cg-019[32m 25[2mms[22m[39m
+     [32m✓[39m cg-020[32m 10[2mms[22m[39m
+     [32m✓[39m cg-021[32m 11[2mms[22m[39m
+     [32m✓[39m cg-022[32m 19[2mms[22m[39m
+     [32m✓[39m cg-023[32m 8[2mms[22m[39m
+     [32m✓[39m cg-024[32m 13[2mms[22m[39m
+     [32m✓[39m cg-025[32m 3[2mms[22m[39m
+     [32m✓[39m cg-026[32m 14[2mms[22m[39m
+     [32m✓[39m cg-027[32m 14[2mms[22m[39m
+     [32m✓[39m cg-028[32m 17[2mms[22m[39m
+     [32m✓[39m cg-029[32m 14[2mms[22m[39m
+     [32m✓[39m cg-030[32m 9[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 459[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 368[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 1179[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m)[22m[33m 2295[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [33m[2m✓[22m[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[33m 338[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 932[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/channels.test.ts > channel comparison (I3) > disagreement makes the field unknown, keeps both readings and proposes review (C8)
+AssertionError: expected '1.48' to be null
+
+- Expected:
+null
+
++ Received:
+"1.48"
+
+ ❯ test/channels.test.ts:97:61
+     95|     expect(check.model_value).toBe("1.48");
+     96|     expect(check.text_layer_value).toBe("1.43");
+     97|     expect(r.evaluation!.fields.get("chemistry.Mn")!.value).toBeNull();
+       |                                                             ^
+     98|     expect(r.decision.proposal).toBe("review");
+     99|     expect(r.receipt.channel_checks.find((c) => c.field === "chemistry…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/channels.test.ts > channel comparison (I3) > equality is exact-decimal, not string equality
+AssertionError: expected [] to include 'CHANNEL_DISAGREE:P'
+ ❯ test/channels.test.ts:110:23
+    108|     const tl2 = agreeingTextLayer(withOverrides(model, { "chemistry.P"…
+    109|     const e2 = evaluate({ model, textLayer: tl2, deliveryLine: deliver…
+    110|     expect(codes(e2)).toContain("CHANNEL_DISAGREE:P");
+       |                       ^
+    111|   });
+    112|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-018
+AssertionError: cg-018 reasons: expected [ 'CEV_MISMATCH' ] to include 'CHANNEL_DISAGREE:Mn'
+ ❯ test/dataset.test.ts:97:81
+     95|       expect(r.decision.human_required).toBe(true);
+     96|       const got = r.decision.reasons.map((x) => x.code);
+     97|       for (const code of exp.reasons_must_include) expect(got, `${id} …
+       |                                                                                 ^
+     98|       for (const f of exp.rule_failures) {
+     99|         expect(got).toContain(`RULE_FAIL:${f.field}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m229 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 18:50:12
+[2m   Duration [22m 3.27s[2m (tests 68%, transform 24%, import 7%, worker 1%)[22m
+

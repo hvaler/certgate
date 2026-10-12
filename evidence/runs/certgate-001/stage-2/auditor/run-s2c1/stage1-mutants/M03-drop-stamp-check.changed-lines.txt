@@ -1,0 +1,2 @@
+-  if (get("inspection_stamp").state === "absent") reasons.add("STAMP_MISSING", "review", "no inspection stamp on the certificate");
++  /* mutant: stamp check removed */

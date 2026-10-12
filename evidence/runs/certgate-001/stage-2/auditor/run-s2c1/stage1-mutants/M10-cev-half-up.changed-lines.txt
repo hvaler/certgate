@@ -1,0 +1,2 @@
+-  return v.toDecimalPlaces(2, Dec.ROUND_HALF_EVEN);
++  return v.toDecimalPlaces(2, Dec.ROUND_HALF_UP);

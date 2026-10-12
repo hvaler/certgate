@@ -1,0 +1,219 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [31m❯[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[32m 81[2mms[22m[39m
+   [32m✓[39m exact decimals (I4) [2m(1)[22m
+     [32m✓[39m parses strings to decimals and normalises representation[32m 3[2mms[22m[39m
+   [31m❯[39m inclusive spec limits, no rounding (D1-07, S1-27, A-22) [2m(7)[22m
+     [32m✓[39m ReH 355 passes, 354.9 and 354 fail[32m 7[2mms[22m[39m
+[31m     [31m×[31m Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m Rm 470 and 630 pass, 469 and 631 fail[39m[32m 7[2mms[22m[39m
+     [32m✓[39m A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release[32m 1[2mms[22m[39m
+[31m     [31m×[31m A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails[39m[32m 2[2mms[22m[39m
+     [32m✓[39m each spec limit is a rule naming field, observed value and limit (S1-26)[32m 1[2mms[22m[39m
+     [32m✓[39m a rule on an unknown value is not_evaluable, never pass[32m 1[2mms[22m[39m
+   [31m❯[39m CEV (A-02, A-20, A-22) [2m(8)[22m
+[31m     [31m×[31m spec CEV maximum is 0.45 and applies to the exact recomputed value without rounding[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m printed CEV 0.45 passes, 0.46 fails[39m[32m 1[2mms[22m[39m
+     [32m✓[39m coherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44[32m 1[2mms[22m[39m
+     [32m✓[39m printed CEV that does not match the composition is a review trigger (C9)[32m 4[2mms[22m[39m
+     [32m✓[39m printed 0.44 passing with recomputed above 0.45 blocks (A-03)[32m 1[2mms[22m[39m
+[31m     [31m×[31m A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007[39m[32m 1[2mms[22m[39m
+     [32m✓[39m A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); printed 0.43 is not[32m 1[2mms[22m[39m
+     [32m✓[39m an unknown CEV input makes the recomputed CEV unknown[32m 0[2mms[22m[39m
+   [32m✓[39m KV mean as an exact sum (D1-09, A-05) [2m(3)[22m
+     [32m✓[39m sum exactly 81 passes, 80 fails, cert-01's 193 passes[32m 2[2mms[22m[39m
+     [32m✓[39m fewer than three known values is not evaluable (review)[32m 1[2mms[22m[39m
+     [32m✓[39m impact temperature must be -20 °C; other or missing values give review[32m 5[2mms[22m[39m
+   [32m✓[39m document rules [2m(3)[22m
+     [32m✓[39m wrong grade blocks with both grades shown (C5)[32m 1[2mms[22m[39m
+     [32m✓[39m missing stamp gives review; illegible stamp gives review (C13, S1-30)[32m 7[2mms[22m[39m
+     [32m✓[39m certificate type 2.2 or absent gives review (A-06)[32m 3[2mms[22m[39m
+   [32m✓[39m heat or lot against the delivery line (S1-21, A-04, A-12, D1-14) [2m(5)[22m
+     [32m✓[39m mismatch gives review with both heats visible[32m 2[2mms[22m[39m
+     [32m✓[39m heat mismatch means review even when a rule fails or the grade is wrong (A-04)[32m 1[2mms[22m[39m
+     [32m✓[39m scan with a heat mismatch gives review[32m 1[2mms[22m[39m
+     [32m✓[39m whitespace is trimmed, nothing else is normalised[32m 1[2mms[22m[39m
+     [32m✓[39m no paired delivery line is missing evidence: review[32m 2[2mms[22m[39m
+   [32m✓[39m units and scale jumps (S1-22, S1-23, A-08, A-11) [2m(3)[22m
+     [32m✓[39m MPa and N/mm² are accepted; ksi or no unit gives review without conversion[32m 2[2mms[22m[39m
+     [32m✓[39m a value outside the plausibility range is a scale jump: review, not block[32m 1[2mms[22m[39m
+     [32m✓[39m every plausibility range strictly contains its spec limits[32m 0[2mms[22m[39m
+   [32m✓[39m decision precedence and I5 (S1-31, D1-03) [2m(5)[22m
+     [32m✓[39m block > review > release, and human_required is always true[32m 0[2mms[22m[39m
+     [32m✓[39m each I5 trigger alone prevents release[32m 5[2mms[22m[39m
+     [32m✓[39m a scan with every value in spec is review, never release (D1-04)[32m 1[2mms[22m[39m
+     [32m✓[39m a scan with a known failing value blocks (D1-03)[32m 1[2mms[22m[39m
+     [32m✓[39m an unknown critical field forces review and names the field (S1-17)[32m 1[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 357[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 486[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 563[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 615[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 469[2mms[22m[39m
+ [31m❯[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 869[2mms[22m[39m
+   [32m✓[39m dataset composition [2m(6)[22m
+     [32m✓[39m has 20-30 cases, digital and scanned, covering C1-C13[32m 10[2mms[22m[39m
+     [32m✓[39m matches CHECKSUMS.sha256 for every dataset file[32m 21[2mms[22m[39m
+     [32m✓[39m keeps the three pre-kickoff certificates byte-identical (S1-38)[32m 1[2mms[22m[39m
+     [32m✓[39m stores every numeric value in inputs as a JSON string (S1-25)[32m 19[2mms[22m[39m
+     [32m✓[39m mock output equals the correct reading except for labelled planted deviations (A-01, D1-20)[32m 42[2mms[22m[39m
+     [32m✓[39m prints CEV as the half-even rounding of the exact recomputed value, except planted cases (A-20, A-23)[32m 6[2mms[22m[39m
+   [31m❯[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 303[2mms[22m[39m
+     [32m✓[39m cg-002[32m 13[2mms[22m[39m
+     [32m✓[39m cg-003[32m 10[2mms[22m[39m
+     [32m✓[39m cg-004[32m 36[2mms[22m[39m
+     [32m✓[39m cg-005[32m 27[2mms[22m[39m
+     [32m✓[39m cg-006[32m 26[2mms[22m[39m
+     [32m✓[39m cg-007[32m 25[2mms[22m[39m
+     [32m✓[39m cg-008[32m 15[2mms[22m[39m
+[31m     [31m×[31m cg-009[39m[32m 40[2mms[22m[39m
+     [32m✓[39m cg-010[32m 32[2mms[22m[39m
+     [32m✓[39m cg-011[32m 25[2mms[22m[39m
+     [32m✓[39m cg-012[32m 10[2mms[22m[39m
+     [32m✓[39m cg-013[32m 19[2mms[22m[39m
+     [32m✓[39m cg-014[32m 12[2mms[22m[39m
+     [32m✓[39m cg-015[32m 9[2mms[22m[39m
+     [32m✓[39m cg-016[32m 4[2mms[22m[39m
+     [32m✓[39m cg-017[32m 6[2mms[22m[39m
+     [32m✓[39m cg-018[32m 11[2mms[22m[39m
+     [32m✓[39m cg-019[32m 10[2mms[22m[39m
+     [32m✓[39m cg-020[32m 11[2mms[22m[39m
+     [32m✓[39m cg-021[32m 10[2mms[22m[39m
+     [32m✓[39m cg-022[32m 19[2mms[22m[39m
+     [32m✓[39m cg-023[32m 14[2mms[22m[39m
+     [32m✓[39m cg-024[32m 7[2mms[22m[39m
+     [32m✓[39m cg-025[32m 4[2mms[22m[39m
+     [32m✓[39m cg-026[32m 15[2mms[22m[39m
+     [32m✓[39m cg-027[32m 12[2mms[22m[39m
+     [32m✓[39m cg-028[32m 12[2mms[22m[39m
+     [32m✓[39m cg-029[32m 9[2mms[22m[39m
+     [32m✓[39m cg-030[32m 14[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 571[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 470[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m)[22m[33m 2210[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [33m[2m✓[22m[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[33m 302[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 941[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 1658[2mms[22m[39m
+   [32m✓[39m product code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7) [2m(27)[22m
+     [33m[2m✓[22m[39m cli.ts[33m 403[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-009
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/dataset.test.ts:93:35
+     91|       const exp = expected(id);
+     92|       const r = await runCase(id);
+     93|       expect(r.decision.proposal).toBe(exp.expected_proposal);
+       |                                   ^
+     94|       expect(r.readings.case.status).toBe(exp.expected_status === "err…
+     95|       expect(r.decision.human_required).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)
+AssertionError: expected 'block' not to be 'block' // Object.is equality
+ ❯ test/rules.test.ts:31:44
+     29|   });
+     30|   it("Mn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ra…
+     31|     expect(ok("chemistry.Mn", "1.60")).not.toBe("block");
+       |                                            ^
+     32|     const e161 = evalWith({ overrides: { "chemistry.Mn": { value: "1.6…
+     33|     expect(e161.decision.proposal).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > Rm 470 and 630 pass, 469 and 631 fail
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:39:47
+     37|   it("Rm 470 and 630 pass, 469 and 631 fail", () => {
+     38|     expect(ok("mechanical.Rm", "470", "MPa")).toBe("release");
+     39|     expect(ok("mechanical.Rm", "630", "MPa")).toBe("release");
+       |                                               ^
+     40|     expect(ok("mechanical.Rm", "469", "MPa")).toBe("block");
+     41|     expect(ok("mechanical.Rm", "631", "MPa")).toBe("block");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  test/rules.test.ts > inclusive spec limits, no rounding (D1-07, S1-27, A-22) > A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:52:40
+     50|     expect(ok("mechanical.A", "20")).toBe("release");
+     51|     expect(ok("mechanical.A", "19.9")).toBe("block");
+     52|     expect(ok("chemistry.P", "0.025")).toBe("release");
+       |                                        ^
+     53|     expect(ok("chemistry.P", "0.0251")).toBe("block");
+     54|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > spec CEV maximum is 0.45 and applies to the exact recomputed value without rounding
+AssertionError: expected 'fail' to be 'pass' // Object.is equality
+
+Expected: "pass"
+Received: "fail"
+
+ ❯ test/rules.test.ts:88:35
+     86|     // C above its own 0.20 max would block anyway; check the CEV rule…
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m225 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 18:49:28
+[2m   Duration [22m 4.33s[2m (tests 51%, transform 39%, import 10%, worker 1%)[22m
+     87|     const rec = (c: string, p: string) => run(c, p).rule_results.find(…
+     88|     expect(rec("0.4500", "0.45")).toBe("pass");
+       |                                   ^
+     89|     expect(rec("0.4549", "0.45")).toBe("fail");
+     90|     expect(rec("0.4550", "0.46")).toBe("fail");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > printed CEV 0.45 passes, 0.46 fails
+AssertionError: expected 'fail' to be 'pass' // Object.is equality
+
+Expected: "pass"
+Received: "fail"
+
+ ❯ test/rules.test.ts:96:33
+     94|     const printedRule = (p: string) => evalWith({ overrides: { cev_pri…
+     95|       .rule_results.find((r) => r.rule_id.endsWith("CEV.printed"))!.ou…
+     96|     expect(printedRule("0.45")).toBe("pass");
+       |                                 ^
+     97|     expect(printedRule("0.46")).toBe("fail");
+     98|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  test/rules.test.ts > CEV (A-02, A-20, A-22) > A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007
+AssertionError: expected 'block' to be 'release' // Object.is equality
+
+Expected: "release"
+Received: "block"
+
+ ❯ test/rules.test.ts:126:33
+    124|     const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    125|     expect(e.cev_recomputed).toBe("0.45");
+    126|     expect(e.decision.proposal).toBe("release");
+       |                                 ^
+    127|   });
+    128|   it("A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); p…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+

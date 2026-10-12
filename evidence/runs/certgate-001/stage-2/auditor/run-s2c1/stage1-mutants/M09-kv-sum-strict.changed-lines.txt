@@ -1,0 +1,2 @@
+-      const ok = sum.gte(new Dec(l.min!).times(3));
++      const ok = sum.gt(new Dec(l.min!).times(3));

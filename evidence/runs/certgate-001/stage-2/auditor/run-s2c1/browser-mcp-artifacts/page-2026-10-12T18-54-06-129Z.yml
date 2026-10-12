@@ -1,0 +1,389 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "CertGate" [ref=f1e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f1e8]:
+        - link "Cases" [ref=f1e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f1e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f1e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f1e12]: "Model endpoint: off · last check 2026-10-12T18:54:03.848Z"
+  - note [ref=f1e15]:
+    - generic [ref=f1e16]:
+      - strong [ref=f1e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f1e18]:
+    - generic [ref=f1e19]:
+      - region [ref=f1e2120]:
+        - generic [ref=f1e2121]:
+          - generic [ref=f1e2122]: Case cg-003 · Delivery note ALB-2026-0917 · line 3
+          - heading "Certificate SV-2026-118512 · heat 24-72015" [level=1] [ref=f1e2123]
+          - generic [ref=f1e2124]: Siderúrgica Valdemora S.A. · Chapa 25 x 2000 x 6000 mm · scanned PDF, no text layer
+        - generic [ref=f1e2125]:
+          - strong [ref=f1e2126]: Stored reading
+          - text: · mock reading, no model · 2026-10-12T18:35:51.742Z · not live
+      - region [ref=f1e2127]:
+        - generic [ref=f1e2128]: CERTGATE PROPOSES
+        - heading "Review — CertGate will not propose release" [level=2] [ref=f1e2129]
+        - list [ref=f1e2130]:
+          - listitem [ref=f1e2131]: CRITICAL_UNKNOWN:ReH — mechanical.ReH could not be read with confidence
+          - listitem [ref=f1e2132]: "NO_SECOND_CHANNEL — no text layer: 22 critical field(s) need human confirmation"
+          - listitem [ref=f1e2133]: RULE_NOT_EVALUABLE:ReH — mechanical.ReH unknown
+      - region [ref=f1e2134]:
+        - generic [ref=f1e2135]:
+          - heading "Steps of this run" [level=2] [ref=f1e2136]
+          - generic [ref=f1e2137]: mock reading · no model
+        - list [ref=f1e2138]:
+          - listitem [ref=f1e2139]:
+            - generic [ref=f1e2140]: Case created
+            - generic [ref=f1e2141]: done
+            - generic [ref=f1e2142]: 1.696 ms
+            - generic [ref=f1e2143]: file type and size checked, hash recorded
+          - listitem [ref=f1e2144]:
+            - generic [ref=f1e2145]: Model reading · mock (no model)
+            - generic [ref=f1e2146]: done
+            - generic [ref=f1e2147]: 0.169 ms
+            - generic [ref=f1e2148]: mock reading · no model
+          - listitem [ref=f1e2149]:
+            - generic [ref=f1e2150]: Text layer
+            - generic [ref=f1e2151]: not available
+            - generic [ref=f1e2152]: 0.007 ms
+            - generic [ref=f1e2153]: "not available: scan, no text layer"
+          - listitem [ref=f1e2154]:
+            - generic [ref=f1e2155]: Internal coherence and rules against ESP-014
+            - generic [ref=f1e2156]: done
+            - generic [ref=f1e2157]: 0.352 ms
+            - generic [ref=f1e2158]: "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
+          - listitem [ref=f1e2159]:
+            - generic [ref=f1e2160]: Proposal
+            - generic [ref=f1e2161]: done
+            - generic [ref=f1e2162]: —
+            - generic [ref=f1e2163]: review · a person decides
+        - paragraph [ref=f1e2164]: Durations are the measured timings of this run, from its receipt.
+      - generic [ref=f1e2165]:
+        - region [ref=f1e2166]:
+          - generic [ref=f1e2167]:
+            - heading "Values against purchase spec ESP-014 rev. 3" [level=2] [ref=f1e2168]
+            - generic [ref=f1e2169]: 22 critical fields · 17 pass · 1 unknown · 0 fail
+          - table [ref=f1e2171]:
+            - rowgroup [ref=f1e2172]:
+              - row [ref=f1e2173]:
+                - columnheader "FIELD" [ref=f1e2174]
+                - columnheader "READ" [ref=f1e2175]
+                - columnheader "CHANNELS" [ref=f1e2176]
+                - columnheader "SPEC" [ref=f1e2177]
+                - columnheader "SOURCE" [ref=f1e2178]
+                - columnheader "RESULT" [ref=f1e2179]
+            - rowgroup [ref=f1e2180]:
+              - row [ref=f1e2181]:
+                - rowheader "Certificate type" [ref=f1e2182]
+                - cell "3.1" [ref=f1e2183]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2184]'
+                - cell "3.1 (EN 10204)" [ref=f1e2185]
+                - cell "page 1 · document title" [ref=f1e2186]
+                - cell "✓ Pass" [ref=f1e2187]
+              - row [ref=f1e2188]:
+                - rowheader "Heat no." [ref=f1e2189]
+                - cell "24-72015" [ref=f1e2190]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2191]'
+                - 'cell "= delivery line 3: 24-72015" [ref=f1e2192]'
+                - cell "page 1 · Colada / Heat no." [ref=f1e2193]
+                - cell "✓ Pass" [ref=f1e2194]
+              - row [ref=f1e2195]:
+                - rowheader "Grade" [ref=f1e2196]
+                - cell "TRN-355" [ref=f1e2197]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2198]'
+                - cell "TRN-355 (ordered TRN-355)" [ref=f1e2199]
+                - cell "page 1 · Calidad / Grade" [ref=f1e2200]
+                - cell "✓ Pass" [ref=f1e2201]
+              - row [ref=f1e2202]:
+                - rowheader "CEV (printed)" [ref=f1e2203]
+                - cell "0.40 %" [ref=f1e2204]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2205]'
+                - cell "≤ 0.45 %" [ref=f1e2206]
+                - cell "page 1 · heat analysis table, column CEV" [ref=f1e2207]
+                - cell "✓ Pass" [ref=f1e2208]
+              - row [ref=f1e2209]:
+                - rowheader "KV test temperature" [ref=f1e2210]
+                - cell "-20 °C" [ref=f1e2211]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2212]'
+                - cell "-20 °C" [ref=f1e2213]
+                - cell "page 1 · impact test heading" [ref=f1e2214]
+                - cell "✓ Pass" [ref=f1e2215]
+              - row [ref=f1e2216]:
+                - rowheader "Inspection stamp" [ref=f1e2217]
+                - cell "QA-07" [ref=f1e2218]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2219]'
+                - cell "required" [ref=f1e2220]
+                - cell "page 1 · signature block, Sello" [ref=f1e2221]
+                - cell "✓ Pass" [ref=f1e2222]
+              - row [ref=f1e2223]:
+                - rowheader "C (%)" [ref=f1e2224]
+                - cell "0.15 %" [ref=f1e2225]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2226]'
+                - cell "≤ 0.20 %" [ref=f1e2227]
+                - cell "page 1 · heat analysis table, column C" [ref=f1e2228]
+                - cell "✓ Pass" [ref=f1e2229]
+              - row [ref=f1e2230]:
+                - rowheader "Si (%)" [ref=f1e2231]
+                - cell "0.19 %" [ref=f1e2232]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2233]'
+                - cell "≤ 0.55 %" [ref=f1e2234]
+                - cell "page 1 · heat analysis table, column Si" [ref=f1e2235]
+                - cell "✓ Pass" [ref=f1e2236]
+              - row [ref=f1e2237]:
+                - rowheader "Mn (%)" [ref=f1e2238]
+                - cell "1.38 %" [ref=f1e2239]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2240]'
+                - cell "≤ 1.60 %" [ref=f1e2241]
+                - cell "page 1 · heat analysis table, column Mn" [ref=f1e2242]
+                - cell "✓ Pass" [ref=f1e2243]
+              - row [ref=f1e2244]:
+                - rowheader "P (%)" [ref=f1e2245]
+                - cell "0.011 %" [ref=f1e2246]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2247]'
+                - cell "≤ 0.025 %" [ref=f1e2248]
+                - cell "page 1 · heat analysis table, column P" [ref=f1e2249]
+                - cell "✓ Pass" [ref=f1e2250]
+              - row [ref=f1e2251]:
+                - rowheader "S (%)" [ref=f1e2252]
+                - cell "0.005 %" [ref=f1e2253]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2254]'
+                - cell "≤ 0.025 %" [ref=f1e2255]
+                - cell "page 1 · heat analysis table, column S" [ref=f1e2256]
+                - cell "✓ Pass" [ref=f1e2257]
+              - row [ref=f1e2258]:
+                - rowheader "Cr (%)" [ref=f1e2259]
+                - cell "0.05 %" [ref=f1e2260]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2261]'
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e2262]
+                - cell "page 1 · heat analysis table, column Cr" [ref=f1e2263]
+                - cell "info" [ref=f1e2264]
+              - row [ref=f1e2265]:
+                - rowheader "Ni (%)" [ref=f1e2266]
+                - cell "0.04 %" [ref=f1e2267]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2268]'
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e2269]
+                - cell "page 1 · heat analysis table, column Ni" [ref=f1e2270]
+                - cell "info" [ref=f1e2271]
+              - row [ref=f1e2272]:
+                - rowheader "Mo (%)" [ref=f1e2273]
+                - cell "0.01 %" [ref=f1e2274]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2275]'
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e2276]
+                - cell "page 1 · heat analysis table, column Mo" [ref=f1e2277]
+                - cell "info" [ref=f1e2278]
+              - row [ref=f1e2279]:
+                - rowheader "Cu (%)" [ref=f1e2280]
+                - cell "0.07 %" [ref=f1e2281]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2282]'
+                - cell "≤ 0.55 %" [ref=f1e2283]
+                - cell "page 1 · heat analysis table, column Cu" [ref=f1e2284]
+                - cell "✓ Pass" [ref=f1e2285]
+              - row [ref=f1e2286]:
+                - rowheader "V (%)" [ref=f1e2287]
+                - cell "0.002 %" [ref=f1e2288]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2289]'
+                - cell "no limit in ESP-014 (used for CEV)" [ref=f1e2290]
+                - cell "page 1 · heat analysis table, column V" [ref=f1e2291]
+                - cell "info" [ref=f1e2292]
+              - row [ref=f1e2293]:
+                - rowheader "ReH" [ref=f1e2294]
+                - cell "unknown" [ref=f1e2295]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2296]'
+                - cell "≥ 355 MPa" [ref=f1e2297]
+                - cell "page 1 · mechanical tests table, column ReH" [ref=f1e2298]
+                - cell "UNKNOWN" [ref=f1e2299]
+              - row [ref=f1e2300]:
+                - rowheader "Rm (MPa)" [ref=f1e2301]
+                - cell "529 MPa" [ref=f1e2302]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2303]'
+                - cell "≥ 470 and ≤ 630 MPa" [ref=f1e2304]
+                - cell "page 1 · mechanical tests table, column Rm" [ref=f1e2305]
+                - cell "✓ Pass" [ref=f1e2306]
+              - row [ref=f1e2307]:
+                - rowheader "A (%)" [ref=f1e2308]
+                - cell "27 %" [ref=f1e2309]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2310]'
+                - cell "≥ 20 %" [ref=f1e2311]
+                - cell "page 1 · mechanical tests table, column A" [ref=f1e2312]
+                - cell "✓ Pass" [ref=f1e2313]
+              - row [ref=f1e2314]:
+                - rowheader "KV specimen 1" [ref=f1e2315]
+                - cell "61 J" [ref=f1e2316]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2317]'
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e2318]
+                - cell "page 1 · impact test table, Probeta 1" [ref=f1e2319]
+                - cell "✓ Pass" [ref=f1e2320]
+              - row [ref=f1e2321]:
+                - rowheader "KV specimen 2" [ref=f1e2322]
+                - cell "57 J" [ref=f1e2323]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2324]'
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e2325]
+                - cell "page 1 · impact test table, Probeta 2" [ref=f1e2326]
+                - cell "✓ Pass" [ref=f1e2327]
+              - row [ref=f1e2328]:
+                - rowheader "KV specimen 3" [ref=f1e2329]
+                - cell "66 J" [ref=f1e2330]
+                - 'cell "one channel only (scan): needs confirmation" [ref=f1e2331]'
+                - cell "mean of 3 >= 27 J (sum >= 81)" [ref=f1e2332]
+                - cell "page 1 · impact test table, Probeta 3" [ref=f1e2333]
+                - cell "✓ Pass" [ref=f1e2334]
+              - row [ref=f1e2335]:
+                - rowheader "CEV (recomputed; exact value in the receipt)" [ref=f1e2336]
+                - cell "0.399733… %" [ref=f1e2337]
+                - cell "—" [ref=f1e2338]
+                - cell "<= 0.45 %" [ref=f1e2339]
+                - cell "computed from C, Mn, Cr, Ni, Mo, Cu, V (IIW formula, cited)" [ref=f1e2340]
+                - cell "✓ Pass" [ref=f1e2341]
+          - generic [ref=f1e2342]:
+            - strong [ref=f1e2343]: Reading channels.
+            - text: "mock reading · no model. Text layer:"
+            - strong [ref=f1e2344]: not available (scan).
+            - text: Without a second channel, 22 critical fields need a person to confirm them on the original.
+        - complementary [ref=f1e2345]:
+          - generic [ref=f1e2346]:
+            - heading "Runs on AMD" [level=2] [ref=f1e2347]
+            - generic [ref=f1e2348]: NOT APPLICABLE · MOCK
+          - paragraph [ref=f1e2349]: Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand.
+          - generic [ref=f1e2350]:
+            - term [ref=f1e2351]: State
+            - definition [ref=f1e2352]: "not_applicable_mock · mock reading: no model and no endpoint were used"
+            - term [ref=f1e2353]: Checked at
+            - definition [ref=f1e2354]: unknown
+            - term [ref=f1e2355]: Model(s) listed
+            - definition [ref=f1e2356]: none
+            - term [ref=f1e2357]: GPU
+            - definition [ref=f1e2358]: unknown
+            - term [ref=f1e2359]: ROCm · vLLM
+            - definition [ref=f1e2360]: unknown · unknown
+            - term [ref=f1e2361]: Latency (ms)
+            - definition [ref=f1e2362]: unknown
+            - term [ref=f1e2363]: Tokens / s
+            - definition [ref=f1e2364]: unknown
+            - term [ref=f1e2365]: Cost estimate (USD)
+            - definition [ref=f1e2366]: unknown
+      - region [ref=f1e2367]:
+        - heading "Explanation" [level=2] [ref=f1e2368]
+        - paragraph [ref=f1e2369]: "There is no model explanation: this is a mock reading, no model was used."
+      - region [ref=f1e2370]:
+        - heading "Confirm the critical fields on the original" [level=2] [ref=f1e2371]
+        - paragraph [ref=f1e2372]: This certificate has no second reading channel. Type each value as printed on the original (all 22 critical fields; write "absent" for a field that is not on the document). The rules are then run again on your values.
+        - generic [ref=f1e2373]:
+          - generic [ref=f1e2374]:
+            - generic [ref=f1e2375]: Certificate type
+            - textbox "Certificate type" [ref=f1e2376]:
+              - /placeholder: "read: 3.1"
+          - generic [ref=f1e2377]:
+            - generic [ref=f1e2378]: Heat no.
+            - textbox "Heat no." [ref=f1e2379]:
+              - /placeholder: "read: 24-72015"
+          - generic [ref=f1e2380]:
+            - generic [ref=f1e2381]: Grade
+            - textbox "Grade" [ref=f1e2382]:
+              - /placeholder: "read: TRN-355"
+          - generic [ref=f1e2383]:
+            - generic [ref=f1e2384]: CEV (printed)
+            - textbox "CEV (printed)" [ref=f1e2385]:
+              - /placeholder: "read: 0.40"
+          - generic [ref=f1e2386]:
+            - generic [ref=f1e2387]: KV test temperature
+            - textbox "KV test temperature" [ref=f1e2388]:
+              - /placeholder: "read: -20"
+          - generic [ref=f1e2389]:
+            - generic [ref=f1e2390]: Inspection stamp
+            - textbox "Inspection stamp" [ref=f1e2391]:
+              - /placeholder: "read: QA-07"
+          - generic [ref=f1e2392]:
+            - generic [ref=f1e2393]: C (%)
+            - textbox "C (%)" [ref=f1e2394]:
+              - /placeholder: "read: 0.15"
+          - generic [ref=f1e2395]:
+            - generic [ref=f1e2396]: Si (%)
+            - textbox "Si (%)" [ref=f1e2397]:
+              - /placeholder: "read: 0.19"
+          - generic [ref=f1e2398]:
+            - generic [ref=f1e2399]: Mn (%)
+            - textbox "Mn (%)" [ref=f1e2400]:
+              - /placeholder: "read: 1.38"
+          - generic [ref=f1e2401]:
+            - generic [ref=f1e2402]: P (%)
+            - textbox "P (%)" [ref=f1e2403]:
+              - /placeholder: "read: 0.011"
+          - generic [ref=f1e2404]:
+            - generic [ref=f1e2405]: S (%)
+            - textbox "S (%)" [ref=f1e2406]:
+              - /placeholder: "read: 0.005"
+          - generic [ref=f1e2407]:
+            - generic [ref=f1e2408]: Cr (%)
+            - textbox "Cr (%)" [ref=f1e2409]:
+              - /placeholder: "read: 0.05"
+          - generic [ref=f1e2410]:
+            - generic [ref=f1e2411]: Ni (%)
+            - textbox "Ni (%)" [ref=f1e2412]:
+              - /placeholder: "read: 0.04"
+          - generic [ref=f1e2413]:
+            - generic [ref=f1e2414]: Mo (%)
+            - textbox "Mo (%)" [ref=f1e2415]:
+              - /placeholder: "read: 0.01"
+          - generic [ref=f1e2416]:
+            - generic [ref=f1e2417]: Cu (%)
+            - textbox "Cu (%)" [ref=f1e2418]:
+              - /placeholder: "read: 0.07"
+          - generic [ref=f1e2419]:
+            - generic [ref=f1e2420]: V (%)
+            - textbox "V (%)" [ref=f1e2421]:
+              - /placeholder: "read: 0.002"
+          - generic [ref=f1e2422]:
+            - generic [ref=f1e2423]: ReH
+            - textbox "ReH" [ref=f1e2424]:
+              - /placeholder: "unknown: read the original"
+          - generic [ref=f1e2425]:
+            - generic [ref=f1e2426]: Rm (MPa)
+            - textbox "Rm (MPa)" [ref=f1e2427]:
+              - /placeholder: "read: 529"
+          - generic [ref=f1e2428]:
+            - generic [ref=f1e2429]: A (%)
+            - textbox "A (%)" [ref=f1e2430]:
+              - /placeholder: "read: 27"
+          - generic [ref=f1e2431]:
+            - generic [ref=f1e2432]: KV specimen 1
+            - textbox "KV specimen 1" [ref=f1e2433]:
+              - /placeholder: "read: 61"
+          - generic [ref=f1e2434]:
+            - generic [ref=f1e2435]: KV specimen 2
+            - textbox "KV specimen 2" [ref=f1e2436]:
+              - /placeholder: "read: 57"
+          - generic [ref=f1e2437]:
+            - generic [ref=f1e2438]: KV specimen 3
+            - textbox "KV specimen 3" [ref=f1e2439]:
+              - /placeholder: "read: 66"
+        - generic [ref=f1e2441]:
+          - generic [ref=f1e2442]: Confirmed by
+          - textbox "Confirmed by" [ref=f1e2443]:
+            - /placeholder: "[Name] · Quality"
+        - button "Re-run the rules with these values" [ref=f1e2445] [cursor=pointer]
+        - status
+      - region [ref=f1e2446]:
+        - heading "Decision · a person decides" [level=2] [ref=f1e2447]
+        - paragraph [ref=f1e2448]: CertGate proposes; it never releases material. Your name and reason go into the receipt. The time is stamped by the server.
+        - generic [ref=f1e2450]:
+          - generic [ref=f1e2451]: Your name and role
+          - textbox "Your name and role" [ref=f1e2452]:
+            - /placeholder: "[Name] · Quality"
+        - generic [ref=f1e2453]:
+          - generic [ref=f1e2454]: Reason
+          - textbox "Reason" [ref=f1e2455]:
+            - /placeholder: What you checked and why you decide this
+        - generic [ref=f1e2456]:
+          - button "Block batch" [ref=f1e2457] [cursor=pointer]
+          - button "Request new certificate" [ref=f1e2458] [cursor=pointer]
+          - button "Release batch" [disabled] [ref=f1e2459]
+        - paragraph [ref=f1e2460]: Release is not offered while the proposal is not release. For a scan, every critical field must first be confirmed on the original.
+        - status
+      - paragraph [ref=f1e2461]:
+        - link "Open the receipt" [ref=f1e2462] [cursor=pointer]:
+          - /url: "#/receipt"

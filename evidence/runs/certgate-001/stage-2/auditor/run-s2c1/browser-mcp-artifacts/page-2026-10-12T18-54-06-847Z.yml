@@ -1,0 +1,42 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "CertGate" [ref=f1e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f1e8]:
+        - link "Cases" [ref=f1e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f1e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f1e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f1e12]: "Model endpoint: off · last check 2026-10-12T18:54:09.256Z"
+  - note [ref=f1e15]:
+    - generic [ref=f1e16]:
+      - strong [ref=f1e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f1e18]:
+    - generic [ref=f1e19]:
+      - complementary [ref=f1e2464]:
+        - generic [ref=f1e2465]:
+          - heading "Runs on AMD" [level=2] [ref=f1e2466]
+          - generic [ref=f1e2467]: ENDPOINT OFF
+        - paragraph [ref=f1e2468]: Read now from the configured model endpoint and its sidecar. With no endpoint configured, it says endpoint off with the time of this check. Nothing is typed by hand.
+        - generic [ref=f1e2469]:
+          - term [ref=f1e2470]: State
+          - definition [ref=f1e2471]: off · no endpoint configured
+          - term [ref=f1e2472]: Checked at
+          - definition [ref=f1e2473]: 2026-10-12T18:54:09.256Z
+          - term [ref=f1e2474]: Model(s) listed
+          - definition [ref=f1e2475]: none
+          - term [ref=f1e2476]: GPU
+          - definition [ref=f1e2477]: unknown
+          - term [ref=f1e2478]: ROCm · vLLM
+          - definition [ref=f1e2479]: unknown · unknown
+          - term [ref=f1e2480]: Latency (ms)
+          - definition [ref=f1e2481]: unknown
+          - term [ref=f1e2482]: Tokens / s
+          - definition [ref=f1e2483]: unknown
+          - term [ref=f1e2484]: Cost estimate (USD)
+          - definition [ref=f1e2485]: unknown
+      - paragraph [ref=f1e2486]: In this build no endpoint is configured and no AMD hardware is used.

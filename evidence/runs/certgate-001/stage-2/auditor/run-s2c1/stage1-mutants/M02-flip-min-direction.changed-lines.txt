@@ -1,0 +1,2 @@
+-  const belowMin = l.min !== null && value.lt(new Dec(l.min));
++  const belowMin = l.min !== null && value.gt(new Dec(l.min));

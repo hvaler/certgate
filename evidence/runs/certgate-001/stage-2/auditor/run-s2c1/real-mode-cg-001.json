@@ -1,0 +1,95 @@
+{
+  "summary": {
+    "case_id": "cg-001",
+    "status": "error",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "live_no_reading",
+    "reasons": [
+      "READER_ERROR:endpoint_not_configured"
+    ],
+    "human_confirmation_required": [],
+    "note": "CertGate only proposes. A person decides. All data is fictitious. Mode real: live attempt, no reading was obtained (endpoint_not_configured); nothing was read by a model."
+  },
+  "receipt": {
+    "receipt_schema": "certgate.receipt/1",
+    "case_id": "cg-001",
+    "run_id": "42ce5afc-c5dc-4ee9-ba88-450b1139a149",
+    "created_at": "2026-10-12T18:48:44.781Z",
+    "mode": "real",
+    "reading_source": "live_no_reading",
+    "reader": {
+      "reader_id": "live-reader-unconfigured",
+      "reading_source": "live_no_reading",
+      "model_id": "none (model endpoint not configured)",
+      "model_version": "unknown",
+      "vllm_version": "unknown",
+      "rocm_version": "unknown",
+      "calls": "1"
+    },
+    "planted": [],
+    "status": "error",
+    "proposal": "review",
+    "reasons": [
+      {
+        "code": "READER_ERROR:endpoint_not_configured",
+        "effect": "review",
+        "detail": "model endpoint not configured: no live reading in this build"
+      }
+    ],
+    "human_required": true,
+    "human_confirmation_required": [],
+    "human_decision": null,
+    "confirmations": [],
+    "channel_available": true,
+    "timings_ms": {
+      "validate": "145.707",
+      "text_layer": "6.791",
+      "model_reading": "0.208",
+      "evaluation": "0.068"
+    },
+    "errors": [
+      {
+        "class": "endpoint_not_configured",
+        "detail": "model endpoint not configured: no live reading in this build",
+        "injected": false,
+        "recovered": false
+      }
+    ],
+    "hashes": {
+      "certificate_sha256": "55c15e2e23d2928af427c633c19ef1605f9e4145ba330c0aec1b469d19eca4c6",
+      "certificate_size": "3350",
+      "delivery_note_sha256": "15a7247a6c1c2bc55894f5c2a633b5282b784b4ef0d0c6cad2b09bf40f643fe3",
+      "model_output_sha256": null,
+      "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
+    },
+    "rules_version": "certgate-rules-1.0.0",
+    "plausibility_version": "plausibility-v1",
+    "cev_formula_source": "IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md",
+    "spec": {
+      "spec_id": "ESP-014",
+      "revision": "3",
+      "grade": "TRN-355"
+    },
+    "delivery": {
+      "delivery_note": "ALB-2026-0917",
+      "line": "1"
+    },
+    "values": [],
+    "channel_checks": [],
+    "rule_results": [],
+    "f1": {
+      "state": "off",
+      "checked_at": null,
+      "detail": "no endpoint data captured",
+      "model_ids": [],
+      "gpu": null,
+      "rocm_version": null,
+      "vllm_version": null,
+      "latency_ms": null,
+      "tokens_per_second": null,
+      "cost_estimate_usd": null
+    },
+    "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
+  }
+}

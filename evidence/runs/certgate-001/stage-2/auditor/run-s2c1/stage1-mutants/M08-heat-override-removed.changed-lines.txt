@@ -1,0 +1,2 @@
+-  const heatMismatch = reasons.some((r) => r.code === "HEAT_MISMATCH");
++  const heatMismatch = false;

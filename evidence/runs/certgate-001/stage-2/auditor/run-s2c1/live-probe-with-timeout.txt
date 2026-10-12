@@ -1,0 +1,27 @@
+PASS S2-12 off :: state=off detail=no endpoint configured
+PASS B-19 last check advances :: 2026-10-12T18:52:12.550Z -> 2026-10-12T18:52:13.652Z
+PASS S2-20/B-13 upload no endpoint :: http=200 proposal=review status=error reading_source=live_no_reading model_id=none (endpoint off) counted=false
+PASS S2-15 windows + not consumed :: remaining=3 windows_note=no live window is announced
+PASS S2-11 F1 shows endpoint values verbatim :: state=on models=["certgate-test-stub"] gpu="TEST STUB (no GPU)" rocm=stub-0
+PASS S2-36 cost unknown without price :: cost=null
+PASS B-06 override ignored :: http=200 model_id=certgate-test-stub reading_source=live proposal=release
+PASS I7 stub reading labelled as stub :: reading_source=live reader={"reader_id":"live-reader-openai-compatible","reading_source":"live","model_id":"certgate-test-stub","model_version":"as reported by the endpoint","vllm_version":"stub-0","rocm_version":"stub-0","calls":"1"}
+PASS B-05 no-store on live read :: cache-control=no-store
+PASS B-05 no-store on status :: cache-control=no-store
+PASS B-02 atomic: exactly remaining accepted :: accepted=2 rejected429=6 statuses=200,429,429,429,200,429,429,429
+PASS S2-16 reopens at next UTC hour :: reopens_at=2026-10-12T19:00:00.000Z expected=2026-10-12T19:00:00.000Z
+PASS S2-16 status exhausted :: remaining=0 reason=limit reached this hour
+PASS S2-19 bypass attempts rejected :: http=429
+PASS S2-26 no key or code in responses :: key-present=false
+PASS S2-17 wrong code rejected, not consumed :: http=403 remaining=2
+PASS S2-17 code never echoed :: searched responses for the code
+PASS S2-17 missing code rejected :: http=403
+PASS B-04 throttle after repeated failures :: statuses=403,403,403,429
+PASS S2-17 correct code accepted :: http=200
+PASS S2-25 C11 http_429 :: http=200 status=error proposal=review errors=["http_429","http_429","http_429"] calls=3 reading_source=live_no_reading ms=114
+PASS S2-25 C11 http_5xx :: http=200 status=error proposal=review errors=["http_5xx","http_5xx","http_5xx"] calls=3 reading_source=live_no_reading ms=119
+PASS S2-25 C11 invalid_json :: http=200 status=error proposal=review errors=["invalid_json"] calls=1 reading_source=live_no_reading ms=113
+PASS S2-25 C11 huge :: http=200 status=error proposal=review errors=["invalid_json"] calls=1 reading_source=live_no_reading ms=137
+PASS S2-25 C11 timeout :: http=200 status=error proposal=review errors=["timeout","timeout","timeout"] calls=3 reading_source=live_no_reading ms=196636
+SUMMARY 25/25 PASS
+exit=0
