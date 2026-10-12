@@ -168,7 +168,8 @@ export interface RunReceipt {
   channel_available: boolean;
   timings_ms: Record<string, string>;
   /** injected = true when the failure was planted by the mock (C11), never a real endpoint error. */
-  errors: { class: string; detail: string; injected: boolean }[];
+  /** Every failed reader attempt; recovered = a later bounded retry succeeded. */
+  errors: { class: string; detail: string; injected: boolean; recovered: boolean }[];
   hashes: {
     certificate_sha256: string;
     certificate_size: string;

@@ -33,7 +33,9 @@ export interface CaseReadings {
   text_layer: TextLayerResult;
   model: ModelReading | null;
   model_output_sha256: string | null;
-  reader_error: { class: string; detail: string; injected: boolean } | null;
+  reader_error: ReaderErrorRecord | null;
+  /** Every failed reader attempt, including attempts a retry recovered from. */
+  reader_errors: ReaderErrorRecord[];
   reader: { reader_id: string; kind: "mock" | "live"; model_id: string; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
   timings: Record<string, string>;
   spec: Spec;
@@ -56,13 +58,20 @@ const ms = (t0: bigint) => {
   return `${us / 1000n}.${(us % 1000n).toString().padStart(3, "0")}`;
 };
 
-async function readWithRetry(reader: ModelReader, req: { case_id: string; certificate: Uint8Array }) {
+type ReaderErrorRecord = { class: string; detail: string; injected: boolean; recovered: boolean };
+
+/** Bounded retry. Every failed attempt is recorded, also those a later retry recovered from (ADV-S1-F04). */
+async function readWithRetry(reader: ModelReader, req: { case_id: string; certificate: Uint8Array }, errors: ReaderErrorRecord[]) {
+  const injected = reader.planted.some((p) => p.kind === "failure");
   for (let attempt = 0; ; attempt++) {
     try {
       const text = await reader.read(req);
-      return { text, model: parseModelOutput(text) };
+      const model = parseModelOutput(text);
+      for (const e of errors) e.recovered = true;
+      return { text, model };
     } catch (e) {
       if (!(e instanceof ReaderError)) throw e;
+      errors.push({ class: e.errorClass, detail: injected ? `INJECTED (mock, planted): ${e.message}` : e.message, injected, recovered: false });
       if (RETRYABLE.has(e.errorClass) && attempt < MAX_RETRIES) continue;
       throw e;
     }
@@ -92,14 +101,14 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
   let model: ModelReading | null = null;
   let modelSha: string | null = null;
   let readerError: CaseReadings["reader_error"] = null;
+  const readerErrors: ReaderErrorRecord[] = [];
   try {
-    const r = await readWithRetry(input.reader, { case_id: input.case_id, certificate: cert.bytes });
+    const r = await readWithRetry(input.reader, { case_id: input.case_id, certificate: cert.bytes }, readerErrors);
     model = r.model;
     modelSha = sha256(new TextEncoder().encode(r.text));
   } catch (e) {
     if (!(e instanceof ReaderError)) throw e;
-    const injected = input.reader.planted.some((p) => p.kind === "failure");
-    readerError = { class: e.errorClass, detail: injected ? `INJECTED (mock, planted): ${e.message}` : e.message, injected };
+    readerError = readerErrors[readerErrors.length - 1]!;
   }
   timings.model_reading = ms(t0);
 
@@ -118,7 +127,7 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
   };
   const reader = input.reader;
   return {
-    case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError,
+    case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError, reader_errors: readerErrors,
     reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, model_version: reader.model_version,
       vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls, planted: reader.planted },
     timings, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
@@ -199,7 +208,12 @@ export function recordHumanDecision(
 function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceipt {
   const rd = r.readings;
   // The reader's own declaration covers failures, where no model output exists (finding F-01).
-  const planted = rd.model?.planted ?? rd.reader.planted;
+  // Union of what the model output and the reader declare as planted: a recovered injected failure has a valid
+  // model output that does not list it (ADV-S1-F04).
+  const planted = [...(rd.model?.planted ?? [])];
+  for (const p of rd.reader.planted) {
+    if (!planted.some((q) => q.kind === p.kind && q.field === p.field)) planted.push(p);
+  }
   const readingSource: RunReceipt["reading_source"] =
     rd.reader.kind === "live" ? "live" : planted.length > 0 ? "planted" : "mock";
   const fields = r.evaluation?.fields;
@@ -227,7 +241,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     })),
     channel_available: rd.text_layer.channel_available,
     timings_ms: timings,
-    errors: rd.reader_error ? [rd.reader_error] : [],
+    errors: rd.reader_errors,
     hashes: {
       certificate_sha256: rd.case.certificate_file_hash,
       certificate_size: rd.case.certificate_file_size,
