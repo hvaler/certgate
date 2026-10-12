@@ -167,7 +167,8 @@ export interface RunReceipt {
   confirmations: (FieldConfirmation & { read_value: string | null; reading_source: string })[];
   channel_available: boolean;
   timings_ms: Record<string, string>;
-  errors: { class: string; detail: string }[];
+  /** injected = true when the failure was planted by the mock (C11), never a real endpoint error. */
+  errors: { class: string; detail: string; injected: boolean }[];
   hashes: {
     certificate_sha256: string;
     certificate_size: string;

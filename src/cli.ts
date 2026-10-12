@@ -34,6 +34,21 @@ function parseArgs(argv: string[]) {
   return { opts, positional };
 }
 
+/** The note follows the actual reading source and mode (finding F-04). */
+function readingNote(r: CaseResult): string {
+  const base = "CertGate only proposes. A person decides. All data is fictitious.";
+  switch (r.receipt.reading_source) {
+    case "mock":
+      return `${base} The reading is MOCK (no model).`;
+    case "planted":
+      return `${base} The reading is MOCK (no model) with planted deviations: ${r.receipt.planted.map((p) => p.kind).join(", ")}.`;
+    case "live":
+      return r.readings.model === null
+        ? `${base} Mode ${r.receipt.mode}: no reading was obtained (${r.receipt.errors[0]?.class ?? "error"}); nothing was read by a model.`
+        : `${base} The reading came from the live model channel.`;
+  }
+}
+
 export function summary(r: CaseResult) {
   return {
     case_id: r.readings.case.case_id,
@@ -43,7 +58,7 @@ export function summary(r: CaseResult) {
     reading_source: r.receipt.reading_source,
     reasons: r.decision.reasons.map((x) => x.code),
     human_confirmation_required: r.decision.human_confirmation_required,
-    note: "CertGate only proposes. A person decides. All data is fictitious; the reading is MOCK (no model).",
+    note: readingNote(r),
   };
 }
 

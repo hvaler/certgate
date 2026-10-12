@@ -29,6 +29,15 @@ describe("failure injection and bounded retry (C11)", () => {
       expect(r.receipt.errors[0]!.class).toBe(cls);
       expect(r.decision.reasons.map((x) => x.code)).toEqual([`READER_ERROR:${cls}`]);
     });
+    it(`${id} ${cls}: the receipt labels the injected failure as planted in structural fields (finding F-01)`, async () => {
+      const r = await processCase(loadDatasetCase(id, getShared()));
+      expect(r.receipt.reading_source).toBe("planted");
+      expect(r.receipt.reader.reading_source).toBe("planted");
+      expect(r.receipt.planted).toEqual([expect.objectContaining({ kind: "failure" })]);
+      expect(r.receipt.errors).toEqual([expect.objectContaining({ class: cls, injected: true })]);
+      expect(r.receipt.errors[0]!.detail).toMatch(/^INJECTED \(mock, planted\)/);
+      expect(() => exportReceipt(r.receipt, {})).not.toThrow();
+    });
   }
 
   it("a model output that breaks the reading schema is invalid output: review", () => {
@@ -54,6 +63,8 @@ describe("real mode without an endpoint (S1-19, D1-15)", () => {
     expect(r.readings.case.status).toBe("error");
     expect(r.decision.proposal).toBe("review");
     expect(r.receipt.errors[0]!.class).toBe("endpoint_not_configured");
+    expect(r.receipt.errors[0]!.injected).toBe(false);
+    expect(r.receipt.planted).toEqual([]);
     expect(r.receipt.reader.model_id).not.toMatch(/MOCK/);
     expect(r.readings.model).toBeNull();
   });

@@ -28,6 +28,22 @@ describe("CLI", () => {
     expect(code).toBe(EXIT.processed);
     expect(JSON.parse(out).summary.status).toBe("error");
   });
+  it("in real mode the summary note does not claim a MOCK reading (finding F-04)", async () => {
+    const prev = process.env.CERTGATE_MODE;
+    process.env.CERTGATE_MODE = "real";
+    try {
+      const j = JSON.parse((await cli(["process", "--case", "cg-001"])).out);
+      expect(j.summary.reading_source).toBe("live");
+      expect(j.summary.note).not.toMatch(/MOCK/);
+      expect(j.summary.note).toMatch(/no reading was obtained \(endpoint_not_configured\)/);
+    } finally {
+      if (prev === undefined) delete process.env.CERTGATE_MODE; else process.env.CERTGATE_MODE = prev;
+    }
+  });
+  it("mock and planted notes say MOCK", async () => {
+    expect(JSON.parse((await cli(["process", "--case", "cg-001"])).out).summary.note).toMatch(/MOCK \(no model\)\.$/);
+    expect(JSON.parse((await cli(["process", "--case", "cg-023"])).out).summary.note).toMatch(/planted deviations: failure/);
+  });
   it("processes an external case directory", async () => {
     const dir = mkdtempSync(path.join(tmpdir(), "certgate-ext-"));
     cpSync(path.join(DATA, "cases", "cg-005", "certificate.pdf"), path.join(dir, "certificate.pdf"));

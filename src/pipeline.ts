@@ -5,7 +5,7 @@ import { findLine, parseDeliveryNote } from "./delivery.js";
 import { evaluate, readerErrorDecision, RULES_VERSION, type Evaluation } from "./evaluate.js";
 import { CRITICAL_FIELDS, NUMERIC_FIELDS } from "./fields.js";
 import { sha256, validateCertificate, validateDeliveryNote } from "./input-file.js";
-import { parseModelOutput, type ModelReading } from "./model-output.js";
+import { parseModelOutput, type ModelReading, type PlantedEntry } from "./model-output.js";
 import { MAX_RETRIES, ReaderError, RETRYABLE, type ModelReader } from "./reader.js";
 import { extractTextLayer, type TextLayerResult } from "./text-layer.js";
 import type { Case, Decision, DeliveryLine, FieldConfirmation, HumanAction, RunReceipt, Spec } from "./types.js";
@@ -33,8 +33,8 @@ export interface CaseReadings {
   text_layer: TextLayerResult;
   model: ModelReading | null;
   model_output_sha256: string | null;
-  reader_error: { class: string; detail: string } | null;
-  reader: { reader_id: string; kind: "mock" | "live"; model_id: string; model_version: string; vllm_version: string; rocm_version: string; calls: number };
+  reader_error: { class: string; detail: string; injected: boolean } | null;
+  reader: { reader_id: string; kind: "mock" | "live"; model_id: string; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
   timings: Record<string, string>;
   spec: Spec;
   plausibility: Plausibility;
@@ -98,7 +98,8 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
     modelSha = sha256(new TextEncoder().encode(r.text));
   } catch (e) {
     if (!(e instanceof ReaderError)) throw e;
-    readerError = { class: e.errorClass, detail: e.message };
+    const injected = input.reader.planted.some((p) => p.kind === "failure");
+    readerError = { class: e.errorClass, detail: injected ? `INJECTED (mock, planted): ${e.message}` : e.message, injected };
   }
   timings.model_reading = ms(t0);
 
@@ -119,7 +120,7 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
   return {
     case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError,
     reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, model_version: reader.model_version,
-      vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls },
+      vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls, planted: reader.planted },
     timings, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
   };
 }
@@ -197,7 +198,8 @@ export function recordHumanDecision(
 
 function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceipt {
   const rd = r.readings;
-  const planted = rd.model?.planted ?? [];
+  // The reader's own declaration covers failures, where no model output exists (finding F-01).
+  const planted = rd.model?.planted ?? rd.reader.planted;
   const readingSource: RunReceipt["reading_source"] =
     rd.reader.kind === "live" ? "live" : planted.length > 0 ? "planted" : "mock";
   const fields = r.evaluation?.fields;

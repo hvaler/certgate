@@ -53,10 +53,17 @@ critical field.
 Requirements: Node.js 24 (local run) or Docker.
 
 ```sh
-# Docker (no network needed at runtime)
+# Docker
 docker build --no-cache -t certgate .
-docker run --rm --network none -p 3000:3000 -e PORT=3000 certgate
+
+# The service on PORT, reachable from the host (a published port needs a network; the service itself makes
+# no outbound call in mock mode)
+docker run --rm -d --name certgate -p 3000:3000 -e PORT=3000 certgate
 curl -X POST http://localhost:3000/api/cases/cg-003/process
+docker stop certgate
+
+# The service fully offline: with --network none no port can be published, so query it from inside
+docker run --rm --network none -e PORT=3000 certgate sh -c 'node dist/src/server.js & sleep 2; node -e "fetch(\"http://127.0.0.1:3000/api/cases/cg-003/process\",{method:\"POST\"}).then(r=>r.text()).then(console.log)"'
 
 # One dataset case through the CLI, inside the image
 docker run --rm --network none certgate node dist/src/cli.js process --case cg-003

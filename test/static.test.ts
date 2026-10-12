@@ -74,6 +74,12 @@ describe("fictitious data is labelled; repository files (S1-01, S1-02, S1-39)", 
     expect(readme).toMatch(/docker run/);
     expect(readme).not.toMatch(/runs on AMD (today|now)|deployed at|accuracy of \d/i);
   });
+  it("no README command publishes a port under --network none (finding F-02)", () => {
+    const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
+    const runs = readme.split("\n").filter((l) => /docker run/.test(l));
+    expect(runs.length).toBeGreaterThan(2);
+    for (const l of runs) expect(/--network none/.test(l) && /\s-p\s/.test(l), l).toBe(false);
+  });
   it("LICENSE is MIT", () => {
     expect(readFileSync(path.join(ROOT, "LICENSE"), "utf8")).toMatch(/^MIT License/);
   });
