@@ -40,6 +40,12 @@ describe("inclusive spec limits, no rounding (D1-07, S1-27, A-22)", () => {
     expect(ok("mechanical.Rm", "469", "MPa")).toBe("block");
     expect(ok("mechanical.Rm", "631", "MPa")).toBe("block");
   });
+  it("A26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release", () => {
+    const e = evalWith({ overrides: { "chemistry.P": { value: "0.02500000000000000001", unit: "%" } } });
+    expect(e.decision.proposal).toBe("block");
+    expect(codes(e)).toContain("RULE_FAIL:P");
+    expect(ok("mechanical.ReH", "354.99999999999999999", "MPa")).toBe("block");
+  });
   it("A 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails", () => {
     expect(ok("mechanical.A", "20")).toBe("release");
     expect(ok("mechanical.A", "19.9")).toBe("block");
@@ -105,6 +111,25 @@ describe("CEV (A-02, A-20, A-22)", () => {
     const e = evalWith({ overrides: { "chemistry.Mn": { value: "1.60", unit: "%" }, "chemistry.C": { value: "0.19", unit: "%" }, cev_printed: { value: "0.44", unit: "%" } } });
     expect(codes(e)).toEqual(expect.arrayContaining(["CEV_MISMATCH", "RULE_FAIL:CEV"]));
     expect(e.decision.proposal).toBe("block");
+  });
+  // Behavioural guards against binary floating point (finding ADV-S1-F01, mutants M13/M14).
+  const cevCase = (c: string, mn: string, cu: string, printed: string) => evalWith({
+    overrides: {
+      "chemistry.C": { value: c, unit: "%" }, "chemistry.Mn": { value: mn, unit: "%" }, "chemistry.Cu": { value: cu, unit: "%" },
+      "chemistry.Cr": { value: "0", unit: "%" }, "chemistry.Mo": { value: "0", unit: "%" }, "chemistry.V": { value: "0", unit: "%" },
+      "chemistry.Ni": { value: "0", unit: "%" }, cev_printed: { value: printed, unit: "%" },
+    },
+  });
+  it("A25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007", () => {
+    const e = cevCase("0.17", "1.50", "0.45", "0.45");
+    expect(e.cev_recomputed).toBe("0.45");
+    expect(e.decision.proposal).toBe("release");
+  });
+  it("A16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); printed 0.43 is not", () => {
+    const e = cevCase("0.175", "1.50", "0", "0.42");
+    expect(codes(e)).not.toContain("CEV_MISMATCH");
+    expect(e.decision.proposal).toBe("release");
+    expect(codes(cevCase("0.175", "1.50", "0", "0.43"))).toContain("CEV_MISMATCH");
   });
   it("an unknown CEV input makes the recomputed CEV unknown", () => {
     expect(recomputeCev({ C: "0.1", Mn: "1", Cr: null, Mo: "0", V: "0", Ni: "0", Cu: "0" })).toBeNull();

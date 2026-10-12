@@ -1,5 +1,5 @@
 // CLI and HTTP entry points (S1-05, S1-41 entry points, adversary msg 0a960033).
-import { cpSync, mkdtempSync, readFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import type { AddressInfo } from "node:net";
@@ -54,6 +54,21 @@ describe("CLI", () => {
     expect(JSON.parse(out).summary.proposal).toBe("block");
     const other = await cli(["process", "--case-dir", dir, "--line", "1"]);
     expect(JSON.parse(other.out).summary.reasons).toContain("HEAT_MISMATCH");
+  });
+  it("a mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02)", async () => {
+    for (const [mutate, cls] of [[(s: string) => s.replace('"value": "0.16"', '"value": 0.16'), "invalid_output"], [(s: string) => s.slice(0, 200), "invalid_json"]] as const) {
+      const dir = mkdtempSync(path.join(tmpdir(), "certgate-badjson-"));
+      cpSync(path.join(DATA, "cases", "cg-001", "certificate.pdf"), path.join(dir, "certificate.pdf"));
+      cpSync(path.join(DATA, "delivery", "ALB-2026-0917.csv"), path.join(dir, "delivery.csv"));
+      writeFileSync(path.join(dir, "reading.json"), mutate(readFileSync(path.join(DATA, "cases", "cg-001", "reading.json"), "utf8")));
+      const r = await cli(["process", "--case-dir", dir, "--line", "1"]);
+      expect(r.code, cls).toBe(EXIT.processed);
+      const j = JSON.parse(r.out);
+      expect(j.summary.status).toBe("error");
+      expect(j.summary.proposal).toBe("review");
+      expect(j.summary.reasons).toEqual([`READER_ERROR:${cls}`]);
+      expect(j.receipt.errors[0].injected).toBe(false);
+    }
   });
   it("rejects bad input with exit 2", async () => {
     const dir = mkdtempSync(path.join(tmpdir(), "certgate-bad-"));

@@ -64,21 +64,34 @@ export class MockReader implements ModelReader {
   readonly rocm_version = NOT_APPLICABLE;
   private count = 0;
   private readonly failure: ReaderErrorClass | null;
-  readonly planted: PlantedEntry[];
+  /** false: the injected failure happens on the first call only, so a retry can succeed (D1-05). */
+  private readonly persistent: boolean;
+  /** Set when the mock output file itself cannot be used; read() then reports it as invalid model output. */
+  private readonly unusable: { cls: ReaderErrorClass; detail: string } | null = null;
+  readonly planted: PlantedEntry[] = [];
 
   constructor(private readonly outputText: string) {
-    const parsed = parseStrictJson(outputText, "mock model output") as {
-      mock_failure?: { class?: unknown };
-      planted?: { kind?: unknown; field?: unknown; note?: unknown }[];
-    };
-    this.planted = Array.isArray(parsed.planted)
-      ? parsed.planted.map((p) => ({ kind: String(p.kind), field: typeof p.field === "string" ? p.field : null, note: String(p.note ?? "") }))
-      : [];
+    let parsed: { mock_failure?: { class?: unknown; persistent?: unknown }; planted?: { kind?: unknown; field?: unknown; note?: unknown }[] };
+    try {
+      parsed = parseStrictJson(outputText, "mock model output") as typeof parsed;
+    } catch (e) {
+      // A broken mock output is model output that fails validation (I5): it goes through the reader-error
+      // path and yields a receipt, never an internal error (finding ADV-S1-F02).
+      const cls: ReaderErrorClass = /not valid JSON/.test((e as Error).message) ? "invalid_json" : "invalid_output";
+      this.unusable = { cls, detail: (e as Error).message };
+      this.failure = null;
+      this.persistent = true;
+      return;
+    }
+    if (Array.isArray(parsed.planted)) {
+      this.planted = parsed.planted.map((p) => ({ kind: String(p.kind), field: typeof p.field === "string" ? p.field : null, note: String(p.note ?? "") }));
+    }
     const cls = parsed.mock_failure?.class;
     if (cls !== undefined && (typeof cls !== "string" || !FAILURE_CLASSES.has(cls))) {
-      throw new Error(`mock model output: unknown mock_failure class ${String(cls)}`);
+      this.unusable = { cls: "invalid_output", detail: `mock model output: unknown mock_failure class ${String(cls)}` };
     }
-    this.failure = (cls as ReaderErrorClass | undefined) ?? null;
+    this.failure = this.unusable ? null : ((cls as ReaderErrorClass | undefined) ?? null);
+    this.persistent = parsed.mock_failure?.persistent !== false;
     if (this.failure && !this.planted.some((p) => p.kind === "failure")) {
       this.planted.push({ kind: "failure", field: null, note: `injected reader failure ${this.failure}` });
     }
@@ -94,14 +107,16 @@ export class MockReader implements ModelReader {
 
   async read(_req: ReadRequest): Promise<string> {
     this.count++;
-    switch (this.failure) {
+    if (this.unusable) throw new ReaderError(this.unusable.cls, this.unusable.detail);
+    const failing = this.failure !== null && (this.persistent || this.count === 1) ? this.failure : null;
+    switch (failing) {
       case null:
         return this.outputText;
       case "invalid_json":
         // Simulates a reply that is cut off or is not JSON.
         return this.outputText.slice(0, Math.floor(this.outputText.length / 2));
       default:
-        throw new ReaderError(this.failure, `mock reader: injected failure ${this.failure}`);
+        throw new ReaderError(failing, `mock reader: injected failure ${failing}`);
     }
   }
 }

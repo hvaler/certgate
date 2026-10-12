@@ -40,6 +40,18 @@ describe("failure injection and bounded retry (C11)", () => {
     });
   }
 
+  it("a non-persistent injected failure succeeds on retry: 2 calls, normal proposal (optional O1)", async () => {
+    const doc = JSON.parse(mockText("cg-024"));
+    doc.mock_failure.persistent = false;
+    const input = loadDatasetCase("cg-024", getShared());
+    const reader = new MockReader(JSON.stringify(doc));
+    const r = await processCase({ ...input, reader });
+    expect(reader.calls).toBe(2);
+    expect(r.readings.case.status).toBe("processed");
+    expect(r.decision.proposal).toBe("release");
+    expect(r.receipt.reading_source).toBe("planted");
+    expect(r.receipt.errors).toEqual([]);
+  });
   it("a model output that breaks the reading schema is invalid output: review", () => {
     const doc = JSON.parse(mockText("cg-001"));
     delete doc.fields.chemistry.Mn;
