@@ -21,3 +21,4 @@ dist/
 coverage/
 *.log
 .vitest/
+.playwright-mcp/
