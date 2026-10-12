@@ -1,0 +1,13 @@
+diff --git a/public/labels.js b/public/labels.js
+index 110b3b7..ff89d07 100644
+--- a/public/labels.js
++++ b/public/labels.js
+@@ -18,7 +18,7 @@
+   function storyLabelDetail(s) {
+     return s.evaluatedAt
+       ? `mock reading, no model · stored ${s.storedAt} · re-evaluated by the server at ${s.evaluatedAt} with the confirmations and decision given · not live`
+-      : `mock reading, no model · stored ${s.storedAt} · not live`;
++      : `live reading · ${new Date().toISOString()}`;
+   }
+ 
+   /** A case kept in this browser: its reading label and its original receipt time; never "live" (B-09). */

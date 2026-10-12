@@ -1,0 +1,20 @@
+PASS  cg-002: Release disabled on a block proposal
+PASS  cg-003: Release disabled before confirmation
+PASS  cg-003: Release enabled after every critical field confirmed with ReH 358
+PASS  F2-01: case file label keeps the original stored time and says re-evaluated  [Stored reading
+· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.436Z with the confirmations and decision given · not live]
+PASS  F2-01: label after a decision keeps the original stored time  [Stored reading
+· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.711Z with the confirmations and decision given · not live]
+PASS  F2-01: receipt screen keeps the original stored time and says re-evaluated  [Stored reading
+· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.711Z with the confirmations and decision given · not live]
+PASS  C12/B-21: decision fields empty on the next case
+PASS  C12/B-21: story inputs are not written to browser storage
+PASS  S2-20: upload with no endpoint is a live attempt with no reading, review  [Stored in this browser
+· live attempt · no reading · 2026-10-12T19:10:35.927Z · not live]
+PASS  B-09: reopened from browser storage it is labelled stored, never live  [Stored in this browser
+· live attempt · no reading · 2026-10-12T19:10:35.927Z · not live]
+PASS  F2-02: an upload's explanation does not claim a mock reading  [Explanation
+
+There is no model explanation: this was a live attempt and nothing was read.]
+PASS  B-17: no third-party request
+PASS  B-16: HTML in document fields is shown as text and never executed  [Certificate <img src=x onerror="window.__pwned=1">SV-<b>1</b> · heat 24-71830]

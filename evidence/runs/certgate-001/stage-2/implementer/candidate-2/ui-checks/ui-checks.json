@@ -1,0 +1,67 @@
+[
+  {
+    "name": "cg-002: Release disabled on a block proposal",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cg-003: Release disabled before confirmation",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cg-003: Release enabled after every critical field confirmed with ReH 358",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "F2-01: case file label keeps the original stored time and says re-evaluated",
+    "ok": true,
+    "detail": "Stored reading\n· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.436Z with the confirmations and decision given · not live"
+  },
+  {
+    "name": "F2-01: label after a decision keeps the original stored time",
+    "ok": true,
+    "detail": "Stored reading\n· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.711Z with the confirmations and decision given · not live"
+  },
+  {
+    "name": "F2-01: receipt screen keeps the original stored time and says re-evaluated",
+    "ok": true,
+    "detail": "Stored reading\n· mock reading, no model · stored 2026-10-12T19:05:49.062Z · re-evaluated by the server at 2026-10-12T19:10:35.711Z with the confirmations and decision given · not live"
+  },
+  {
+    "name": "C12/B-21: decision fields empty on the next case",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "C12/B-21: story inputs are not written to browser storage",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S2-20: upload with no endpoint is a live attempt with no reading, review",
+    "ok": true,
+    "detail": "Stored in this browser\n· live attempt · no reading · 2026-10-12T19:10:35.927Z · not live"
+  },
+  {
+    "name": "B-09: reopened from browser storage it is labelled stored, never live",
+    "ok": true,
+    "detail": "Stored in this browser\n· live attempt · no reading · 2026-10-12T19:10:35.927Z · not live"
+  },
+  {
+    "name": "F2-02: an upload's explanation does not claim a mock reading",
+    "ok": true,
+    "detail": "Explanation\n\nThere is no model explanation: this was a live attempt and nothing was read."
+  },
+  {
+    "name": "B-17: no third-party request",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "B-16: HTML in document fields is shown as text and never executed",
+    "ok": true,
+    "detail": "Certificate <img src=x onerror=\"window.__pwned=1\">SV-<b>1</b> · heat 24-71830"
+  }
+]

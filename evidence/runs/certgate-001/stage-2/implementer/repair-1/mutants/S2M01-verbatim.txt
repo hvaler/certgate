@@ -1,0 +1,51 @@
+
+ RUN  v5.0.4 <scratch>/mut-b7f4a54
+
+ ❯ test/labels.test.ts (10 tests | 2 failed) 4608ms
+   ❯ reading labels never present a mock or stored reading as live (S2M01) (3)
+     × view labels per reading source 11ms
+     × a mock run's view is labelled mock, and nothing mock says live 4491ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/labels.test.ts > reading labels never present a mock or stored reading as live (S2M01) > view labels per reading source
+AssertionError: expected 'live reading from the configured endp…' to be 'mock reading · no model' // Object.is equality
+
+Expected: "mock reading · no model"
+Received: "live reading from the configured endpoint"
+
+ ❯ test/labels.test.ts:26:34
+     24| describe("reading labels never present a mock or stored reading as liv…
+     25|   it("view labels per reading source", () => {
+     26|     expect(readingLabel("mock")).toBe("mock reading · no model");
+       |                                  ^
+     27|     expect(readingLabel("planted")).toMatch(/^mock reading · no model/…
+     28|     expect(readingLabel("live_no_reading")).toBe("live attempt · no re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/labels.test.ts > reading labels never present a mock or stored reading as live (S2M01) > a mock run's view is labelled mock, and nothing mock says live
+AssertionError: expected 'live reading from the configured endp…' to match /^mock reading · no model/
+
+- Expected:
+/^mock reading · no model/
+
++ Received:
+"live reading from the configured endpoint"
+
+ ❯ test/labels.test.ts:34:31
+     32|     for (const id of ["cg-001", "cg-002", "cg-003", "cg-018"]) {
+     33|       const v = toView(await runCase(id));
+     34|       expect(v.reading_label).toMatch(/^mock reading · no model/);
+       |                               ^
+     35|       expect(v.reading_label).not.toMatch(/live/);
+     36|       expect(v.steps[1]!.name).toMatch(/mock \(no model\)/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  2 failed | 244 passed (246)
+   Start at  21:08:12
+   Duration  10.72s (tests 93%, transform 5%, import 2%)
+

@@ -1,0 +1,13 @@
+diff --git a/public/app.js b/public/app.js
+index da74aee..b2c1a8d 100644
+--- a/public/app.js
++++ b/public/app.js
+@@ -329,7 +329,7 @@ async function storyScreen(id) {
+ function drawStory() {
+   const s = session.story;
+   const view = s.view;
+-  const ctx = { storedTitle: "Stored reading", storedDetail: storyLabelDetail(s) };
++  const ctx = { storedTitle: "Stored reading", storedDetail: `live reading · ${new Date().toISOString()}` };
+   const evaluate = async (extra) => {
+     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
+     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;

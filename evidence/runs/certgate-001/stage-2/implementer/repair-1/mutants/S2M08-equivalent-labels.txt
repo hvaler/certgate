@@ -1,0 +1,54 @@
+
+ RUN  v5.0.4 <scratch>/mut-b7f4a54
+
+ ❯ test/labels.test.ts (10 tests | 2 failed) 981ms
+   ❯ release gating in the UI (S2M08, S2-04, B-14) (3)
+     × release is offered only for a release proposal that is not an error 21ms
+     × on the stored stories: disabled for cg-002 and cg-003, enabled for cg-001 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/labels.test.ts > release gating in the UI (S2M08, S2-04, B-14) > release is offered only for a release proposal that is not an error
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ test/labels.test.ts:78:74
+     76|   it("release is offered only for a release proposal that is not an er…
+     77|     expect(L.releaseAllowed({ proposal: "release", status: "processed"…
+     78|     expect(L.releaseAllowed({ proposal: "block", status: "processed" }…
+       |                                                                          ^
+     79|     expect(L.releaseAllowed({ proposal: "review", status: "processed" …
+     80|     expect(L.releaseAllowed({ proposal: "release", status: "error" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/labels.test.ts > release gating in the UI (S2M08, S2-04, B-14) > on the stored stories: disabled for cg-002 and cg-003, enabled for cg-001
+AssertionError: cg-002: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ test/labels.test.ts:86:45
+     84|     for (const [id, ok] of [["cg-001", true], ["cg-002", false], ["cg-…
+     85|       const st = JSON.parse(readFileSync(path.join(ROOT, "public", "st…
+     86|       expect(L.releaseAllowed(st.view), id).toBe(ok);
+       |                                             ^
+     87|     }
+     88|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  2 failed | 244 passed (246)
+   Start at  21:09:00
+   Duration  5.17s (tests 92%, import 5%, transform 2%, worker 1%)
+

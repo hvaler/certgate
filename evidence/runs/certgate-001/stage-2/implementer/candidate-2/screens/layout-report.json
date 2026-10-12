@@ -1,0 +1,120 @@
+[
+ {
+  "width": 375,
+  "name": "landing",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "name": "judge",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "name": "story-cg-001",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "name": "story-cg-002",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "name": "story-cg-003",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "name": "amd",
+  "scrollWidth": 375,
+  "innerWidth": 375,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 375,
+  "external": [],
+  "errors": []
+ },
+ {
+  "width": 1280,
+  "name": "landing",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "name": "judge",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "name": "story-cg-001",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "name": "story-cg-002",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "name": "story-cg-003",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "name": "amd",
+  "scrollWidth": 1280,
+  "innerWidth": 1280,
+  "overflow": false,
+  "notice": true,
+  "amdClaims": []
+ },
+ {
+  "width": 1280,
+  "external": [],
+  "errors": []
+ }
+]

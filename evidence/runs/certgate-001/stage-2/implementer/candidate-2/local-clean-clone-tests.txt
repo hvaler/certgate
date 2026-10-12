@@ -1,0 +1,17 @@
+b7f4a546fee6784d3312c19b74817807f6f0114d 33bb040e5a21ce9fa1b92f0f1dd80708808bf3ad 2026-10-12T21:07:42+02:00
+2026-10-12T19:09:37Z
+
+added 42 packages in 2s
+
+> certgate@0.1.0 build
+> tsc -p tsconfig.json
+
+
+ RUN  v5.0.4 <scratch>/s2c2
+
+
+ Test Files  11 passed (11)
+      Tests  246 passed (246)
+   Start at  21:09:43
+   Duration  5.79s (tests 88%, transform 8%, import 4%)
+

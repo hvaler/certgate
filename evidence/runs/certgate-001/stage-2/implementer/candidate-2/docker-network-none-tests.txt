@@ -1,0 +1,28 @@
+
+ RUN  v5.0.4 /app
+
+ ✓ test/rules.test.ts (35 tests) 126ms
+ ✓ test/inputs.test.ts (15 tests) 594ms
+   ✓ spec ESP-014 from its versioned file (S1-12) (4)
+     ✓ puts spec id, revision and file hash into every receipt 453ms
+ ✓ test/entrypoints.test.ts (11 tests) 649ms
+ ✓ test/reader.test.ts (22 tests) 849ms
+   ✓ failure injection and bounded retry (C11) (14)
+     ✓ cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt 495ms
+ ✓ test/channels.test.ts (23 tests) 560ms
+ ✓ test/static.test.ts (44 tests) 54ms
+ ✓ test/labels.test.ts (10 tests) 325ms
+   ✓ reading labels never present a mock or stored reading as live (S2M01) (3)
+     ✓ a mock run's view is labelled mock, and nothing mock says live 311ms
+ ✓ test/human.test.ts (9 tests) 335ms
+ ✓ test/dataset.test.ts (36 tests) 670ms
+ ✓ test/isolation.test.ts (3 tests) 267ms
+ ✓ test/web.test.ts (38 tests) 2371ms
+   ✓ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     ✓ C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret 921ms
+
+ Test Files  11 passed (11)
+      Tests  246 passed (246)
+   Start at  19:10:11
+   Duration  3.34s (tests 70%, transform 20%, import 9%, worker 1%)
+
