@@ -1,0 +1,13 @@
+diff --git "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/reader.ts" "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M07-mock-model-id-real-looking\\src/reader.ts"
+index 16769f7..31b4373 100644
+--- "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/reader.ts"
++++ "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M07-mock-model-id-real-looking\\src/reader.ts"
+@@ -46,7 +46,7 @@ export interface ModelReader {
+   readonly planted: PlantedEntry[];
+ }
+ 
+-export const MOCK_LABEL = "MOCK (no model; dataset reading)";
++export const MOCK_LABEL = "Qwen2.5-VL-72B-Instruct";
+ const NOT_APPLICABLE = "not applicable (mock)";
+ 
+ const FAILURE_CLASSES = new Set(["endpoint_off", "timeout", "http_429", "http_5xx", "invalid_json"]);

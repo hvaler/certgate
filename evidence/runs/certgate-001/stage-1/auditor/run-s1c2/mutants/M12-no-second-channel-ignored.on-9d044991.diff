@@ -1,0 +1,13 @@
+diff --git "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/evaluate.ts" "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M12-no-second-channel-ignored\\src/evaluate.ts"
+index ee6e061..8da87c6 100644
+--- "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/evaluate.ts"
++++ "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M12-no-second-channel-ignored\\src/evaluate.ts"
+@@ -198,7 +198,7 @@ export function evaluate(input: EvaluationInput): Evaluation {
+ 
+   // Scans: release needs every critical field confirmed by a person (I3, register A-21).
+   if (pendingConfirmation.length > 0) {
+-    reasons.add("NO_SECOND_CHANNEL", "review",
++    reasons.add("NO_SECOND_CHANNEL", "info",
+       `no text layer: ${pendingConfirmation.length} critical field(s) need human confirmation`);
+   }
+ 

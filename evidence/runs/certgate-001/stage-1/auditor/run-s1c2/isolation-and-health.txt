@@ -1,0 +1,27 @@
+health: {
+  "status": "ok",
+  "mode": "mock",
+  "reader": "MOCK (no model)",
+  "notice": "All data is fictitious."
+}
+
+{"B_after_A_equals_B_alone":true,"B_before_A_equals_B_alone":true,"A_after_B_equals_A_alone":true,"A_proposal":"review","B_proposal":"release"}
+pair cg-003 cg-001 exit=0
+health: {
+  "status": "ok",
+  "mode": "mock",
+  "reader": "MOCK (no model)",
+  "notice": "All data is fictitious."
+}
+
+{"B_after_A_equals_B_alone":true,"B_before_A_equals_B_alone":true,"A_after_B_equals_A_alone":true,"A_proposal":"block","B_proposal":"review"}
+pair cg-002 cg-016 exit=0
+health: {
+  "status": "ok",
+  "mode": "mock",
+  "reader": "MOCK (no model)",
+  "notice": "All data is fictitious."
+}
+
+{"B_after_A_equals_B_alone":true,"B_before_A_equals_B_alone":true,"A_after_B_equals_A_alone":true,"A_proposal":"review","B_proposal":"release"}
+pair cg-024 cg-008 exit=0

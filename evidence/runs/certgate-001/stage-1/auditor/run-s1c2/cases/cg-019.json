@@ -1,0 +1,922 @@
+{
+  "summary": {
+    "case_id": "cg-019",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CEV_MISMATCH"
+    ],
+    "human_confirmation_required": [],
+    "note": "CertGate only proposes. A person decides. All data is fictitious. The reading is MOCK (no model)."
+  },
+  "receipt": {
+    "receipt_schema": "certgate.receipt/1",
+    "case_id": "cg-019",
+    "run_id": "2d3e0308-4b72-40fb-86c2-8e230806aad2",
+    "created_at": "2026-10-12T18:02:51.271Z",
+    "mode": "mock",
+    "reading_source": "mock",
+    "reader": {
+      "reader_id": "mock-reader",
+      "reading_source": "mock",
+      "model_id": "MOCK (no model; dataset reading)",
+      "model_version": "not applicable (mock)",
+      "vllm_version": "not applicable (mock)",
+      "rocm_version": "not applicable (mock)",
+      "calls": "1"
+    },
+    "planted": [],
+    "status": "processed",
+    "proposal": "review",
+    "reasons": [
+      {
+        "code": "CEV_MISMATCH",
+        "effect": "review",
+        "detail": "printed CEV 0.38 differs from recomputed 0.4124 (rounded 0.41)"
+      }
+    ],
+    "human_required": true,
+    "human_confirmation_required": [],
+    "human_decision": null,
+    "confirmations": [],
+    "channel_available": true,
+    "timings_ms": {
+      "validate": "307.928",
+      "text_layer": "14.508",
+      "model_reading": "0.855",
+      "evaluation": "2.814"
+    },
+    "errors": [],
+    "hashes": {
+      "certificate_sha256": "d675034537b67c8f705caa483c11103b4015f159a59d98178b82f8becbf68daa",
+      "certificate_size": "3179",
+      "delivery_note_sha256": "701325f7befd6a4a31df652905f8c336978dedfc409c9e52d2f1e8af360e5962",
+      "model_output_sha256": "52adc7fed709f577ebc7894e830f0e21a9a9744f25027633ce242fa95cabba80",
+      "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
+    },
+    "rules_version": "certgate-rules-1.0.0",
+    "plausibility_version": "plausibility-v1",
+    "cev_formula_source": "IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md",
+    "spec": {
+      "spec_id": "ESP-014",
+      "revision": "3",
+      "grade": "TRN-355"
+    },
+    "delivery": {
+      "delivery_note": "ALB-2026-1003",
+      "line": "16"
+    },
+    "values": [
+      {
+        "field": "issuer",
+        "value": "Siderúrgica Valdemora S.A.",
+        "unit": null,
+        "source": "known (model)"
+      },
+      {
+        "field": "certificate_no",
+        "value": "SV-2026-118764",
+        "unit": null,
+        "source": "known (model)"
+      },
+      {
+        "field": "certificate_type",
+        "value": "3.1",
+        "unit": null,
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "date",
+        "value": "2026-10-03",
+        "unit": null,
+        "source": "known (model)"
+      },
+      {
+        "field": "heat_or_lot",
+        "value": "24-73285",
+        "unit": null,
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "grade",
+        "value": "TRN-355",
+        "unit": null,
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "dimensions",
+        "value": "Chapa 25 x 2000 x 6000 mm",
+        "unit": null,
+        "source": "known (model)"
+      },
+      {
+        "field": "cev_printed",
+        "value": "0.38",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "kv_temperature",
+        "value": "-20",
+        "unit": "°C",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "inspection_stamp",
+        "value": "QA-07",
+        "unit": null,
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.C",
+        "value": "0.16",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Si",
+        "value": "0.21",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Mn",
+        "value": "1.42",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.P",
+        "value": "0.012",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.S",
+        "value": "0.006",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Cr",
+        "value": "0.04",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Ni",
+        "value": "0.03",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Mo",
+        "value": "0.01",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.Cu",
+        "value": "0.05",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "chemistry.V",
+        "value": "0.002",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.ReH",
+        "value": "392",
+        "unit": "MPa",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.Rm",
+        "value": "538",
+        "unit": "MPa",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.A",
+        "value": "26",
+        "unit": "%",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.KV_1",
+        "value": "64",
+        "unit": "J",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.KV_2",
+        "value": "71",
+        "unit": "J",
+        "source": "known (model+text_layer)"
+      },
+      {
+        "field": "mechanical.KV_3",
+        "value": "58",
+        "unit": "J",
+        "source": "known (model+text_layer)"
+      }
+    ],
+    "channel_checks": [
+      {
+        "field": "certificate_type",
+        "model_value": "3.1",
+        "model_unit": null,
+        "text_layer_value": "3.1",
+        "text_layer_unit": null,
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "document title"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "document title",
+            "x": "330.0",
+            "y": "791.9"
+          }
+        ]
+      },
+      {
+        "field": "heat_or_lot",
+        "model_value": "24-73285",
+        "model_unit": null,
+        "text_layer_value": "24-73285",
+        "text_layer_unit": null,
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "Heat number"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "Heat number",
+            "x": "40.0",
+            "y": "743.9"
+          }
+        ]
+      },
+      {
+        "field": "grade",
+        "model_value": "TRN-355",
+        "model_unit": null,
+        "text_layer_value": "TRN-355",
+        "text_layer_unit": null,
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "Steel grade"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "Steel grade",
+            "x": "40.0",
+            "y": "683.9"
+          }
+        ]
+      },
+      {
+        "field": "cev_printed",
+        "model_value": "0.38",
+        "model_unit": "%",
+        "text_layer_value": "0.38",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column CEV"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header CEV",
+            "x": "514.2",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "kv_temperature",
+        "model_value": "-20",
+        "model_unit": "°C",
+        "text_layer_value": "-20",
+        "text_layer_unit": "°C",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "impact test heading"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "impact test heading",
+            "y": "526.9"
+          }
+        ]
+      },
+      {
+        "field": "inspection_stamp",
+        "model_value": "QA-07",
+        "model_unit": null,
+        "text_layer_value": "QA-07",
+        "text_layer_unit": null,
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "inspection block, Stamp"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "signature block",
+            "y": "296.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.C",
+        "model_value": "0.16",
+        "model_unit": "%",
+        "text_layer_value": "0.16",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column C"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header C",
+            "x": "46.0",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Si",
+        "model_value": "0.21",
+        "model_unit": "%",
+        "text_layer_value": "0.21",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Si"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Si",
+            "x": "92.8",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Mn",
+        "model_value": "1.42",
+        "model_unit": "%",
+        "text_layer_value": "1.42",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Mn"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Mn",
+            "x": "139.6",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.P",
+        "model_value": "0.012",
+        "model_unit": "%",
+        "text_layer_value": "0.012",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column P"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header P",
+            "x": "186.5",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.S",
+        "model_value": "0.006",
+        "model_unit": "%",
+        "text_layer_value": "0.006",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column S"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header S",
+            "x": "233.3",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Cr",
+        "model_value": "0.04",
+        "model_unit": "%",
+        "text_layer_value": "0.04",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Cr"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Cr",
+            "x": "280.1",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Ni",
+        "model_value": "0.03",
+        "model_unit": "%",
+        "text_layer_value": "0.03",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Ni"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Ni",
+            "x": "326.9",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Mo",
+        "model_value": "0.01",
+        "model_unit": "%",
+        "text_layer_value": "0.01",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Mo"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Mo",
+            "x": "373.7",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.Cu",
+        "model_value": "0.05",
+        "model_unit": "%",
+        "text_layer_value": "0.05",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column Cu"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header Cu",
+            "x": "420.5",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "chemistry.V",
+        "model_value": "0.002",
+        "model_unit": "%",
+        "text_layer_value": "0.002",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "chemical composition table, column V"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "heat analysis header V",
+            "x": "467.4",
+            "y": "424.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.ReH",
+        "model_value": "392",
+        "model_unit": "MPa",
+        "text_layer_value": "392",
+        "text_layer_unit": "MPa",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "tensile test table, column ReH"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "mechanical header Yield strength (MPa)",
+            "x": "46.0",
+            "y": "576.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.Rm",
+        "model_value": "538",
+        "model_unit": "MPa",
+        "text_layer_value": "538",
+        "text_layer_unit": "MPa",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "tensile test table, column Rm"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "mechanical header Tensile strength (MPa)",
+            "x": "196.0",
+            "y": "576.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.A",
+        "model_value": "26",
+        "model_unit": "%",
+        "text_layer_value": "26",
+        "text_layer_unit": "%",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "tensile test table, column A"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "mechanical header Elongation A5 (%)",
+            "x": "346.0",
+            "y": "576.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.KV_1",
+        "model_value": "64",
+        "model_unit": "J",
+        "text_layer_value": "64",
+        "text_layer_unit": "J",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "impact test table, Specimen 1"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "impact header Specimen 1",
+            "x": "46.0",
+            "y": "502.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.KV_2",
+        "model_value": "71",
+        "model_unit": "J",
+        "text_layer_value": "71",
+        "text_layer_unit": "J",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "impact test table, Specimen 2"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "impact header Specimen 2",
+            "x": "176.0",
+            "y": "502.9"
+          }
+        ]
+      },
+      {
+        "field": "mechanical.KV_3",
+        "model_value": "58",
+        "model_unit": "J",
+        "text_layer_value": "58",
+        "text_layer_unit": "J",
+        "agree": true,
+        "channel_available": true,
+        "issue": null,
+        "human_confirmed": false,
+        "source_refs": [
+          {
+            "channel": "model",
+            "page": "1",
+            "fragment": "impact test table, Specimen 3"
+          },
+          {
+            "channel": "text_layer",
+            "page": "1",
+            "fragment": "impact header Specimen 3",
+            "x": "306.0",
+            "y": "502.9"
+          }
+        ]
+      }
+    ],
+    "rule_results": [
+      {
+        "rule_id": "ESP-014.r3.C",
+        "input_field_refs": [
+          "chemistry.C"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.20 %",
+        "observed": "0.16",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.Si",
+        "input_field_refs": [
+          "chemistry.Si"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.55 %",
+        "observed": "0.21",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.Mn",
+        "input_field_refs": [
+          "chemistry.Mn"
+        ],
+        "outcome": "pass",
+        "expected": "<= 1.60 %",
+        "observed": "1.42",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.P",
+        "input_field_refs": [
+          "chemistry.P"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.025 %",
+        "observed": "0.012",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.S",
+        "input_field_refs": [
+          "chemistry.S"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.025 %",
+        "observed": "0.006",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.Cu",
+        "input_field_refs": [
+          "chemistry.Cu"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.55 %",
+        "observed": "0.05",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.ReH",
+        "input_field_refs": [
+          "mechanical.ReH"
+        ],
+        "outcome": "pass",
+        "expected": ">= 355 MPa",
+        "observed": "392",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.Rm",
+        "input_field_refs": [
+          "mechanical.Rm"
+        ],
+        "outcome": "pass",
+        "expected": ">= 470 and <= 630 MPa",
+        "observed": "538",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.A",
+        "input_field_refs": [
+          "mechanical.A"
+        ],
+        "outcome": "pass",
+        "expected": ">= 20 %",
+        "observed": "26",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.CEV.printed",
+        "input_field_refs": [
+          "cev_printed"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.45 %",
+        "observed": "0.38",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.CEV.recomputed",
+        "input_field_refs": [
+          "chemistry.C",
+          "chemistry.Mn",
+          "chemistry.Cr",
+          "chemistry.Mo",
+          "chemistry.V",
+          "chemistry.Ni",
+          "chemistry.Cu"
+        ],
+        "outcome": "pass",
+        "expected": "<= 0.45 %",
+        "observed": "0.4124",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.KV_media",
+        "input_field_refs": [
+          "mechanical.KV_1",
+          "mechanical.KV_2",
+          "mechanical.KV_3"
+        ],
+        "outcome": "pass",
+        "expected": "mean of 3 >= 27 J (sum >= 81)",
+        "observed": "sum 193",
+        "reason": "within limit"
+      },
+      {
+        "rule_id": "ESP-014.r3.grade",
+        "input_field_refs": [
+          "grade",
+          "delivery_line.grade_ordered"
+        ],
+        "outcome": "pass",
+        "expected": "TRN-355 (spec) and TRN-355 (ordered)",
+        "observed": "TRN-355",
+        "reason": "grade matches"
+      }
+    ],
+    "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
+  }
+}

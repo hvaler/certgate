@@ -1,0 +1,13 @@
+diff --git "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/evaluate.ts" "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M02-flip-min-direction\\src/evaluate.ts"
+index ee6e061..f4d062f 100644
+--- "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/evaluate.ts"
++++ "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M02-flip-min-direction\\src/evaluate.ts"
+@@ -172,7 +172,7 @@ function limitRule(spec: Spec, field: string, key: string, value: Dec | null, ob
+     return { rule_id, input_field_refs: refs, outcome: "not_evaluable", expected, observed: null, reason: `${key} unknown` };
+   }
+   // Inclusive limits, exact decimals, no rounding before comparison (register D1-07, S1-27, A-22).
+-  const belowMin = l.min !== null && value.lt(new Dec(l.min));
++  const belowMin = l.min !== null && value.gt(new Dec(l.min));
+   const aboveMax = l.max !== null && value.gt(new Dec(l.max));
+   const outcome = belowMin || aboveMax ? "fail" : "pass";
+   const reason = outcome === "pass" ? "within limit"

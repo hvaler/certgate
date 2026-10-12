@@ -1,0 +1,11 @@
+diff --git "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/decimal.ts" "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M10-cev-half-up\\src/decimal.ts"
+index a09986e..ef6532e 100644
+--- "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/decimal.ts"
++++ "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M10-cev-half-up\\src/decimal.ts"
+@@ -29,5 +29,5 @@ export function decimalTextEqual(a: string, b: string): boolean {
+ 
+ /** Rounds to 0.01 with ROUND_HALF_EVEN; used only by the CEV coherence check (register A-20). */
+ export function roundCevForCoherence(v: Dec): Dec {
+-  return v.toDecimalPlaces(2, Dec.ROUND_HALF_EVEN);
++  return v.toDecimalPlaces(2, Dec.ROUND_HALF_UP);
+ }

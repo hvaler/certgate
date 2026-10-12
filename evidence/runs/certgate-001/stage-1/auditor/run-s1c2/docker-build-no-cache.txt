@@ -1,0 +1,125 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 1.28kB 0.1s done
+#1 DONE 0.7s
+
+#2 [internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 33B 0.0s
+#3 transferring context: 196B 0.1s done
+#3 DONE 0.1s
+
+#4 [build 1/7] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#4 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 0.0s done
+#4 DONE 0.0s
+
+#5 [build 2/7] WORKDIR /app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 1.37MB 5.3s
+#6 transferring context: 1.97MB 10.6s
+#6 transferring context: 2.04MB 11.9s done
+#6 DONE 12.0s
+
+#7 [build 3/7] COPY package.json package-lock.json ./
+#7 DONE 0.1s
+
+#8 [build 4/7] RUN npm ci --no-audit --no-fund
+#8 ...
+
+#9 [stage-1  4/13] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#9 20.98 
+#9 20.98 added 42 packages in 21s
+#9 20.99 npm notice
+#9 20.99 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#9 20.99 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#9 20.99 npm notice To update run: npm install -g npm@12.2.0
+#9 20.99 npm notice
+#9 21.13 npm warn using --force Recommended protections disabled.
+#9 DONE 21.4s
+
+#8 [build 4/7] RUN npm ci --no-audit --no-fund
+#8 21.41 
+#8 21.41 added 42 packages in 21s
+#8 21.41 npm notice
+#8 21.41 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#8 21.41 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#8 21.41 npm notice To update run: npm install -g npm@12.2.0
+#8 21.41 npm notice
+#8 DONE 21.5s
+
+#10 [build 5/7] COPY tsconfig.json vitest.config.ts ./
+#10 DONE 0.0s
+
+#11 [build 6/7] COPY src ./src
+#11 DONE 0.0s
+
+#12 [build 7/7] RUN npx tsc -p tsconfig.json
+#12 DONE 1.9s
+
+#13 [build 5/7] COPY tsconfig.json vitest.config.ts ./
+#13 CACHED
+
+#14 [build 4/7] RUN npm ci --no-audit --no-fund
+#14 CACHED
+
+#15 [build 3/7] COPY package.json package-lock.json ./
+#15 CACHED
+
+#16 [stage-1  4/13] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#16 CACHED
+
+#17 [build 6/7] COPY src ./src
+#17 CACHED
+
+#18 [build 7/7] RUN npx tsc -p tsconfig.json
+#18 CACHED
+
+#19 [stage-1  5/13] COPY --from=build /app/dist ./dist
+#19 CANCELED
+
+#20 [stage-1  5/13] COPY --from=build /app/dist ./dist
+#20 DONE 0.1s
+
+#21 [stage-1  6/13] COPY tsconfig.json vitest.config.ts .env.example .gitignore README.md LICENSE ./
+#21 DONE 0.1s
+
+#22 [stage-1  7/13] COPY src ./src
+#22 DONE 0.1s
+
+#23 [stage-1  8/13] COPY test ./test
+#23 DONE 0.0s
+
+#24 [stage-1  9/13] COPY config ./config
+#24 DONE 0.1s
+
+#25 [stage-1 10/13] COPY data ./data
+#25 DONE 0.1s
+
+#26 [stage-1 11/13] COPY docs ./docs
+#26 DONE 0.0s
+
+#27 [stage-1 12/13] COPY tools ./tools
+#27 DONE 0.0s
+
+#28 [stage-1 13/13] RUN chown -R node:node /app
+#28 DONE 3.3s
+
+#29 exporting to image
+#29 exporting layers
+#29 exporting layers 10.2s done
+#29 exporting manifest sha256:375fb808a049b19e1818e6f46552419f89008d0e10a0a8923d994a51f3ea31e9 0.0s done
+#29 exporting config sha256:a5a4b2a112b07ba8c7d124552741de0b5040f1517d69620d2ce2c512ee925571 0.0s done
+#29 exporting attestation manifest sha256:c8cdee674599ce688d485f69186a131be78e4faeaa30eed830f6d24bc5222f21 0.0s done
+#29 exporting manifest list sha256:a581e8a942037d2495d962a33f0277eb658f4bc4e2a720f0bae73aaf888ee4e3 0.0s done
+#29 naming to docker.io/library/certgate-audit:9d04499 done
+#29 unpacking to docker.io/library/certgate-audit:9d04499
+#29 unpacking to docker.io/library/certgate-audit:9d04499 4.9s done
+#29 DONE 15.4s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/mp6xj3sfztzsplsxb48kgz9e8

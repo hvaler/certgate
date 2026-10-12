@@ -1,0 +1,13 @@
+diff --git "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/pipeline.ts" "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M06-mock-reading-source-live\\src/pipeline.ts"
+index a143685..a280bfd 100644
+--- "a/C:\\nexus\\dev\\certgate-audit-s1c2\\src/pipeline.ts"
++++ "b/C:\\nexus\\dev\\certgate-audit-mutants\\r2\\M06-mock-reading-source-live\\src/pipeline.ts"
+@@ -201,7 +201,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
+   // The reader's own declaration covers failures, where no model output exists (finding F-01).
+   const planted = rd.model?.planted ?? rd.reader.planted;
+   const readingSource: RunReceipt["reading_source"] =
+-    rd.reader.kind === "live" ? "live" : planted.length > 0 ? "planted" : "mock";
++    rd.reader.kind === "mock" ? "live" : planted.length > 0 ? "planted" : "mock";
+   const fields = r.evaluation?.fields;
+   return {
+     receipt_schema: "certgate.receipt/1",

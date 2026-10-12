@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "case_id": "cg-026",
+    "status": "error",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "planted",
+    "reasons": [
+      "READER_ERROR:http_5xx"
+    ],
+    "human_confirmation_required": [],
+    "note": "CertGate only proposes. A person decides. All data is fictitious. The reading is MOCK (no model) with planted deviations: failure."
+  },
+  "receipt": {
+    "receipt_schema": "certgate.receipt/1",
+    "case_id": "cg-026",
+    "run_id": "967b266b-44b6-43d2-9383-22fd0a7d7f87",
+    "created_at": "2026-10-12T18:02:59.820Z",
+    "mode": "mock",
+    "reading_source": "planted",
+    "reader": {
+      "reader_id": "mock-reader",
+      "reading_source": "planted",
+      "model_id": "MOCK (no model; dataset reading)",
+      "model_version": "not applicable (mock)",
+      "vllm_version": "not applicable (mock)",
+      "rocm_version": "not applicable (mock)",
+      "calls": "3"
+    },
+    "planted": [
+      {
+        "kind": "failure",
+        "field": null,
+        "note": "injected reader failure http_5xx"
+      }
+    ],
+    "status": "error",
+    "proposal": "review",
+    "reasons": [
+      {
+        "code": "READER_ERROR:http_5xx",
+        "effect": "review",
+        "detail": "INJECTED (mock, planted): mock reader: injected failure http_5xx"
+      }
+    ],
+    "human_required": true,
+    "human_confirmation_required": [],
+    "human_decision": null,
+    "confirmations": [],
+    "channel_available": true,
+    "timings_ms": {
+      "validate": "172.257",
+      "text_layer": "6.509",
+      "model_reading": "0.259",
+      "evaluation": "0.108"
+    },
+    "errors": [
+      {
+        "class": "http_5xx",
+        "detail": "INJECTED (mock, planted): mock reader: injected failure http_5xx",
+        "injected": true
+      }
+    ],
+    "hashes": {
+      "certificate_sha256": "f3cb4cfddbddeec2ee8cab2b58b74aec44a4df652c161357cecbf16ea63c509e",
+      "certificate_size": "3350",
+      "delivery_note_sha256": "701325f7befd6a4a31df652905f8c336978dedfc409c9e52d2f1e8af360e5962",
+      "model_output_sha256": null,
+      "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
+    },
+    "rules_version": "certgate-rules-1.0.0",
+    "plausibility_version": "plausibility-v1",
+    "cev_formula_source": "IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md",
+    "spec": {
+      "spec_id": "ESP-014",
+      "revision": "3",
+      "grade": "TRN-355"
+    },
+    "delivery": {
+      "delivery_note": "ALB-2026-1003",
+      "line": "23"
+    },
+    "values": [],
+    "channel_checks": [],
+    "rule_results": [],
+    "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
+  }
+}

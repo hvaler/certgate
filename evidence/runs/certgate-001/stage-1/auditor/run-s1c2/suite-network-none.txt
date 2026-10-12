@@ -1,0 +1,197 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts[2m > [22mexact decimals (I4)[2m > [22mparses strings to decimals and normalises representation[32m 4[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22mReH 355 passes, 354.9 and 354 fail[32m 9[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22mMn 1.60 passes, 1.61 and 1.68 block (not review: plausibility ranges contain the limits, A-08)[32m 20[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22mRm 470 and 630 pass, 469 and 631 fail[32m 4[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22mA26: P 0.02500000000000000001 is above 0.025 and blocks; float would round it to 0.025 and release[32m 8[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22mA 20 passes, 19.9 fails; P 0.025 passes, 0.0251 fails[32m 3[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22meach spec limit is a rule naming field, observed value and limit (S1-26)[32m 3[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22minclusive spec limits, no rounding (D1-07, S1-27, A-22)[2m > [22ma rule on an unknown value is not_evaluable, never pass[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mspec CEV maximum is 0.45 and applies to the exact recomputed value without rounding[32m 16[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mprinted CEV 0.45 passes, 0.46 fails[32m 16[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mcoherence rounds half-even: 0.425 -> 0.42, 0.435 -> 0.44[32m 0[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mprinted CEV that does not match the composition is a review trigger (C9)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mprinted 0.44 passing with recomputed above 0.45 blocks (A-03)[32m 12[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mA25: exact CEV 0.45 (C 0.17 + Mn 1.50/6 + Cu 0.45/15) passes the max; float would give 0.45000000000000007[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22mA16: exact CEV tie 0.425 printed 0.42 is coherent (half-even); printed 0.43 is not[32m 14[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mCEV (A-02, A-20, A-22)[2m > [22man unknown CEV input makes the recomputed CEV unknown[32m 0[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mKV mean as an exact sum (D1-09, A-05)[2m > [22msum exactly 81 passes, 80 fails, cert-01's 193 passes[32m 5[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mKV mean as an exact sum (D1-09, A-05)[2m > [22mfewer than three known values is not evaluable (review)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mKV mean as an exact sum (D1-09, A-05)[2m > [22mimpact temperature must be -20 °C; other or missing values give review[32m 16[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdocument rules[2m > [22mwrong grade blocks with both grades shown (C5)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdocument rules[2m > [22mmissing stamp gives review; illegible stamp gives review (C13, S1-30)[32m 13[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdocument rules[2m > [22mcertificate type 2.2 or absent gives review (A-06)[32m 2[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mheat or lot against the delivery line (S1-21, A-04, A-12, D1-14)[2m > [22mmismatch gives review with both heats visible[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mheat or lot against the delivery line (S1-21, A-04, A-12, D1-14)[2m > [22mheat mismatch means review even when a rule fails or the grade is wrong (A-04)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mheat or lot against the delivery line (S1-21, A-04, A-12, D1-14)[2m > [22mscan with a heat mismatch gives review[32m 4[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mheat or lot against the delivery line (S1-21, A-04, A-12, D1-14)[2m > [22mwhitespace is trimmed, nothing else is normalised[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mheat or lot against the delivery line (S1-21, A-04, A-12, D1-14)[2m > [22mno paired delivery line is missing evidence: review[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22munits and scale jumps (S1-22, S1-23, A-08, A-11)[2m > [22mMPa and N/mm² are accepted; ksi or no unit gives review without conversion[32m 11[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22munits and scale jumps (S1-22, S1-23, A-08, A-11)[2m > [22ma value outside the plausibility range is a scale jump: review, not block[32m 2[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22munits and scale jumps (S1-22, S1-23, A-08, A-11)[2m > [22mevery plausibility range strictly contains its spec limits[32m 2[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdecision precedence and I5 (S1-31, D1-03)[2m > [22mblock > review > release, and human_required is always true[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdecision precedence and I5 (S1-31, D1-03)[2m > [22meach I5 trigger alone prevents release[32m 43[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdecision precedence and I5 (S1-31, D1-03)[2m > [22ma scan with every value in spec is review, never release (D1-04)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdecision precedence and I5 (S1-31, D1-03)[2m > [22ma scan with a known failing value blocks (D1-03)[32m 1[2mms[22m[39m
+ [32m✓[39m test/rules.test.ts[2m > [22mdecision precedence and I5 (S1-31, D1-03)[2m > [22man unknown critical field forces review and names the field (S1-17)[32m 8[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mprocesses a named dataset case and prints proposal and receipt (exit 0)[33m 313[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mspec ESP-014 from its versioned file (S1-12)[2m > [22mloads exactly the limits of the pre-kickoff spec file[32m 7[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mspec ESP-014 from its versioned file (S1-12)[2m > [22mrejects a spec file with a JSON number (the pre-kickoff file has revision: 3)[32m 1[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mspec ESP-014 from its versioned file (S1-12)[2m > [22mrejects a spec with a limit missing or not a decimal string[32m 7[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-001: every critical field equals the correct reading[33m 512[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22ma reader failure is still a processed case (exit 0) with status error[32m 122[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mspec ESP-014 from its versioned file (S1-12)[2m > [22mputs spec id, revision and file hash into every receipt[33m 574[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 586[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-004: every critical field equals the correct reading[32m 68[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22min real mode the summary note does not claim a MOCK reading (finding F-04)[32m 55[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-005: every critical field equals the correct reading[32m 83[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-009: every critical field equals the correct reading[32m 31[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-014: every critical field equals the correct reading[32m 26[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-023 endpoint_off: the receipt labels the injected failure as planted in structural fields (finding F-01)[32m 82[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-024 timeout: status error, review, exactly 3 reader call(s), error class in receipt[32m 38[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mdelivery note from CSV (S1-13)[2m > [22mmaps the columns into DeliveryLine[32m 2[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mdelivery note from CSV (S1-13)[2m > [22mrejects a malformed CSV, a missing column or an empty required value[32m 12[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrejects an empty file[32m 1[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrejects a non-PDF renamed .pdf, by magic bytes[32m 3[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrejects an oversized file[32m 10[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrejects an encrypted PDF (with and without a user password)[32m 1[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrejects a PDF with no pages[32m 17[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcertificate file validation before any reading (S1-11, A-17)[2m > [22mrecords SHA-256 and size of each input file[32m 43[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcontract types (S1-07, S1-08)[2m > [22mone of each contract structure serialises with the fields of 03-DISENO[32m 46[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mmock and planted notes say MOCK[32m 80[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mprocesses an external case directory[32m 64[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mhas 20-30 cases, digital and scanned, covering C1-C13[32m 15[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mmatches CHECKSUMS.sha256 for every dataset file[32m 36[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mkeeps the three pre-kickoff certificates byte-identical (S1-38)[32m 1[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mstores every numeric value in inputs as a JSON string (S1-25)[32m 50[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-019: every critical field equals the correct reading[32m 21[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-028: every critical field equals the correct reading[32m 29[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-029: every critical field equals the correct reading[32m 12[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-030: every critical field equals the correct reading[32m 51[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-024 timeout: the receipt labels the injected failure as planted in structural fields (finding F-01)[32m 40[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-025 http_429: status error, review, exactly 3 reader call(s), error class in receipt[32m 15[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-025 http_429: the receipt labels the injected failure as planted in structural fields (finding F-01)[32m 5[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-026 http_5xx: status error, review, exactly 3 reader call(s), error class in receipt[32m 53[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22ma mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02)[32m 69[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mrejects bad input with exit 2[32m 15[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mconfirmation and human decision from the CLI[32m 16[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcontract types (S1-07, S1-08)[2m > [22mevery known chemistry and mechanical value carries a source reference (S1-08)[32m 129[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts[2m > [22mcontract types (S1-07, S1-08)[2m > [22man absent optional field stays null, never a default[32m 32[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mmock output equals the correct reading except for labelled planted deviations (A-01, D1-20)[32m 69[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mdataset composition[2m > [22mprints CEV as the half-even rounding of the exact recomputed value, except planted cases (A-20, A-23)[32m 16[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mlayout B uses a decimal comma, which is normalised (A-10)[32m 48[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22munits printed in headers apply to the values under them (A-11)[32m 37[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22ma spoofed duplicate field in free text is a conflict (A-16)[32m 21[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-026 http_5xx: the receipt labels the injected failure as planted in structural fields (finding F-01)[32m 56[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-027 invalid_json: status error, review, exactly 1 reader call(s), error class in receipt[32m 51[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mCLI[2m > [22mwrites the output file with --out[32m 46[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts[2m > [22mHTTP service[2m > [22manswers /health and processes a dataset case[32m 133[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22mcg-027 invalid_json: the receipt labels the injected failure as planted in structural fields (finding F-01)[32m 35[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22ma non-persistent injected failure succeeds on retry: 2 calls, normal proposal (optional O1)[32m 42[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22ma model output that breaks the reading schema is invalid output: review[32m 1[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mfailure injection and bounded retry (C11)[2m > [22ma JSON number in the model output is rejected (S1-25)[32m 0[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mreal mode without an endpoint (S1-19, D1-15)[2m > [22mfails visibly and never falls back to the mock[32m 20[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22man approval instruction in the text layer never becomes a field value (C10)[32m 26[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mthe C8 text-layer Mn comes from the PDF bytes, not from the planted misread (D1-20)[32m 35[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-002: a scan yields "no channel available", not an error (S1-15)[32m 35[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-003: a scan yields "no channel available", not an error (S1-15)[32m 20[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-016: a scan yields "no channel available", not an error (S1-15)[32m 25[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-017: a scan yields "no channel available", not an error (S1-15)[32m 18[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mtext-layer extraction without any model[2m > [22mcg-025: a scan yields "no channel available", not an error (S1-15)[32m 17[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mchannel comparison (I3)[2m > [22mdisagreement makes the field unknown, keeps both readings and proposes review (C8)[32m 34[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mchannel comparison (I3)[2m > [22mequality is exact-decimal, not string equality[32m 4[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mchannel comparison (I3)[2m > [22ma field missing from the text layer is not corroborated: review[32m 11[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts[2m > [22mchannel comparison (I3)[2m > [22man unknown model value is never replaced by the text layer's value (I2)[32m 2[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mmock label everywhere (I7, S1-18, A-18)[2m > [22mreceipt of a mock run carries the mock label and reading_source[32m 54[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mmock label everywhere (I7, S1-18, A-18)[2m > [22mplanted deviations are labelled planted in the receipt (D1-20)[32m 18[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mmock label everywhere (I7, S1-18, A-18)[2m > [22mthe exporter rejects a receipt without reading_source or without the mock label[32m 12[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mreceipt content (S1-33, A-15, A-19)[2m > [22mhas case id, versions, hashes, spec id and revision, timings; no JSON numbers[32m 63[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mreceipt content (S1-33, A-15, A-19)[2m > [22mcontains no secret environment value and no absolute path[32m 19[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mthe model explains, it never decides (I1, S1-32, C10)[2m > [22mcontaminated explanation text has no effect on the proposal[32m 46[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts[2m > [22mthe model explains, it never decides (I1, S1-32, C10)[2m > [22madding or changing an explanation never changes the proposal[32m 101[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-001[33m 575[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mevaluate.ts[32m 2[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mcoherence.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mdecimal.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mfields.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mspec.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mtext-layer.ts[32m 4[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mdelivery.ts[32m 2[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mmodel-output.ts[32m 2[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno binary floating point in rules, coherence or units (I4, S1-25)[2m > [22mstrict-json.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mcases.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mcli.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mcoherence.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mconfig.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mdecimal.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mdelivery.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mevaluate.ts[32m 3[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mfields.ts[32m 11[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22minput-file.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mmodel-output.ts[32m 2[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mpdf.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mpipeline.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mreader.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mreceipt.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mserver.ts[32m 10[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mspec.ts[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mstrict-json.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mtext-layer.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mproduct code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7)[2m > [22mtypes.ts[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mconfiguration by environment only; .env.example lists every variable without values (I6, S1-03)[2m > [22menv reads in src equal the .env.example keys[32m 7[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mconfiguration by environment only; .env.example lists every variable without values (I6, S1-03)[2m > [22m.env is ignored by .gitignore (verified with git check-ignore in the handoff)[32m 1[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mno automatic release (S1-10)[2m > [22monly recordHumanDecision sets human_decision to a value[32m 3[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mdataset generator does not import product code (A-09)[2m > [22mimports only the standard library, reportlab and Pillow[32m 3[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mfictitious data is labelled; repository files (S1-01, S1-02, S1-39)[2m > [22mREADME states fictitious data, mock-only status and how to run[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mfictitious data is labelled; repository files (S1-01, S1-02, S1-39)[2m > [22mno README command publishes a port under --network none (finding F-02)[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mfictitious data is labelled; repository files (S1-01, S1-02, S1-39)[2m > [22mLICENSE is MIT[32m 0[2mms[22m[39m
+ [32m✓[39m test/static.test.ts[2m > [22mfictitious data is labelled; repository files (S1-01, S1-02, S1-39)[2m > [22mthe spec file and every certificate say they are fictitious[32m 0[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-002[32m 19[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-003[32m 9[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-004[32m 47[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-005[32m 22[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-006[32m 23[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22m(a) cert-03 with every critical field confirmed and ReH 358 proposes release[32m 290[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-007[32m 17[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-008[32m 17[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-009[32m 24[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-010[32m 23[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-011[32m 18[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-012[32m 25[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22m(b) cert-03 with only ReH confirmed as 358 stays review: no second channel[32m 10[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22m(c) ReH confirmed as 338 blocks, even with other fields unconfirmed[32m 13[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22ma confirmation may change a confident reading; the receipt keeps both values[32m 5[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22mconfirming a field resolves a channel disagreement on a digital certificate[32m 91[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-013[32m 13[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-014[32m 19[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-015[32m 10[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-016[32m 3[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-017[32m 3[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-018[32m 14[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-019[32m 11[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-020[32m 15[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-021[32m 13[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mper-field human confirmation re-runs coherence and rules (A-07, A-21)[2m > [22mrejects a confirmation without who, when, or with a non-decimal value[32m 4[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mhuman decision: release, block or request a new certificate (S1-09, S1-10)[2m > [22mrecords who, when and why without changing the proposal[32m 4[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mhuman decision: release, block or request a new certificate (S1-09, S1-10)[2m > [22mwithout a human decision the case stays proposal-only[32m 23[2mms[22m[39m
+ [32m✓[39m test/human.test.ts[2m > [22mhuman decision: release, block or request a new certificate (S1-09, S1-10)[2m > [22mrejects a decision without a reason, a person or a valid action[32m 29[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-022[32m 12[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-023[32m 7[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-024[32m 6[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-025[32m 7[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-026[32m 14[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-027[32m 15[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-028[32m 15[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-029[32m 13[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts[2m > [22mevery dataset case yields its expected outcome through the mock path[2m > [22mcg-030[32m 6[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts[2m > [22mconsecutive cases do not contaminate each other[2m > [22mA -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 429[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts[2m > [22mconsecutive cases do not contaminate each other[2m > [22mevery dataset case gives the same receipt in sequence and alone[32m 108[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts[2m > [22mconsecutive cases do not contaminate each other[2m > [22mno value of the first case appears in the second[32m 36[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m188 passed[39m[22m[90m (188)[39m
+[2m   Start at [22m 18:02:27
+[2m   Duration [22m 2.67s[2m (tests 77%, transform 14%, import 8%, worker 1%)[22m
+

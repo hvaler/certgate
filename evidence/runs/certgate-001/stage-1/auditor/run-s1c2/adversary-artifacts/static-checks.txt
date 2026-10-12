@@ -1,0 +1,7 @@
+PASS     S1-42 git dates
+REVIEW   S1-25 float heuristics  (54 items)
+REVIEW   S1-25 json numbers  (1 items)
+REVIEW   D1-12 expectation reads  (44 items)
+FAIL     S1-43 secrets  (1 items)
+PASS     S1-03 env example
+PASS     S1-38 originals byte-identical

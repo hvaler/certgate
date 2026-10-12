@@ -1,0 +1,692 @@
+{
+  "tool": "adversary static_checks.py",
+  "python": "3.12.10",
+  "started_utc": "2026-10-12T18:07:01.036312+00:00",
+  "candidate": "9d0449917b237ab5de51ccf1141b772e5c0e7008",
+  "tree": "e65caa5b420d833bac8e9037db45688239f6e4f6",
+  "dirty": false,
+  "tracked_files": 294,
+  "product_sources": [
+    "data/origin/mini-prueba/generar.py",
+    "src/cases.ts",
+    "src/cli.ts",
+    "src/coherence.ts",
+    "src/config.ts",
+    "src/decimal.ts",
+    "src/delivery.ts",
+    "src/evaluate.ts",
+    "src/fields.ts",
+    "src/input-file.ts",
+    "src/model-output.ts",
+    "src/pdf.ts",
+    "src/pipeline.ts",
+    "src/reader.ts",
+    "src/receipt.ts",
+    "src/server.ts",
+    "src/spec.ts",
+    "src/strict-json.ts",
+    "src/text-layer.ts",
+    "src/types.ts",
+    "tools/dataset/generate.py",
+    "vitest.config.ts"
+  ],
+  "checks": {
+    "S1-42 git dates": {
+      "status": "PASS",
+      "commits": 19,
+      "violations": []
+    },
+    "S1-25 float heuristics": {
+      "status": "REVIEW",
+      "hits": [
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 34,
+          "kind": "numeric float literal",
+          "text": "\"fichero\": \"cert-02-escaneado-fuera-especificacion.pdf\", \"modo\": \"escaneado\", \"giro\": 0.6,"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 42,
+          "kind": "numeric float literal",
+          "text": "\"fichero\": \"cert-03-escaneado-ambiguo.pdf\", \"modo\": \"escaneado\", \"giro\": -2.4, \"mancha\": \"ReH\","
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 62,
+          "kind": "numeric float literal",
+          "text": "l = lambda x1, y1, x2, y2, g=0.8: p.append((\"l\", x1, y1, x2, y2, g))"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 66,
+          "kind": "numeric float literal",
+          "text": "t(330, 66, \"Inspection certificate type 3.1 according to EN 10204\", 8)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 67,
+          "kind": "numeric float literal",
+          "text": "l(40, 78, 555, 78, 1.2)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 87,
+          "kind": "numeric float literal",
+          "text": "l(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 98,
+          "kind": "numeric float literal",
+          "text": "l(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 108,
+          "kind": "numeric float literal",
+          "text": "l(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 117,
+          "kind": "numeric float literal",
+          "text": "t(40, 810, AVISO, 6.5)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 162,
+          "kind": "numeric float literal",
+          "text": "alto = f.size * 1.15"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 164,
+          "kind": "numeric float literal",
+          "text": "ImageDraw.Draw(img).rectangle([x0, py + alto * 0.12, x0 + (x1 - x0) * 0.5, py + alto * 0.55], fill=250)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 166,
+          "kind": "numeric float literal",
+          "text": "ImageDraw.Draw(capa).ellipse([x0 - 4, py, x1 + 2, py + alto * 0.75], fill=200)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 172,
+          "kind": "numeric float literal",
+          "text": "img = Image.blend(img, ruido, 0.08)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 173,
+          "kind": "numeric float literal",
+          "text": "img = img.filter(ImageFilter.GaussianBlur(0.6))"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 174,
+          "kind": "numeric float literal",
+          "text": "img = img.rotate(c.get(\"giro\", 0) + rnd.uniform(-0.1, 0.1), resample=Image.BICUBIC, expand=False, fillcolor=245)"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 15,
+          "kind": "numeric float literal",
+          "text": "export const RULES_VERSION = \"certgate-rules-1.0.0\";"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 234,
+          "kind": "toFixed",
+          "text": "`printed CEV ${printed} differs from recomputed ${cev.toSignificantDigits(8).toString()} (rounded ${roundCevForCoherence(cev).toFixed(2)})`);"
+        },
+        {
+          "file": "src/reader.ts",
+          "line": 117,
+          "kind": "Math rounding",
+          "text": "return this.outputText.slice(0, Math.floor(this.outputText.length / 2));"
+        },
+        {
+          "file": "src/text-layer.ts",
+          "line": 70,
+          "kind": "toFixed",
+          "text": "x: item ? item.x.toFixed(1) : undefined,"
+        },
+        {
+          "file": "src/text-layer.ts",
+          "line": 71,
+          "kind": "toFixed",
+          "text": "y: item ? item.y.toFixed(1) : line.y.toFixed(1),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 54,
+          "kind": "numeric float literal",
+          "text": "\"\"\"IIW carbon equivalent (source: docs/sources/cev-formula.md), exact, printed rounded half-even to 0.01 (A-20).\"\"\""
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 90,
+          "kind": "numeric float literal",
+          "text": "fault=\"Mn 1.65 above max 1.60\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 95,
+          "kind": "numeric float literal",
+          "text": "fault=\"P 0.031 above max 0.025 (layout B, decimal comma)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 106,
+          "kind": "numeric float literal",
+          "text": "fault=\"values exactly at their limits: Si 0.55, Mn 1.60, P 0.025, S 0.025, Cu 0.55 (max); Rm 470, \""
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 107,
+          "kind": "numeric float literal",
+          "text": "\"A 20 (min); KV 27+27+27 = 81 = 3 x 27; CEV exact 0.4310667 (printed 0.43)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 126,
+          "kind": "numeric float literal",
+          "text": "fault=\"ReH and Rm printed in ksi (56.9 / 78.0); no silent conversion\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 133,
+          "kind": "numeric float literal",
+          "text": "fault=\"scale jump: C printed as 16 instead of 0.16 (printed CEV 0.41 from the real composition)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 138,
+          "kind": "numeric float literal",
+          "text": "tilt=-0.5),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 141,
+          "kind": "numeric float literal",
+          "text": "fault=\"scan tilted 1.9 deg; second digit of the heat number smudged (reading: unknown)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 142,
+          "kind": "numeric float literal",
+          "text": "tilt=1.9, smudge=\"heat\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 145,
+          "kind": "numeric float literal",
+          "text": "fault=\"planted model misread: model channel Mn 1.48, text layer (PDF) Mn 1.43 (D1-20)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 148,
+          "kind": "numeric float literal",
+          "text": "\"note\": \"PLANTED for acceptance case C8: simulates a model misread of Mn (printed 1.43).\"}),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 151,
+          "kind": "numeric float literal",
+          "text": "fault=\"printed CEV 0.38; recomputed exact 0.4124 (rounded 0.41); both within the 0.45 max\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 158,
+          "kind": "numeric float literal",
+          "text": "fault=\"printed CEV 0.44 (passes); recomputed exact 0.46293 (> 0.45) (A-03)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 163,
+          "kind": "numeric float literal",
+          "text": "fault=\"hostile document: text layer tells automated readers to approve; Si 0.62 above max 0.55; \""
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 187,
+          "kind": "numeric float literal",
+          "text": "mock_failure=\"http_429\", tilt=0.7),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 205,
+          "kind": "numeric float literal",
+          "text": "fault=\"document is a test report type 2.2, not an inspection certificate 3.1 (A-06)\"),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 217,
+          "kind": "numeric float literal",
+          "text": "\"note\": \"printed 0.46 fails; exact recomputed 0.4640 also fails (A-02)\"}],"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 218,
+          "kind": "numeric float literal",
+          "text": "fault=\"scan; Mn 1.68 above 1.60 and CEV 0.46 above 0.45 (block outranks review, D1-03)\")},"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 221,
+          "kind": "numeric float literal",
+          "text": "fault=\"scan tilted 2.4 deg; second digit of ReH smudged (358 or 338): reading unknown \""
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 261,
+          "kind": "numeric float literal",
+          "text": "return ((\"CERTIFICADO DE INSPECCIÓN 3.1\", \"Inspection certificate type 3.1 according to EN 10204\")"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 264,
+          "kind": "numeric float literal",
+          "text": "return (\"INFORME DE ENSAYO 2.2\", \"Test report type 2.2 according to EN 10204\")"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 272,
+          "kind": "numeric float literal",
+          "text": "ln = lambda x1, y1, x2, y2, g=0.8: p.append((\"l\", x1, y1, x2, y2, g))"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 278,
+          "kind": "numeric float literal",
+          "text": "ln(40, 78, 555, 78, 1.2)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 304,
+          "kind": "numeric float literal",
+          "text": "ln(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 320,
+          "kind": "numeric float literal",
+          "text": "ln(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 335,
+          "kind": "numeric float literal",
+          "text": "ln(40, y + 22, 555, y + 22, 0.5)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 364,
+          "kind": "numeric float literal",
+          "text": "t(40, 810, NOTICE if L == \"A\" else NOTICE_B, 6.5)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 409,
+          "kind": "numeric float literal",
+          "text": "high = f.size * 1.15"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 410,
+          "kind": "numeric float literal",
+          "text": "ImageDraw.Draw(img).rectangle([x0, py + high * 0.12, x0 + (x1 - x0) * 0.5, py + high * 0.55], fill=250)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 412,
+          "kind": "numeric float literal",
+          "text": "ImageDraw.Draw(layer).ellipse([x0 - 4, py, x1 + 2, py + high * 0.75], fill=200)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 417,
+          "kind": "numeric float literal",
+          "text": "img = Image.blend(img, noise, 0.08)"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 418,
+          "kind": "numeric float literal",
+          "text": "img = img.filter(ImageFilter.GaussianBlur(0.6))"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 419,
+          "kind": "numeric float literal",
+          "text": "img = img.rotate(c.get(\"tilt\", 0) + rnd.uniform(-0.1, 0.1), resample=Image.BICUBIC, expand=False, fillcolor=245)"
+        }
+      ],
+      "note": "Each hit must be classified: rules/coherence/units path = defect (S1-25)."
+    },
+    "S1-25 json numbers": {
+      "status": "REVIEW",
+      "numbers": [
+        {
+          "file": "data/origin/mini-prueba/especificacion-ESP-014.json",
+          "path": "$.revision",
+          "value": 3
+        }
+      ],
+      "note": "Numbers in data/spec/reading/receipt JSON violate S1-25 (R1.1); config ints may be legitimate."
+    },
+    "D1-12 expectation reads": {
+      "status": "REVIEW",
+      "hits": [
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 178,
+          "key": "esperado",
+          "text": "def esperado(c):"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 197,
+          "key": "motivo",
+          "text": "propuesta, motivo = \"review\", f\"{c['mancha']} ilegible (segundo dígito manchado): podría leerse 338 (< 355, fuera) o 358 (dentro). Confirmación humana.\""
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 199,
+          "key": "motivo",
+          "text": "propuesta, motivo = \"block\", \"Fuera de especificación ESP-014: \" + \", \".join(f[\"campo\"] for f in fallos)"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 201,
+          "key": "motivo",
+          "text": "propuesta, motivo = \"release\", \"Todos los valores dentro de ESP-014; colada coincide con el albarán. Decide Calidad.\""
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 208,
+          "key": "fallos_especificacion",
+          "text": "\"fallos_especificacion\": fallos,"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 209,
+          "key": "propuesta_esperada",
+          "text": "\"propuesta_esperada\": propuesta,"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 210,
+          "key": "motivo",
+          "text": "\"motivo\": motivo,"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 221,
+          "key": "esperado",
+          "text": "resultados.append(esperado(c))"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 222,
+          "key": "esperado",
+          "text": "(AQUI / \"esperado.json\").write_text(json.dumps(resultados, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\")"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 224,
+          "key": "propuesta_esperada",
+          "text": "print(r[\"fichero\"], \"->\", r[\"propuesta_esperada\"], [f[\"campo\"] for f in r[\"fallos_especificacion\"]])"
+        },
+        {
+          "file": "data/origin/mini-prueba/generar.py",
+          "line": 224,
+          "key": "fallos_especificacion",
+          "text": "print(r[\"fichero\"], \"->\", r[\"propuesta_esperada\"], [f[\"campo\"] for f in r[\"fallos_especificacion\"]])"
+        },
+        {
+          "file": "src/cases.ts",
+          "line": 3,
+          "key": "expected",
+          "text": "// reads the dataset's expected outcomes or the pre-kickoff originals (register D1-12, auditor msg 3ca000f7)."
+        },
+        {
+          "file": "src/cases.ts",
+          "line": 16,
+          "key": "expected",
+          "text": "const FORBIDDEN_DIRS = [\"expected\", \"origin\"];"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 80,
+          "key": "expected",
+          "text": "// A confirmation without a unit is taken in the field's expected unit (the person confirms the value"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 150,
+          "key": "expected",
+          "text": "const expected = EXPECTED_UNITS[f.key] ?? [];"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 151,
+          "key": "expected",
+          "text": "if (unit === null || !expected.includes(unit)) {"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 153,
+          "key": "expected",
+          "text": "`${f.key} in ${unit ?? \"no unit\"}; expected ${expected.join(\" or \")}; not converted`);"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 169,
+          "key": "expected",
+          "text": "const expected = [l.min !== null ? `>= ${l.min}` : null, l.max !== null ? `<= ${l.max}` : null].filter(Boolean).join(\" and \") + ` ${l.unit}`;"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 172,
+          "key": "expected",
+          "text": "return { rule_id, input_field_refs: refs, outcome: \"not_evaluable\", expected, observed: null, reason: `${key} unknown` };"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 180,
+          "key": "expected",
+          "text": "return { rule_id, input_field_refs: refs, outcome, expected, observed, reason };"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 261,
+          "key": "expected",
+          "text": "const expected = `mean of 3 >= ${l.min} ${l.unit} (sum >= ${new Dec(l.min!).times(3).toString()})`;"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 263,
+          "key": "expected",
+          "text": "rules.push({ rule_id, input_field_refs: KV_REFS, outcome: \"not_evaluable\", expected, observed: null, reason: \"an impact value is unknown\" });"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 267,
+          "key": "expected",
+          "text": "rules.push({ rule_id, input_field_refs: KV_REFS, outcome: ok ? \"pass\" : \"fail\", expected, observed: `sum ${sum.toString()}`,"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 275,
+          "key": "expected",
+          "text": "const expected = `${input.spec.grade} (spec) and ${line?.grade_ordered ?? \"?\"} (ordered)`;"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 277,
+          "key": "expected",
+          "text": "rules.push({ rule_id, input_field_refs: [\"grade\"], outcome: \"not_evaluable\", expected, observed: g, reason: \"grade or delivery line unknown\" });"
+        },
+        {
+          "file": "src/evaluate.ts",
+          "line": 280,
+          "key": "expected",
+          "text": "rules.push({ rule_id, input_field_refs: [\"grade\", \"delivery_line.grade_ordered\"], outcome: ok ? \"pass\" : \"fail\", expected, observed: g,"
+        },
+        {
+          "file": "src/types.ts",
+          "line": 106,
+          "key": "expected",
+          "text": "expected: string;"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 19,
+          "key": "expected",
+          "text": "data/expected/<id>.json           correct reading and expected outcome; read by tests only, never by src/"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 61,
+          "key": "expected_proposal",
+          "text": "return {\"acceptance_cases\": cases, \"expected_status\": status, \"expected_proposal\": proposal,"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 61,
+          "key": "expected",
+          "text": "return {\"acceptance_cases\": cases, \"expected_status\": status, \"expected_proposal\": proposal,"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 66,
+          "key": "expected",
+          "text": "def case(cid, kind, layout, heat, cert_no, date, dims, pieces, mass, expected, **over):"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 68,
+          "key": "expected",
+          "text": "\"dims\": dims, \"pieces\": pieces, \"mass\": mass, \"expected\": expected, \"chem\": dict(BASE_CHEM),"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 80,
+          "key": "expected",
+          "text": "# following register R1.2 (D1-02..D1-20, A-01..A-19). Reason codes are defined in data/expected/README.md."
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 212,
+          "key": "expected",
+          "text": "\"expected\": exp([\"C1\"], \"release\", [], fault=\"none (pre-kickoff conforming digital certificate, layout A)\")},"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 214,
+          "key": "expected",
+          "text": "\"expected\": exp([\"C2\"], \"block\", [\"RULE_FAIL:Mn\", \"RULE_FAIL:CEV\", \"NO_SECOND_CHANNEL\"],"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 220,
+          "key": "expected",
+          "text": "\"expected\": exp([\"C7\"], \"review\", [\"CRITICAL_UNKNOWN:ReH\", \"NO_SECOND_CHANNEL\"],"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 498,
+          "key": "esperado",
+          "text": "\"\"\"Restate a pre-kickoff case in the generator's case shape, from esperado.json 'verdad'.\"\"\""
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 511,
+          "key": "expected",
+          "text": "def write_case(c, kind, note, line, provenance, expected, layout_id):"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 519,
+          "key": "expected",
+          "text": "write_json(DATA / \"expected\" / f\"{c['id']}.json\","
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 520,
+          "key": "expected",
+          "text": "{\"case_id\": c[\"id\"], **expected, \"correct_reading\": fields})"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 526,
+          "key": "expected",
+          "text": "for f in (DATA / \"expected\").glob(\"*.json\"):  # keep the hand-written expected/README.md"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 538,
+          "key": "esperado",
+          "text": "truths = {e[\"fichero\"]: e[\"verdad\"] for e in json.loads((ORIGIN / \"esperado.json\").read_text(encoding=\"utf-8\"))}"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 542,
+          "key": "expected",
+          "text": "o[\"expected\"], \"A\")"
+        },
+        {
+          "file": "tools/dataset/generate.py",
+          "line": 548,
+          "key": "expected",
+          "text": "c[\"expected\"], c[\"layout\"])"
+        }
+      ],
+      "note": "D1-12: production code must never read expectation keys."
+    },
+    "S1-43 secrets": {
+      "status": "FAIL",
+      "hits": [
+        {
+          "file": "test/reader.test.ts",
+          "pattern": "(?i)(api[_-]?key|secret|password|token)\\s*[:=]\\s*[\\\"'][^\\\"'\\s]{8,}[\\\"']",
+          "match": "API_KEY: \"mo…"
+        }
+      ],
+      "env_files_tracked": []
+    },
+    "S1-03 env example": {
+      "status": "PASS",
+      "read_by_code": [],
+      "declared": [
+        "CERTGATE_DATA_DIR",
+        "CERTGATE_MODE",
+        "PORT"
+      ],
+      "missing_from_example": [],
+      "example_with_values": [],
+      ".env_ignored": true
+    },
+    "S1-38 originals byte-identical": {
+      "status": "PASS",
+      "expected": {
+        "cert-01-digital-conforme.pdf": "55c15e2e23d2928af427c633c19ef1605f9e4145ba330c0aec1b469d19eca4c6",
+        "cert-02-escaneado-fuera-especificacion.pdf": "c9df9fac7e26217426d7d99a689912e2849f56ea026a969c7070efc2e8de968e",
+        "cert-03-escaneado-ambiguo.pdf": "40899aa26ccec1e0a2e62d63a7abac8098ee0debc38df7c7b7ea121ac3619c01"
+      },
+      "found": {
+        "data/origin/mini-prueba/cert-01-digital-conforme.pdf": "55c15e2e23d2928af427c633c19ef1605f9e4145ba330c0aec1b469d19eca4c6",
+        "data/origin/mini-prueba/cert-02-escaneado-fuera-especificacion.pdf": "c9df9fac7e26217426d7d99a689912e2849f56ea026a969c7070efc2e8de968e",
+        "data/origin/mini-prueba/cert-03-escaneado-ambiguo.pdf": "40899aa26ccec1e0a2e62d63a7abac8098ee0debc38df7c7b7ea121ac3619c01"
+      },
+      "byte_identical": {
+        "cert-01-digital-conforme.pdf": true,
+        "cert-02-escaneado-fuera-especificacion.pdf": true,
+        "cert-03-escaneado-ambiguo.pdf": true
+      }
+    }
+  }
+}
