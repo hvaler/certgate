@@ -1,0 +1,117 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 146[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 455[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 329[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 667[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(14)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 325[2mms[22m[39m
+ [31m❯[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 503[2mms[22m[39m
+   [31m❯[39m CLI [2m(10)[22m
+     [32m✓[39m processes a named dataset case and prints proposal and receipt (exit 0)[32m 188[2mms[22m[39m
+     [32m✓[39m a reader failure is still a processed case (exit 0) with status error[32m 73[2mms[22m[39m
+     [32m✓[39m in real mode the summary note does not claim a MOCK reading (finding F-04)[32m 19[2mms[22m[39m
+     [32m✓[39m mock and planted notes say MOCK[32m 47[2mms[22m[39m
+     [32m✓[39m processes an external case directory[32m 38[2mms[22m[39m
+     [32m✓[39m a mock output with a JSON number or invalid JSON is invalid model output: receipt, status error, review (ADV-S1-F02)[32m 36[2mms[22m[39m
+     [32m✓[39m rejects bad input with exit 2[32m 2[2mms[22m[39m
+     [32m✓[39m confirmation and human decision from the CLI[32m 8[2mms[22m[39m
+[31m     [31m×[31m the CLI rejects release while the proposal is not release (B-14): exit 2[39m[32m 21[2mms[22m[39m
+     [32m✓[39m writes the output file with --out[32m 28[2mms[22m[39m
+   [32m✓[39m HTTP service [2m(1)[22m
+     [32m✓[39m answers /health and processes a dataset case[32m 39[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 539[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 345[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 632[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 349[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 774[2mms[22m[39m
+ [31m❯[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1955[2mms[22m[39m
+   [32m✓[39m F1 panel (S2-11, S2-12, S2-36, B-06, B-19) [2m(5)[22m
+     [32m✓[39m no endpoint configured: off with the server's real check time, a later load shows a later time[32m 48[2mms[22m[39m
+     [32m✓[39m unreachable endpoint: off[32m 14[2mms[22m[39m
+     [32m✓[39m with the test stub: shows exactly what the endpoint and sidecar report; cost unknown without a price[32m 20[2mms[22m[39m
+     [32m✓[39m request parameters, headers or body cannot set the endpoint (B-06)[32m 16[2mms[22m[39m
+     [32m✓[39m cost estimate uses only the configured price (S2-36)[32m 17[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [32m✓[39m status: disabled when LIVE_READS_PER_HOUR is unset, 0 or invalid (fail closed); no-store (B-05)[32m 12[2mms[22m[39m
+     [32m✓[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[32m 233[2mms[22m[39m
+     [32m✓[39m web upload limit is below the Vercel body limit and enforced (B-18)[32m 70[2mms[22m[39m
+     [32m✓[39m invalid input is rejected before anything is counted[32m 10[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [32m✓[39m reads through the adapter: reading_source live, model id as reported by configuration, key only sent to the endpoint[32m 52[2mms[22m[39m
+     [32m✓[39m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[32m 179[2mms[22m[39m
+     [32m✓[39m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[32m 117[2mms[22m[39m
+     [32m✓[39m client headers, cookies or body fields cannot change the count[32m 33[2mms[22m[39m
+     [32m✓[39m access code: wrong code rejected without consuming; throttled after repeated failures; never echoed[32m 31[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 927[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret[32m 19[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret[32m 15[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret[32m 15[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret[32m 23[2mms[22m[39m
+   [32m✓[39m stored stories (S2-14, B-12, B-23) [2m(3)[22m
+     [32m✓[39m are versioned static files labelled stored and mock, with the run's own created_at[32m 9[2mms[22m[39m
+     [32m✓[39m equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings[32m 30[2mms[22m[39m
+     [32m✓[39m the served story file keeps its timestamp across loads; stories may be cached, the API not[32m 15[2mms[22m[39m
+   [31m❯[39m confirmations and decisions through the API (S2-04, A-21, B-14, B-15) [2m(4)[22m
+     [32m✓[39m cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks[32m 16[2mms[22m[39m
+[31m     [31m×[31m release is rejected below the UI when the proposal is not release (API 409, core error)[39m[32m 8[2mms[22m[39m
+     [32m✓[39m decided_at and confirmed_at are stamped by the server clock, not the client[32m 8[2mms[22m[39m
+     [32m✓[39m unknown story ids are not served[32m 2[2mms[22m[39m
+   [32m✓[39m static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20) [2m(8)[22m
+     [32m✓[39m no HTML injection sinks in the client (B-16)[32m 2[2mms[22m[39m
+     [32m✓[39m no third-party URL in any page or asset (B-17)[32m 0[2mms[22m[39m
+     [32m✓[39m no AMD-run claims: only the panel name 'Runs on AMD' (B-11, D2-02)[32m 1[2mms[22m[39m
+     [32m✓[39m the endpoint pill says on only when the server's F1 state is on (B-11)[32m 2[2mms[22m[39m
+     [32m✓[39m landing figures are placeholders with no digit in any figure slot (S2-01, B-20)[32m 4[2mms[22m[39m
+     [32m✓[39m states where AMD fits and that nothing runs on AMD in this build; limit is per instance (S2-30, B-08)[32m 2[2mms[22m[39m
+     [32m✓[39m every screen carries the fictitious-data notice (S2-07)[32m 2[2mms[22m[39m
+     [32m✓[39m the browser receives no key or code: none in static files; responses checked above (S2-26)[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/entrypoints.test.ts > CLI > the CLI rejects release while the proposal is not release (B-14): exit 2
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ test/entrypoints.test.ts:93:20
+     91|   it("the CLI rejects release while the proposal is not release (B-14)…
+     92|     const r = await cli(["process", "--case", "cg-002", "--decide", "r…
+     93|     expect(r.code).toBe(EXIT.rejected);
+       |                    ^
+     94|     expect(JSON.parse(r.out).error).toMatch(/release is not allowed wh…
+     95|     expect((await cli(["process", "--case", "cg-001", "--decide", "rel…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/web.test.ts > confirmations and decisions through the API (S2-04, A-21, B-14, B-15) > release is rejected below the UI when the proposal is not release (API 409, core error)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/web.test.ts:278:22
+    276|     const base = await app({ env: {} });
+    277|     const r = await postJson(`${base}/api/stories/cg-002/evaluate`, { …
+    278|     expect(r.status).toBe(409);
+       |                      ^
+    279|     const core = await runCase("cg-002");
+    280|     expect(() => recordHumanDecision(core, { action: "release", reason…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m230 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 19:09:01
+[2m   Duration [22m 5.25s[2m (transform 55%, tests 31%, import 13%)[22m
+

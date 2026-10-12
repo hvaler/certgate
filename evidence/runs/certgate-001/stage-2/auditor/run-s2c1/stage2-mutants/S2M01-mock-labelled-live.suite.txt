@@ -1,0 +1,36 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 498[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 340[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 750[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(14)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 353[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 825[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 529[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 628[2mms[22m[39m
+   [32m✓[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [33m[2m✓[22m[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[33m 460[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 1146[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 619[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 590[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 466[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 450[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 3656[2mms[22m[39m
+   [32m✓[39m product code never reads expectations or pre-kickoff originals (D1-12, S1-37, auditor 3ca000f7) [2m(27)[22m
+     [33m[2m✓[22m[39m cases.ts[33m 727[2mms[22m[39m
+     [33m[2m✓[22m[39m cli.ts[33m 418[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m)[22m[33m 2062[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 934[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m232 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 19:08:11
+[2m   Duration [22m 9.42s[2m (transform 51%, tests 35%, import 14%)[22m
+

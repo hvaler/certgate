@@ -1,0 +1,13 @@
+M06r-mock-reading-source-live parent=496f4ddc unmerged files=src/pipeline.ts exit=1 KILLED ::  FAIL  test/entrypoints.test.ts > CLI > mock and planted notes say MOCK
+S2M01-mock-labelled-live parent=496f4ddc unmerged files=src/web/view.ts exit=0 SURVIVED :: 
+S2M02-story-not-live-dropped parent=496f4ddc unmerged files=public/app.js exit=0 SURVIVED :: 
+S2M03-limit-never-consumed parent=496f4ddc unmerged files=src/web/limiter.ts exit=1 KILLED ::  FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour
+S2M04-limit-trusts-client parent=496f4ddc unmerged files=src/web/app.ts exit=0 SURVIVED :: 
+S2M05-f1-hardcoded-on parent=496f4ddc unmerged files=src/web/f1.ts exit=1 KILLED ::  FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > no endpoint configured: off with the server's real check time, a later load shows a later time
+S2M06-f1-stale-checked-at parent=496f4ddc unmerged files=src/web/f1.ts exit=1 KILLED ::  FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > no endpoint configured: off with the server's real check time, a later load shows a later time
+S2M07-core-release-gate-removed parent=496f4ddc unmerged files=src/pipeline.ts exit=1 KILLED ::  FAIL  test/entrypoints.test.ts > CLI > the CLI rejects release while the proposal is not release (B-14): exit 2
+S2M08-ui-release-always-enabled parent=496f4ddc unmerged files=public/app.js exit=0 SURVIVED :: 
+S2M09-text-as-html parent=496f4ddc unmerged files=public/app.js exit=1 KILLED ::  FAIL  test/web.test.ts > static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20) > no HTML injection sinks in the client (B-16)
+S2M10-live-read-cacheable parent=496f4ddc unmerged files=src/web/app.ts exit=1 KILLED ::  FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+S2M11-code-check-bypassed parent=496f4ddc unmerged files=src/web/app.ts exit=1 KILLED ::  FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+S2M12-wrong-code-consumes parent=496f4ddc unmerged files=src/web/app.ts exit=1 KILLED ::  FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted

@@ -1,0 +1,13 @@
+diff --git a/public/app.js b/public/app.js
+index d2a5f78..2fe570f 100644
+--- a/public/app.js
++++ b/public/app.js
+@@ -17,7 +17,7 @@ function h(tag, props, ...children) {
+   }
+   for (const c of children.flat()) {
+     if (c === null || c === undefined || c === false) continue;
+-    el.append(typeof c === "string" ? document.createTextNode(c) : c);
++    if (typeof c === "string") { const s = document.createElement("span"); s.innerHTML = c; el.append(s); } else el.append(c);
+   }
+   return el;
+ }

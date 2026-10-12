@@ -1,0 +1,170 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 655[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 656[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 719[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 357[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 344[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 671[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 788[2mms[22m[39m
+ [31m❯[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m | [22m[31m10 failed[39m[2m)[22m[33m 1997[2mms[22m[39m
+   [32m✓[39m F1 panel (S2-11, S2-12, S2-36, B-06, B-19) [2m(5)[22m
+     [32m✓[39m no endpoint configured: off with the server's real check time, a later load shows a later time[32m 91[2mms[22m[39m
+     [32m✓[39m unreachable endpoint: off[32m 30[2mms[22m[39m
+     [32m✓[39m with the test stub: shows exactly what the endpoint and sidecar report; cost unknown without a price[32m 37[2mms[22m[39m
+     [32m✓[39m request parameters, headers or body cannot set the endpoint (B-06)[32m 14[2mms[22m[39m
+     [32m✓[39m cost estimate uses only the configured price (S2-36)[32m 14[2mms[22m[39m
+   [31m❯[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [32m✓[39m status: disabled when LIVE_READS_PER_HOUR is unset, 0 or invalid (fail closed); no-store (B-05)[32m 28[2mms[22m[39m
+[31m     [31m×[31m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[39m[33m 337[2mms[22m[39m
+     [32m✓[39m web upload limit is below the Vercel body limit and enforced (B-18)[32m 67[2mms[22m[39m
+[31m     [31m×[31m invalid input is rejected before anything is counted[39m[32m 16[2mms[22m[39m
+   [31m❯[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [32m✓[39m reads through the adapter: reading_source live, model id as reported by configuration, key only sent to the endpoint[32m 67[2mms[22m[39m
+[31m     [31m×[31m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[39m[32m 61[2mms[22m[39m
+[31m     [31m×[31m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[39m[32m 143[2mms[22m[39m
+     [32m✓[39m client headers, cookies or body fields cannot change the count[32m 31[2mms[22m[39m
+[31m     [31m×[31m access code: wrong code rejected without consuming; throttled after repeated failures; never echoed[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[39m[33m 923[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret[39m[32m 11[2mms[22m[39m
+[31m     [31m×[31m C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret[39m[32m 17[2mms[22m[39m
+   [32m✓[39m stored stories (S2-14, B-12, B-23) [2m(3)[22m
+     [32m✓[39m are versioned static files labelled stored and mock, with the run's own created_at[32m 5[2mms[22m[39m
+     [32m✓[39m equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings[32m 18[2mms[22m[39m
+     [32m✓[39m the served story file keeps its timestamp across loads; stories may be cached, the API not[32m 9[2mms[22m[39m
+   [32m✓[39m confirmations and decisions through the API (S2-04, A-21, B-14, B-15) [2m(4)[22m
+     [32m✓[39m cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks[32m 10[2mms[22m[39m
+     [32m✓[39m release is rejected below the UI when the proposal is not release (API 409, core error)[32m 8[2mms[22m[39m
+     [32m✓[39m decided_at and confirmed_at are stamped by the server clock, not the client[32m 6[2mms[22m[39m
+     [32m✓[39m unknown story ids are not served[32m 1[2mms[22m[39m
+   [32m✓[39m static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20) [2m(8)[22m
+     [32m✓[39m no HTML injection sinks in the client (B-16)[32m 1[2mms[22m[39m
+     [32m✓[39m no third-party URL in any page or asset (B-17)[32m 0[2mms[22m[39m
+     [32m✓[39m no AMD-run claims: only the panel name 'Runs on AMD' (B-11, D2-02)[32m 0[2mms[22m[39m
+     [32m✓[39m the endpoint pill says on only when the server's F1 state is on (B-11)[32m 1[2mms[22m[39m
+     [32m✓[39m landing figures are placeholders with no digit in any figure slot (S2-01, B-20)[32m 1[2mms[22m[39m
+     [32m✓[39m states where AMD fits and that nothing runs on AMD in this build; limit is per instance (S2-30, B-08)[32m 1[2mms[22m[39m
+     [32m✓[39m every screen carries the fictitious-data notice (S2-07)[32m 1[2mms[22m[39m
+     [32m✓[39m the browser receives no key or code: none in static files; responses checked above (S2-26)[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected '4' to be '5' // Object.is equality
+
+Expected: "5"
+Received: "4"
+
+ ❯ test/web.test.ts:114:89
+    112|     expect(j.view.receipt.errors[0].class).toBe("endpoint_off");
+    113|     expect(j.view.receipt.f1.state).toBe("off");
+    114|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    115|   });
+    116|   it("web upload limit is below the Vercel body limit and enforced (B-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > invalid input is rejected before anything is counted
+AssertionError: expected '1' to be '2' // Object.is equality
+
+Expected: "2"
+Received: "1"
+
+ ❯ test/web.test.ts:131:89
+    129|     const res = await postJson(`${base}/api/live/read`, { certificate_…
+    130|     expect(res.status).toBe(400);
+    131|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    132|     expect(s.state.chatCalls).toBe(0);
+    133|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour
+AssertionError: expected 429 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 429
+
+ ❯ test/web.test.ts:158:74
+    156|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2…
+    157|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+    158|     expect((await postJson(`${base}/api/live/read`, liveBody())).statu…
+       |                                                                          ^
+    159|     const third = await postJson(`${base}/api/live/read`, liveBody());
+    160|     expect(third.status).toBe(429);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ test/web.test.ts:172:60
+    170|     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3…
+    171|     const results = await Promise.all(Array.from({ length: 8 }, () => …
+    172|     expect(results.filter((r) => r.status === 200).length).toBe(3);
+       |                                                            ^
+    173|     expect(results.filter((r) => r.status === 429).length).toBe(5);
+    174|     expect(s.state.chatCalls).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+AssertionError: expected '0' to be '2' // Object.is equality
+
+Expected: "2"
+Received: "0"
+
+ ❯ test/web.test.ts:196:89
+    194|     const throttled = await postJson(`${base}/api/live/read`, liveBody…
+    195|     expect(throttled.status).toBe(429);
+    196|     expect((await (await fetch(`${base}/api/live/status`)).json()).rem…
+       |                                                                                         ^
+    197|     expect(s.state.chatCalls).toBe(0);
+    198|     const ok = await postJson(`${base}/api/live/read`, liveBody({ acce…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret
+AssertionError: expected '3' to be '4' // Object.is equality
+
+Expected: "4"
+Received: "3"
+
+ ❯ test/web.test.ts:217:91
+    215|       expect(s.state.chatCalls).toBe(calls);
+    216|       expect(text).not.toContain("sk-stub-secret-123");
+    217|       expect((await (await fetch(`${base}/api/live/status`)).json()).r…
+       |                                                                                           ^
+    218|     });
+    219|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m222 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 19:09:29
+[2m   Duration [22m 3.09s[2m (tests 68%, transform 23%, import 9%, worker 1%)[22m
+

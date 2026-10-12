@@ -1,0 +1,27 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 345[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 552[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 588[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 633[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 468[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 820[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 306[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 370[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 1133[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m)[22m[33m 5038[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 920[2mms[22m[39m
+   [32m✓[39m stored stories (S2-14, B-12, B-23) [2m(3)[22m
+     [33m[2m✓[22m[39m are versioned static files labelled stored and mock, with the run's own created_at[33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings[33m 650[2mms[22m[39m
+     [33m[2m✓[22m[39m the served story file keeps its timestamp across loads; stories may be cached, the API not[33m 1019[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m232 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 19:08:25
+[2m   Duration [22m 6.53s[2m (tests 71%, transform 23%, import 6%)[22m
+

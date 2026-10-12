@@ -1,0 +1,13 @@
+diff --git a/src/web/view.ts b/src/web/view.ts
+index 72a321a..fa9c163 100644
+--- a/src/web/view.ts
++++ b/src/web/view.ts
+@@ -55,7 +55,7 @@ const NAMES: Record<string, string> = {
+ 
+ export function readingLabel(src: RunReceipt["reading_source"]): string {
+   switch (src) {
+-    case "mock": return "mock reading · no model";
++    case "mock": return "live reading from the configured endpoint";
+     case "planted": return "mock reading · no model · planted deviation (test case)";
+     case "live": return "live reading from the configured endpoint";
+     case "live_no_reading": return "live attempt · no reading";

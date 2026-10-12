@@ -1,0 +1,128 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 296[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 490[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 513[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 575[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 348[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 642[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 314[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 861[2mms[22m[39m
+ [31m❯[39m test/web.test.ts [2m([22m[2m34 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 1924[2mms[22m[39m
+   [31m❯[39m F1 panel (S2-11, S2-12, S2-36, B-06, B-19) [2m(5)[22m
+[31m     [31m×[31m no endpoint configured: off with the server's real check time, a later load shows a later time[39m[32m 39[2mms[22m[39m
+     [32m✓[39m unreachable endpoint: off[32m 17[2mms[22m[39m
+     [32m✓[39m with the test stub: shows exactly what the endpoint and sidecar report; cost unknown without a price[32m 23[2mms[22m[39m
+[31m     [31m×[31m request parameters, headers or body cannot set the endpoint (B-06)[39m[32m 17[2mms[22m[39m
+     [32m✓[39m cost estimate uses only the configured price (S2-36)[32m 45[2mms[22m[39m
+   [31m❯[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [32m✓[39m status: disabled when LIVE_READS_PER_HOUR is unset, 0 or invalid (fail closed); no-store (B-05)[32m 17[2mms[22m[39m
+[31m     [31m×[31m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[39m[32m 240[2mms[22m[39m
+     [32m✓[39m web upload limit is below the Vercel body limit and enforced (B-18)[32m 71[2mms[22m[39m
+     [32m✓[39m invalid input is rejected before anything is counted[32m 10[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(10)[22m
+     [32m✓[39m reads through the adapter: reading_source live, model id as reported by configuration, key only sent to the endpoint[32m 42[2mms[22m[39m
+     [32m✓[39m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[32m 134[2mms[22m[39m
+     [32m✓[39m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[32m 125[2mms[22m[39m
+     [32m✓[39m client headers, cookies or body fields cannot change the count[32m 41[2mms[22m[39m
+     [32m✓[39m access code: wrong code rejected without consuming; throttled after repeated failures; never echoed[32m 30[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 3 call(s), counted once, no secret[33m 916[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret[32m 14[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret[32m 13[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode invalid_json: status error, review, 1 call(s), counted once, no secret[32m 14[2mms[22m[39m
+     [32m✓[39m C11 through HTTP, stub mode huge: status error, review, 1 call(s), counted once, no secret[32m 18[2mms[22m[39m
+   [32m✓[39m stored stories (S2-14, B-12, B-23) [2m(3)[22m
+     [32m✓[39m are versioned static files labelled stored and mock, with the run's own created_at[32m 11[2mms[22m[39m
+     [32m✓[39m equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings[32m 24[2mms[22m[39m
+     [32m✓[39m the served story file keeps its timestamp across loads; stories may be cached, the API not[32m 14[2mms[22m[39m
+   [32m✓[39m confirmations and decisions through the API (S2-04, A-21, B-14, B-15) [2m(4)[22m
+     [32m✓[39m cg-003 with every critical field confirmed and ReH 358 proposes release; only ReH stays review; 338 blocks[32m 16[2mms[22m[39m
+     [32m✓[39m release is rejected below the UI when the proposal is not release (API 409, core error)[32m 10[2mms[22m[39m
+     [32m✓[39m decided_at and confirmed_at are stamped by the server clock, not the client[32m 7[2mms[22m[39m
+     [32m✓[39m unknown story ids are not served[32m 2[2mms[22m[39m
+   [32m✓[39m static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20) [2m(8)[22m
+     [32m✓[39m no HTML injection sinks in the client (B-16)[32m 3[2mms[22m[39m
+     [32m✓[39m no third-party URL in any page or asset (B-17)[32m 0[2mms[22m[39m
+     [32m✓[39m no AMD-run claims: only the panel name 'Runs on AMD' (B-11, D2-02)[32m 1[2mms[22m[39m
+     [32m✓[39m the endpoint pill says on only when the server's F1 state is on (B-11)[32m 2[2mms[22m[39m
+     [32m✓[39m landing figures are placeholders with no digit in any figure slot (S2-01, B-20)[32m 2[2mms[22m[39m
+     [32m✓[39m states where AMD fits and that nothing runs on AMD in this build; limit is per instance (S2-30, B-08)[32m 2[2mms[22m[39m
+     [32m✓[39m every screen carries the fictitious-data notice (S2-07)[32m 2[2mms[22m[39m
+     [32m✓[39m the browser receives no key or code: none in static files; responses checked above (S2-26)[32m 0[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > no endpoint configured: off with the server's real check time, a later load shows a later time
+AssertionError: expected { state: 'on', …(9) } to match object { state: 'off', …(4) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "checked_at": "2026-10-12T18:20:00.000Z",
+-   "detail": "no endpoint configured",
+-   "gpu": null,
+-   "model_ids": [],
+-   "state": "off",
++   "detail": "read from the configured endpoint",
++   "gpu": "AMD Instinct MI300X",
++   "model_ids": [
++     "gemma-3-27b-it",
++   ],
++   "state": "on",
+  }
+
+ ❯ test/web.test.ts:54:15
+     52|     const base = await app({ env: {}, clock: c.now });
+     53|     const a = await (await fetch(`${base}/api/f1`)).json();
+     54|     expect(a).toMatchObject({ state: "off", detail: "no endpoint confi…
+       |               ^
+     55|     c.advance(61_000);
+     56|     const b = await (await fetch(`${base}/api/f1`)).json();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/web.test.ts > F1 panel (S2-11, S2-12, S2-36, B-06, B-19) > request parameters, headers or body cannot set the endpoint (B-06)
+AssertionError: expected 'on' to be 'off' // Object.is equality
+
+Expected: "off"
+Received: "on"
+
+ ❯ test/web.test.ts:77:21
+     75|     const base = await app({ env: {} });
+     76|     const f = await (await fetch(`${base}/api/f1?base=${encodeURICompo…
+     77|     expect(f.state).toBe("off");
+       |                     ^
+     78|   });
+     79|   it("cost estimate uses only the configured price (S2-36)", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/web.test.ts > live reading without an endpoint (S2-15, S2-20, S2-31, B-13) > an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ test/web.test.ts:106:23
+    104|     expect(res.headers.get("cache-control")).toBe("no-store");
+    105|     const j = await res.json();
+    106|     expect(j.counted).toBe(false);
+       |                       ^
+    107|     expect(j.view.status).toBe("error");
+    108|     expect(j.view.proposal).toBe("review");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m229 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 19:08:47
+[2m   Duration [22m 2.82s[2m (tests 66%, transform 26%, import 7%)[22m
+

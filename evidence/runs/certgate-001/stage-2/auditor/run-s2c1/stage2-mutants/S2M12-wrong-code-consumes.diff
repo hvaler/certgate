@@ -1,0 +1,12 @@
+diff --git a/src/web/app.ts b/src/web/app.ts
+index 22e8bc3..bc22f04 100644
+--- a/src/web/app.ts
++++ b/src/web/app.ts
+@@ -158,6 +158,7 @@ export function createHandler(deps: AppDeps = {}) {
+     if (csv && csv.length > WEB_MAX_DELIVERY_BYTES) throw new HttpError(413, `delivery note exceeds ${WEB_MAX_DELIVERY_BYTES} bytes`);
+     const line = typeof body.delivery_line === "string" ? body.delivery_line : null;
+     // 2. Access code, if configured, with its own failure throttle (S2-17, B-04).
++    liveCounter.tryConsume();
+     if (cfg.liveAccessCode !== null && !codeMatches(body.access_code, cfg.liveAccessCode)) {
+       const t = codeFailures.tryConsume();
+       if (!t.ok) throw new HttpError(429, "too many wrong access codes this hour", { reopens_at: t.reopens_at });

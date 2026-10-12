@@ -1,0 +1,12 @@
+diff --git a/src/web/limiter.ts b/src/web/limiter.ts
+index 16121cd..fd65b71 100644
+--- a/src/web/limiter.ts
++++ b/src/web/limiter.ts
+@@ -37,7 +37,6 @@ export class InMemoryHourlyCounter implements HourlyCounter {
+     this.roll(now);
+     const reopens_at = startOfNextUtcHour(now).toISOString();
+     if (this.limit <= 0 || this.used >= this.limit) return { ok: false, remaining: 0, reopens_at };
+-    this.used++;
+     return { ok: true, remaining: this.limit - this.used, reopens_at };
+   }
+ 

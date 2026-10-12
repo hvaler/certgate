@@ -1,0 +1,13 @@
+diff --git a/public/app.js b/public/app.js
+index d2a5f78..5d6e418 100644
+--- a/public/app.js
++++ b/public/app.js
+@@ -279,7 +279,7 @@ function decisionForm(view, onSubmit, opts) {
+     if (!who.value.trim() || !why.value.trim()) { msg.textContent = "Name and reason are required."; return; }
+     msg.textContent = await onSubmit({ action, decided_by: who.value.trim(), reason: why.value.trim() });
+   };
+-  const releaseOk = view.proposal === "release";
++  const releaseOk = true;
+   return h("section", { class: "card stack", "aria-labelledby": "decide" },
+     h("h2", { id: "decide" }, "Decision · a person decides"),
+     h("p", { class: "muted small" }, "CertGate proposes; it never releases material. Your name and reason go into the receipt.", opts.clientTime ? " This case is held in your browser: the decision is recorded with your browser's time, not verified by a server." : " The time is stamped by the server."),

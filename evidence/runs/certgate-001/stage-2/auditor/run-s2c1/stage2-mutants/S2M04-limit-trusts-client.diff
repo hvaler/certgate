@@ -1,0 +1,13 @@
+diff --git a/src/web/app.ts b/src/web/app.ts
+index 22e8bc3..e7eb22a 100644
+--- a/src/web/app.ts
++++ b/src/web/app.ts
+@@ -183,7 +183,7 @@ export function createHandler(deps: AppDeps = {}) {
+     // 5. Limit, checked and consumed atomically, on the server (S2-16, B-02).
+     await validateCertificate(inputBase.certificate);
+     if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
+-    const slot = liveCounter.tryConsume();
++    const slot = typeof body.remaining_this_hour === "string" ? { ok: true, remaining: Number.parseInt(body.remaining_this_hour, 10), reopens_at: "" } : liveCounter.tryConsume();
+     if (!slot.ok) {
+       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: slot.reopens_at });
+     }

@@ -1,0 +1,13 @@
+diff --git a/public/app.js b/public/app.js
+index d2a5f78..b2a1bca 100644
+--- a/public/app.js
++++ b/public/app.js
+@@ -328,7 +328,7 @@ function drawStory() {
+   const view = s.view;
+   const ctx = s.evaluatedAt
+     ? { storedTitle: "Stored reading", storedDetail: `mock reading, no model · stored ${view.receipt.created_at} · re-evaluated by the server at ${s.evaluatedAt} with your confirmations · not live` }
+-    : { storedTitle: "Stored reading", storedDetail: `mock reading, no model · ${view.receipt.created_at} · not live` };
++    : { storedTitle: "Stored reading", storedDetail: `live reading · ${new Date().toISOString()}` };
+   const evaluate = async (extra) => {
+     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
+     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;
