@@ -141,7 +141,7 @@ export interface Decision {
 
 export interface ReaderInfo {
   reader_id: string;
-  reading_source: "mock" | "planted" | "live";
+  reading_source: ReadingSource;
   model_id: string;
   model_version: string;
   vllm_version: string;
@@ -155,7 +155,7 @@ export interface RunReceipt {
   run_id: string;
   created_at: string;
   mode: string;
-  reading_source: "mock" | "planted" | "live";
+  reading_source: ReadingSource;
   reader: ReaderInfo;
   planted: { kind: string; field: string | null; note: string }[];
   status: Case["status"];
@@ -186,5 +186,27 @@ export interface RunReceipt {
   /** Both channels per critical field; disagreements stay visible (C8). */
   channel_checks: ChannelCheck[];
   rule_results: RuleResult[];
+  /** Copy of the F1 panel data at reading time (S2-13). */
+  f1: F1Snapshot;
   notice: string;
+}
+
+/**
+ * mock = MockReader, dataset reading; planted = mock with labelled planted deviations; live = a live endpoint
+ * returned a reading; live_no_reading = a live attempt that read nothing (S2-31).
+ */
+export type ReadingSource = "mock" | "planted" | "live" | "live_no_reading";
+
+/** F1 "Runs on AMD" data, only ever read from the configured endpoint (S2-11). */
+export interface F1Snapshot {
+  state: "on" | "off" | "not_applicable_mock";
+  checked_at: string | null;
+  detail: string;
+  model_ids: string[];
+  gpu: string | null;
+  rocm_version: string | null;
+  vllm_version: string | null;
+  latency_ms: string | null;
+  tokens_per_second: string | null;
+  cost_estimate_usd: string | null;
 }

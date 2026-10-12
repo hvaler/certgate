@@ -8,7 +8,7 @@ import { sha256, validateCertificate, validateDeliveryNote } from "./input-file.
 import { parseModelOutput, type ModelReading, type PlantedEntry } from "./model-output.js";
 import { MAX_RETRIES, ReaderError, RETRYABLE, type ModelReader } from "./reader.js";
 import { extractTextLayer, type TextLayerResult } from "./text-layer.js";
-import type { Case, Decision, DeliveryLine, FieldConfirmation, HumanAction, RunReceipt, Spec } from "./types.js";
+import type { Case, Decision, DeliveryLine, F1Snapshot, FieldConfirmation, HumanAction, RunReceipt, Spec } from "./types.js";
 import { normaliseDecimalText } from "./decimal.js";
 
 export const FICTITIOUS_NOTICE =
@@ -24,6 +24,8 @@ export interface CaseInput {
   plausibility: Plausibility;
   mode: string;
   now?: () => Date;
+  /** F1 data captured when a live reading is made (S2-13). */
+  f1?: F1Snapshot | null;
 }
 
 /** Everything read for one case. Evaluation can be re-run on it (human confirmation) without re-reading. */
@@ -38,6 +40,8 @@ export interface CaseReadings {
   reader_errors: ReaderErrorRecord[];
   reader: { reader_id: string; kind: "mock" | "live"; model_id: string; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
   timings: Record<string, string>;
+  /** F1 snapshot taken at reading time (S2-13); null outside the live path. */
+  f1: F1Snapshot | null;
   spec: Spec;
   plausibility: Plausibility;
   mode: string;
@@ -130,7 +134,7 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
     case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError, reader_errors: readerErrors,
     reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, model_version: reader.model_version,
       vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls, planted: reader.planted },
-    timings, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
+    timings, f1: input.f1 ?? null, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
   };
 }
 
@@ -190,6 +194,10 @@ export function recordHumanDecision(
   d: { action: HumanAction; reason: string; decided_by: string; decided_at: string },
 ): CaseResult {
   if (!["release", "block", "request_new_certificate"].includes(d.action)) throw new HumanDecisionError(`unknown action ${d.action}`);
+  // Release is only possible when the current proposal is release (register B-14): enforced here, below any UI.
+  if (d.action === "release" && result.decision.proposal !== "release") {
+    throw new HumanDecisionError(`release is not allowed while the proposal is ${result.decision.proposal}`);
+  }
   if (!d.reason?.trim()) throw new HumanDecisionError("a human decision needs a reason");
   if (!d.decided_by?.trim()) throw new HumanDecisionError("a human decision needs decided_by");
   if (Number.isNaN(Date.parse(d.decided_at))) throw new HumanDecisionError("a human decision needs decided_at (ISO time)");
@@ -215,7 +223,8 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     if (!planted.some((q) => q.kind === p.kind && q.field === p.field)) planted.push(p);
   }
   const readingSource: RunReceipt["reading_source"] =
-    rd.reader.kind === "live" ? "live" : planted.length > 0 ? "planted" : "mock";
+    // A live attempt that read nothing must never present itself as a live reading (S2-31, I7).
+    rd.reader.kind === "live" ? (rd.model === null ? "live_no_reading" : "live") : planted.length > 0 ? "planted" : "mock";
   const fields = r.evaluation?.fields;
   return {
     receipt_schema: "certgate.receipt/1",
@@ -259,6 +268,19 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
       : [],
     channel_checks: r.evaluation?.channel_checks ?? [],
     rule_results: r.evaluation?.rule_results ?? [],
+    f1: rd.f1 ?? notApplicableF1(rd.reader.kind),
     notice: FICTITIOUS_NOTICE,
+  };
+}
+
+
+/** F1 copy for runs that did not use a live endpoint (S2-13: mock run => off / not applicable). */
+export function notApplicableF1(kind: "mock" | "live"): F1Snapshot {
+  return {
+    state: kind === "mock" ? "not_applicable_mock" : "off",
+    checked_at: null,
+    detail: kind === "mock" ? "mock reading: no model and no endpoint were used" : "no endpoint data captured",
+    model_ids: [], gpu: null, rocm_version: null, vllm_version: null, latency_ms: null,
+    tokens_per_second: null, cost_estimate_usd: null,
   };
 }

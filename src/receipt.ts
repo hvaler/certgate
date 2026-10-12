@@ -15,11 +15,11 @@ function secretValues(env: NodeJS.ProcessEnv): string[] {
 
 export function exportReceipt(receipt: RunReceipt, env: NodeJS.ProcessEnv = process.env): string {
   const r = receipt as Partial<RunReceipt>;
-  if (r.reading_source !== "mock" && r.reading_source !== "planted" && r.reading_source !== "live") {
-    throw new ReceiptExportError("receipt has no valid reading_source (mock, planted or live)");
+  if (!["mock", "planted", "live", "live_no_reading"].includes(r.reading_source as string)) {
+    throw new ReceiptExportError("receipt has no valid reading_source (mock, planted, live or live_no_reading)");
   }
   if (r.reader?.reading_source !== r.reading_source) throw new ReceiptExportError("receipt reader.reading_source mismatch");
-  if (r.reading_source !== "live" && !/^MOCK/.test(r.reader?.model_id ?? "")) {
+  if ((r.reading_source === "mock" || r.reading_source === "planted") && !/^MOCK/.test(r.reader?.model_id ?? "")) {
     throw new ReceiptExportError("a mock receipt must carry the MOCK model label");
   }
   assertNoNumbers(receipt);

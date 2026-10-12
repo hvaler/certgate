@@ -33,9 +33,9 @@ describe("CLI", () => {
     process.env.CERTGATE_MODE = "real";
     try {
       const j = JSON.parse((await cli(["process", "--case", "cg-001"])).out);
-      expect(j.summary.reading_source).toBe("live");
+      expect(j.summary.reading_source).toBe("live_no_reading"); // S2-31
       expect(j.summary.note).not.toMatch(/MOCK/);
-      expect(j.summary.note).toMatch(/no reading was obtained \(endpoint_not_configured\)/);
+      expect(j.summary.note).toMatch(/live attempt, no reading was obtained \(endpoint_not_configured\)/);
     } finally {
       if (prev === undefined) delete process.env.CERTGATE_MODE; else process.env.CERTGATE_MODE = prev;
     }

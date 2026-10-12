@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
 
-const srcFiles = readdirSync(path.join(ROOT, "src")).filter((f) => f.endsWith(".ts"));
+const srcFiles = (readdirSync(path.join(ROOT, "src"), { recursive: true }) as string[]).filter((f) => f.endsWith(".ts"));
 const src = (f: string) => readFileSync(path.join(ROOT, "src", f), "utf8");
 const strip = (t: string) => t.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
 

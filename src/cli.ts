@@ -42,10 +42,10 @@ function readingNote(r: CaseResult): string {
       return `${base} The reading is MOCK (no model).`;
     case "planted":
       return `${base} The reading is MOCK (no model) with planted deviations: ${r.receipt.planted.map((p) => p.kind).join(", ")}.`;
+    case "live_no_reading":
+      return `${base} Mode ${r.receipt.mode}: live attempt, no reading was obtained (${r.receipt.errors[0]?.class ?? "error"}); nothing was read by a model.`;
     case "live":
-      return r.readings.model === null
-        ? `${base} Mode ${r.receipt.mode}: no reading was obtained (${r.receipt.errors[0]?.class ?? "error"}); nothing was read by a model.`
-        : `${base} The reading came from the live model channel.`;
+      return `${base} The reading came from the live endpoint, model ${r.receipt.reader.model_id} (as reported by the endpoint).`;
   }
 }
 

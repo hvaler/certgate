@@ -93,6 +93,8 @@ describe("real mode without an endpoint (S1-19, D1-15)", () => {
     expect(r.receipt.planted).toEqual([]);
     expect(r.receipt.reader.model_id).not.toMatch(/MOCK/);
     expect(r.readings.model).toBeNull();
+    expect(r.receipt.reading_source).toBe("live_no_reading"); // S2-31: never presented as a live reading
+    expect(r.receipt.f1.state).toBe("off");
   });
 });
 
