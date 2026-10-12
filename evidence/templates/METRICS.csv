@@ -1,0 +1,1 @@
+run_id,stage,role,seat_id,harness,model,started_utc,finished_utc,wall_seconds,input_tokens,output_tokens,cached_tokens,cost,currency,cost_is_estimate,measurement_source,limitations

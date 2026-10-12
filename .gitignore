@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+private-artifacts/
+*.pem
+*.key
+# Do not ignore room.json, evidence records, Dockerfiles or stage source.
+
+# Anadido tras la primera tirada (28/09): los dos que casi entran en la entrega.
+# Los seats trabajan DENTRO del repo, asi que sus borradores y su configuracion
+# local caen aqui y se commitean solos si nadie los excluye.
+_messages/
+.claude/

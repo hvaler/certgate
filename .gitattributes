@@ -1,0 +1,15 @@
+# Line endings are stored as LF and checked out as LF on every platform.
+# This is not cosmetic: a shell script or an entrypoint that reaches a container
+# with CRLF fails to start, and the deliverable is required to start in a clean
+# isolated environment.
+* text=auto eol=lf
+
+# Files git must never rewrite
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary

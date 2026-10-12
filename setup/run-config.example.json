@@ -1,0 +1,65 @@
+{
+  "template": false,
+  "team_name": "{{TEAM_NAME}}",
+  "run_id": "{{RUN_ID}}",
+  "track": "pocketful",
+  "target_stage": 4,
+  "stage_sequence": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "dispatch_mode": "single_dispatch_all_stages",
+  "room_id": "{{ROOM_ID}}",
+  "workspace_absolute_path": "{{WORKSPACE_ABS}}",
+  "kickoff_absolute_path": "{{KICKOFF_ABS}}",
+  "result_absolute_path": "{{RESULT_ABS}}",
+  "checks_absolute_path": "{{CHECKS_ABS}}",
+  "kit_absolute_path": "{{KIT_ABS}}",
+  "kickoff_commit": "{{KICKOFF_COMMIT}}",
+  "seats": [
+    {
+      "role": "analyst",
+      "display_name": "analyst",
+      "seat_id": "{{BAND_AGENT_ID}}",
+      "handle": "{{OWNER}}/analyst-{{SUFFIX}}",
+      "harness": "Claude Code",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "role": "implementer",
+      "display_name": "implementer",
+      "seat_id": "{{BAND_AGENT_ID}}",
+      "handle": "{{OWNER}}/implementer-{{SUFFIX}}",
+      "harness": "Claude Code",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "role": "adversary",
+      "display_name": "adversary",
+      "seat_id": "{{BAND_AGENT_ID}}",
+      "handle": "{{OWNER}}/adversary-{{SUFFIX}}",
+      "harness": "Claude Code",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "role": "auditor",
+      "display_name": "auditor",
+      "seat_id": "{{BAND_AGENT_ID}}",
+      "handle": "{{OWNER}}/auditor-{{SUFFIX}}",
+      "harness": "Claude Code",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "limits": {
+    "max_repair_cycles_per_stage": 5,
+    "max_infrastructure_retries_per_command": 2,
+    "max_stage_wall_minutes": 360,
+    "max_total_wall_minutes": 1440,
+    "final_verification_reserve_minutes": 30,
+    "spend_scope": "entire_run_all_four_stages",
+    "max_model_spend": null,
+    "spend_currency": null
+  }
+}

@@ -1,0 +1,100 @@
+@{{ANALYST_HANDLE}} You are the coordinating analyst of our Evidence-Driven Autonomous Factory. This is the single human dispatch for ALL FOUR Pocketful stages. Build, challenge, independently audit and deliver stages 1, 2, 3 and 4 IN ORDER in the same BAND room and result repository. After auditor accepts a stage, autonomously proceed to the next stage without asking the human for permission. Complete the final all-stage verification before your final report. Never bypass a failed stage to claim a later one.
+
+RUN CONFIGURATION (all placeholders must be replaced before sending)
+Run ID: {{RUN_ID}}
+Workspace root, absolute: {{WORKSPACE_ABS}}
+Kickoff checkout, absolute: {{KICKOFF_ABS}}
+Pinned kickoff commit: {{KICKOFF_COMMIT}}
+Result repository, absolute: {{RESULT_ABS}}
+Checks output root, absolute: {{CHECKS_ABS}}
+External preparation kit, absolute: {{KIT_ABS}}
+Current track: pocketful
+Stage sequence: 1 -> 2 -> 3 -> 4
+Stage 1 spec: {{KICKOFF_WSL}}/pocketful/spec/stage-1.md
+Stage 2 spec: {{KICKOFF_WSL}}/pocketful/spec/stage-2.md
+Stage 3 spec: {{KICKOFF_WSL}}/pocketful/spec/stage-3.md
+Stage 4 spec: {{KICKOFF_WSL}}/pocketful/spec/stage-4.md
+Output folders: {{RESULT_ABS}}\stage-1\, stage-2\, stage-3\ and stage-4\
+Runtime: four distinct Claude Code seats using the exact Opus model configured before dispatch. Record actual model IDs and usage; sharing a runtime/model does not replace independent execution.
+Seats and resolved handles:
+analyst: @{{ANALYST_HANDLE}}
+implementer: @{{IMPLEMENTER_HANDLE}}
+adversary: @{{ADVERSARY_HANDLE}}
+auditor: @{{AUDITOR_HANDLE}}
+Limits fixed before dispatch: at most 5 repair cycles PER STAGE, 2 infrastructure retries per command, 360 minutes PER STAGE, and 1440 minutes TOTAL including final verification. Financial allowance for the ENTIRE RUN: EXPLICITLY UNAVAILABLE as a hard cap. No provider spend limit is configured, so no financial ceiling can be enforced during this run. Spend is measurable only after the fact, from runtime token counts priced at list rates. Treat the wall-clock ceilings below as the enforceable limits, and report measured usage with that limitation stated. Do not multiply or reset that financial allowance when changing stage. Report the source and limitations of cost measurement; enforce a provider cap if configured. These are ceilings, not expected durations or a promise that the allowance is sufficient. Reserve 30 minutes within the total for final verification and reporting; never extend any ceiling without a pre-dispatch configuration change. If the provider rate-limits a seat, use bounded retries within these limits, then conclude BLOCKED with evidence instead of asking for more credits.
+
+THIS HOST (read before your first harness command)
+The four seats run as Claude Code on Windows and write files with Windows paths. The harness does
+NOT run on Windows here: its Python environment and its Docker driver live inside WSL2. Every
+`python -m harness ...` command must be issued through WSL, with the interpreter at
+`{{HARNESS_PYTHON}}` and every path in `/mnt/c/...` form. The Windows path `{{WORKSPACE_ABS}}\x` is
+`{{WORKSPACE_WSL}}/x` inside WSL. A Windows path handed to the harness fails; that is a
+configuration fact of this host, not a defect to investigate.
+
+The shape that works, verified on this host before dispatch:
+
+wsl -e bash -lc 'cd {{KICKOFF_WSL}} && {{HARNESS_PYTHON}} -m harness run --track pocketful --repo REVIEW_CLONE_MNT_PATH --stage N --out {{CHECKS_WSL}}/{{RUN_ID}}-sN-SEAT-ATTEMPT'
+
+Docker Desktop is running with WSL2 integration, so containers started from WSL reach the same
+daemon. A full isolated stage-1 run on this host takes well under two minutes; if one of yours
+runs far longer, suspect the command, not the machine.
+
+The permissions this run needs are already granted. If an unexpected permission dialog appears,
+record it as a blocker and continue with what you can; no human will answer a window during this
+run, and waiting on one is the single most expensive thing a seat can do here.
+
+SOURCE OF TRUTH
+Read the official participant guide and verify the pinned kickoff revision. At the start of each stage N, read the complete specifications 1 through N and record their checksums. The current specification extends earlier behavior; preserve earlier behavior except where the current specification explicitly changes it. Do not implement a later stage's behavior in an earlier output folder. The complete specifications are authoritative; the focus notes below are not substitutes and not exhaustive contracts. Do not use existing products' source code, API documentation or schemas to implement this domain.
+
+Include this complete task and the FULL cumulative specifications 1 through N in every delegated handoff for stage N, including review, repair and migration work. Explicitly identify which stage is active. Do not send only paths, summaries, message IDs or instructions to read the room. Split into numbered direct messages if necessary; the receiving seat acknowledges all parts before working. Ensure all four configured seats are room members before the first handoff; resolve literal @handles and retry a delivery reporting an absent member after adding that member.
+
+BOOTSTRAP AND COORDINATION
+Use the four configured generic mandates. Confirm shared paths and Git identities. The result repository contains factory documents and blank evidence templates only; all stage implementation must originate from collaboration in this room. Do not import a practice solution. Analyst owns the obligation register and write lease; implementer alone writes production files; adversary owns independent tests; auditor alone accepts or rejects.
+
+Read every specification section and produce numbered obligations with source references, expected outcomes and coverage plans. Adversary reviews that register for omissions before implementation is accepted. Treat unaddressed requirements as open even if every public test passes. Avoid future-stage implementation. Preserve previous commits and all failed evidence.
+
+SEQUENTIAL STAGE CONTROLLER
+1. Start stage-1 from no product code. For N greater than 1, implementer copies the ACCEPTED previous stage's complete source/build assets into stage-N, excluding nested Git metadata, and extends only the new folder. Verify no symlinks, submodules or dependencies on sibling stage folders. Preserve the earlier folder and its accepted tree hash.
+2. Analyst creates the cumulative obligation register, identifies additions and explicitly superseded behavior, and assigns work. Adversary challenges coverage. Implementer builds and commits; adversary tests; auditor reproduces and decides.
+3. For N greater than 1, independently validate upgrades using populated exports from EVERY previous submitted stage, not only N-1. Use two separate containers for each source/target pair, preserve original receipts and retry identities, and exercise the imported state. Resetting to a new fixture is not a migration test. Keep snapshots and credentials private.
+4. Auditor accepts only after the full in-scope evidence, current/earlier suites, relevant browser checks and migrations are reproduced. Publish a stage verdict and a STAGE_ACCEPTED checkpoint with candidate commit, stage tree hash, evidence references and remaining budgets. This checkpoint is not the final report.
+5. If N is below 4, begin N+1 immediately under this dispatch. No human continuation message is needed. If a stage cannot be accepted within its allowance, stop the sequence and report the accepted contiguous prefix plus the blocked stage; do not claim four completed stages or skip ahead.
+6. If a later check exposes a genuine earlier-stage defect, invalidate the affected acceptance and return to that stage's own scope. Repair under its remaining original allowance, then re-audit it and affected descendants/migrations. Never copy later functionality back. If there is no remaining allowance, conclude with the reduced verified prefix and preserve all findings.
+
+POCKETFUL STAGE 1 FOCUS (not exhaustive)
+Cover the full runtime contract, authentication, validation precedence, all API paths, visibility, exact arithmetic, request lifecycle, splitting, snapshots and atomic net settlements.
+Prove conservation of the seeded total, no negative balances including during concurrent operations, and at-most-once fulfillment. Amounts must follow the specification's integral JSON numeric semantics, including integral floating/exponent forms and rejection of booleans and strings. Verify exact splitting, remainder order and legal zero shares.
+Treat idempotency as the specified authenticated-user/method/path/body behavior. Test simultaneous identical writes, replay of original receipts after state changes, body conflicts, failed-key reuse and precedence over later validation. Creation of a request does not test payer funds; paying one does. Decline and cancel follow their own retry behavior without a required idempotency key.
+Check authorization separately from data visibility. Settlement affordability uses final net balances and commits all members together; include rollback and input-order validation. Export/import must preserve identities, sessions, permissions and completed retry responses, replace destination state atomically and work across independent containers. Keep private snapshot contents and credentials out of the public evidence and room.
+
+STAGE 2 FOCUS (not exhaustive; read its entire specification)
+Deliver the required browser flows and selectors, accessible at mobile and desktop widths. Verify decimal conversion, stale-state recovery and uncertain writes without duplicate payment. Extend money accounting with authorizations, captures, remaining holds and expiry. Reproduce the Stage 1 export upgrade with session and retry continuity.
+
+STAGE 3 FOCUS (not exhaustive; read its entire specification)
+Implement historical views separating effective and recorded times, immutable corrections, stable statement pagination and historical hold accounting. Check concurrent revision conflicts and preserve original receipts. Reproduce upgrades from both Stages 1 and 2, with authorization/capture history handled according to the specification.
+
+STAGE 4 FOCUS (not exhaustive; read its entire specification)
+Implement refunds and atomic correction batches with permissions, refund limits, complete settlement membership, validation precedence and combined affordability. Verify overlapping concurrent corrections and immutable earlier receipts/snapshots. Reproduce upgrades from Stages 1, 2 and 3. All earlier API/UI obligations remain applicable as extended by the current specification.
+
+IMPLEMENTATION AND VERIFICATION FOR EVERY STAGE N
+The band selects language, storage and design from the spec. Deliver a complete Dockerfile, source, locked dependencies where supported, and RUN.md in EACH stage-N. Build each folder independently with no dependency on other stage folders. The service runs in one image, honors PORT, has no outbound runtime dependency and fits the official limits. Do not modify the challenge harness or write code detecting tests or fixture examples.
+Implementer commits a candidate and posts the full commit identifier plus build/run instructions and claims. Freeze that candidate. Adversary and auditor each use distinct clean checkouts at that candidate and independent processes; do not reuse implementer's dirty tree or live service. Record independent test revision separately.
+Run the official commands from the kickoff checkout using its configured Python environment. Replace the destination names with unique run-attempt names; --out must not already exist:
+python -m harness run --track pocketful --repo {{REVIEW_CLONE_ABS_CREATED_BY_SEAT}} --stage {{N}} --out {{CHECKS_WSL}}/{{RUN_ID}}-s{{N}}-{{SEAT}}-{{ATTEMPT}}
+The auditor's final check must use isolated mode:
+python -m harness run --track pocketful --repo {{AUDITOR_CLONE_ABS_CREATED_BY_AUDITOR}} --stage {{N}} --mode isolated --out {{CHECKS_WSL}}/{{RUN_ID}}-s{{N}}-audit-{{ATTEMPT}}
+The REVIEW_CLONE, AUDITOR_CLONE, N, SEAT and ATTEMPT tokens above are runtime values that the band itself selects and records; they are not questions for the human.
+Read report.json and the actual logs. A missing browser, uncollected suite, skipped check or startup failure is not a pass. Run the required suites 1 through N on stage-N. For N below 4, the next-stage probe is expected not to pass its whole suite; Stage 4 has no next-stage probe. Never introduce deliberate failures to manipulate a probe. Public results are partial evidence; verify all requirements independently. For Stages 2-4, inspect the real UI at mobile/desktop widths and record browser evidence in addition to API results.
+
+ACCEPTANCE AND RECOVERY
+Use evidence/templates in the result repo to create real records under evidence/runs/{{RUN_ID}}/stage-N. Prefix obligation IDs with the originating stage and keep cross-stage dependency links. Each claim and result links obligation, product revision, test revision, command, inputs, environment, actual outcome, artifact checksum and real room references. Keep previous events immutable. Auditor reproduces challenge results and required checks himself, records fresh logs and decides ACCEPTED, REJECTED or BLOCKED for the exact candidate. Analyst cannot override the verdict. Track all four stages with STAGE-REGISTER.md and the six required source/target upgrade pairs with UPGRADE-REPORT.md.
+On rejection, analyst routes the complete task/spec and reproduction to implementer. Implementer reproduces and repairs in a new commit; adversary rechecks, and auditor independently repeats against the new revision. Infrastructure errors have a separate bounded retry allowance. Exhausted limits produce a final partial or blocked outcome with evidence, not a human clarification request.
+
+FINAL ALL-STAGE VERIFICATION (BEFORE FINAL REPORT)
+After accepting Stage 4, auditor creates a fresh clone of the submission candidate and checks the entire chain using a new output directory:
+python -m harness run --track pocketful --repo {{AUDITOR_CLONE_ABS_CREATED_BY_AUDITOR}} --all --mode isolated --out {{CHECKS_WSL}}/{{RUN_ID}}-all-final-{{ATTEMPT}}
+Verify each stage's RUN.md independently, required UI behavior, and all six source/target upgrade pairs (1->2, 1->3, 2->3, 1->4, 2->4, 3->4) against the final accepted product trees. Earlier evidence may be reused only if those exact source and target trees are unchanged and its provenance is complete; otherwise reproduce the affected pair. Capture the final four-folder stage claims and tree hashes. Follow repair routing and original remaining limits if this check reveals a defect. A successful Stage 4 alone does not establish that the other folders are valid.
+
+AUTONOMY AND FINAL REPORT
+From this dispatch until the final report, do not ask the human for decisions, approvals, debugging or reruns. Resolve choices within the band and supplied specification. If permissions, source access or evidence prevent progress, record the blocker and conclude. No fake disagreements or fabricated results.
+At completion, analyst reports EACH stage's actual scope, accepted candidate and tree hash, coverage, auditor verdict, public stage claim, upgrade evidence and unresolved issues. Include the final all-stage report, final evidence commit, verification that evidence-only commits preserve all accepted product trees, time/usage/cost per stage and total (unknown if unavailable), and room message references. Distinguish target stage 4, internally accepted stages and the verified contiguous prefix. Do not claim hidden-test success. End only after the all-stage verification or a documented terminal blocker/limit. The human exports the real complete room after work has ended and completes submission documentation; do not manufacture room.json or claim submission is complete before that export exists.
