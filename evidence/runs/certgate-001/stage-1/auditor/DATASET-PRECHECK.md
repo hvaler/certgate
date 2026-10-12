@@ -9,7 +9,7 @@
 - Command: `python -I audit_dataset.py C:\nexus\dev\certgate-auditor C:\nexus\dev\AMD-ACT3\datos\mini-prueba`
 - Artifacts:
   - `audit_dataset.py`: SHA-256 `2fdc7ede320ef9e238ff0440c06211178e645958b425598b50d155b961f1a3d5`
-  - `dataset-precheck-4ebd9533.log`: SHA-256 `02e5663cd2d6d08405a2b1538ccdff98a00ab1b8b43d370f1757cdb77d843d1b`, exit code 1 (two findings, both explained below)
+  - `dataset-precheck-4ebd9533.log`: SHA-256 `02e5663cd2d6d08405a2b1538ccdff98a00ab1b8b43d370f1757cdb77d843d1b` as written on disk (CRLF). The committed blob was normalised to LF by `.gitattributes`; its SHA-256 as committed in `0cc05f77` is `c014c1d3f23c8e0bf11eae29e8e9fde789eebf2188c6112f6d6c52260600ddfe`. Exit code 1 (two findings, both explained below)
 
 ## What was checked, and the result
 
