@@ -1,0 +1,30 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 189[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1115[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 710[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1514[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(7)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 572[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 1802[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 580[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 1214[2mms[22m[39m
+   [32m✓[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [33m[2m✓[22m[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[33m 763[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 2120[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 610[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 531[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 633[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 521[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m175 passed[39m[22m[90m (175)[39m
+[2m   Start at [22m 17:36:59
+[2m   Duration [22m 3.86s[2m (tests 69%, transform 21%, import 8%, worker 1%)[22m
+
