@@ -1,0 +1,188 @@
+// Internal contract of CertGate (03-DISENO, "Contrato interno inicial"). These are product types, not a claim
+// about any Evolus or vLLM schema. Every numeric value is a decimal string; absent optional data is null.
+
+export interface SourceRef {
+  /** "model" = model channel, "text_layer" = PDF text layer, "delivery_note", "spec", "human" */
+  channel: "model" | "text_layer" | "delivery_note" | "spec" | "human";
+  page: string | null;
+  fragment: string;
+  /** Position on the page for text-layer values (points, origin bottom-left), as strings. */
+  x?: string;
+  y?: string;
+}
+
+export type FieldStatus = "read" | "unknown" | "absent";
+
+export interface ChemistryEntry {
+  element: string;
+  value: string | null;
+  unit: string | null;
+  source_ref: SourceRef;
+}
+
+export interface MechanicalEntry {
+  property: string;
+  value: string | null;
+  unit: string | null;
+  source_ref: SourceRef;
+}
+
+export interface Case {
+  case_id: string;
+  run_id: string;
+  created_at: string;
+  status: "processed" | "error" | "rejected";
+  certificate_file_hash: string;
+  certificate_file_size: string;
+  delivery_file_hash: string | null;
+  source_refs: SourceRef[];
+}
+
+/** The effective certificate after channel checks, coherence and human confirmation. Unknown = null. */
+export interface Certificate {
+  issuer: string | null;
+  certificate_no: string | null;
+  certificate_type: string | null;
+  heat_or_lot: string | null;
+  grade: string | null;
+  dimensions: string | null;
+  chemistry: ChemistryEntry[];
+  cev_printed: string | null;
+  mechanical: MechanicalEntry[];
+  kv_temperature: string | null;
+  inspection_stamp: string | null;
+}
+
+export interface DeliveryLine {
+  delivery_note: string;
+  line: string;
+  po_number: string;
+  heat_or_lot: string;
+  grade_ordered: string;
+  quantity: string | null;
+  mass_kg: string | null;
+  source_ref: SourceRef;
+}
+
+export interface SpecLimit {
+  field: string;
+  min: string | null;
+  max: string | null;
+  unit: string;
+}
+
+export interface Spec {
+  spec_id: string;
+  version: string;
+  grade: string;
+  limits: SpecLimit[];
+  kv_temperature: string;
+  required_certificate_type: string;
+  document_rules: string[];
+  file_sha256: string;
+  notice: string;
+}
+
+export interface ChannelCheck {
+  field: string;
+  model_value: string | null;
+  model_unit: string | null;
+  text_layer_value: string | null;
+  text_layer_unit: string | null;
+  agree: boolean;
+  channel_available: boolean;
+  /** Why the field ended unknown or needs a person, when it does. */
+  issue: "disagree" | "text_layer_missing" | "text_layer_conflict" | "no_second_channel" | null;
+  human_confirmed: boolean;
+  source_refs: SourceRef[];
+}
+
+export type RuleOutcome = "pass" | "fail" | "not_evaluable";
+
+export interface RuleResult {
+  rule_id: string;
+  input_field_refs: string[];
+  outcome: RuleOutcome;
+  expected: string;
+  observed: string | null;
+  reason: string;
+}
+
+export type Proposal = "release" | "block" | "review";
+export type HumanAction = "release" | "block" | "request_new_certificate";
+
+export interface ReasonEntry {
+  code: string;
+  effect: "block" | "review" | "info";
+  detail: string;
+}
+
+export interface FieldConfirmation {
+  field: string;
+  value: string | null;
+  unit: string | null;
+  confirmed_by: string;
+  confirmed_at: string;
+}
+
+export interface Decision {
+  proposal: Proposal;
+  reasons: ReasonEntry[];
+  evidence_refs: string[];
+  /** Always true: CertGate only proposes; a person decides. */
+  human_required: true;
+  /** Scans: the critical fields still waiting for human confirmation (I3). */
+  human_confirmation_required: string[];
+  human_decision: HumanAction | null;
+  decided_by: string | null;
+  decided_at: string | null;
+  decision_reason: string | null;
+}
+
+export interface ReaderInfo {
+  reader_id: string;
+  reading_source: "mock" | "planted" | "live";
+  model_id: string;
+  model_version: string;
+  vllm_version: string;
+  rocm_version: string;
+  calls: string;
+}
+
+export interface RunReceipt {
+  receipt_schema: "certgate.receipt/1";
+  case_id: string;
+  run_id: string;
+  created_at: string;
+  mode: string;
+  reading_source: "mock" | "planted" | "live";
+  reader: ReaderInfo;
+  planted: { kind: string; field: string | null; note: string }[];
+  status: Case["status"];
+  proposal: Proposal;
+  reasons: ReasonEntry[];
+  human_required: true;
+  human_confirmation_required: string[];
+  human_decision: { action: HumanAction; by: string; at: string; reason: string } | null;
+  confirmations: (FieldConfirmation & { read_value: string | null; reading_source: string })[];
+  channel_available: boolean;
+  timings_ms: Record<string, string>;
+  errors: { class: string; detail: string }[];
+  hashes: {
+    certificate_sha256: string;
+    certificate_size: string;
+    delivery_note_sha256: string | null;
+    model_output_sha256: string | null;
+    spec_sha256: string;
+  };
+  rules_version: string;
+  plausibility_version: string;
+  cev_formula_source: string;
+  spec: { spec_id: string; revision: string; grade: string };
+  delivery: { delivery_note: string; line: string } | null;
+  values: { field: string; value: string | null; unit: string | null; source: string }[];
+  /** Both channels per critical field; disagreements stay visible (C8). */
+  channel_checks: ChannelCheck[];
+  rule_results: RuleResult[];
+  notice: string;
+}

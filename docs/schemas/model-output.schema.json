@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "certgate.mock-model-output/1",
+  "title": "CertGate model-channel output (reading.json); in this build produced only by MockReader",
+  "description": "Validated in src/model-output.ts. Every numeric value is a string; a JSON number anywhere rejects the document (invalid_output). Unknown keys are ignored.",
+  "type": "object",
+  "required": ["fields"],
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": ["value", "status"],
+      "properties": {
+        "value": { "type": ["string", "null"], "description": "Decimal string for numeric fields (point or comma), text otherwise; null when status is unknown or absent" },
+        "unit": { "type": ["string", "null"], "description": "% for chemistry and CEV; MPa or N/mm² for ReH and Rm; % for A; J for KV; °C for kv_temperature" },
+        "status": { "enum": ["read", "unknown", "absent"], "description": "read = value present; unknown = not readable with confidence; absent = not printed on the document" },
+        "source_ref": { "type": "object", "properties": { "page": { "type": "string" }, "fragment": { "type": "string" } } },
+        "note": { "type": "string" },
+        "planted": { "type": "boolean", "description": "true on a planted deviation (dataset only)" }
+      }
+    }
+  },
+  "properties": {
+    "schema": { "const": "certgate.mock-model-output/1" },
+    "case_id": { "type": "string" },
+    "fields": {
+      "type": "object",
+      "required": ["issuer", "certificate_no", "certificate_type", "date", "heat_or_lot", "grade", "dimensions", "chemistry", "cev_printed", "mechanical", "kv_temperature", "inspection_stamp"],
+      "properties": {
+        "issuer": { "$ref": "#/$defs/field" },
+        "certificate_no": { "$ref": "#/$defs/field" },
+        "certificate_type": { "$ref": "#/$defs/field", "description": "EN 10204 type label, e.g. \"3.1\"" },
+        "date": { "$ref": "#/$defs/field" },
+        "heat_or_lot": { "$ref": "#/$defs/field" },
+        "grade": { "$ref": "#/$defs/field" },
+        "dimensions": { "$ref": "#/$defs/field" },
+        "chemistry": {
+          "type": "object",
+          "required": ["C", "Si", "Mn", "P", "S", "Cr", "Ni", "Mo", "Cu", "V"],
+          "additionalProperties": { "$ref": "#/$defs/field" }
+        },
+        "cev_printed": { "$ref": "#/$defs/field" },
+        "mechanical": {
+          "type": "object",
+          "required": ["ReH", "Rm", "A", "KV_1", "KV_2", "KV_3"],
+          "additionalProperties": { "$ref": "#/$defs/field" }
+        },
+        "kv_temperature": { "$ref": "#/$defs/field", "description": "Impact test temperature, e.g. \"-20\" with unit °C" },
+        "inspection_stamp": { "$ref": "#/$defs/field" }
+      }
+    },
+    "explanation": {
+      "type": ["object", "null"],
+      "description": "Model free text. Recorded, never used by the decision.",
+      "properties": { "text": { "type": "string" }, "planted": { "type": "boolean" }, "note": { "type": "string" } }
+    },
+    "planted": {
+      "type": "array",
+      "description": "Planted deviations: kind misread | contamination | failure. Any entry makes the receipt's reading_source \"planted\".",
+      "items": { "type": "object", "properties": { "kind": { "type": "string" }, "field": { "type": ["string", "null"] }, "note": { "type": "string" } } }
+    },
+    "mock_failure": {
+      "type": "object",
+      "description": "MockReader failure injection. timeout, http_429 and http_5xx are retried twice (3 calls); endpoint_off and invalid_json are not (1 call). The call count is in receipt.reader.calls and ModelReader.calls.",
+      "properties": { "class": { "enum": ["endpoint_off", "timeout", "http_429", "http_5xx", "invalid_json"] }, "persistent": { "type": "boolean" } }
+    }
+  }
+}

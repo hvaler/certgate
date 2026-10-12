@@ -15,3 +15,9 @@ private-artifacts/
 # local caen aqui y se commitean solos si nadie los excluye.
 _messages/
 .claude/
+
+# Build output and local tooling (CertGate)
+dist/
+coverage/
+*.log
+.vitest/

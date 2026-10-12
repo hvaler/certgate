@@ -1,0 +1,27 @@
+{
+  "name": "certgate",
+  "version": "0.1.0",
+  "description": "CertGate prepares the review of a steel inspection certificate against a purchase specification and proposes release, block or review. A person decides. Demo data is fictitious.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/server.js",
+    "certgate": "node dist/src/cli.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "decimal.js": "10.6.0",
+    "pdfjs-dist": "6.4.299"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.4"
+  }
+}

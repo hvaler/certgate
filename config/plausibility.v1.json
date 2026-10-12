@@ -1,0 +1,24 @@
+{
+  "version": "plausibility-v1",
+  "notice": "Band-defined plausibility ranges for the FICTITIOUS CertGate demo. They are NOT taken from any standard. A value outside its range is treated as a scale jump (field unknown, review). Each range strictly contains the corresponding ESP-014 limit with margin (register A-08).",
+  "ranges": {
+    "chemistry.C": { "min": "0", "max": "2", "unit": "%" },
+    "chemistry.Si": { "min": "0", "max": "3", "unit": "%" },
+    "chemistry.Mn": { "min": "0", "max": "5", "unit": "%" },
+    "chemistry.P": { "min": "0", "max": "0.5", "unit": "%" },
+    "chemistry.S": { "min": "0", "max": "0.5", "unit": "%" },
+    "chemistry.Cr": { "min": "0", "max": "5", "unit": "%" },
+    "chemistry.Ni": { "min": "0", "max": "5", "unit": "%" },
+    "chemistry.Mo": { "min": "0", "max": "2", "unit": "%" },
+    "chemistry.Cu": { "min": "0", "max": "3", "unit": "%" },
+    "chemistry.V": { "min": "0", "max": "1", "unit": "%" },
+    "cev_printed": { "min": "0", "max": "2", "unit": "%" },
+    "mechanical.ReH": { "min": "50", "max": "2000", "unit": "MPa" },
+    "mechanical.Rm": { "min": "100", "max": "2500", "unit": "MPa" },
+    "mechanical.A": { "min": "1", "max": "80", "unit": "%" },
+    "mechanical.KV_1": { "min": "1", "max": "500", "unit": "J" },
+    "mechanical.KV_2": { "min": "1", "max": "500", "unit": "J" },
+    "mechanical.KV_3": { "min": "1", "max": "500", "unit": "J" },
+    "kv_temperature": { "min": "-200", "max": "100", "unit": "°C" }
+  }
+}
