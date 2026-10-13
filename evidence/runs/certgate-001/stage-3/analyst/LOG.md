@@ -12,3 +12,4 @@ Append-only. Times UTC, analyst clock.
 
 Budgets: Stage 3 ends 22:54Z; Stage 4 300 min; run total ends 2026-10-14T03:54Z; hard stop 2026-10-17T18:00Z.
 | 17:01Z | Adversary (14740157): vars visible 11/42/51, host allows calls; one GET /models at 16:56:20Z (made without an announced lease, single call). All four seats can reach the endpoint; no host block | 14740157 |
+| 17:04Z | Adversary Stage 3 challenge ea1533c3 (CH3-01..18) → R3.1 committed ed8f8e92 (committed-blob SHA-256 48dbb1bb9ae29e05cfc67acf8cd754b4c90c0b17b0b747832e8c607fbbe5c93a); all accepted/decided; C-04 drops model explanation for this run (recorded deviation from D step 7); sent to all three | 03ec3b8c |
