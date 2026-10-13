@@ -1,0 +1,17 @@
+S4M11-reading-range: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M11b-every-proposal-as-expected: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M12-new-uncovered-capability: KILLED | 1 failed | 314 passed (315) | test/docs.test.ts
+S4M13-sk-proj-key-in-deploy: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M18s-hosted-demo-claim: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M20-wrong-run-commit: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M21-wrong-licence: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M22-wrong-reported-model: KILLED | 2 failed | 313 passed (315) | test/docs.test.ts
+S4M04-health-without-modelid: KILLED | 1 failed | 314 passed (315) | test/stage4-claims.test.ts
+S4M01-health-hardcoded-off: KILLED | 1 failed | 314 passed (315) | test/web.test.ts
+S4M03-amd-line-ignores-f1: KILLED | 1 failed | 314 passed (315) | test/story-screen-render.test.ts
+S2M02br-story-label-cut: KILLED | 5 failed | 310 passed (315) | test/labels.test.ts, test/story-screen-render.test.ts
+S3M06-json-repaired: KILLED | 5 failed | 310 passed (315) | test/live-reader-prose.test.ts
+clean: yes
+S4M23-claim-in-code-comment: SURVIVED | 315 passed (315)
+S4M24-claim-in-heading: SURVIVED | 315 passed (315)
+clean: yes

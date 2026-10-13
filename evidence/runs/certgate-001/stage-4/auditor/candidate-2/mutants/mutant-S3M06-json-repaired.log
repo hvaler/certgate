@@ -1,0 +1,62 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/live-reader-prose.test.ts (6 tests | 5 failed) 11949ms
+   ❯ JSON is never repaired by guessing (ADV-S3-F01, S3-01) (6)
+     × prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read 7817ms
+     × prose before and after: C11 invalid_json, status error, review, 1 call, no value read 1544ms
+     × trailing text after the JSON: C11 invalid_json, status error, review, 1 call, no value read 835ms
+     × a fence that does not span the whole content: C11 invalid_json, status error, review, 1 call, no value read 616ms
+     × stripCodeFences never extracts JSON out of surrounding text 22ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  5 failed | 308 passed (313)
+   Start at  23:14:28
+   Duration  30.91s (tests 98%, import 1%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > prose before and after: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > trailing text after the JSON: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > a fence that does not span the whole content: C11 invalid_json, status error, review, 1 call, no value read
+AssertionError: expected 'processed' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "processed"
+
+ ❯ test/live-reader-prose.test.ts:47:38
+     45|       const input = loadDatasetCase("cg-004", loadShared("real"));
+     46|       const r = evaluateCase(await readCase({ ...input, reader: new Li…
+     47|       expect(r.readings.case.status).toBe("error");
+       |                                      ^
+     48|       expect(r.decision.proposal).toBe("review");
+     49|       expect(r.receipt.errors.at(-1)!.class).toBe("invalid_json");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > stripCodeFences never extracts JSON out of surrounding text
+AssertionError: expected '{\n  "schema": "certgate.mock-model-o…' to be 'Here:\n{\n  "schema": "certgate.mock-…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,6 +1,5 @@
+- Here:
+  {
+    "schema": "certgate.mock-model-output/1",
+    "case_id": "cg-004",
+    "note": "MOCK model output for the offline pipeline. It is the dataset's correct reading, except for the deviations listed in 'planted'. It is NOT the output of any model.",
+    "fields": {
+
+ ❯ test/live-reader-prose.test.ts:63:50
+     61|   });
+     62|   it("stripCodeFences never extracts JSON out of surrounding text", ()…
+     63|     expect(stripCodeFences(`Here:\n${reading}`)).toBe(`Here:\n${readin…
+       |                                                  ^
+     64|     expect(stripCodeFences(`${reading}\nDone.`)).toBe(`${reading}\nDon…
+     65|     expect(stripCodeFences(`\`\`\`json\n${reading}\n\`\`\``)).toBe(rea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+

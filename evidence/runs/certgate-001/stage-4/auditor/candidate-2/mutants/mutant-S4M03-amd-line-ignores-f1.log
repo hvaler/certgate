@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/story-screen-render.test.ts (6 tests | 1 failed) 48ms
+   ❯ Runs on AMD screen text follows the F1 state (R4.5 E-08) (2)
+     × endpoint off: says off with the server's detail, never that an endpoint or AMD hardware is used 12ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  1 failed | 312 passed (313)
+   Start at  23:13:33
+   Duration  8.74s (tests 95%, import 4%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/story-screen-render.test.ts > Runs on AMD screen text follows the F1 state (R4.5 E-08) > endpoint off: says off with the server's detail, never that an endpoint or AMD hardware is used
+AssertionError: expected 'Endpoint on: AMD Token Factory. The v…' to be 'Endpoint off (no endpoint configured)…' // Object.is equality
+
+Expected: "Endpoint off (no endpoint configured): judge mode shows the recorded readings only."
+Received: "Endpoint on: AMD Token Factory. The values above are as reported by the endpoint."
+
+ ❯ test/story-screen-render.test.ts:48:27
+     46|       const { ctx, view } = await loadApp(ROOT, { "/api/f1": { state: …
+     47|       await ctx.amdScreen();
+     48|       expect(state(view)).toBe(`Endpoint off (${detail}): judge mode s…
+       |                           ^
+     49|       expect(JSON.stringify(view.textContent)).not.toMatch(/sidecar|no…
+     50|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

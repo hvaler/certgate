@@ -1,0 +1,57 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/docs.test.ts (14 tests | 2 failed) 22361ms
+   ❯ sentence map (F-02 completeness, ADV-S4-F02) (1)
+     × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 197ms
+   ❯ README facts against their sources (ADV-S4-F01, F-04) (4)
+     × README provenance facts equal the run artifacts and the publisher record 20ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  2 failed | 313 passed (315)
+   Start at  23:26:32
+   Duration  30.34s (tests 98%, import 2%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+AssertionError: sentences without a claims-map entry (map them in claims-map.json): expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "README.md :: | Candidate · time (UTC) | `5c904693` · 2026-10-13 17:28–17:49 | `a892f771` · 2026-10-13 19:13–19:31 |",
++ ]
+
+ ❯ test/docs.test.ts:168:91
+    166|     const units: { doc: string; text: string }[] = allUnits(ROOT);
+    167|     const missing = units.filter((u) => !mapped.has(key(u))).map(key);
+    168|     expect(missing, "sentences without a claims-map entry (map them in…
+       |                                                                                           ^
+    169|     const present = new Set(units.map(key));
+    170|     expect(map.filter((m) => !present.has(key(m))).map(key), "stale cl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > README provenance facts equal the run artifacts and the publisher record
+AssertionError: evaluation/runs/real-candidate-dd557fd: README says 5c904693: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/docs.test.ts:191:88
+    189|       const run = JSON.parse(read(`${dir}/run.json`));
+    190|       const commit = /`([0-9a-f]{7,40})`/.exec(cells[i]!)![1]!;
+    191|       expect(run.candidate_commit.startsWith(commit), `${dir}: README …
+       |                                                                                        ^
+    192|       const models = new Set(JSON.parse(read(`${dir}/results.json`)).m…
+    193|       expect([...models]).toEqual(["self-dploy/Qwen3.8-27B"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

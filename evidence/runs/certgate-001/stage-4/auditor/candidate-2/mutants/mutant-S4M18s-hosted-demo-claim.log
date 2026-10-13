@@ -1,0 +1,427 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/docs.test.ts (14 tests | 2 failed) 2280ms
+   ❯ no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) (3)
+     × no forbidden claim in README, DEPLOY.md, METRICS.md or public 26ms
+   ❯ sentence map (F-02 completeness, ADV-S4-F02) (1)
+     × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 22ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  2 failed | 311 passed (313)
+   Start at  23:11:09
+   Duration  16.62s (tests 97%, import 2%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+AssertionError: README.md: /vercel\.app/i: expected '# CertGate\n\n**CertGate prepares the…' not to match /vercel\.app/i
+
+- Expected:
+/vercel\.app/i
+
++ Received:
+"# CertGate
+
+**CertGate prepares the review of a steel mill inspection certificate against a purchase specification, and
+proposes release, block or review. A person in Quality decides.** CertGate never releases material on its own.
+
+> **All data in this repository is fictitious.** Siderúrgica Valdemora S.A. (the mill), Talleres Ribera Norte
+> S.L. (the buyer), the grade TRN-355 and the purchase specification ESP-014 are invented for the demo. The limits
+> in ESP-014 belong to that fictitious company and are **not** the limits of any real standard. Only these
+> synthetic certificates are ever sent to the model endpoint.
+
+Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY.md](DEPLOY.md) (Vercel, for the
+human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) ·
+[EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).
+
+Try the hosted demo: https://certgate.vercel.app (judges can use it now).
+
+## Problem and user
+
+When a batch of steel arrives at a plant, it comes with a mill certificate (an inspection certificate of the
+EN 10204 3.1 kind): heat or lot, grade, chemical composition and measured mechanical properties. Someone in
+goods-in or Quality must check that the certificate belongs to that batch and that the values meet the purchase
+specification. Today this is done by hand, with certificates in different layouts and sometimes scanned. Material
+out of spec that reaches production means scrap, claims or a recall.
+
+- **Primary user:** goods-in or Quality technician at a mid-size plant that buys certified material.
+- **Who decides:** the Quality manager who signs the release or the block.
+
+## What it does
+
+For each case (certificate PDF plus its delivery-note line), CertGate:
+
+1. Validates the files (PDF by magic bytes, size limits, not encrypted, has pages) and records their SHA-256.
+2. Reads the certificate through two channels:
+   - the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page
+     images** of every certificate, digital or scanned, and returns the values as one JSON object;
+   - the **text layer** of a digital PDF, extracted without any model. A scan has no text layer, so its critical
+     fields need human confirmation, and CertGate says so.
+3. Compares the channels. A disagreement makes the field unknown and the case goes to review.
+4. Checks internal coherence: heat or lot against the delivery note, expected units and scale jumps, and the
+   printed carbon equivalent against one recomputed from the composition. The formula's source is cited in
+   [docs/sources/cev-formula.md](docs/sources/cev-formula.md).
+5. Applies deterministic, versioned rules against the spec, with exact decimals (never binary floating point).
+6. Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run
+   receipt without secrets.
+
+Proposal precedence: a heat mismatch means review; otherwise block > review > release. Release is proposed only
+when no review or block condition holds. A scan is never proposed for release until a person has confirmed every
+critical field.
+
+## What runs on AMD, and how it is shown
+
+- **Endpoint:** AMD Token Factory, the AMD compute of the event (OpenAI-compatible; host `developer.amd.com.cn`).
+- **Model:** requested as `Qwen3.8-27B`; every reply reports it as `self-dploy/Qwen3.8-27B`. Its publisher is the
+  Qwen Team, and its licence, as published by the publisher, is apache-2.0
+  (https://huggingface.co/Qwen/Qwen3.8-27B, retrieved 2026-10-13; see [docs/sources/model.md](docs/sources/model.md)).
+- **What the model does:** it reads the page images of a certificate into the CertGate reading contract: value,
+  unit, status, and the location where it says it found the value. Requests use temperature 0 and a frozen
+  instruction (SHA-256 `32fad2f9…`).
+- **What the model never does:** it never decides and never explains. The text-layer comparison, the coherence
+  checks, the rules and the proposal run in the CertGate backend without any model, and a person decides. The
+  model's reasoning text is never used or stored.
+- **How it is shown:**
+  - The \"Runs on AMD\" panel (`#/amd`) shows only what the endpoint reports: the model list, the key's rate limit
+    and daily spend, and the latency, tokens and cost of the last reading.
+  - Every receipt of a real reading (live or recorded) carries a copy of those values from reading time, plus the
+    endpoint reply's id, created time, model and usage.
+  - The endpoint does not expose the GPU model, the ROCm version or the serving-stack version. The panel says
+    \"not exposed by the endpoint\" for them, and nothing else claims them.
+- **Cost:** the cost shown is the cost reported by the endpoint; Token Factory credits are free and have no
+  monetary value.
+
+## Evaluation (real model)
+
+Two independent real runs read the same 27 fictitious certificates (cg-004 … cg-030). cg-001 … cg-003 were used
+to tune the prompt and are excluded. Every figure comes from the committed run artifacts. The full tables, the
+reporting rules (FC-broad and FC-strict, rule abstention versus failure, confident-on-illegible, aggregates over
+processed cases, usage reconciliation) and the per-case comparison of the two runs are in [METRICS.md](METRICS.md),
+which is generated from those artifacts.
+
+| | Implementer run | Auditor's independent run |
+|---|---|---|
+| Artifacts | [evaluation/runs/real-candidate-dd557fd/](evaluation/runs/real-candidate-dd557fd/REPORT.md) | [stage-3/auditor/candidate-3/real-run/eval-retry1/](evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/) |
+| Candidate · time (UTC) | `dd557fd` · 2026-10-13 17:28–17:49 | `a892f771` · 2026-10-13 19:13–19:31 |
+| **False conforming** (released when the expected proposal was not release) | **0 of 18** (strict, expected block: 0 of 6) | **0 of 18** (strict: 0 of 6) |
+| Non-conformities caught | 6 of 6, all proposed block | 6 of 6, all proposed block |
+| Proposal as expected | 27 of 27 | 26 of 27 (cg-004: review, expected release) |
+| Failures · retries | 0 of 27 · 0 | 0 of 27 · 0 |
+| Field readings correct | 591 of 594 | 591 of 594 |
+| Seconds per certificate | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |
+| Cost per certificate | mean 0.00020529 | mean 0.00020863 |
+
+- Costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.
+- The reading path, the prompt and the rules are identical by diff in both candidates and in the accepted
+  candidate `5c904693`.
+- The landing page shows the figures of the implementer run and names that run. They come from
+  `public/figures.json`, which is generated from the artifacts and never written by hand.
+
+## Demo procedure
+
+Start the container in mock mode (no endpoint and no network needed); see \"Run it\". Then open
+`http://localhost:3000/` in a browser:
+
+1. **Landing:** the problem in one sentence, the four evaluation figures with their denominators, and the
+   fictitious-data notice.
+2. **Judge mode, three recorded real runs:** cg-001 (conforming, release proposed), cg-002 (scan out of spec,
+   block) and cg-003 (ambiguous scan, block). Each card is labelled \"recorded real reading … not live\" with its
+   recording date. Judge mode makes no model call and has no limit.
+3. **cg-003, the case it refuses to release:** a scan has no second reading channel, so release stays disabled.
+   Confirm every critical field by hand with ReH 358 (the true value) and re-run the rules: release becomes
+   possible, and the person records the decision with a reason. With ReH 338, the proposal is block.
+4. **Open the receipt:** it shows the values, both channels, the rules, the endpoint data at reading time, and a
+   JSON download.
+5. **Runs on AMD (`#/amd`):** without an endpoint it says \"endpoint off\" with the time of the check.
+6. **Live reading (container in real mode only):** start the container with the three `MODEL_*` variables (see
+   \"Run it\"), choose a dataset certificate, confirm the third-party notice, and press \"Read live\". A reading takes
+   about 1 to 4 minutes.
+
+## Run it
+
+Requirements: Node.js 24 (local run) or Docker.
+
+```sh
+# Build the image
+docker build --no-cache -t certgate .
+
+# Mock mode: the web UI at http://localhost:3000 (no endpoint: judge mode shows the recorded real runs; \"endpoint off\")
+docker run --rm -d --name certgate-ui -p 3000:3000 -e PORT=3000 certgate
+docker stop certgate-ui
+
+# The service on PORT, reachable from the host (a published port needs a network; the service itself makes
+# no outbound call in mock mode)
+docker run --rm -d --name certgate -p 3000:3000 -e PORT=3000 certgate
+curl -X POST http://localhost:3000/api/cases/cg-003/process
+docker stop certgate
+
+# The service fully offline: with --network none no port can be published, so query it from inside
+docker run --rm --network none -e PORT=3000 certgate sh -c 'node dist/src/server.js & sleep 2; node -e \"fetch(\\\"http://127.0.0.1:3000/api/cases/cg-003/process\\\",{method:\\\"POST\\\"}).then(r=>r.text()).then(console.log)\"'
+
+# One dataset case through the CLI, inside the image
+docker run --rm --network none certgate node dist/src/cli.js process --case cg-003
+
+# The test suite inside the image (makes no endpoint call; the checks over the delivery documents and evidence,
+# test/docs.test.ts and test/metrics-md.test.ts, are skipped there because the image carries neither)
+docker run --rm --network none certgate npx vitest run
+
+# Local
+npm ci
+npm run build
+npm test
+node dist/src/cli.js list
+node dist/src/cli.js process --case cg-001
+```
+
+### Real mode: live reading against AMD Token Factory (container or local)
+
+Live reading runs from the container, not from the deployed site.
+
+```sh
+# MODEL_BASE_URL, MODEL_API_KEY and MODEL_ID come from your environment; never write their values anywhere.
+docker run --rm -p 3000:3000 -e PORT=3000 -e MODEL_BASE_URL -e MODEL_API_KEY -e MODEL_ID -e LIVE_READS_PER_HOUR=20 certgate
+```
+
+With these set, the \"Runs on AMD\" panel reads the endpoint, and \"Read live\" can read a dataset certificate. A
+visitor-uploaded file also needs `LIVE_ACCESS_CODE` to be configured and given.
+
+### CLI
+
+```
+certgate list
+certgate process --case <id>                              dataset case data/cases/<id>
+certgate process --case-dir <dir> [--line <n>] [--delivery <csv>]
+    <dir>/certificate.pdf, <dir>/reading.json (mock model output), <dir>/delivery.csv (or --delivery);
+    the paired delivery line from --line or <dir>/case.json \"delivery_line\"
+options:
+  --out <file>                 also write the output to a file
+  --receipt-only               print only the receipt JSON
+  --confirm <field>=<value>    human confirmation of a critical field (repeatable; value \"absent\" = not on document)
+  --confirmed-by <name>
+  --decide <release|block|request_new_certificate> --reason <text> --decided-by <name>
+exit codes: 0 processed (any proposal, including reader errors), 2 input rejected, 1 internal error
+```
+
+The CLI reads dataset cases through the offline `MockReader`, which returns the dataset's prepared reading and is
+labelled `MOCK` in every output. With `CERTGATE_MODE=real` the CLI has no adapter and fails visibly; it never
+falls back to the mock. Field names for `--confirm`: `certificate_type`, `heat_or_lot`, `grade`,
+`chemistry.<C|Si|Mn|P|S|Cr|Ni|Mo|Cu|V>`, `cev_printed`, `mechanical.<ReH|Rm|A|KV_1|KV_2|KV_3>`, `kv_temperature`,
+`inspection_stamp`. A confirmation without a unit is taken in the field's expected unit.
+
+### Web UI and HTTP API
+
+Open `http://localhost:<PORT>/`. Screens:
+- landing and judge mode (`#/`);
+- a recorded run (`#/story/cg-003`);
+- a case kept in this browser (`#/local/<id>`);
+- the \"Runs on AMD\" panel (`#/amd`);
+- each case's receipt, with a JSON download.
+
+Every page carries the fictitious-data notice. Pages make no third-party request.
+
+| Method and path | Result |
+|---|---|
+| `GET /health` | status and mode |
+| `GET /api/f1` | \"Runs on AMD\" data from the configured endpoint, probed at most once per 60 s (`no-store`) |
+| `GET /api/live/status` | live reading: enabled, limit, remaining this hour, reopening time, windows, upload policy, notice (`no-store`) |
+| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading, or C11 `endpoint_off` with no endpoint (`no-store`) |
+| `POST /api/stories/<cg-001\\|cg-002\\|cg-003>/evaluate` | `{confirmations?: [{field, value}], confirmed_by?, decision?: {action, reason, decided_by}}`: the recorded reading re-evaluated (no model call) with a person's confirmations and decision; times are stamped by the server |
+| `GET /stories/<id>.json`, `GET /stories/<id>.recording.json` | recorded run and its stored endpoint reply (versioned static files) |
+| `GET /figures.json` | landing figures, generated from the evaluation artifacts |
+| `GET /api/cases`, `POST /api/cases/<id>/process` | Stage 1 dataset API (mock path) |
+
+Release is rejected (HTTP 409, and in the core) while the proposal is not release.
+
+`GET /health` reports two separate fields. `mode` is the mode of the CLI and the dataset API (`CERTGATE_MODE`,
+`mock` by default). `reader` is `live` when an endpoint and a model are configured outside the deployed site, and
+`off` otherwise. A container in real mode therefore answers `\"mode\": \"mock\", \"reader\": \"live\"`: the dataset API
+still uses the mock, and live reading uses the endpoint.
+
+### Live reading against the local test stub (tests and review only)
+
+```sh
+node test/support/stub-endpoint.mjs --port 8001            # TEST STUB, not a model; --mode timeout|http_429|http_5xx|invalid_json|huge
+MODEL_BASE_URL=http://127.0.0.1:8001/v1 MODEL_ID=certgate-test-stub MODEL_API_KEY=stub-key \\
+  LIVE_READS_PER_HOUR=3 PORT=3000 node dist/src/server.js
+```
+
+### Evaluation, metrics and stories
+
+`npx vitest run` makes no endpoint call and passes with `--network none`. The live reader is tested against
+replies recorded from the endpoint (`test/fixtures/endpoint/`) and against a local stub. The commands that call the
+endpoint are separate and need the three `MODEL_*` variables:
+
+```sh
+npm run build
+node tools/evaluate/run-eval.mjs --out evaluation/runs/<name>     # endpoint: cg-004..cg-030, GET /usage before and after
+node dist/src/tools/build-stories.js record                       # endpoint: re-record the three stories (3 readings)
+node tools/evaluate/metrics.mjs evaluation/runs/<name>            # offline: recompute metrics.json from results.json
+node tools/evaluate/figures.mjs evaluation/runs/<name>            # offline: regenerate public/figures.json
+node tools/evaluate/metrics-md.mjs                                # offline: regenerate METRICS.md (--check to compare)
+node dist/src/tools/build-stories.js                              # offline: rebuild the stories from the recordings
+```
+
+Browser checks (need Playwright with Chromium, not part of `npm test`): `node test/browser/ui-checks.mjs [outDir]`.
+
+### Configuration
+
+Environment variables only; see [.env.example](.env.example), which has no values (`.env` is ignored by git).
+Secrets (`MODEL_API_KEY`, `LIVE_ACCESS_CODE`) stay on the server and are never sent to the browser.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `CERTGATE_MODE` | `mock` | CLI and dataset API: `mock` (offline, dataset readings) or `real` (no adapter: fails visibly) |
+| `PORT` | `3000` | HTTP port |
+| `CERTGATE_DATA_DIR` | `<repo>/data` | dataset directory |
+| `MODEL_BASE_URL` | none | OpenAI-compatible endpoint (AMD Token Factory), including `/v1`; unset = endpoint off |
+| `MODEL_API_KEY` | none | secret, sent only to that endpoint |
+| `MODEL_ID` | none | model id requested from the endpoint |
+| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, server-side, per instance; unset, invalid or 0 = disabled; documented deployment value 20 |
+| `LIVE_ACCESS_CODE` | none (no default) | needed for live reading of a visitor-uploaded file; without it only dataset certificates are read live |
+| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per UTC hour before rejection |
+| `LIVE_WINDOWS` | none | announced live windows, shown as text |
+| `VERCEL` | set by Vercel | on the deployed site live reading is unavailable (time budget, see Limitations) |
+
+Input limits:
+- CLI and container: certificate PDF up to 10 MiB; delivery note up to 1 MiB.
+- Web upload: **up to 3 MiB** of PDF, sent as base64 so the request stays below Vercel's 4.5 MB body limit;
+  delivery note up to 256 KiB.
+
+Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).
+
+## Limitations
+
+- **Shared service.** AMD Token Factory is a shared service.
+  - Per key: about 20–30 requests per minute, 8 concurrent requests, and a rolling daily spend cap read from
+    GET /usage (1, in free credits).
+  - During the human's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts. In the
+    band's two evaluation runs there were 0 retries and 0 failures.
+  - CertGate keeps at most 2 requests in flight, retries only 429 and 5xx (at most 3 attempts, Retry-After
+    honoured), and waits up to 300 s per attempt.
+  - The provider keeps prompts and outputs for about 2 days, so only synthetic data may be sent. Before any live
+    reading the page shows that notice, and the server requires the visitor to confirm it.
+- **Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).
+- **Deployed site has no live reading (OI-S2-02).**
+  - The worst case of one live reading is 3 × 300 s + 2 × 120 s = 1140 s, above the 300 s Vercel function
+    duration.
+  - With `VERCEL` set, `/api/live/read` answers 503 \"live reading unavailable on the deployed site; live
+    demonstration from the container\", and the page says so.
+  - Judge mode works on the deployed site; live reading is demonstrated from the container.
+- **Live-read limit per instance (OI-S2-01).** The limit is counted on the server, per server instance, in
+  memory. Measured consequence: two instances with a limit of 2 let 4 readings through (test \"the live limit is per
+  instance\" in `test/web.test.ts`). With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour, all
+  drawn on the same endpoint key. A shared store behind the same interface (`src/web/limiter.ts`) would make it
+  global.
+- **Uploads.** Without `LIVE_ACCESS_CODE`, live reading is limited to the 30 dataset certificates, matched by
+  SHA-256; with it, a visitor's synthetic file can also be read. The access-code path is tested against a local
+  stub with a test-only code, and no real access code is configured on the band's host.
+- **cg-003, the ambiguous scan.** The model reads the smudged yield strength confidently as **338** MPa; the true
+  value is 358. It did so in both completed tuning reads, in the recorded story and in the adversary's probe. The
+  product therefore proposes **block** (rule failure plus no second channel), never release, and the scan still
+  needs a person to confirm every critical field. The story card shows what the recorded run shows. The prompt
+  was not tuned to change this.
+- **Decimal comma, no unit.** The model sometimes returns a printed CEV with a decimal comma and no unit
+  (`0,41`). It happened once in each real run, on a different case each time (cg-028 in the implementer run,
+  cg-004 in the auditor's). The text-layer channel check caught it every time, and the case went to review.
+- **No model-written explanation.** The model is not asked for an explanation, and the product never shows one.
+  This deviates from step 7 of the product design (03-DISENO); it was chosen to keep decisions entirely in the
+  deterministic rules (I1). The case file shows the rule reasons.
+- **Locations are the model's claim.** The page and fragment where the model says it found a value are labelled
+  \"as reported by the model\" and are not verified. On digital PDFs the text layer checks the values, not the
+  locations.
+- **Hostile duplicate field.** A text layer with a spoofed duplicate of a field (cg-022: \"ReH (MPa) 400\" while
+  the table says 340) makes that field unknown. A would-be block becomes review, never release.
+- **Prompt examples.** The reading instruction's examples reuse values of cg-001 (\"0.16\", \"392\", \"QA-07\"). cg-001
+  is a tuning and story case, outside the 27-case evaluation.
+- **Text-layer parser.** It covers the two fictitious certificate layouts of the dataset, not arbitrary mill
+  certificates.
+- **Cosmetic:** `/favicon.ico` answers 404.
+- **One endpoint and one model.** The results apply to Qwen3.8-27B on AMD Token Factory, as reported on
+  2026-10-13. A repeat run may differ: the two independent runs differ in one proposal (cg-004, review) and in
+  timing.
+
+## Dataset
+
+The dataset has 30 fictitious certificates with planted faults, 25 digital and 5 scanned. All are fictitious:
+three demo certificates were created before the kickoff, and 27 were created in this run. The expected outcomes
+were written and committed before any product code. For the cases whose planted fault exists only in the mock,
+the real-model expectations were written by hand before the first real run
+([evaluation/expectations-real-run.json](evaluation/expectations-real-run.json)). See [data/README.md](data/README.md)
+for provenance, coverage and checksums.
+
+## Reason codes
+
+The codes of [data/expected/README.md](data/expected/README.md), plus these, raised by the product:
+
+| Code | When | Effect |
+|---|---|---|
+| `TEXT_LAYER_MISSING:<field>` | The model channel read a field that the text layer does not contain | review |
+| `RULE_NOT_EVALUABLE:<field>` | A spec rule's input is unknown | review |
+| `NOT_A_NUMBER:<field>` | A numeric field holds text that is not a decimal | review |
+| `READER_ERROR:invalid_output` | Model output parses as JSON but breaks the reading schema | review, status error |
+| `READER_ERROR:endpoint_not_configured` | `CERTGATE_MODE=real` without an adapter | review, status error |
+
+## Repository layout
+
+```
+src/         product code (TypeScript, Node 24)
+public/      web UI, recorded stories, landing figures
+api/         Vercel function entry
+test/        tests (vitest), runnable offline; test/browser: Playwright checks
+config/      band-defined plausibility ranges (not from any standard)
+data/        fictitious dataset, spec ESP-014 r3, delivery notes
+docs/        cited sources
+evaluation/  real-run expectations, tuning exclusions, development call log, evaluation runs
+tools/       dataset generator (Python, dev-time), evaluation, metrics and development tools
+evidence/    stage records of the band (registers, handoffs, verdicts, logs)
+```
+
+## How it was built
+
+CertGate was built by a band of four Claude Code seats: analyst, implementer, adversary and auditor.
+- The implementer alone wrote the product.
+- The adversary attacked it, including mutation checks.
+- The auditor accepted or rejected each stage independently. In Stage 3 it made its own real evaluation run.
+
+The UI was designed with Claude Design and implemented by the band: the design defines the look, and the
+behaviour follows the written specification. The model that reads the certificates in this build runs on AMD
+Token Factory.
+
+## License
+
+[MIT](LICENSE).
+"
+
+ ❯ test/docs.test.ts:120:91
+    118|       // R4.7 (F-06 extension): no hosted-demo claim or deployment URL…
+    119|       /vercel\.app/i, /hosted demo/i, /https?:\/\/(?!localhost|127\.|v…
+    120|     for (const f of files) for (const re of forbidden) expect(read(f),…
+       |                                                                                           ^
+    121|   });
+    122|   it("no secret-looking value in the docs", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+AssertionError: sentences without a claims-map entry (map them in claims-map.json): expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "README.md :: Try the hosted demo: https://certgate.vercel.app (judges can use it now).",
++ ]
+
+ ❯ test/docs.test.ts:168:91
+    166|     const units: { doc: string; text: string }[] = allUnits(ROOT);
+    167|     const missing = units.filter((u) => !mapped.has(key(u))).map(key);
+    168|     expect(missing, "sentences without a claims-map entry (map them in…
+       |                                                                                           ^
+    169|     const present = new Set(units.map(key));
+    170|     expect(map.filter((m) => !present.has(key(m))).map(key), "stale cl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
