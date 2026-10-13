@@ -1,0 +1,19 @@
+MODEL vars in process: False,False,False
+
+added 42 packages in 3s
+npm ci exit=0
+
+> certgate@0.1.0 build
+> tsc -p tsconfig.json
+
+build exit=0
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s3c1
+
+
+ Test Files  12 passed (12)
+      Tests  269 passed (269)
+   Start at  20:12:00
+   Duration  45.00s (tests 96%, transform 3%, import 1%)
+
+vitest exit=0

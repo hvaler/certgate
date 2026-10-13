@@ -1,0 +1,78 @@
+{
+ "cases": 27,
+ "FC_broad": "0 / 18",
+ "FC_broad_cases": [],
+ "FC_broad_over_all": "0 / 27",
+ "FC_strict": "0 / 6",
+ "FC_strict_cases": [],
+ "nonconformities_caught": "6 / 6",
+ "blocked": "6 / 6",
+ "nonconforming_cases": [
+  "cg-005",
+  "cg-006",
+  "cg-007",
+  "cg-012",
+  "cg-020",
+  "cg-021"
+ ],
+ "proposal_equals_expected": "27 / 27",
+ "mismatches": [],
+ "rule_abstention": "12 / 27",
+ "failures": "0 / 27",
+ "per_field": {
+  "correct": 591,
+  "correct_unknown": 1,
+  "correct_absent": 1,
+  "wrong_value": 0,
+  "unit_missing_value_right": 1,
+  "invented": 0,
+  "confident_on_illegible": 0,
+  "missed": 0,
+  "total": 594
+ },
+ "per_field_disagreements_with_reported_category": [
+  [
+   "cg-028",
+   "cev_printed",
+   "wrong",
+   "unit_missing_value_right",
+   "0.41",
+   "0,41",
+   null
+  ]
+ ],
+ "seconds_per_certificate": {
+  "mean": 89.6,
+  "median": 80.6,
+  "min": 52.0,
+  "max": 207.7,
+  "N": 27
+ },
+ "latency_ms": {
+  "mean": 89500,
+  "median": 80554,
+  "N": 27
+ },
+ "tokens_per_certificate": {
+  "total_mean": 4234,
+  "completion_mean": 1441,
+  "reasoning_mean": 552
+ },
+ "cost_per_certificate": {
+  "mean": "0.00020529",
+  "median": "0.00020112",
+  "N": 27,
+  "unknown": 0,
+  "sum": "0.0055428814"
+ },
+ "attempts": 27,
+ "retries": 0,
+ "usage_delta_cost": "0.005542881786823273",
+ "sum_reply_costs": "0.0055428814",
+ "usage_delta_minus_sum": "3.86823273E-10",
+ "usage_delta_requests": 27,
+ "models_reported": [
+  "self-dploy/Qwen3.8-27B"
+ ],
+ "problems": []
+}
