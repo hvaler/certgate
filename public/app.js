@@ -65,7 +65,8 @@ async function refreshF1() {
 
 function f1Panel(f1, title, note) {
   const v = (x) => (x === null || x === undefined || x === "" ? "unknown" : String(x));
-  const state = f1.state === "on" ? "ENDPOINT ON" : f1.state === "off" ? "ENDPOINT OFF" : "NOT APPLICABLE · MOCK";
+  const state = f1.state === "on" ? "ENDPOINT ON" : f1.state === "off" ? "ENDPOINT OFF"
+    : f1.state === "not_captured_in_evaluation_run" ? "F1 NOT CAPTURED AT READING TIME" : "NOT APPLICABLE · MOCK";
   return h("aside", { class: "card side stack", id: "f1", "aria-labelledby": "f1-title" },
     h("div", { class: "btns between" }, h("h2", { id: "f1-title" }, title), badge(state)),
     h("p", { class: "muted small" }, note),

@@ -18,7 +18,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 const dist = (p) => import(pathToFileURL(path.join(ROOT, "dist", "src", p)).href);
 const { LiveReader, promptSha256 } = await dist("web/live-reader.js");
 const { loadDatasetCase, loadShared } = await dist("cases.js");
-const { evaluateCase, readCase } = await dist("pipeline.js");
+const { evaluateCase, readCase, replyOnlyF1 } = await dist("pipeline.js");
+const { ENDPOINT_NAME, ENDPOINT_SOURCE, NOT_EXPOSED } = await dist("web/f1.js");
 const { exportReceipt } = await dist("receipt.js");
 const { CRITICAL_FIELDS } = await dist("fields.js");
 const { decimalTextEqual } = await dist("decimal.js");
@@ -109,6 +110,9 @@ async function runCase(id) {
   const readings = await readCase({ ...input, reader, mode: "real" });
   const result = evaluateCase(readings);
   const ms = Date.now() - t0;
+  // F1 at reading time (S3-11, F3-01): the reply's own values and rate-limit headers; no probe is made here, so the
+  // probe values are labelled not_captured_in_evaluation_run. Never "off" for a live reading.
+  result.receipt.f1 = replyOnlyF1(reader.lastResponse, { endpoint_host: host, rate_limit: reader.lastCall?.rate_limit ?? null, endpoint_name: ENDPOINT_NAME, endpoint_source: ENDPOINT_SOURCE, not_exposed: NOT_EXPOSED });
   const exp = expectationFor(id);
   const errors = result.receipt.errors;
   if (result.readings.case.status === "processed") lastSuccess = Date.now();

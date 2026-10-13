@@ -209,7 +209,14 @@ export type ReadingSource = "mock" | "planted" | "live" | "live_no_reading";
  * reading's reply); what the endpoint does not expose is said so, never filled from code (S3-08, S3-09).
  */
 export interface F1Snapshot {
-  state: "on" | "off" | "not_applicable_mock";
+  /**
+   * "not_captured_in_evaluation_run": a live reading whose F1 probe (GET /models, GET /usage) was not taken at
+   * reading time. The reply's own values (model, tokens, cost, timing, rate-limit headers when recorded) are filled;
+   * every other value says not_captured_in_evaluation_run. A live reading is never "off" (F3-01, I7).
+   */
+  state: "on" | "off" | "not_applicable_mock" | "not_captured_in_evaluation_run";
+  /** Values not recorded at reading time (state not_captured_in_evaluation_run). */
+  not_captured?: string[];
   checked_at: string | null;
   detail: string;
   /** Cited fact, not a measurement: the endpoint is AMD Token Factory, the AMD compute named by the event page. */

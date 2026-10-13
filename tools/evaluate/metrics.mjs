@@ -69,6 +69,18 @@ export function computeMetrics({ results, usageBefore, usageAfter, run }) {
     return [k, Object.fromEntries(Object.entries(cats).map(([c, l]) => [c, withCases(l, den)]))];
   }));
   const fieldDen = Object.values(totals).reduce((a, b) => a + b, 0);
+  // O3-01: the cause of every "wrong" field result, derived from the recorded values (no hand-written text).
+  const NUMERIC = (k) => k.startsWith("chemistry.") || k.startsWith("mechanical.") || k === "cev_printed" || k === "kv_temperature";
+  const wrongCauses = [];
+  for (const r of results) for (const [k, f] of Object.entries(r.fields)) {
+    if (f.category !== "wrong") continue;
+    const causes = [];
+    const comma = typeof f.model === "string" && /^-?\d+,\d+$/.test(f.model.trim());
+    if (comma && f.correct !== null && f.model.trim().replace(",", ".") === String(f.correct)) causes.push("value right (decimal comma)");
+    else causes.push("value differs");
+    if (NUMERIC(k) && (f.model_unit === null || f.model_unit === "")) causes.push("unit missing");
+    wrongCauses.push({ case_id: r.case_id, field: k, model: f.model, model_unit: f.model_unit, correct: f.correct, cause: causes.join(", ") });
+  }
   const confidentOnIllegible = [];
   for (const r of results) for (const [k, f] of Object.entries(r.fields))
     if (f.category === "confident_on_illegible") confidentOnIllegible.push({ case_id: r.case_id, field: k, model: f.model, correct: f.correct });
@@ -115,7 +127,7 @@ export function computeMetrics({ results, usageBefore, usageAfter, run }) {
       failure: withCases(failures.map((r) => r.case_id), N),
       failure_by_class: Object.fromEntries(Object.entries(failByClass).map(([c, l]) => [c, withCases(l, N)])),
     },
-    per_field_accuracy: { over: "critical fields of processed cases, model channel vs correct reading", totals: Object.fromEntries(Object.entries(totals).map(([c, n]) => [c, frac(n, fieldDen)])), by_field: fieldTable, confident_on_illegible: confidentOnIllegible },
+    per_field_accuracy: { over: "critical fields of processed cases, model channel vs correct reading", wrong_causes: wrongCauses, totals: Object.fromEntries(Object.entries(totals).map(([c, n]) => [c, frac(n, fieldDen)])), by_field: fieldTable, confident_on_illegible: confidentOnIllegible },
     time: {
       seconds_per_certificate_processed: { mean: dec(mean(secs), 1), median: dec(median(secs), 1), min: dec(Math.min(...secs), 1), max: dec(Math.max(...secs), 1), n: String(secs.length) },
       seconds_per_certificate_all: { mean: dec(mean(allSecs), 1), median: dec(median(allSecs), 1), n: String(allSecs.length) },

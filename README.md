@@ -111,7 +111,7 @@ the prompt and are excluded. Full artifacts and the report:
 | Non-conformities caught | 6 of 6, all proposed block |
 | Proposal equal to the expected one | 27 of 27 |
 | Review proposed by the rules | 12 of 27; failures 0 of 27; retries 0 |
-| Field readings correct | 591 of 594; 1 wrong (cg-028 CEV read `0,41`, caught by the text layer, so review) |
+| Field readings correct | 591 of 594; 1 wrong (cg-028 CEV: value right (decimal comma), unit missing; the text-layer check disagreed, so review) |
 | Seconds per certificate | mean 89.6 s, median 80.6 s (N = 27) |
 | Cost per certificate | mean 0.00020529, cost reported by the endpoint; Token Factory credits are free and have no monetary value |
 

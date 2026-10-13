@@ -162,6 +162,16 @@
   },
   "per_field_accuracy": {
     "over": "critical fields of processed cases, model channel vs correct reading",
+    "wrong_causes": [
+      {
+        "case_id": "cg-028",
+        "field": "cev_printed",
+        "model": "0,41",
+        "model_unit": null,
+        "correct": "0.41",
+        "cause": "value right (decimal comma), unit missing"
+      }
+    ],
     "totals": {
       "correct": {
         "numerator": "591",

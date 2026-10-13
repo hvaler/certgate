@@ -9,7 +9,7 @@ import { parseModelOutput, type ModelReading, type PlantedEntry } from "./model-
 import { MOCK_RETRY_POLICY, ReaderError, type ModelReader } from "./reader.js";
 import { extractTextLayer, type TextLayerResult } from "./text-layer.js";
 import type { Case, Decision, DeliveryLine, F1Snapshot, FieldConfirmation, HumanAction, RunReceipt, Spec } from "./types.js";
-import { normaliseDecimalText } from "./decimal.js";
+import { Dec, normaliseDecimalText } from "./decimal.js";
 
 export const FICTITIOUS_NOTICE =
   "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo.";
@@ -279,7 +279,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
       : [],
     channel_checks: r.evaluation?.channel_checks ?? [],
     rule_results: r.evaluation?.rule_results ?? [],
-    f1: rd.f1 ?? notApplicableF1(rd.reader.kind),
+    f1: rd.f1 ?? notApplicableF1(rd.reader.kind, rd.endpoint_response, rd.reader_error?.class ?? null),
     endpoint_response: rd.endpoint_response,
     model_text: rd.model?.explanation
       ? { text: rd.model.explanation.text, references: rd.model.explanation.references, planted: rd.model.explanation.planted, untrusted: true, used_for_decision: false }
@@ -292,11 +292,70 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
 export const COST_LABEL = "cost reported by the endpoint; Token Factory credits are free and have no monetary value";
 
 /** F1 copy for runs that did not use a live endpoint (S2-13: mock run => not applicable). */
-export function notApplicableF1(kind: "mock" | "live"): F1Snapshot {
+export const NOT_CAPTURED = "not_captured_in_evaluation_run";
+
+/**
+ * F1 for a live reading made without an F1 probe (the evaluation runner): only what the reply recorded at reading
+ * time; everything else is labelled not captured, never defaulted or reconstructed (F3-01). Never "off".
+ */
+export function replyOnlyF1(
+  reply: Record<string, string | null> | null,
+  opts: { endpoint_host?: string | null; rate_limit?: Record<string, string> | null; endpoint_name?: string | null; endpoint_source?: string | null; not_exposed?: string | null } = {},
+): F1Snapshot {
+  const missing: string[] = [];
+  const val = (key: string, v: string | null | undefined) => {
+    if (v === null || v === undefined || v === "") { missing.push(key); return NOT_CAPTURED; }
+    return v;
+  };
+  const rl = opts.rate_limit ?? null;
+  const fromHeaders = (key: string, header: string) => val(key, rl ? rl[header] ?? null : null);
+  const completion = reply?.completion_tokens ?? null;
+  const elapsed = reply?.elapsed_ms ?? null;
+  const tps = completion !== null && elapsed !== null && Number(elapsed) > 0 ? new Dec(completion).div(new Dec(elapsed).div(1000)).toDecimalPlaces(2).toString() : null;
+  const snap: F1Snapshot = {
+    state: NOT_CAPTURED,
+    checked_at: val("checked_at", null),
+    detail: "live reading; no F1 probe (GET /models, GET /usage) was taken at reading time. Reply values are as recorded; other values were not captured.",
+    endpoint_name: opts.endpoint_name ?? null, endpoint_source: opts.endpoint_source ?? null,
+    endpoint_host: val("endpoint_host", opts.endpoint_host ?? null),
+    model_ids: [],
+    model_reported: val("model_reported", reply?.model ?? null),
+    gpu: opts.not_exposed ?? null, rocm_version: opts.not_exposed ?? null, vllm_version: opts.not_exposed ?? null,
+    latency_ms: val("latency_ms", null),
+    last_reading_ms: val("last_reading_ms", elapsed),
+    completion_tokens: val("completion_tokens", completion),
+    total_tokens: val("total_tokens", reply?.total_tokens ?? null),
+    tokens_per_second: val("tokens_per_second", tps),
+    cost_reported: val("cost_reported", reply?.cost_reported ?? null),
+    cost_label: COST_LABEL,
+    rate_limit_rpm: fromHeaders("rate_limit_rpm", "x-ratelimit-limit-user-rpm"),
+    rate_limit_rpm_remaining: fromHeaders("rate_limit_rpm_remaining", "x-ratelimit-remaining-user-rpm"),
+    daily_spend_limit: fromHeaders("daily_spend_limit", "x-ratelimit-limit-user-daily-usd"),
+    daily_spend_used: fromHeaders("daily_spend_used", "x-ratelimit-used-user-daily-usd"),
+    daily_spend_remaining: fromHeaders("daily_spend_remaining", "x-ratelimit-remaining-user-daily-usd"),
+    usage_source: rl && Object.keys(rl).length > 0 ? "X-RateLimit headers of this reading" : val("usage_source", null),
+    probe_cached: false,
+  };
+  missing.unshift("model_ids");
+  snap.not_captured = missing;
+  return snap;
+}
+
+export function notApplicableF1(kind: "mock" | "live", reply: Record<string, string | null> | null = null, readerErrorClass: string | null = null): F1Snapshot {
+  // A live reading is never reported as endpoint "off" (F3-01). "off" stays only when no endpoint was configured or
+  // reachable (C11 endpoint_off / endpoint_not_configured) and nothing was read.
+  const noEndpoint = reply === null && (readerErrorClass === "endpoint_off" || readerErrorClass === "endpoint_not_configured");
+  if (kind === "live" && !noEndpoint) return replyOnlyF1(reply);
+  if (kind === "live") {
+    return { ...replyOnlyF1(null), state: "off", detail: "no endpoint configured or reachable: nothing was read", not_captured: undefined,
+      checked_at: null, endpoint_host: null, model_reported: null, last_reading_ms: null, completion_tokens: null, total_tokens: null,
+      tokens_per_second: null, cost_reported: null, rate_limit_rpm: null, rate_limit_rpm_remaining: null, daily_spend_limit: null,
+      daily_spend_used: null, daily_spend_remaining: null, usage_source: null, latency_ms: null };
+  }
   return {
-    state: kind === "mock" ? "not_applicable_mock" : "off",
+    state: "not_applicable_mock",
     checked_at: null,
-    detail: kind === "mock" ? "mock reading: no model and no endpoint were used" : "no endpoint data captured",
+    detail: "mock reading: no model and no endpoint were used",
     endpoint_name: null, endpoint_source: null, endpoint_host: null, model_ids: [], model_reported: null,
     gpu: null, rocm_version: null, vllm_version: null, latency_ms: null, last_reading_ms: null,
     completion_tokens: null, total_tokens: null, tokens_per_second: null, cost_reported: null, cost_label: COST_LABEL,

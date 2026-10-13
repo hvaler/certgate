@@ -47,14 +47,16 @@ triggered by this run. There is no proposal mismatch.
 | correct (value and unit equal the correct reading) | 591 / 594 |
 | correct unknown (correct reading illegible, model said unknown) | 1 / 594 — cg-017 `heat_or_lot` (smudged heat on a scan) |
 | correct absent (not on the document, model said absent) | 1 / 594 — cg-028 `inspection_stamp` |
-| wrong | 1 / 594 — cg-028 `cev_printed`: model `0,41`, correct `0.41` |
+| wrong | 1 / 594 — cg-028 `cev_printed`: model `0,41` with no unit, correct `0.41 %`. Cause: **value right (decimal comma), unit missing** |
 | invented (confident value where the field is absent) | 0 / 594 |
 | confident-on-illegible (confident value where the correct reading is illegible) | 0 / 594 |
 
-cg-028 `cev_printed`: the model copied the printed CEV with a decimal comma. The product does not normalise a
-model's decimal separator. The model-free text layer read `0.41`, the two channels disagreed, and the case got
-`CHANNEL_DISAGREE:cev_printed` + `CRITICAL_UNKNOWN:cev_printed`, which means review (it is also `STAMP_MISSING`,
-its planted fault). The one wrong reading was caught by the second channel, as designed (I3).
+cg-028 `cev_printed`, cause: **value right (decimal comma), unit missing** (`metrics.json`
+`per_field_accuracy.wrong_causes`, derived from the recorded values). The model copied the printed CEV as `0,41` and
+gave no unit. The product does not normalise a model's decimal separator and requires the unit. The model-free text
+layer read `0.41 %`, so the channel check correctly disagreed (`CHANNEL_DISAGREE:cev_printed` +
+`CRITICAL_UNKNOWN:cev_printed`), and the proposal was review (the case is also `STAMP_MISSING`, its planted fault).
+The metric keeps counting this field as wrong.
 
 ## GET /usage reconciliation (C-15)
 
@@ -104,3 +106,24 @@ For each planted case, `evaluation/expectations-real-run.json` says which accept
 - `metrics.json` was recomputed offline after the run with a fix to number formatting in `tools/evaluate/metrics.mjs`.
   The run had printed integer means with their trailing zeros stripped, for example a latency mean of "895" for
   89500. Every numerator and denominator is unchanged.
+
+## Repair 1 (F3-01): F1 snapshot of the evaluation receipts
+
+The candidate-1 runner passed no F1 snapshot to the pipeline. Each of the 27 receipts in `results.json` therefore
+says `"state": "off"`, `"detail": "no endpoint data captured"`, even though they are real live readings. That is
+wrong (S3-11, I7), and it is fixed without re-running: the fix touches neither the reading path, nor the prompt,
+nor the rules.
+
+- `results.json` is kept **unchanged** as preserved evidence (SHA-256 `2a08b37d74f05196bb906381cd9decff75100df8bc6c6039519f527bb03c5cef`).
+- `results.f1-regenerated.json` (SHA-256 `804176f48843bbf4b57559a6001b6a35220879937b88ada48da0e2dbdd7dc1e4`) is
+  the same file with each receipt's `f1` regenerated offline by `node tools/evaluate/regenerate-receipts.mjs <this dir>`.
+  Only data recorded at reading time is used: the reply's `model`, tokens, `cost` and elapsed time
+  (`endpoint_response`), and the host from `run.json`. Tokens per second is completion tokens / elapsed time, as in S3-08.
+- State: `not_captured_in_evaluation_run`. The values that were not recorded at reading time (the GET /models model
+  list, GET /usage, probe latency and check time, and the X-RateLimit headers, which the candidate-1 runner did not
+  keep) all say `not_captured_in_evaluation_run` and are listed in `f1.not_captured`; none is reconstructed or
+  defaulted. GPU, ROCm and vLLM say "not exposed by the endpoint".
+- Nothing else in the file differs (a test checks this). The metrics do not use the F1 snapshot, so `metrics.json`
+  is unaffected, except for the O3-01 cause field added above.
+- From candidate 2 on, the runner stores this snapshot at reading time, including the reply's X-RateLimit headers,
+  and a live receipt can never say "off" (`test/evaluation-receipts.test.ts`).
