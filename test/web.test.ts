@@ -197,6 +197,17 @@ describe("live upload policy and deployed site (R3.1 C-02, C-07, S3-24)", () => 
     expect(appJs).toMatch(/synthetic_confirmed: confirm\.checked/);
     expect(appJs).toMatch(/st\.notice/);
   });
+  it("the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured)", async () => {
+    const s = await stub();
+    const a = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2" }) });
+    const b = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2" }) });
+    const statuses = [];
+    for (const base of [a, b, a, b, a, b]) statuses.push((await postJson(`${base}/api/live/read`, liveBody())).status);
+    expect(statuses).toEqual([200, 200, 200, 200, 429, 429]);
+    expect(s.state.chatCalls).toBe(4);
+    const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
+    expect(readme).toMatch(/with N instances the real ceiling\s+is N × 20 live readings per\s+hour/);
+  });
   it("time budget: the worst-case live reading does not fit the deployed function, so the deployed site has no live reading (C-07)", async () => {
     const L = await import("../src/web/limits.js");
     expect(L.LIVE_WORST_CASE_MS).toBe(L.ADAPTER_ATTEMPT_TIMEOUT_MS * L.ADAPTER_MAX_ATTEMPTS + L.ADAPTER_BACKOFF_CAP_MS * (L.ADAPTER_MAX_ATTEMPTS - 1));

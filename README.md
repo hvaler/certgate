@@ -88,10 +88,12 @@ The endpoint provider keeps prompts and outputs for about 2 days. **Only the fic
   about 1 to 4 minutes, and its worst case is 3 × 300 s + 2 × 120 s = 1140 s, above the 300 s Vercel function
   duration. With `VERCEL` set, `/api/live/read` answers 503 and the page says so; judge mode works.
 - The live-read limit is counted on the server, **per server instance in this build** (in memory). Documented
-  deployment value: `LIVE_READS_PER_HOUR=20`, which is also the endpoint key's limit of 20 requests per minute
-  shared by every caller. Measured consequence: with N instances the real ceiling is N × 20 live readings per
-  hour, and all of them draw on the same key (20 requests/minute, 1 USD-equivalent of free credits per day); a
-  deployment with several instances needs a shared store behind the same interface (`src/web/limiter.ts`).
+  deployment value: `LIVE_READS_PER_HOUR=20`. Measured consequence (test "the live limit is per instance" in
+  `test/web.test.ts`: two instances with a limit of 2 let 4 readings through): with N instances the real ceiling
+  is N × 20 live readings per
+  hour, all drawn on the same endpoint key (rate limit 20 requests per minute and daily cost limit 1, as reported
+  by GET /usage). A deployment with several instances needs a shared store behind the same interface
+  (`src/web/limiter.ts`).
 - The text-layer parser covers the two fictitious certificate layouts of the dataset, not arbitrary mill
   certificates (known gap).
 - **The UI was designed with Claude Design and implemented by the band** (four Claude Code seats: analyst,
