@@ -1,0 +1,19 @@
+2026-10-13T22:22:11Z
+Estimated at list prices — not a bill.
+AGENT                     SESSIONS         TOKENS   ESTIMATE  LAST ACTIVITY
+hugo.valer/implementer-thgp         1      681459154    $173.56  2026-09-28T20:12:30.986Z
+hugo.valer/verifier-thgq         1      395619477    $107.67  2026-09-28T19:58:14.873Z
+hugo.valer/implementer-xwz4         1      389316244    $101.50  2026-10-13T20:15:11.059Z
+hugo.valer/auditor-xwz6          1      362661557     $89.66  2026-10-13T20:14:27.673Z
+hugo.valer/adversary-xwz5         1      305822251     $76.97  2026-10-13T20:15:00.551Z
+hugo.valer/analyst-xwz3          1      319006106     $76.00  2026-10-13T20:14:32.782Z
+hugo.valer/auditor-thgx          1      158895581     $56.23  2026-10-07T12:41:56.585Z
+hugo.valer/integrator-thgr         1      138383095     $43.45  2026-09-28T19:55:13.827Z
+hugo.valer/planner-thgn          1      136755424     $41.06  2026-09-28T19:55:18.028Z
+hugo.valer/adversary-thgz         1      125995041     $38.30  2026-09-29T01:12:46.936Z
+hugo.valer/implementer-thgt         1      107065994     $32.81  2026-09-29T01:12:50.989Z
+hugo.valer/analyst-thgs          1      103369212     $28.51  2026-09-29T07:46:05.966Z
+(unattributed)                 958    19863392692  $15209.64  2026-10-13T19:52:41.043Z
+  token categories (non-additive): reasoning=511409
+TOTAL                          970    23087741828  $16075.38
+  token categories (non-additive): reasoning=511409
