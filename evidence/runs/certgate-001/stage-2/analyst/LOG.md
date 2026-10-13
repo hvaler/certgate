@@ -26,3 +26,5 @@ Budgets: stage 2 ends 23:12Z; run ends 2026-10-13T02:52Z (no new work after 02:2
 | 19:33Z | Auditor reports the human operator gave an infrastructure go in its window (~13 GB free); auditor resumes docker build --no-cache b7f4a546 as infra retry 1/2 (a669fd01). Recorded as a human intervention reported by the auditor, outside the room; analyst cannot verify it | a669fd01 |
 | 19:35Z | Auditor infra retry 1/2 succeeded (image 26cb4fde..e291); heavy work done 19:36Z; evidence 6a18ee92; verdict pending | 0921b2d8 |
 | 19:38Z | STAGE_ACCEPTED Stage 2 b7f4a546 (863c3ff1). Adversary closing summary 80e1ca2f. Final report written | 863c3ff1 |
+| 19:39Z | Final report posted (dbfe2f1c). Adversary confirms its content, no corrections (70b82ce8) | 70b82ce8 |
+| 19:40Z | Auditor verified section 8 (8dfba3c1). Hash note: committed blob of FINAL-REPORT.md at e90fe2c2 (blob d6450330, LF) has SHA-256 66a97b2733a5fe4c0c908d6895c198a36fd7d965836f36cff21a8b9a118a1317 (auditor's computation); the 27fc67cd value cited in msg d6fe5271 is of the CRLF working copy. Dispatch 1 closed by analyst and auditor | 8dfba3c1 |

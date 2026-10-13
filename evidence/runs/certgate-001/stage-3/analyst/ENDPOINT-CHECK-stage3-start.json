@@ -1,0 +1,29 @@
+{
+  "checked_utc": "2026-10-13T16:54:42.4569023Z",
+  "request": "GET <MODEL_BASE_URL>/models",
+  "host": "developer.amd.com.cn",
+  "http_status": 200,
+  "latency_ms": 1192,
+  "model_ids": [
+    "DeepSeek-V4.1-Flash",
+    "DeepSeek-V4-Flash",
+    "DeepSeek-V4-Flash-Vision-Exp",
+    "Gemma-4-31B-IT",
+    "GLM-5.3-Flash",
+    "MiMo-V2.6-Flash",
+    "MinerU2.5-Pro",
+    "MiniCPM5-2B",
+    "MiniCPM-V-4.7-1B",
+    "MiniCPM-V-4.7-35B-A3B",
+    "Qwen3.8-27B",
+    "Qwen3.8-Flash-Next"
+  ],
+  "MODEL_ID": "Qwen3.8-27B",
+  "model_id_listed": true,
+  "env_presence": {
+    "MODEL_ID_len": 11,
+    "MODEL_BASE_URL_len": 42,
+    "MODEL_API_KEY_len": 51
+  },
+  "ratelimit_headers": []
+}

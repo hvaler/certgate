@@ -1,0 +1,16 @@
+{
+  "seat": "auditor-xwz6",
+  "check": "GET <MODEL_BASE_URL>/models",
+  "utc": "2026-10-13T16:5xZ",
+  "lease": { "taken_msg": "ea88448e", "released_msg": "78097076", "calls": "1" },
+  "http": "200",
+  "elapsed_ms": "1068",
+  "host": "developer.amd.com.cn",
+  "models_listed": "12",
+  "model_id": "Qwen3.8-27B",
+  "model_id_listed": "true",
+  "x_ratelimit_headers": "none",
+  "env": { "MODEL_ID_length": "11", "MODEL_BASE_URL_length": "42", "MODEL_API_KEY_length": "51" },
+  "host_permission": "allowed (no block)",
+  "note": "The values of MODEL_BASE_URL and MODEL_API_KEY are not recorded."
+}
