@@ -1,0 +1,54 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c1
+
+ ❯ test/story-screen-render.test.ts (6 tests | 2 failed) 79ms
+   ❯ Runs on AMD screen text follows the F1 state (R4.5 E-08) (2)
+     × endpoint off: says off with the server's detail, never that an endpoint or AMD hardware is used 10ms
+     × endpoint on: names AMD Token Factory, values as reported, and makes no GPU, ROCm or vLLM claim 3ms
+
+ Test Files  1 failed | 16 passed (17)
+      Tests  2 failed | 298 passed (300)
+   Start at  22:43:24
+   Duration  11.71s (tests 95%, import 3%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/story-screen-render.test.ts > Runs on AMD screen text follows the F1 state (R4.5 E-08) > endpoint off: says off with the server's detail, never that an endpoint or AMD hardware is used
+AssertionError: expected '"Runs on AMDENDPOINT OFFRead now from…' not to match /sidecar|no AMD hardware|In this build…/
+
+- Expected:
+/sidecar|no AMD hardware|In this build no endpoint/
+
++ Received:
+"\"Runs on AMDENDPOINT OFFRead now from the configured model endpoint and its sidecar (GET /models and GET /usage, probed at most once per 60 s). With no endpoint configured, it says endpoint off with the time of this check. Nothing is typed by hand.Stateoff · no endpoint configuredChecked at2026-10-13T20:00:00.000ZEndpointunknownModel(s) listednoneModel (as reported)unknownGPUunknownROCm · vLLMunknown · unknownProbe latency (ms)unknownLast reading (ms)unknownTokens (completion · total)unknown · unknownTokens / sunknownCostunknown · cost reported by the endpointRate limit (req/min · remaining)unknown · unknownDaily spend (limit · used · remaining)unknown · unknown · unknownRead fromunknownEndpoint off (no endpoint configured): judge mode shows the recorded readings only.\""
+
+ ❯ test/story-screen-render.test.ts:49:52
+     47|       await ctx.amdScreen();
+     48|       expect(state(view)).toBe(`Endpoint off (${detail}): judge mode s…
+     49|       expect(JSON.stringify(view.textContent)).not.toMatch(/sidecar|no…
+       |                                                    ^
+     50|     }
+     51|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/story-screen-render.test.ts > Runs on AMD screen text follows the F1 state (R4.5 E-08) > endpoint on: names AMD Token Factory, values as reported, and makes no GPU, ROCm or vLLM claim
+AssertionError: expected 'Runs on AMDENDPOINT ONRead now from t…' not to match /sidecar/
+
+- Expected:
+/sidecar/
+
++ Received:
+"Runs on AMDENDPOINT ONRead now from the configured model endpoint and its sidecar (GET /models and GET /usage, probed at most once per 60 s). With no endpoint configured, it says endpoint off with the time of this check. Nothing is typed by hand.Stateon · read from the configured endpointChecked at2026-10-13T20:00:00.000ZEndpointAMD Token Factory · unknownModel(s) listedQwen3.8-27BModel (as reported)unknownGPUnot exposed by the endpointROCm · vLLMnot exposed by the endpoint · not exposed by the endpointProbe latency (ms)unknownLast reading (ms)unknownTokens (completion · total)unknown · unknownTokens / sunknownCostunknown · cost reported by the endpoint; Token Factory credits are free and have no monetary valueRate limit (req/min · remaining)unknown · unknownDaily spend (limit · used · remaining)unknown · unknown · unknownRead fromunknownEndpoint on: AMD Token Factory. The values above are as reported by the endpoint."
+
+ ❯ test/story-screen-render.test.ts:57:34
+     55|     expect(state(view)).toBe("Endpoint on: AMD Token Factory. The valu…
+     56|     expect(state(view)).not.toMatch(/GPU|ROCm|vLLM|MI\d/);
+     57|     expect(view.textContent).not.toMatch(/sidecar/);
+       |                                  ^
+     58|   });
+     59| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

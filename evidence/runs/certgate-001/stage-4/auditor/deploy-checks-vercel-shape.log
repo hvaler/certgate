@@ -1,0 +1,19 @@
+# DEPLOY.md section 4 checks against the container with VERCEL=1 and no MODEL_* (container equivalent, S4-02)
+$ /health
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "off",
+  "notice": "All data is fictitious."
+}
+
+$ /api/f1
+{'state': 'off', 'detail': 'no endpoint configured'}
+$ /api/live/status
+{'enabled': False, 'deployed_site': True, 'reason': 'live reading unavailable on the deployed site; live demonstration from the container'}
+$ /stories/cg-003.json -> 200
+$ /stories/cg-003.recording.json -> 200
+$ /figures.json -> 200
+$ POST /api/stories/cg-003/evaluate {}
+proposal block
+$ POST /api/live/read -> 503

@@ -1,0 +1,19 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - link "CertGate" [ref=f3e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=f3e8]:
+        - link "Cases" [ref=f3e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=f3e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=f3e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=f3e12]: "Model endpoint: off · last check 2026-10-13T20:48:28.084Z"
+  - note [ref=f3e15]:
+    - generic [ref=f3e16]:
+      - strong [ref=f3e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=f3e18]:
+    - paragraph [ref=f3e20]: Loading…

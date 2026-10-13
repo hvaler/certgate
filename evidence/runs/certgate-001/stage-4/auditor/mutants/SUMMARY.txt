@@ -1,0 +1,7 @@
+S4M01-health-hardcoded-off: KILLED | 2 failed | 298 passed (300) | failing files: test/isolation.test.ts, test/web.test.ts
+S4M02-health-stale-string: KILLED | 1 failed | 299 passed (300) | failing files: test/web.test.ts
+S4M03-amd-line-ignores-f1: KILLED | 1 failed | 299 passed (300) | failing files: test/story-screen-render.test.ts
+S4M04-sidecar-wording-restored: KILLED | 2 failed | 298 passed (300) | failing files: test/story-screen-render.test.ts
+S2M02br-story-label-cut: KILLED | 5 failed | 295 passed (300) | failing files: test/labels.test.ts, test/story-screen-render.test.ts
+S3M06-json-repaired: KILLED | 5 failed | 295 passed (300) | failing files: test/live-reader-prose.test.ts
+clean: yes

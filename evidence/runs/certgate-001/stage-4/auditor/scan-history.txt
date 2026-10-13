@@ -1,0 +1,10 @@
+mode=history objects_scanned=1073
+MODEL_API_KEY value: 0 hit(s)
+MODEL_BASE_URL host+path value: 0 hit(s)
+LIVE_ACCESS_CODE: not set on this host: cannot be scanned for
+generic Bearer token-like: 0 file(s)
+generic sk- key-like: 0 file(s)
+generic KEY/TOKEN/SECRET = long value: 0 file(s)
+local user name / operator e-mail: 14 file(s) -> evidence/runs/certgate-001/DISPATCH-2.txt@9522faacac, evidence/runs/certgate-001/stage-1/OBLIGATIONS-R1.0.md@d88b5edf18, evidence/runs/certgate-001/stage-1/OBLIGATIONS.md@46c2dcad4b, evidence/runs/certgate-001/stage-1/OBLIGATIONS.md@5e3328949c, eviden …
+user-profile paths: 25 file(s) -> evidence/runs/certgate-001/DISPATCH-2.txt@9522faacac, evidence/runs/certgate-001/stage-1/analyst/SOURCE-DRIFT-1735Z.diff@3ea1fe040b, evidence/runs/certgate-001/stage-1/auditor/VERDICT-S1-candidate-2.md@3ebe2b9757, evidence/runs/certgate-001/stage-1/implementer/local …
+jury-code-77 fixture: 19 file(s) -> evidence/runs/certgate-001/DISPATCH-2.txt@9522faacac, evidence/runs/certgate-001/stage-2/auditor/run-s2c1/stage1-mutants/M06-mock-reading-source-live.suite.txt@d2efea5307, evidence/runs/certgate-001/stage-2/auditor/run-s2c1/stage2-mutants/S2M11-code-check-bypassed …

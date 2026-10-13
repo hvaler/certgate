@@ -1,0 +1,10 @@
+mode=tree objects_scanned=1135
+MODEL_API_KEY value: 0 hit(s)
+MODEL_BASE_URL host+path value: 0 hit(s)
+LIVE_ACCESS_CODE: not set on this host: cannot be scanned for
+generic Bearer token-like: 0 file(s)
+generic sk- key-like: 0 file(s)
+generic KEY/TOKEN/SECRET = long value: 0 file(s)
+local user name / operator e-mail: 1 file(s) -> evidence\runs\certgate-001\DISPATCH-2.txt
+user-profile paths: 6 file(s) -> evidence\runs\certgate-001\DISPATCH-2.txt, evidence\runs\certgate-001\stage-1\auditor\VERDICT-S1-candidate-2.md, evidence\runs\certgate-001\stage-2\OBLIGATIONS.md, evidence\runs\certgate-001\stage-2\auditor\VERDICT-S2-candidate-1.md, evidence\runs\certgate-001\stage-3\OBLIGATIONS.md, evidence\runs\certgate-001\stage-4\OBLIGATIONS.md
+jury-code-77 fixture: 8 file(s) -> evidence\runs\certgate-001\DISPATCH-2.txt, evidence\runs\certgate-001\stage-2\auditor\run-s2c1\stage1-mutants\M06-mock-reading-source-live.suite.txt, evidence\runs\certgate-001\stage-2\auditor\run-s2c1\stage2-mutants\S2M11-code-check-bypassed.suite.txt, evidence\runs\certgate-001\stage-2\auditor\run-s2c2\mutants\M06-mock-reading-source-live.suite.txt, evidence\ru

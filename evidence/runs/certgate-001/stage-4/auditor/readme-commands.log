@@ -1,0 +1,114 @@
+$ docker run --rm -d --name certgate-ui -p 3000:3000 -e PORT=3000 certgate
+04cea8cf3908f66b9e78253ffead10be6f0691be6e9458ca57119a21fe2d8df9
+[exit 0]
+$ curl -s http://localhost:3000/health
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "off",
+  "notice": "All data is fictitious."
+}
+[exit 0]
+$ curl -s -o /dev/null -w %{http_code}\n http://localhost:3000/
+200
+[exit 0]
+$ docker stop certgate-ui
+certgate-ui
+[exit 0]
+$ docker run --rm -d --name certgate -p 3000:3000 -e PORT=3000 certgate
+8599f505c2e682e8ea94139670443719da7c42bfae395ba68d3da2425beedc4b
+[exit 0]
+$ curl -X POST http://localhost:3000/api/cases/cg-003/process | head
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CRITICAL_UNKNOWN:ReH",
+      "NO_SECOND_CHANNEL",
+      "RULE_NOT_EVALUABLE:ReH"
+    ],
+    "human_confirmation_required": [
+      "certificate_type",
+      "heat_or_lot",
+      "grade",
+      "cev_printed",
+      "kv_tempe
+$ docker stop certgate
+certgate
+[exit 0]
+$ (fully offline) docker run --rm --network none ... sh -c node server & fetch
+CertGate listening on http://localhost:3000 (mode mock)
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CRITICAL_UNKNOWN:ReH",
+      "NO_SECOND_CHANNEL",
+      "RULE_NOT_EVALUABLE:ReH"
+    ],
+    "human_confirmation_required": 
+[exit 0]
+$ docker run --rm --network none certgate node dist/src/cli.js process --case cg-003 | head
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CRITICAL_UNKNOWN:ReH",
+      "NO_SECOND_CHANNEL",
+      "RULE_NOT_EVALUABLE:ReH"
+    ],
+[exit 0]
+$ docker run --rm --network none certgate npx vitest run
+ [2m[90m↓[39m[22m test/docs.test.ts [2m([22m[2m9 tests[22m[2m | [22m[33m9 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m test/metrics-md.test.ts [2m([22m[2m3 tests[22m[2m | [22m[33m3 skipped[39m[2m)[22m
+[2m Test Files [22m [1m[32m15 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (17)[39m
+[2m      Tests [22m [1m[32m288 passed[39m[22m[2m | [22m[33m12 skipped[39m[90m (300)[39m
+$ node dist/src/cli.js list
+cg-001
+cg-002
+cg-003
+cg-004
+cg-005
+[exit 0]
+$ node dist/src/cli.js process --case cg-001 (summary)
+{
+  "summary": {
+    "case_id": "cg-001",
+    "status": "processed",
+    "proposal": "release",
+    "human_required": true,
+
+$ npm test (already: npx vitest run 300/300; see suite-clean-clone.log)
+$ stub + server (README "local test stub")
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "live",
+  "notice": "All data is fictitious."
+}
+
+{
+  "state": "on",
+  "checked_at": "2026-10-13T20:38:08.981Z",
+  "detail": "read from the configured endpoint",
+  "endpoint_name": "AMD Token Factory",
+  "endpoint_source": "https://notebooks.amd.com/tokenfactory (event page: \"The event is hosted on notebooks.amd.com/tokenfactory.\")",
+  "endpoint_
+{
+  "enabled": true,
+  "reason": "open within the limit",
+  "deployed_site": false,
+  "upload_policy": "dataset certificates only (matched by SHA-256); uploaded files need the access code, which is not configured here",
+  "notice": "The file is sent 

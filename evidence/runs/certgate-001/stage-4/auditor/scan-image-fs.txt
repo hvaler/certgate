@@ -1,0 +1,11 @@
+image: sha256:86355e29d475a1fa9b38ec0b3cb34c0b21bb25c7114af21f5fe88808c1b3fe30
+mode=tree objects_scanned=1819
+MODEL_API_KEY value: 0 hit(s)
+MODEL_BASE_URL host+path value: 0 hit(s)
+LIVE_ACCESS_CODE: not set on this host: cannot be scanned for
+generic Bearer token-like: 0 file(s)
+generic sk- key-like: 0 file(s)
+generic KEY/TOKEN/SECRET = long value: 5 file(s) -> node_modules\typescript\lib\_tsc.js, node_modules\typescript\lib\typescript.d.ts, node_modules\typescript\lib\typescript.js, node_modules\vite\dist\node\chunks\node.js, node_modules\vitest\dist\chunks\index.B8VfM7Mf.js
+local user name / operator e-mail: 0 file(s)
+user-profile paths: 1 file(s) -> node_modules\@types\node\fs.d.ts
+jury-code-77 fixture: 2 file(s) -> test\docs.test.ts, test\web.test.ts
