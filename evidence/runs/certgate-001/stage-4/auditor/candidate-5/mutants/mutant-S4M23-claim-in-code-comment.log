@@ -1,0 +1,57 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/docs.test.ts (14 tests | 2 failed) 4729ms
+   ❯ no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) (3)
+     × no forbidden claim in README, DEPLOY.md, METRICS.md or public 177ms
+   ❯ sentence map (F-02 completeness, ADV-S4-F02) (1)
+     × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 193ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  2 failed | 315 passed (317)
+   Start at  00:11:34
+   Duration  20.67s (tests 98%, import 2%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+AssertionError: README.md: positive deployed-site claim: expected 'live reading also works on the deploy…' to match /\b(not|unavailable|never|no)\b/i
+
+- Expected:
+/\b(not|unavailable|never|no)\b/i
+
++ Received:
+"live reading also works on the deployed site"
+
+ ❯ test/docs.test.ts:130:117
+    128|     for (const f of files) {
+    129|       const t = read(f).replace(/\s+/g, " ");
+    130|       for (const re of positive) for (const m of t.matchAll(re)) expec…
+       |                                                                                                                     ^
+    131|       // E-11: any clause naming a "public site" or "public URL" must …
+    132|       // clause by clause (". ; #" end a clause), so that a negation e…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+AssertionError: sentences without a claims-map entry (map them in claims-map.json): expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "README.md :: Build the image (live reading also works on the deployed site; no container needed)",
++ ]
+
+ ❯ test/docs.test.ts:184:91
+    182|     const units: { doc: string; text: string }[] = allUnits(ROOT);
+    183|     const missing = units.filter((u) => !mapped.has(key(u))).map(key);
+    184|     expect(missing, "sentences without a claims-map entry (map them in…
+       |                                                                                           ^
+    185|     const present = new Set(units.map(key));
+    186|     expect(map.filter((m) => !present.has(key(m))).map(key), "stale cl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

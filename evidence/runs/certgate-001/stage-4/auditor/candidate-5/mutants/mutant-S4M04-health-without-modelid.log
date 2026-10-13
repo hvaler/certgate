@@ -1,0 +1,31 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/stage4-claims.test.ts (10 tests | 1 failed) 1467ms
+   ❯ /health with an endpoint but no model id (ADV-S4-F05) (1)
+     × MODEL_BASE_URL set without MODEL_ID reports reader off 11ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  1 failed | 316 passed (317)
+   Start at  00:15:18
+   Duration  13.40s (tests 97%, import 2%, transform 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/stage4-claims.test.ts > /health with an endpoint but no model id (ADV-S4-F05) > MODEL_BASE_URL set without MODEL_ID reports reader off
+AssertionError: expected 'live' to be 'off' // Object.is equality
+
+Expected: "off"
+Received: "live"
+
+ ❯ test/stage4-claims.test.ts:118:67
+    116|   it("MODEL_BASE_URL set without MODEL_ID reports reader off", async (…
+    117|     const base = await app({ env: { MODEL_BASE_URL: "http://127.0.0.1:…
+    118|     expect((await (await fetch(`${base}/health`)).json()).reader).toBe…
+       |                                                                   ^
+    119|   });
+    120| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
