@@ -1,0 +1,12 @@
+ test/live-reader-prose.test.ts | 67 ++++++++++++++++++++++++++++++++++++++++++
+ test/web.test.ts               |  4 ++-
+ 2 files changed, 70 insertions(+), 1 deletion(-)
+--- including evidence:
+ .../stage-3/implementer/HANDOFF-S3-candidate-2.md  |  55 +++++++++++++++
+ .../repair-1/browser/b16-hostile-375.png           | Bin 0 -> 438007 bytes
+ .../repair-1/browser/cg-003-confirmed-1280.png     | Bin 0 -> 517797 bytes
+ .../repair-1/browser/hostile-reading.json          |   1 +
+ .../implementer/repair-1/browser/ui-checks.json    |  77 +++++++++++++++++++++
+ test/live-reader-prose.test.ts                     |  67 ++++++++++++++++++
+ test/web.test.ts                                   |   4 +-
+ 7 files changed, 203 insertions(+), 1 deletion(-)
