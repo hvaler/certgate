@@ -1,10 +1,22 @@
 {
   "schema": "certgate.real-run-expectations/1",
-  "register": "R3.0, decision D3-04, row S3-17",
+  "register": "R3.0, decision D3-04, row S3-17; R3.1 C-16 (cg-016, cg-017 added before any real evaluation run)",
   "written_by": "implementer-xwz4, by hand, 2026-10-13, before any real evaluation run",
   "rule": "Under the real reader the mock-only planted deviations of these cases do not exist. Each expected proposal below is the proposal implied by the certificate's CORRECT reading (data/expected/<id>.json correct_reading) and its paired delivery line, applying D1-03/A-04 precedence, inclusive limits and the A-02 CEV rule. It was reasoned by hand and is not computed by product code. Every other case keeps data/expected/<id>.json.",
   "note_on_failures": "A real reader failure (C11: timeout, 429, 5xx, invalid output) is recorded as status error and counted as an abstention; it does not change the expected proposal written here.",
   "cases": {
+    "cg-016": {
+      "certificate_kind": "scan",
+      "expected_proposal": "review",
+      "reasons_must_include": ["NO_SECOND_CHANNEL"],
+      "reasoning": "Clean, confident, all-in-spec scan (D1-04): no text layer, so every critical field needs human confirmation. Rule-driven review that the real model must not change (R3.1 C-16). Same as data/expected/cg-016.json."
+    },
+    "cg-017": {
+      "certificate_kind": "scan",
+      "expected_proposal": "review",
+      "reasons_must_include": ["NO_SECOND_CHANNEL"],
+      "reasoning": "Scan with the second digit of the heat number smudged. Rule-driven review (no second channel) whatever the model reads; if the model reads the heat with confidence the case is still review, never release (R3.1 C-16). data/expected/cg-017.json also lists CRITICAL_UNKNOWN:heat_or_lot, which only holds if the model reports the heat as unknown; the rule-driven reason is the one required here."
+    },
     "cg-018": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
