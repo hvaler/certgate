@@ -118,3 +118,33 @@ describe("/health with an endpoint but no model id (ADV-S4-F05)", () => {
     expect((await (await fetch(`${base}/health`)).json()).reader).toBe("off");
   });
 });
+
+describe("DEPLOY.md post-deploy checks, in the Vercel shape (C-46, E-11)", () => {
+  it("VERCEL=1 without MODEL_*: health ok, f1 off, live status disabled with the deployed-site reason, live read 503, stories, recordings and figures 200, story evaluate block", async () => {
+    const base = await app({ env: { VERCEL: "1" } });
+    const health = await fetch(`${base}/health`);
+    expect(health.status).toBe(200);
+    expect((await health.json()).status).toBe("ok");
+    const f1 = await (await fetch(`${base}/api/f1`)).json();
+    expect(f1).toMatchObject({ state: "off", detail: "no endpoint configured" });
+    const st = await (await fetch(`${base}/api/live/status`)).json();
+    expect(st).toMatchObject({ enabled: false, deployed_site: true, reason: "live reading unavailable on the deployed site; live demonstration from the container" });
+    for (const p of ["/stories/cg-003.json", "/stories/cg-003.recording.json", "/figures.json"]) expect((await fetch(`${base}${p}`)).status, p).toBe(200);
+    const ev = await postJson(`${base}/api/stories/cg-003/evaluate`, {});
+    expect(ev.status).toBe(200);
+    expect((await ev.json()).view.proposal).toBe("block");
+    expect((await postJson(`${base}/api/live/read`, { certificate_base64: "", synthetic_confirmed: true })).status).toBe(503);
+  });
+});
+
+describe("README test-stub modes (C-67)", () => {
+  it("the stub answers each documented --mode as the README says", async () => {
+    for (const mode of ["timeout", "http_429", "http_5xx", "invalid_json", "huge"]) {
+      const s = await startStub({ mode }); open.push(s);
+      expect(s.state.mode).toBe(mode);
+    }
+    const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
+    expect(readme).toContain("# TEST STUB, not a model; --mode timeout|http_429|http_5xx|invalid_json|huge");
+    expect(readFileSync(path.join(ROOT, "test", "support", "stub-endpoint.mjs"), "utf8")).toMatch(/TEST DOUBLE, NOT A MODEL/);
+  });
+});

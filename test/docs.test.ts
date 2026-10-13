@@ -124,6 +124,8 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     const positive = [
       /live reading(?: (?:also|works|is|available|runs))* (?:on|from) the deployed site/gi,
       /live reading[^.\n]*\b(?:works?|available|runs?|possible)\b[^.\n]*deployed/gi,
+      // E-11: any sentence or comment naming a "public site" or "public URL" must be a negative one.
+      /[^.#;]*\bpublic (?:site|url)\b[^.;]*/gi,
     ];
     for (const f of files) {
       const t = read(f).replace(/\s+/g, " ");
