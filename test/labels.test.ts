@@ -69,6 +69,19 @@ describe("stored-story labels (S2M02, F2-01, B-09, B-12)", () => {
     const s = L.localLabelDetail({ reading_label: "live attempt · no reading", receipt: { created_at: "2026-10-12T19:00:00.000Z" } });
     expect(s).toBe("live attempt · no reading · 2026-10-12T19:00:00.000Z · not live");
   });
+  it("every stored label in app.js is used exactly as labels.js returns it: no suffix cut, nothing appended (ADV-S3-F02, kills S2M02br)", () => {
+    // Every call of a label builder, outside the import line.
+    const calls = [...appJs.matchAll(/\b(storyLabelDetail|localLabelDetail)\(/g)].filter((m) => !appJs.slice(Math.max(0, m.index! - 40), m.index!).includes("const {"));
+    expect(calls.length).toBeGreaterThanOrEqual(3);
+    for (const m of calls) {
+      const rest = appJs.slice(m.index!, m.index! + 60);
+      // The call is closed and directly followed by "," "}" or ")": no .slice/.replace/+/[…] on the label.
+      expect(rest, rest).toMatch(/^(storyLabelDetail\(s\)|localLabelDetail\(view\))\s*[,})]/);
+    }
+    expect(appJs).toMatch(/storedDetail: storyLabelDetail\(s\) \}/);
+    expect(appJs).toMatch(/storyLabel: storyLabelDetail\(s\) \}/);
+    expect(appJs).toMatch(/storedDetail: localLabelDetail\(view\) \}/);
+  });
   it("app.js builds every stored label through labels.js and writes no live label or clock time of its own", () => {
     expect(appJs).toMatch(/storedDetail: storyLabelDetail\(s\)/);
     expect(appJs).toMatch(/storedDetail: localLabelDetail\(view\)/);
