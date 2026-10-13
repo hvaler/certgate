@@ -1,0 +1,122 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "CertGate" [ref=e4] [cursor=pointer]:
+        - /url: "#/"
+      - navigation "Main" [ref=e8]:
+        - link "Cases" [ref=e9] [cursor=pointer]:
+          - /url: "#/"
+        - link "Judge mode" [ref=e10] [cursor=pointer]:
+          - /url: "#/judge"
+        - link "Runs on AMD" [ref=e11] [cursor=pointer]:
+          - /url: "#/amd"
+      - generic [ref=e12]: "Model endpoint: off · last check 2026-10-13T19:36:55.347Z"
+  - note [ref=e15]:
+    - generic [ref=e16]:
+      - strong [ref=e17]: Fictitious demo data.
+      - text: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and purchase spec ESP-014 are invented. No real material or standard is represented.
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - region [ref=e20]:
+        - generic [ref=e21]: FOR QUALITY ENGINEERS RECEIVING CERTIFIED STEEL
+        - heading "Catch the out-of-spec batch before it enters production" [level=1] [ref=e22]
+        - paragraph [ref=e23]:
+          - text: "Every batch of steel arrives with a mill certificate. Someone in Quality checks it by hand against the purchase spec: different mills, different layouts, often scanned. CertGate puts every value next to the spec and its place in the document, and proposes release, block or review."
+          - strong [ref=e24]: A person decides.
+        - paragraph [ref=e25]:
+          - text: "Where AMD fits: each certificate page is read, as an image, by the open model"
+          - strong [ref=e26]: self-dploy/Qwen3.8-27B
+          - text: (as reported by the endpoint), served by AMD Token Factory. The model only reads; it never explains or decides. GPU, ROCm and vLLM versions are not exposed by the endpoint, so none is claimed here.
+        - generic [ref=e27]:
+          - link "See the case it refuses to release" [ref=e28] [cursor=pointer]:
+            - /url: "#/story/cg-003"
+          - link "All three recorded runs" [ref=e29] [cursor=pointer]:
+            - /url: "#/judge"
+      - region [ref=e30]:
+        - heading "MEASURED ON 27 FICTITIOUS CERTIFICATES · REAL MODEL" [level=2] [ref=e31]
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: 0 of 18
+            - generic [ref=e35]: "false conforming (released when the expected proposal was not release) · strict: 0 of 6 expected block"
+          - generic [ref=e36]:
+            - generic [ref=e37]: 6 / 6
+            - generic [ref=e38]: non-conformities caught (not released) · 6 blocked
+          - generic [ref=e39]:
+            - generic [ref=e40]: 89.6 s
+            - generic [ref=e41]: seconds per certificate · mean, median 80.6 s · N = 27 processed
+          - generic [ref=e42]:
+            - generic [ref=e43]: "0.00020529"
+            - generic [ref=e44]: cost per certificate · mean over N = 27 · cost reported by the endpoint; Token Factory credits are free and have no monetary value
+        - paragraph [ref=e45]: "Generated from the evaluation artifacts in evaluation/runs/real-candidate-dd557fd (candidate dd557fd, run 2026-10-13T17:28:48.044Z); cases cg-001, cg-002, cg-003 were used to tune the prompt and are excluded. Failures: 0 of 27."
+      - region [ref=e46]:
+        - heading "Judge mode · three recorded real runs" [level=2] [ref=e47]
+        - paragraph [ref=e48]: Real readings by the model, recorded with their receipt and endpoint data, and stored. They are not re-read live. Judge mode has no limit and makes no model call.
+        - generic [ref=e49]:
+          - link "RELEASE PROPOSED Conforming conforming digital certificate cg-001 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:49:52.325Z · not live" [ref=e50] [cursor=pointer]:
+            - /url: "#/story/cg-001"
+            - generic [ref=e51]: RELEASE PROPOSED
+            - strong [ref=e52]: Conforming
+            - generic [ref=e53]: conforming digital certificate
+            - generic [ref=e54]: cg-001 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:49:52.325Z · not live
+          - link "BLOCK Out of spec scanned certificate out of spec cg-002 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:50:57.586Z · not live" [ref=e55] [cursor=pointer]:
+            - /url: "#/story/cg-002"
+            - generic [ref=e56]: BLOCK
+            - strong [ref=e57]: Out of spec
+            - generic [ref=e58]: scanned certificate out of spec
+            - generic [ref=e59]: cg-002 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:50:57.586Z · not live
+          - link "BLOCK The ambiguous scan ambiguous scan (smudged digit) cg-003 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:52:09.471Z · not live" [ref=e60] [cursor=pointer]:
+            - /url: "#/story/cg-003"
+            - generic [ref=e61]: BLOCK
+            - strong [ref=e62]: The ambiguous scan
+            - generic [ref=e63]: ambiguous scan (smudged digit)
+            - generic [ref=e64]: cg-003 · recorded real reading · self-dploy/Qwen3.8-27B · 2026-10-13T17:52:09.471Z · not live
+      - region [ref=e65]:
+        - generic [ref=e66]:
+          - heading "Read a certificate live" [level=2] [ref=e67]
+          - generic [ref=e68]: LIVE · needs the model endpoint
+        - paragraph [ref=e69]:
+          - text: "When the endpoint is off, live reading opens during the announced windows:"
+          - strong [ref=e70]: no live window is announced
+          - text: . The three recorded runs work at any time.
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: Mill certificate (PDF)
+            - button "Mill certificate (PDF)" [ref=e74]
+          - generic [ref=e75]:
+            - generic [ref=e76]: Delivery note (CSV)
+            - button "Delivery note (CSV)" [ref=e77]
+          - generic [ref=e78]:
+            - generic [ref=e79]: Delivery note line (partida)
+            - textbox "Delivery note line (partida)" [ref=e80]:
+              - /placeholder: e.g. 1
+        - paragraph [ref=e81]:
+          - text: Live readings are limited to
+          - strong [ref=e82]: "0"
+          - text: "per hour for everyone, counted on the server, per server instance in this build. Remaining this hour:"
+          - strong [ref=e83]: "0"
+          - text: . Judge mode has no limit.
+        - paragraph [ref=e84]:
+          - text: "What can be read live here:"
+          - strong [ref=e85]: dataset certificates only (matched by SHA-256); uploaded files need the access code, which is not configured here
+          - text: .
+        - paragraph [ref=e86]: The file is sent to AMD Token Factory, a third-party service that keeps prompts and outputs for about 2 days. Send only synthetic, fictitious certificates, never real data.
+        - generic [ref=e87] [cursor=pointer]:
+          - 'checkbox "I have read the notice: the file is synthetic and may be sent to AMD Token Factory." [ref=e88]'
+          - generic [ref=e89]: "I have read the notice: the file is synthetic and may be sent to AMD Token Factory."
+        - paragraph [ref=e90]: Live reading is disabled on this server (no hourly limit configured).
+        - button "Read live" [disabled] [ref=e92]
+        - status
+      - region [ref=e93]:
+        - heading "What decides, what reads, who signs" [level=2] [ref=e94]
+        - paragraph [ref=e95]:
+          - strong [ref=e96]: The model
+          - text: reads the certificate page images and reports each value with the place it says it found it (as reported by the model). It never explains and never decides.
+        - paragraph [ref=e97]:
+          - strong [ref=e98]: The text layer
+          - text: ", read without any model, checks the critical fields when the PDF has one."
+        - paragraph [ref=e99]:
+          - strong [ref=e100]: Versioned rules
+          - text: compare each value with spec ESP-014 in exact decimals.
+        - paragraph [ref=e101]:
+          - strong [ref=e102]: A person
+          - text: releases, blocks or asks for a new certificate.

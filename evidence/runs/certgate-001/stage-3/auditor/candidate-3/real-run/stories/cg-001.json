@@ -1,0 +1,1415 @@
+{
+  "story_schema": "certgate.story/2",
+  "stored": true,
+  "recorded": true,
+  "stored_at": "2026-10-13T19:31:57.042Z",
+  "recorded_at": "2026-10-13T19:31:57.042Z",
+  "stored_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T19:31:57.042Z · not live",
+  "model_reported": "self-dploy/Qwen3.8-27B",
+  "title": "Conforming",
+  "summary": {
+    "case_id": "cg-001",
+    "status": "processed",
+    "proposal": "release",
+    "human_required": true,
+    "reading_source": "live",
+    "reasons": [],
+    "human_confirmation_required": [],
+    "note": "CertGate only proposes. A person decides. All data is fictitious. The reading came from the live endpoint; model as reported by the endpoint: self-dploy/Qwen3.8-27B (requested: Qwen3.8-27B)."
+  },
+  "recording": "cg-001.recording.json",
+  "view": {
+    "view_schema": "certgate.view/1",
+    "case_id": "cg-001",
+    "status": "processed",
+    "proposal": "release",
+    "reasons": [],
+    "human_confirmation_required": [],
+    "reading_source": "live",
+    "reading_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T19:31:57.042Z · not live",
+    "certificate": {
+      "kind": "digital PDF with a text layer",
+      "certificate_no": "SV-2026-118204",
+      "heat": "24-71830",
+      "issuer": "SIDERÚRGICA VALDEMORA S.A.",
+      "dimensions": "20 x 2000 x 6000 mm"
+    },
+    "delivery": {
+      "delivery_note": "ALB-2026-0917",
+      "line": "1"
+    },
+    "rows": [
+      {
+        "field": "certificate_type",
+        "label": "Certificate type",
+        "value": "3.1",
+        "unit": null,
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "3.1",
+        "text_layer_value": "3.1",
+        "channels": "agree",
+        "spec": "3.1 (EN 10204)",
+        "source": "page 1 · header certificate type (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "heat_or_lot",
+        "label": "Heat no.",
+        "value": "24-71830",
+        "unit": null,
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "24-71830",
+        "text_layer_value": "24-71830",
+        "channels": "agree",
+        "spec": "= delivery line 1: 24-71830",
+        "source": "page 1 · Heat no. (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "grade",
+        "label": "Grade",
+        "value": "TRN-355",
+        "unit": null,
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "TRN-355",
+        "text_layer_value": "TRN-355",
+        "channels": "agree",
+        "spec": "TRN-355 (ordered TRN-355)",
+        "source": "page 1 · Grade row (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "cev_printed",
+        "label": "CEV (printed)",
+        "value": "0.41",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.41",
+        "text_layer_value": "0.41",
+        "channels": "agree",
+        "spec": "≤ 0.45 %",
+        "source": "page 1 · chemistry table CEV (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "kv_temperature",
+        "label": "KV test temperature",
+        "value": "-20",
+        "unit": "°C",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "-20",
+        "text_layer_value": "-20",
+        "channels": "agree",
+        "spec": "-20 °C",
+        "source": "page 1 · impact test header (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "inspection_stamp",
+        "label": "Inspection stamp",
+        "value": "QA-07",
+        "unit": null,
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "QA-07",
+        "text_layer_value": "QA-07",
+        "channels": "agree",
+        "spec": "required",
+        "source": "page 1 · Sello stamp (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.C",
+        "label": "C (%)",
+        "value": "0.16",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.16",
+        "text_layer_value": "0.16",
+        "channels": "agree",
+        "spec": "≤ 0.20 %",
+        "source": "page 1 · chemistry table C (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Si",
+        "label": "Si (%)",
+        "value": "0.21",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.21",
+        "text_layer_value": "0.21",
+        "channels": "agree",
+        "spec": "≤ 0.55 %",
+        "source": "page 1 · chemistry table Si (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Mn",
+        "label": "Mn (%)",
+        "value": "1.42",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "1.42",
+        "text_layer_value": "1.42",
+        "channels": "agree",
+        "spec": "≤ 1.60 %",
+        "source": "page 1 · chemistry table Mn (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.P",
+        "label": "P (%)",
+        "value": "0.012",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.012",
+        "text_layer_value": "0.012",
+        "channels": "agree",
+        "spec": "≤ 0.025 %",
+        "source": "page 1 · chemistry table P (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.S",
+        "label": "S (%)",
+        "value": "0.006",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.006",
+        "text_layer_value": "0.006",
+        "channels": "agree",
+        "spec": "≤ 0.025 %",
+        "source": "page 1 · chemistry table S (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Cr",
+        "label": "Cr (%)",
+        "value": "0.04",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.04",
+        "text_layer_value": "0.04",
+        "channels": "agree",
+        "spec": "no limit in ESP-014 (used for CEV)",
+        "source": "page 1 · chemistry table Cr (as reported by the model)",
+        "result": "info",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Ni",
+        "label": "Ni (%)",
+        "value": "0.03",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.03",
+        "text_layer_value": "0.03",
+        "channels": "agree",
+        "spec": "no limit in ESP-014 (used for CEV)",
+        "source": "page 1 · chemistry table Ni (as reported by the model)",
+        "result": "info",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Mo",
+        "label": "Mo (%)",
+        "value": "0.01",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.01",
+        "text_layer_value": "0.01",
+        "channels": "agree",
+        "spec": "no limit in ESP-014 (used for CEV)",
+        "source": "page 1 · chemistry table Mo (as reported by the model)",
+        "result": "info",
+        "critical": true
+      },
+      {
+        "field": "chemistry.Cu",
+        "label": "Cu (%)",
+        "value": "0.05",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.05",
+        "text_layer_value": "0.05",
+        "channels": "agree",
+        "spec": "≤ 0.55 %",
+        "source": "page 1 · chemistry table Cu (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "chemistry.V",
+        "label": "V (%)",
+        "value": "0.002",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "0.002",
+        "text_layer_value": "0.002",
+        "channels": "agree",
+        "spec": "no limit in ESP-014 (used for CEV)",
+        "source": "page 1 · chemistry table V (as reported by the model)",
+        "result": "info",
+        "critical": true
+      },
+      {
+        "field": "mechanical.ReH",
+        "label": "ReH (MPa)",
+        "value": "392",
+        "unit": "MPa",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "392",
+        "text_layer_value": "392",
+        "channels": "agree",
+        "spec": "≥ 355 MPa",
+        "source": "page 1 · mechanical table ReH (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "mechanical.Rm",
+        "label": "Rm (MPa)",
+        "value": "538",
+        "unit": "MPa",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "538",
+        "text_layer_value": "538",
+        "channels": "agree",
+        "spec": "≥ 470 and ≤ 630 MPa",
+        "source": "page 1 · mechanical table Rm (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "mechanical.A",
+        "label": "A (%)",
+        "value": "26",
+        "unit": "%",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "26",
+        "text_layer_value": "26",
+        "channels": "agree",
+        "spec": "≥ 20 %",
+        "source": "page 1 · mechanical table A (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "mechanical.KV_1",
+        "label": "KV specimen 1",
+        "value": "64",
+        "unit": "J",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "64",
+        "text_layer_value": "64",
+        "channels": "agree",
+        "spec": "mean of 3 >= 27 J (sum >= 81)",
+        "source": "page 1 · impact table Probeta 1 (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "mechanical.KV_2",
+        "label": "KV specimen 2",
+        "value": "71",
+        "unit": "J",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "71",
+        "text_layer_value": "71",
+        "channels": "agree",
+        "spec": "mean of 3 >= 27 J (sum >= 81)",
+        "source": "page 1 · impact table Probeta 2 (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "mechanical.KV_3",
+        "label": "KV specimen 3",
+        "value": "58",
+        "unit": "J",
+        "state": "known",
+        "value_source": "model+text_layer",
+        "model_value": "58",
+        "text_layer_value": "58",
+        "channels": "agree",
+        "spec": "mean of 3 >= 27 J (sum >= 81)",
+        "source": "page 1 · impact table Probeta 3 (as reported by the model)",
+        "result": "pass",
+        "critical": true
+      },
+      {
+        "field": "cev_recomputed",
+        "label": "CEV (recomputed; exact value in the receipt)",
+        "value": "0.4124",
+        "unit": "%",
+        "state": "known",
+        "value_source": "computed",
+        "model_value": null,
+        "text_layer_value": null,
+        "channels": "n/a",
+        "spec": "<= 0.45 %",
+        "source": "computed from C, Mn, Cr, Ni, Mo, Cu, V (IIW formula, cited)",
+        "result": "pass",
+        "critical": false
+      }
+    ],
+    "counts": {
+      "checks": "22",
+      "pass": "18",
+      "fail": "0",
+      "unknown": "0"
+    },
+    "steps": [
+      {
+        "name": "Case created",
+        "status": "done",
+        "duration_ms": "275.229",
+        "note": "file type and size checked, hash recorded"
+      },
+      {
+        "name": "Model reading · recorded real reading",
+        "status": "done",
+        "duration_ms": "64874.566",
+        "note": "read by the endpoint at 2026-10-13T19:31:57.042Z; stored, not live"
+      },
+      {
+        "name": "Text layer",
+        "status": "done",
+        "duration_ms": "4.031",
+        "note": "second channel, read without any model"
+      },
+      {
+        "name": "Internal coherence and rules against ESP-014",
+        "status": "done",
+        "duration_ms": "3.285",
+        "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
+      },
+      {
+        "name": "Proposal",
+        "status": "done",
+        "duration_ms": null,
+        "note": "release · a person decides"
+      }
+    ],
+    "explanation": {
+      "available": false,
+      "text": null,
+      "note": "The model only reads the certificate here; it never explains or decides. The reasons above are the deterministic rules."
+    },
+    "receipt": {
+      "receipt_schema": "certgate.receipt/1",
+      "case_id": "cg-001",
+      "run_id": "d55042b5-4ffe-4051-856d-94556ca8252d",
+      "created_at": "2026-10-13T19:31:57.042Z",
+      "mode": "real",
+      "reading_source": "live",
+      "reader": {
+        "reader_id": "live-reader-openai-compatible",
+        "reading_source": "live",
+        "model_id": "self-dploy/Qwen3.8-27B",
+        "requested_model_id": "Qwen3.8-27B",
+        "model_version": "as reported by the endpoint",
+        "vllm_version": "not exposed by the endpoint",
+        "rocm_version": "not exposed by the endpoint",
+        "calls": "1"
+      },
+      "planted": [],
+      "status": "processed",
+      "proposal": "release",
+      "reasons": [],
+      "human_required": true,
+      "human_confirmation_required": [],
+      "human_decision": null,
+      "confirmations": [],
+      "channel_available": true,
+      "timings_ms": {
+        "validate": "275.229",
+        "text_layer": "4.031",
+        "model_reading": "64874.566",
+        "evaluation": "3.285"
+      },
+      "errors": [],
+      "hashes": {
+        "certificate_sha256": "55c15e2e23d2928af427c633c19ef1605f9e4145ba330c0aec1b469d19eca4c6",
+        "certificate_size": "3350",
+        "delivery_note_sha256": "15a7247a6c1c2bc55894f5c2a633b5282b784b4ef0d0c6cad2b09bf40f643fe3",
+        "model_output_sha256": "711bb6be9c2ba60357d15c69a2a7bd20364489dc33dcd682ed6a1ee77e4471f5",
+        "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
+      },
+      "rules_version": "certgate-rules-1.0.0",
+      "plausibility_version": "plausibility-v1",
+      "cev_formula_source": "IIW (Dearden and O'Neill): CEV = C + Mn/6 + (Cr+Mo+V)/5 + (Cu+Ni)/15; cited in docs/sources/cev-formula.md",
+      "spec": {
+        "spec_id": "ESP-014",
+        "revision": "3",
+        "grade": "TRN-355"
+      },
+      "delivery": {
+        "delivery_note": "ALB-2026-0917",
+        "line": "1"
+      },
+      "values": [
+        {
+          "field": "issuer",
+          "value": "SIDERÚRGICA VALDEMORA S.A.",
+          "unit": null,
+          "source": "known (model)",
+          "location": "page 1 · header issuer (as reported by the model)"
+        },
+        {
+          "field": "certificate_no",
+          "value": "SV-2026-118204",
+          "unit": null,
+          "source": "known (model)",
+          "location": "page 1 · Certificate no. (as reported by the model)"
+        },
+        {
+          "field": "certificate_type",
+          "value": "3.1",
+          "unit": null,
+          "source": "known (model+text_layer)",
+          "location": "page 1 · header certificate type (as reported by the model)"
+        },
+        {
+          "field": "date",
+          "value": "2026-09-14",
+          "unit": null,
+          "source": "known (model)",
+          "location": "page 1 · Date row (as reported by the model)"
+        },
+        {
+          "field": "heat_or_lot",
+          "value": "24-71830",
+          "unit": null,
+          "source": "known (model+text_layer)",
+          "location": "page 1 · Heat no. (as reported by the model)"
+        },
+        {
+          "field": "grade",
+          "value": "TRN-355",
+          "unit": null,
+          "source": "known (model+text_layer)",
+          "location": "page 1 · Grade row (as reported by the model)"
+        },
+        {
+          "field": "dimensions",
+          "value": "20 x 2000 x 6000 mm",
+          "unit": null,
+          "source": "known (model)",
+          "location": "page 1 · Product row (as reported by the model)"
+        },
+        {
+          "field": "cev_printed",
+          "value": "0.41",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table CEV (as reported by the model)"
+        },
+        {
+          "field": "kv_temperature",
+          "value": "-20",
+          "unit": "°C",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · impact test header (as reported by the model)"
+        },
+        {
+          "field": "inspection_stamp",
+          "value": "QA-07",
+          "unit": null,
+          "source": "known (model+text_layer)",
+          "location": "page 1 · Sello stamp (as reported by the model)"
+        },
+        {
+          "field": "chemistry.C",
+          "value": "0.16",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table C (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Si",
+          "value": "0.21",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Si (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Mn",
+          "value": "1.42",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Mn (as reported by the model)"
+        },
+        {
+          "field": "chemistry.P",
+          "value": "0.012",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table P (as reported by the model)"
+        },
+        {
+          "field": "chemistry.S",
+          "value": "0.006",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table S (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Cr",
+          "value": "0.04",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Cr (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Ni",
+          "value": "0.03",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Ni (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Mo",
+          "value": "0.01",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Mo (as reported by the model)"
+        },
+        {
+          "field": "chemistry.Cu",
+          "value": "0.05",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table Cu (as reported by the model)"
+        },
+        {
+          "field": "chemistry.V",
+          "value": "0.002",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · chemistry table V (as reported by the model)"
+        },
+        {
+          "field": "mechanical.ReH",
+          "value": "392",
+          "unit": "MPa",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · mechanical table ReH (as reported by the model)"
+        },
+        {
+          "field": "mechanical.Rm",
+          "value": "538",
+          "unit": "MPa",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · mechanical table Rm (as reported by the model)"
+        },
+        {
+          "field": "mechanical.A",
+          "value": "26",
+          "unit": "%",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · mechanical table A (as reported by the model)"
+        },
+        {
+          "field": "mechanical.KV_1",
+          "value": "64",
+          "unit": "J",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · impact table Probeta 1 (as reported by the model)"
+        },
+        {
+          "field": "mechanical.KV_2",
+          "value": "71",
+          "unit": "J",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · impact table Probeta 2 (as reported by the model)"
+        },
+        {
+          "field": "mechanical.KV_3",
+          "value": "58",
+          "unit": "J",
+          "source": "known (model+text_layer)",
+          "location": "page 1 · impact table Probeta 3 (as reported by the model)"
+        }
+      ],
+      "channel_checks": [
+        {
+          "field": "certificate_type",
+          "model_value": "3.1",
+          "model_unit": null,
+          "text_layer_value": "3.1",
+          "text_layer_unit": null,
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "header certificate type"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "document title",
+              "x": "330.0",
+              "y": "791.9"
+            }
+          ]
+        },
+        {
+          "field": "heat_or_lot",
+          "model_value": "24-71830",
+          "model_unit": null,
+          "text_layer_value": "24-71830",
+          "text_layer_unit": null,
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "Heat no."
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "Colada / Heat no.",
+              "x": "40.0",
+              "y": "653.9"
+            }
+          ]
+        },
+        {
+          "field": "grade",
+          "model_value": "TRN-355",
+          "model_unit": null,
+          "text_layer_value": "TRN-355",
+          "text_layer_unit": null,
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "Grade row"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "Calidad / Grade",
+              "x": "40.0",
+              "y": "668.9"
+            }
+          ]
+        },
+        {
+          "field": "cev_printed",
+          "model_value": "0.41",
+          "model_unit": "%",
+          "text_layer_value": "0.41",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table CEV"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header CEV",
+              "x": "514.2",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "kv_temperature",
+          "model_value": "-20",
+          "model_unit": "°C",
+          "text_layer_value": "-20",
+          "text_layer_unit": "°C",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "impact test header"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "impact test heading",
+              "y": "438.9"
+            }
+          ]
+        },
+        {
+          "field": "inspection_stamp",
+          "model_value": "QA-07",
+          "model_unit": null,
+          "text_layer_value": "QA-07",
+          "text_layer_unit": null,
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "Sello stamp"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "signature block",
+              "y": "296.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.C",
+          "model_value": "0.16",
+          "model_unit": "%",
+          "text_layer_value": "0.16",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table C"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header C",
+              "x": "46.0",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Si",
+          "model_value": "0.21",
+          "model_unit": "%",
+          "text_layer_value": "0.21",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Si"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Si",
+              "x": "92.8",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Mn",
+          "model_value": "1.42",
+          "model_unit": "%",
+          "text_layer_value": "1.42",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Mn"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Mn",
+              "x": "139.6",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.P",
+          "model_value": "0.012",
+          "model_unit": "%",
+          "text_layer_value": "0.012",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table P"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header P",
+              "x": "186.5",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.S",
+          "model_value": "0.006",
+          "model_unit": "%",
+          "text_layer_value": "0.006",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table S"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header S",
+              "x": "233.3",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Cr",
+          "model_value": "0.04",
+          "model_unit": "%",
+          "text_layer_value": "0.04",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Cr"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Cr",
+              "x": "280.1",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Ni",
+          "model_value": "0.03",
+          "model_unit": "%",
+          "text_layer_value": "0.03",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Ni"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Ni",
+              "x": "326.9",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Mo",
+          "model_value": "0.01",
+          "model_unit": "%",
+          "text_layer_value": "0.01",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Mo"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Mo",
+              "x": "373.7",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.Cu",
+          "model_value": "0.05",
+          "model_unit": "%",
+          "text_layer_value": "0.05",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table Cu"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header Cu",
+              "x": "420.5",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "chemistry.V",
+          "model_value": "0.002",
+          "model_unit": "%",
+          "text_layer_value": "0.002",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "chemistry table V"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "heat analysis header V",
+              "x": "467.4",
+              "y": "576.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.ReH",
+          "model_value": "392",
+          "model_unit": "MPa",
+          "text_layer_value": "392",
+          "text_layer_unit": "MPa",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "mechanical table ReH"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "mechanical header ReH (MPa)",
+              "x": "46.0",
+              "y": "488.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.Rm",
+          "model_value": "538",
+          "model_unit": "MPa",
+          "text_layer_value": "538",
+          "text_layer_unit": "MPa",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "mechanical table Rm"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "mechanical header Rm (MPa)",
+              "x": "176.0",
+              "y": "488.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.A",
+          "model_value": "26",
+          "model_unit": "%",
+          "text_layer_value": "26",
+          "text_layer_unit": "%",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "mechanical table A"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "mechanical header A (%)",
+              "x": "306.0",
+              "y": "488.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.KV_1",
+          "model_value": "64",
+          "model_unit": "J",
+          "text_layer_value": "64",
+          "text_layer_unit": "J",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "impact table Probeta 1"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "impact header Probeta 1",
+              "x": "46.0",
+              "y": "414.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.KV_2",
+          "model_value": "71",
+          "model_unit": "J",
+          "text_layer_value": "71",
+          "text_layer_unit": "J",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "impact table Probeta 2"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "impact header Probeta 2",
+              "x": "176.0",
+              "y": "414.9"
+            }
+          ]
+        },
+        {
+          "field": "mechanical.KV_3",
+          "model_value": "58",
+          "model_unit": "J",
+          "text_layer_value": "58",
+          "text_layer_unit": "J",
+          "agree": true,
+          "channel_available": true,
+          "issue": null,
+          "human_confirmed": false,
+          "source_refs": [
+            {
+              "channel": "model",
+              "page": "1",
+              "fragment": "impact table Probeta 3"
+            },
+            {
+              "channel": "text_layer",
+              "page": "1",
+              "fragment": "impact header Probeta 3",
+              "x": "306.0",
+              "y": "414.9"
+            }
+          ]
+        }
+      ],
+      "rule_results": [
+        {
+          "rule_id": "ESP-014.r3.C",
+          "input_field_refs": [
+            "chemistry.C"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.20 %",
+          "observed": "0.16",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.Si",
+          "input_field_refs": [
+            "chemistry.Si"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.55 %",
+          "observed": "0.21",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.Mn",
+          "input_field_refs": [
+            "chemistry.Mn"
+          ],
+          "outcome": "pass",
+          "expected": "<= 1.60 %",
+          "observed": "1.42",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.P",
+          "input_field_refs": [
+            "chemistry.P"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.025 %",
+          "observed": "0.012",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.S",
+          "input_field_refs": [
+            "chemistry.S"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.025 %",
+          "observed": "0.006",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.Cu",
+          "input_field_refs": [
+            "chemistry.Cu"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.55 %",
+          "observed": "0.05",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.ReH",
+          "input_field_refs": [
+            "mechanical.ReH"
+          ],
+          "outcome": "pass",
+          "expected": ">= 355 MPa",
+          "observed": "392",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.Rm",
+          "input_field_refs": [
+            "mechanical.Rm"
+          ],
+          "outcome": "pass",
+          "expected": ">= 470 and <= 630 MPa",
+          "observed": "538",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.A",
+          "input_field_refs": [
+            "mechanical.A"
+          ],
+          "outcome": "pass",
+          "expected": ">= 20 %",
+          "observed": "26",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.CEV.printed",
+          "input_field_refs": [
+            "cev_printed"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.45 %",
+          "observed": "0.41",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.CEV.recomputed",
+          "input_field_refs": [
+            "chemistry.C",
+            "chemistry.Mn",
+            "chemistry.Cr",
+            "chemistry.Mo",
+            "chemistry.V",
+            "chemistry.Ni",
+            "chemistry.Cu"
+          ],
+          "outcome": "pass",
+          "expected": "<= 0.45 %",
+          "observed": "0.4124",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.KV_media",
+          "input_field_refs": [
+            "mechanical.KV_1",
+            "mechanical.KV_2",
+            "mechanical.KV_3"
+          ],
+          "outcome": "pass",
+          "expected": "mean of 3 >= 27 J (sum >= 81)",
+          "observed": "sum 193",
+          "reason": "within limit"
+        },
+        {
+          "rule_id": "ESP-014.r3.grade",
+          "input_field_refs": [
+            "grade",
+            "delivery_line.grade_ordered"
+          ],
+          "outcome": "pass",
+          "expected": "TRN-355 (spec) and TRN-355 (ordered)",
+          "observed": "TRN-355",
+          "reason": "grade matches"
+        }
+      ],
+      "f1": {
+        "state": "on",
+        "checked_at": "2026-10-13T19:33:04.158Z",
+        "detail": "read from the configured endpoint",
+        "endpoint_name": "AMD Token Factory",
+        "endpoint_source": "https://notebooks.amd.com/tokenfactory (event page: \"The event is hosted on notebooks.amd.com/tokenfactory.\")",
+        "endpoint_host": "developer.amd.com.cn",
+        "model_ids": [
+          "DeepSeek-V4.1-Flash",
+          "DeepSeek-V4-Flash",
+          "DeepSeek-V4-Flash-Vision-Exp",
+          "Gemma-4-31B-IT",
+          "GLM-5.3-Flash",
+          "MiMo-V2.6-Flash",
+          "MinerU2.5-Pro",
+          "MiniCPM5-2B",
+          "MiniCPM-V-4.7-1B",
+          "MiniCPM-V-4.7-35B-A3B",
+          "Qwen3.8-27B",
+          "Qwen3.8-Flash-Next"
+        ],
+        "model_reported": "self-dploy/Qwen3.8-27B",
+        "gpu": "not exposed by the endpoint",
+        "rocm_version": "not exposed by the endpoint",
+        "vllm_version": "not exposed by the endpoint",
+        "latency_ms": "334",
+        "last_reading_ms": "64809",
+        "completion_tokens": "1245",
+        "total_tokens": "4038",
+        "tokens_per_second": "19.21",
+        "cost_reported": "0.0001834826",
+        "cost_label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value",
+        "rate_limit_rpm": "20",
+        "rate_limit_rpm_remaining": "19",
+        "daily_spend_limit": "1",
+        "daily_spend_used": "0.01709706",
+        "daily_spend_remaining": "0.98290294",
+        "usage_source": "X-RateLimit headers of the last reading",
+        "probe_cached": false
+      },
+      "endpoint_response": {
+        "response_id": "76fee4e3b67a492b98660766d426bd7c",
+        "created": "1791919984",
+        "model": "self-dploy/Qwen3.8-27B",
+        "finish_reason": "stop",
+        "prompt_tokens": "2793",
+        "completion_tokens": "1245",
+        "reasoning_tokens": "356",
+        "total_tokens": "4038",
+        "cost_reported": "0.0001834826",
+        "elapsed_ms": "64809",
+        "input": "page_images"
+      },
+      "model_text": null,
+      "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."
+    }
+  }
+}
