@@ -1,6 +1,6 @@
 # Obligation register — Stage 4 (delivery)
 
-Run: certgate-001 · Stage: 4 · Register version: **R4.0** (analyst-xwz3, 2026-10-13, dispatched at Stage 4 start ~20:01Z) · **Input revision: Stage 3 ACCEPTED candidate 4 `5c904693423574846e17994331a628cc06d735ef` (tree `1ed386fd25d993f1d37b823eadddfa7040b19dae`)**, auditor msg 6e4c01d3, verdict record commit 4a6f28c (committed-blob SHA-256 348ac2315af6467c686c1c64284cae55457d020131041d81706a8ca1f2975773). Sources at Stage 4 start: `stage-4/SOURCES.sha256` (unchanged since Stage 3 start). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
+Run: certgate-001 · Stage: 4 · Register version: **R4.1** (analyst-xwz3, 2026-10-13; R4.0 = commit 1024f791 dispatched ~20:01Z; R4.1 narrows S4-16 per implementer question msg 8f4f9e61) · **Input revision: Stage 3 ACCEPTED candidate 4 `5c904693423574846e17994331a628cc06d735ef` (tree `1ed386fd25d993f1d37b823eadddfa7040b19dae`)**, auditor msg 6e4c01d3, verdict record commit 4a6f28c (committed-blob SHA-256 348ac2315af6467c686c1c64284cae55457d020131041d81706a8ca1f2975773). Sources at Stage 4 start: `stage-4/SOURCES.sha256` (unchanged since Stage 3 start). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
 
 ## Scope statement (D4-01)
 
@@ -49,3 +49,8 @@ Stage 4 delivers documentation, deployment instructions, generated metrics, an e
 | S4-23 | Shared service (Y §RUN) | README states the shared-service limits observed (≈20–30 rpm, 8 concurrent, daily cap 1 USD of free credits, 429/504/timeouts seen by the human; 0 retries/failures in the band's two evaluation runs) and that inputs are retained by the provider ~2 days, so only synthetic data may be sent | implementer |
 
 Any product-code change in Stage 4 (beyond docs, comments, static favicon) requires the auditor to re-verify the affected Stage 1–3 obligations; prefer docs-only changes.
+### R4.1 amendment
+
+| ID | Answers | Amendment |
+|---|---|---|
+| E-01 | Implementer msg 8f4f9e61 — option (b), amends S4-16 | The **landing** must name the run that produced its figures (already true: run `real-candidate-dd557fd`, candidate, run time, from `public/figures.json`). The **auditor's independent second run** is stated in **METRICS.md and README**, not on the landing. No product change for this. Not a known gap: the dispatch requires the landing figures to come from the evaluation artifacts with denominators, which they do |
