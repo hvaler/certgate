@@ -47,7 +47,10 @@ export function storyLabel(rec: StoryRecording): string {
 /** The view of a story run, relabelled as recorded (I7): the reading came from the endpoint at recording time. */
 export function storyView(r: CaseResult, rec: StoryRecording) {
   const view = toView(r);
-  return { ...view, reading_label: storyLabel(rec), receipt: JSON.parse(exportReceipt(r.receipt, {})) };
+  const steps = view.steps.map((s) => s.name.startsWith("Model reading")
+    ? { ...s, name: "Model reading · recorded real reading", note: `read by the endpoint at ${rec.recorded_at}; stored, not live` }
+    : s);
+  return { ...view, steps, reading_label: storyLabel(rec), receipt: JSON.parse(exportReceipt(r.receipt, {})) };
 }
 
 function storyFile(id: string, r: CaseResult, rec: StoryRecording) {

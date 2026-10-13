@@ -368,6 +368,9 @@ describe("recorded stories (S3-18, D3-08, R3.3 C-23, B-12, B-23)", () => {
       expect(st.view.receipt.created_at).toBe(rec.recorded_at);
       expect(st.stored_label).toBe(`recorded real reading · ${rec.model_reported} via AMD Token Factory · ${rec.recorded_at} · not live`);
       expect(st.view.reading_label).toBe(st.stored_label);
+      // No step of a story says live (I7): the reading step names the recording.
+      expect(JSON.stringify(st.view.steps)).not.toMatch(/live endpoint|live reading from/);
+      expect(st.view.steps.find((x: any) => x.name.startsWith("Model reading")).note).toBe(`read by the endpoint at ${rec.recorded_at}; stored, not live`);
       expect(st.view.reading_source).toBe("live");
       expect(st.view.receipt.reader.model_id).toBe(rec.model_reported);
       expect(rec.model_reported).not.toMatch(/MOCK|stub/i);

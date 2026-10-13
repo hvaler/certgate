@@ -459,10 +459,10 @@
         "note": "file type and size checked, hash recorded"
       },
       {
-        "name": "Model reading · live endpoint",
+        "name": "Model reading · recorded real reading",
         "status": "done",
         "duration_ms": "94518.184",
-        "note": "live reading from the configured endpoint"
+        "note": "read by the endpoint at 2026-10-13T17:52:09.471Z; stored, not live"
       },
       {
         "name": "Text layer",

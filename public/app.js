@@ -164,7 +164,7 @@ async function liveSection(st) {
   return h("section", { class: "card stack", id: "live", "aria-labelledby": "live-title" },
     h("div", { class: "btns between" }, h("h2", { id: "live-title" }, "Read a certificate live"), badge("LIVE · needs the model endpoint")),
     h("p", { class: "muted" }, on ? "" : "When the endpoint is off, live reading opens during the announced windows: ",
-      on ? "" : h("strong", {}, st && st.windows ? st.windows : "no live window is announced"), on ? "" : ". The three stored runs work at any time."),
+      on ? "" : h("strong", {}, st && st.windows ? st.windows : "no live window is announced"), on ? "" : ". The three recorded runs work at any time."),
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "live-pdf" }, "Mill certificate (PDF)"), pdf),
       h("div", { class: "field" }, h("label", { for: "live-csv" }, "Delivery note (CSV)"), csv),
@@ -174,7 +174,7 @@ async function liveSection(st) {
       h("strong", { id: "live-remaining" }, st ? st.remaining_this_hour : "?"), ". Judge mode has no limit."),
     h("p", { class: "small" }, "What can be read live here: ", h("strong", {}, st ? st.upload_policy : "?"), "."),
     h("p", { class: "note", id: "live-notice" }, st ? st.notice : ""),
-    h("div", { class: "field" }, h("label", { for: "live-confirm" }, confirm, " I have read the notice: the file is synthetic and may be sent to AMD Token Factory.")),
+    h("label", { class: "check", for: "live-confirm" }, confirm, h("span", {}, "I have read the notice: the file is synthetic and may be sent to AMD Token Factory.")),
     h("p", { class: "small" }, why),
     h("div", { class: "btns" }, btn), msg);
 }
