@@ -1,0 +1,96 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s3c4
+
+ ❯ test/story-screen-render.test.ts (4 tests | 3 failed) 28ms
+   ❯ rendered story labels say not live (ADV-S3-F02, S3-26, I7) (4)
+     × cg-001: the story screen label and the receipt screen label end with "not live" 15ms
+     × cg-002: the story screen label and the receipt screen label end with "not live" 5ms
+     × cg-003: the story screen label and the receipt screen label end with "not live" 4ms
+ ❯ test/labels.test.ts (12 tests | 1 failed) 1506ms
+   ❯ stored-story labels (S2M02, F2-01, B-09, B-12) (6)
+     × every stored label in app.js is used exactly as labels.js returns it: no suffix cut, nothing appended (ADV-S3-F02, kills S2M02br) 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/labels.test.ts > stored-story labels (S2M02, F2-01, B-09, B-12) > every stored label in app.js is used exactly as labels.js returns it: no suffix cut, nothing appended (ADV-S3-F02, kills S2M02br)
+AssertionError: storyLabelDetail(s).slice(0, -10) }); } }, "Open the receipt: expected 'storyLabelDetail(s).slice(0, -10) });…' to match /^(storyLabelDetail\(s\)|localLabelDet…/
+
+- Expected:
+/^(storyLabelDetail\(s\)|localLabelDetail\(view\))\s*[,})]/
+
++ Received:
+"storyLabelDetail(s).slice(0, -10) }); } }, \"Open the receipt"
+
+ ❯ test/labels.test.ts:79:26
+     77|       const rest = appJs.slice(m.index!, m.index! + 60);
+     78|       // The call is closed and directly followed by "," "}" or ")": n…
+     79|       expect(rest, rest).toMatch(/^(storyLabelDetail\(s\)|localLabelDe…
+       |                          ^
+     80|     }
+     81|     expect(appJs).toMatch(/storedDetail: storyLabelDetail\(s\) \}/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-001: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Stored reading · recorded real readin…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Stored reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:49:52.325Z "
+
+ ❯ test/story-screen-render.test.ts:82:26
+     80|       const receipt = storedLabel(view);
+     81|       expect(receipt).toHaveLength(1);
+     82|       expect(receipt[0]).toMatch(/ · not live$/);
+       |                          ^
+     83|     });
+     84|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-002: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Stored reading · recorded real readin…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Stored reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:50:57.586Z "
+
+ ❯ test/story-screen-render.test.ts:82:26
+     80|       const receipt = storedLabel(view);
+     81|       expect(receipt).toHaveLength(1);
+     82|       expect(receipt[0]).toMatch(/ · not live$/);
+       |                          ^
+     83|     });
+     84|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-003: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Stored reading · recorded real readin…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Stored reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z "
+
+ ❯ test/story-screen-render.test.ts:82:26
+     80|       const receipt = storedLabel(view);
+     81|       expect(receipt).toHaveLength(1);
+     82|       expect(receipt[0]).toMatch(/ · not live$/);
+       |                          ^
+     83|     });
+     84|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 13 passed (15)
+      Tests  4 failed | 281 passed (285)
+   Start at  21:58:02
+   Duration  8.20s (tests 95%, import 4%, transform 1%)
+

@@ -1,0 +1,126 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.42kB 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#2 ...
+
+#3 [auth] library/node:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#2 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 33B 0.0s
+#4 transferring context: 196B 0.3s done
+#4 DONE 0.4s
+
+#5 [build 1/7] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+#5 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 0.0s done
+#5 DONE 0.1s
+
+#6 [build 2/7] WORKDIR /app
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 3.82MB 4.8s
+#7 transferring context: 4.33MB 7.1s done
+#7 DONE 7.1s
+
+#8 [build 3/7] COPY package.json package-lock.json ./
+#8 DONE 1.8s
+
+#9 [build 4/7] RUN npm ci --no-audit --no-fund
+#9 8.317 
+#9 8.317 added 42 packages in 8s
+#9 8.323 npm notice
+#9 8.323 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#9 8.323 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#9 8.323 npm notice To update run: npm install -g npm@12.2.0
+#9 8.323 npm notice
+#9 DONE 8.5s
+
+#10 [build 5/7] COPY tsconfig.json vitest.config.ts ./
+#10 DONE 0.1s
+
+#11 [stage-1  4/17] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#11 8.408 
+#11 8.408 added 42 packages in 8s
+#11 8.425 npm notice
+#11 8.425 npm notice New major version of npm available! 11.19.0 -> 12.2.0
+#11 8.425 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#11 8.425 npm notice To update run: npm install -g npm@12.2.0
+#11 8.425 npm notice
+#11 ...
+
+#12 [build 6/7] COPY src ./src
+#12 DONE 0.0s
+
+#11 [stage-1  4/17] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#11 8.575 npm warn using --force Recommended protections disabled.
+#11 ...
+
+#13 [build 7/7] RUN npx tsc -p tsconfig.json
+#13 ...
+
+#11 [stage-1  4/17] RUN npm ci --include=dev --no-audit --no-fund && npm cache clean --force
+#11 DONE 8.7s
+
+#13 [build 7/7] RUN npx tsc -p tsconfig.json
+#13 DONE 1.6s
+
+#14 [stage-1  5/17] COPY --from=build /app/dist ./dist
+#14 DONE 0.0s
+
+#15 [stage-1  6/17] COPY tsconfig.json vitest.config.ts .env.example .gitignore README.md LICENSE ./
+#15 DONE 0.0s
+
+#16 [stage-1  7/17] COPY src ./src
+#16 DONE 0.0s
+
+#17 [stage-1  8/17] COPY test ./test
+#17 DONE 0.0s
+
+#18 [stage-1  9/17] COPY config ./config
+#18 DONE 0.0s
+
+#19 [stage-1 10/17] COPY data ./data
+#19 DONE 0.0s
+
+#20 [stage-1 11/17] COPY docs ./docs
+#20 DONE 0.0s
+
+#21 [stage-1 12/17] COPY tools ./tools
+#21 DONE 0.0s
+
+#22 [stage-1 13/17] COPY evaluation ./evaluation
+#22 DONE 0.0s
+
+#23 [stage-1 14/17] COPY public ./public
+#23 DONE 0.0s
+
+#24 [stage-1 15/17] COPY api ./api
+#24 DONE 0.0s
+
+#25 [stage-1 16/17] COPY vercel.json ./
+#25 DONE 0.0s
+
+#26 [stage-1 17/17] RUN chown -R node:node /app
+#26 DONE 2.9s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 5.5s done
+#27 exporting manifest sha256:50a6048092bbf3c794c89068ca7846e414ecd3231048cb8d3324104e69c7d550 done
+#27 exporting config sha256:7f20b99a8355dd92f66cd136568ffb014068a049b1edf10a19df769e6e2e3f4e done
+#27 exporting attestation manifest sha256:5314f06deccaac35985b7024667758feaa72c2b9791e27a7f1c43428e4f576b0 done
+#27 exporting manifest list sha256:7173871c4f8de51c521d78ab5eafdef40a525e9208fba04ae5636047ea15eabf done
+#27 naming to docker.io/library/certgate-audit:5c90469 done
+#27 unpacking to docker.io/library/certgate-audit:5c90469
+#27 unpacking to docker.io/library/certgate-audit:5c90469 1.5s done
+#27 DONE 7.0s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/p3v7n74lod3hkf5gba6wk17jb

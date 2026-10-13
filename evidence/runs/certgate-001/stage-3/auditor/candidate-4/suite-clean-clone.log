@@ -1,0 +1,9 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s3c4
+
+
+ Test Files  15 passed (15)
+      Tests  285 passed (285)
+   Start at  21:55:10
+   Duration  24.66s (tests 96%, transform 3%, import 1%)
+

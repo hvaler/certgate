@@ -1,0 +1,73 @@
+0
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 229[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1326[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 940[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 1883[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(14)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 799[2mms[22m[39m
+ [32m✓[39m test/labels.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1164[2mms[22m[39m
+   [32m✓[39m reading labels never present a mock or stored reading as live (S2M01) [2m(3)[22m
+     [33m[2m✓[22m[39m a mock run's view is labelled mock, and nothing mock says live[33m 1098[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1766[2mms[22m[39m
+   [32m✓[39m CLI [2m(10)[22m
+     [33m[2m✓[22m[39m processes a named dataset case and prints proposal and receipt (exit 0)[33m 753[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 1442[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 575[2mms[22m[39m
+ [32m✓[39m test/evaluation-receipts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1648[2mms[22m[39m
+   [32m✓[39m live receipts never say the endpoint was off (F3-01) [2m(5)[22m
+     [33m[2m✓[22m[39m a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled[33m 1501[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32m✓[39m test/story-screen-render.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 226[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 1016[2mms[22m[39m
+   [32m✓[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [33m[2m✓[22m[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[33m 506[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 1620[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 658[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 981[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 746[2mms[22m[39m
+ [32m✓[39m test/live-reader-prose.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1618[2mms[22m[39m
+   [32m✓[39m JSON is never repaired by guessing (ADV-S3-F01, S3-01) [2m(6)[22m
+     [33m[2m✓[22m[39m prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read[33m 882[2mms[22m[39m
+ [32m✓[39m test/live-reader.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 8005[2mms[22m[39m
+   [32m✓[39m request shape (C-01, C-12, S3-02) [2m(1)[22m
+     [33m[2m✓[22m[39m sends only rendered page images: no text-layer string, no PDF bytes; temperature 0; the frozen instruction[33m 1163[2mms[22m[39m
+   [32m✓[39m recorded replies (S3-06, C-14) [2m(4)[22m
+     [33m[2m✓[22m[39m a recorded real reading parses and carries response id, created, model and usage as returned[33m 365[2mms[22m[39m
+     [33m[2m✓[22m[39m the recorded cg-001 reply through the pipeline gives the recorded proposal; the receipt copies the response identity[33m 449[2mms[22m[39m
+     [33m[2m✓[22m[39m error shape {"detail":{"error":…}} (unknown model, 404): C11, message kept, not retried[33m 364[2mms[22m[39m
+   [32m✓[39m C11 under the real reader (S3-03, C-05) [2m(2)[22m
+     [33m[2m✓[22m[39m empty content with the JSON only in the reasoning is a C11 failure; the reasoning is never used (C-05)[33m 775[2mms[22m[39m
+   [32m✓[39m calling discipline (S3-02) [2m(4)[22m
+     [33m[2m✓[22m[39m 429 is retried, honouring Retry-After, at most 3 attempts in all[33m 2703[2mms[22m[39m
+     [33m[2m✓[22m[39m 5xx then success: retried and read on the second attempt[33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m at most 2 requests in flight, across readers[33m 1318[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m46 tests[22m[2m)[22m[33m 8820[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [33m[2m✓[22m[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[33m 613[2mms[22m[39m
+     [33m[2m✓[22m[39m web upload limit is below the Vercel body limit and enforced (B-18)[33m 321[2mms[22m[39m
+   [32m✓[39m live upload policy and deployed site (R3.1 C-02, C-07, S3-24) [2m(5)[22m
+     [33m[2m✓[22m[39m without LIVE_ACCESS_CODE an uploaded file that is not a dataset certificate is refused before anything is counted or sent (C-02 a)[33m 537[2mms[22m[39m
+     [33m[2m✓[22m[39m with LIVE_ACCESS_CODE configured and given, an uploaded synthetic file can be read (C-02 a)[33m 371[2mms[22m[39m
+     [33m[2m✓[22m[39m the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured)[33m 1462[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(14)[22m
+     [33m[2m✓[22m[39m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[33m 877[2mms[22m[39m
+     [33m[2m✓[22m[39m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[33m 869[2mms[22m[39m
+     [33m[2m✓[22m[39m a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)[33m 610[2mms[22m[39m
+     [33m[2m✓[22m[39m model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 1 call(s), counted once, no secret[33m 412[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[32m285 passed[39m[22m[90m (285)[39m
+[2m   Start at [22m 19:57:11
+[2m   Duration [22m 10.36s[2m (tests 82%, transform 11%, import 7%, worker 1%)[22m
+
+[2m    Isolate [22m [33m15 workers spawned[39m[2m · ~337ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~673ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
