@@ -1,0 +1,80 @@
+# Stage 4 mutant kill check on ac738ef3ebb4675760f1b24c10964da49fd79067 (implementer re-creation of the adversary's surviving mutants, msg 646f4b1f), 2026-10-13T21:02:32Z
+S4M11 applied to README.md
+## S4M11 (branch impl-mut/S4M11-on-ac738ef, commit 8337c68)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > README reading-time range equals the implementer run's min and max
+      Tests  2 failed | 311 passed (313)
+S4M11b applied to README.md
+## S4M11b (branch impl-mut/S4M11b-on-ac738ef, commit 1384cfd)
+-    band's two evaluation runs there were 0 retries and 0 failures.
++    band's two evaluation runs there were 0 retries and 0 failures, and every proposal was as expected.
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > the retry and failure sentence equals both runs' artifacts
+      Tests  2 failed | 311 passed (313)
+S4M12 applied to README.md
+## S4M12 (branch impl-mut/S4M12-on-ac738ef, commit 6bfb934)
+-6. Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run
++6. Detects forged inspection stamps and altered digits in scanned certificates.
++7. Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+      Tests  1 failed | 312 passed (313)
+S4M13 applied to DEPLOY.md
+## S4M13 (branch impl-mut/S4M13-on-ac738ef, commit b43f3e9)
++MODEL_API_KEY=sk-proj-Ab12Cd34Ef56Gh78Ij90Kl12Mn34
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no secret-looking value in the docs
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+      Tests  2 failed | 311 passed (313)
+S4M14 applied to DEPLOY.md
+## S4M14 (branch impl-mut/S4M14-on-ac738ef, commit 68db735)
+-| `MODEL_API_KEY` | **do not set** | same |
++| `MODEL_API_KEY` | tfk_9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d | same |
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > environment variables (F-09) > DEPLOY.md tells the human not to set MODEL_* on Vercel (F-05)
+ FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no secret-looking value in the docs
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+      Tests  3 failed | 310 passed (313)
+S4M20 applied to README.md
+## S4M20 (branch impl-mut/S4M20-on-ac738ef, commit a2b67e4)
+-| Candidate · time (UTC) | `dd557fd` · 2026-10-13 17:28–17:49 | `a892f771` · 2026-10-13 19:13–19:31 |
++| Candidate · time (UTC) | `5c904693` · 2026-10-13 17:28–17:49 | `a892f771` · 2026-10-13 19:13–19:31 |
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > README provenance facts equal the run artifacts and the publisher record
+      Tests  2 failed | 311 passed (313)
+S4M21 applied to README.md
+## S4M21 (branch impl-mut/S4M21-on-ac738ef, commit ee23868)
+-  Qwen Team, and its licence, as published by the publisher, is apache-2.0
++  Qwen Team, and its licence, as published by the publisher, is MIT
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > README provenance facts equal the run artifacts and the publisher record
+      Tests  2 failed | 311 passed (313)
+S4M22 applied to README.md
+## S4M22 (branch impl-mut/S4M22-on-ac738ef, commit 49a891f)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+ FAIL  test/docs.test.ts > README facts against their sources (ADV-S4-F01, F-04) > README provenance facts equal the run artifacts and the publisher record
+      Tests  2 failed | 311 passed (313)
+S4M04 applied to src/web/app.ts
+## S4M04 (branch impl-mut/S4M04-on-ac738ef, commit 9216b3c)
+-        const reader = cfg.modelBaseUrl !== null && cfg.modelId !== null && !cfg.deployedSite ? "live" : "off";
++        const reader = cfg.modelBaseUrl !== null && !cfg.deployedSite ? "live" : "off";
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/stage4-claims.test.ts > /health with an endpoint but no model id (ADV-S4-F05) > MODEL_BASE_URL set without MODEL_ID reports reader off
+      Tests  1 failed | 312 passed (313)
+S4M18s: pattern not found in README.md
+On branch impl-mut/S4M18s-on-ac738ef
+nothing to commit, working tree clean
+## S4M18s: first attempt not applied (its pattern wraps across a README line; no commit, suite unchanged). Re-anchored below.
+S4M18s applied to README.md
+## S4M18s (branch impl-mut/S4M18s-on-ac738ef, commit e629f53)
+-Start the container in mock mode (no endpoint and no network needed); see "Run it". Then open
++Try the hosted demo: https://certgate.vercel.app (judges can use it now). Start the container in mock mode (no endpoint and no network needed); see "Run it". Then open
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+      Tests  2 failed | 311 passed (313)
