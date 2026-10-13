@@ -1,0 +1,13 @@
+# clean clone of 0a40432ccce2758d7da490cbcdb3be758e9faaa6 tree fe87f6f2f8501d6a41016fe13baf8df3ca97ac8e at 2026-10-13T18:07:57Z; MODEL_* unset
+
+added 42 packages in 4s
+
+
+ RUN  v5.0.4 <scratch-dir>
+
+
+ Test Files  12 passed (12)
+      Tests  269 passed (269)
+   Start at  20:08:10
+   Duration  18.56s (tests 93%, transform 5%, import 2%)
+

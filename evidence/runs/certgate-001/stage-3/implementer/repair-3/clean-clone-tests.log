@@ -1,0 +1,23 @@
+# clean checkout at 5c904693423574846e17994331a628cc06d735ef tree 1ed386fd25d993f1d37b823eadddfa7040b19dae at 2026-10-13T19:52:47Z; MODEL_* unset; npm ci from the committed lockfile (unchanged since a892f77); suite run twice
+
+added 42 packages in 5s
+
+
+ RUN  v5.0.4 <scratch-dir>
+
+
+ Test Files  15 passed (15)
+      Tests  285 passed (285)
+   Start at  21:52:56
+   Duration  6.77s (tests 88%, transform 7%, import 5%)
+
+# second run
+   Start at  21:53:04
+   Duration  6.18s (tests 94%, import 5%, transform 1%, worker 1%)
+
+    Isolate  15 workers spawned · ~293ms startup each (spawn + environment, per file)
+             at least ~335ms faster with isolate: false — reuses workers across files instead of one per file
+
+# second run, summary lines (the tail above cut them)
+ Test Files  15 passed (15)
+      Tests  285 passed (285)

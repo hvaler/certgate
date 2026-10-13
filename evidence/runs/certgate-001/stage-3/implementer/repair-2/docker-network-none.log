@@ -1,0 +1,70 @@
+# docker build --no-cache of a892f771e531ca76b621b5a03163b2d3cb4f02d6 at 2026-10-13T18:50:09Z
+sha256:3e88a0ee2f7f0358bcb381995c8285c7ae9d4fd2f8b7480dc8037f98c13fc011
+# docker run --rm --network none certgate:s3-a892f77 npx vitest run
+
+ RUN  v5.0.4 /app
+
+ ✓ test/rules.test.ts (35 tests) 206ms
+ ✓ test/inputs.test.ts (15 tests) 1000ms
+   ✓ spec ESP-014 from its versioned file (S1-12) (4)
+     ✓ puts spec id, revision and file hash into every receipt 649ms
+ ✓ test/reader.test.ts (22 tests) 1316ms
+   ✓ failure injection and bounded retry (C11) (14)
+     ✓ cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt 637ms
+ ✓ test/entrypoints.test.ts (11 tests) 1310ms
+   ✓ CLI (10)
+     ✓ processes a named dataset case and prints proposal and receipt (exit 0) 470ms
+ ✓ test/evaluation-receipts.test.ts (5 tests) 1113ms
+   ✓ live receipts never say the endpoint was off (F3-01) (5)
+     ✓ a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled 952ms
+ ✓ test/channels.test.ts (23 tests) 1367ms
+   ✓ text-layer extraction without any model (19)
+     ✓ cg-001: every critical field equals the correct reading 613ms
+ ✓ test/labels.test.ts (11 tests) 925ms
+   ✓ reading labels never present a mock or stored reading as live (S2M01) (3)
+     ✓ a mock run's view is labelled mock, and nothing mock says live 895ms
+ ✓ test/static.test.ts (46 tests) 114ms
+ ✓ test/human.test.ts (9 tests) 685ms
+   ✓ per-field human confirmation re-runs coherence and rules (A-07, A-21) (6)
+     ✓ (a) cert-03 with every critical field confirmed and ReH 358 proposes release 388ms
+ ✓ test/dataset.test.ts (36 tests) 1437ms
+   ✓ every dataset case yields its expected outcome through the mock path (30)
+     ✓ cg-001 531ms
+ ✓ test/isolation.test.ts (3 tests) 805ms
+   ✓ consecutive cases do not contaminate each other (3)
+     ✓ A -> B, B -> A and B alone give identical receipts for B (minus ids and timings) 476ms
+ ✓ test/live-reader-prose.test.ts (6 tests) 1442ms
+   ✓ JSON is never repaired by guessing (ADV-S3-F01, S3-01) (6)
+     ✓ prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read 506ms
+ ✓ test/live-reader.test.ts (12 tests) 6700ms
+   ✓ request shape (C-01, C-12, S3-02) (1)
+     ✓ sends only rendered page images: no text-layer string, no PDF bytes; temperature 0; the frozen instruction 881ms
+   ✓ recorded replies (S3-06, C-14) (4)
+     ✓ the recorded cg-001 reply through the pipeline gives the recorded proposal; the receipt copies the response identity 416ms
+   ✓ C11 under the real reader (S3-03, C-05) (2)
+     ✓ empty content with the JSON only in the reasoning is a C11 failure; the reasoning is never used (C-05) 494ms
+   ✓ calling discipline (S3-02) (4)
+     ✓ 429 is retried, honouring Retry-After, at most 3 attempts in all 2529ms
+     ✓ 5xx then success: retried and read on the second attempt 361ms
+     ✓ at most 2 requests in flight, across readers 1010ms
+ ✓ test/web.test.ts (46 tests) 7364ms
+   ✓ live reading without an endpoint (S2-15, S2-20, S2-31, B-13) (4)
+     ✓ an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted 526ms
+   ✓ live upload policy and deployed site (R3.1 C-02, C-07, S3-24) (5)
+     ✓ without LIVE_ACCESS_CODE an uploaded file that is not a dataset certificate is refused before anything is counted or sent (C-02 a) 525ms
+     ✓ with LIVE_ACCESS_CODE configured and given, an uploaded synthetic file can be read (C-02 a) 393ms
+     ✓ the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured) 1257ms
+   ✓ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     ✓ limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour 701ms
+     ✓ check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings 448ms
+     ✓ a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04) 675ms
+     ✓ C11 through HTTP, stub mode timeout: status error, review, 1 call(s), counted once, no secret 375ms
+
+ Test Files  14 passed (14)
+      Tests  280 passed (280)
+   Start at  18:51:06
+   Duration  8.93s (tests 82%, transform 11%, import 6%, worker 1%)
+
+    Isolate  14 workers spawned · ~346ms startup each (spawn + environment, per file)
+             at least ~623ms faster with isolate: false — reuses workers across files instead of one per file
+

@@ -1,0 +1,35 @@
+# clean clone at 3bb53281b4a6d7cae3bb5df5efa5adf5de5316db tree 86f366ec26cfb19a89dc933f26b289ef4288ef1a at 2026-10-13T18:46:03Z; MODEL_* unset
+
+added 42 packages in 18s
+
+
+ RUN  v5.0.4 <scratch-dir>
+
+ ❯ test/web.test.ts (46 tests | 1 failed) 24135ms
+   ❯ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     × C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret 7389ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret
+AssertionError: expected 'timeout' to be 'http_429' // Object.is equality
+
+Expected: "http_429"
+Received: "timeout"
+
+ ❯ test/web.test.ts:359:50
+    357|       expect(j.view.proposal).toBe("review");
+    358|       expect(j.view.reading_source).toBe("live_no_reading");
+    359|       expect(j.view.receipt.errors.at(-1).class).toBe(cls);
+       |                                                  ^
+    360|       expect(j.view.receipt.reader.calls).toBe(String(calls));
+    361|       expect(s.state.chatCalls).toBe(calls);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 279 passed (280)
+   Start at  20:46:24
+   Duration  24.98s (tests 92%, transform 5%, import 3%)
+

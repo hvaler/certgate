@@ -1,0 +1,19 @@
+# SHA-256 of the Stage 3 implementer verification logs. They were written at the times stated in the handoff
+# records but were not committed then, because .gitignore excludes *.log. They are force-added unchanged in Stage 4;
+# the repair-2 hashes equal those posted in the room at candidate 3 (msg 6c5d9002).
+a5c955f7a73bcb8fc5cb20cc234e87cae7a8a52f37126045267d65246b103019 evidence/runs/certgate-001/stage-3/implementer/browser-checks.log
+ff39d219176dde87535f6a3be1a7d62f3b4efc4f4d628e94e2207874d56394d8 evidence/runs/certgate-001/stage-3/implementer/clean-clone-tests.log
+e3aa1902cf21b1448cb80226288fbe7c054d9cf0bb1f4f550a868f6a881e5999 evidence/runs/certgate-001/stage-3/implementer/docker-network-none.log
+b953cf1673f2bc55dcbc5f8b6c2a9f4e69e9201db564b97ce701274de6e1b7a2 evidence/runs/certgate-001/stage-3/implementer/repair-1/browser-checks.log
+dc4c80dbae7ce589b6284bf6c2e5522771fc386b45928350a7fba4f41df9c9a9 evidence/runs/certgate-001/stage-3/implementer/repair-1/clean-clone-tests.log
+2f4a75eb192422486f87190f1c51e42fed8e19268ddd37fa5d3fef3f0f1dc76f evidence/runs/certgate-001/stage-3/implementer/repair-1/docker-network-none.log
+bf8c9491b26f2fc9d44354bef6dc662084a71b7373161eb8fbca5b310e5fd8a1 evidence/runs/certgate-001/stage-3/implementer/repair-1/f3-01-test-on-candidate-1.log
+9586d1dd51ce80bd7016576744c048bdb8f452ee5ea1cea1f71b9e366258a1fa evidence/runs/certgate-001/stage-3/implementer/repair-2/clean-clone-tests-3bb5328-flaky.log
+4e149a432311c4835ed550b5f98b44e52f52ff0957e9aa70b5d693b46a066f8f evidence/runs/certgate-001/stage-3/implementer/repair-2/clean-clone-tests.log
+5b831cd6ddfc7ba05d6c519f19571f009dbb5771b12ab57fbab1fef6151f4b97 evidence/runs/certgate-001/stage-3/implementer/repair-2/docker-network-none-3bb5328.log
+b751a3d5e498f9854b84836e08a6162926cd776f68eb64f4758f6aa4dcde7e78 evidence/runs/certgate-001/stage-3/implementer/repair-2/docker-network-none.log
+85e7d15662019145dd4368560ec8d7a11cb20bcdbe7c8949e247196aef19f27a evidence/runs/certgate-001/stage-3/implementer/repair-2/mutant-S3M06-on-a892f77.log
+fa483f85d447d6ea02cf45d44862ea04d758d883ffc43072aa6ce35e16bd59d3 evidence/runs/certgate-001/stage-3/implementer/repair-2/mutant-S3M06-on-repair-2.log
+a20d5ead726c0f7f98720bf87c7b80fd8dcd494b0ea188987eba05eed77ac5a4 evidence/runs/certgate-001/stage-3/implementer/repair-3/clean-clone-tests.log
+3d00e6067a658ae22063a9cc25d54ead84825639fab35af95cba9ce13cc88e20 evidence/runs/certgate-001/stage-3/implementer/repair-3/mutant-S2M02br-receipt.log
+17b669d0c17a3e9b39cee40a4fa8e824ff35623332b4700d0f0e4a9347271bb1 evidence/runs/certgate-001/stage-3/implementer/repair-3/mutant-S2M02br-story.log

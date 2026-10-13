@@ -1,0 +1,133 @@
+# mutant S2M02br-story on cc1e4e9e388437eb593923c90806fd0f141b01a9 (branch impl-mut/S2M02br-story-on-5c90469, parent 5c904693423574846e17994331a628cc06d735ef) at 2026-10-13T19:52:17Z
+diff --git a/public/app.js b/public/app.js
+index 6127dcc..5d8a505 100644
+--- a/public/app.js
++++ b/public/app.js
+@@ -348,7 +348,7 @@ async function storyScreen(id) {
+ function drawStory() {
+   const s = session.story;
+   const view = s.view;
+-  const ctx = { storedTitle: "Recorded reading", storedDetail: storyLabelDetail(s) };
++  const ctx = { storedTitle: "Recorded reading", storedDetail: storyLabelDetail(s).slice(0, -10) };
+   const evaluate = async (extra) => {
+     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
+     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;
+# npx vitest run (full suite; must FAIL)
+
+ RUN  v5.0.4 <scratch-dir>
+
+ ❯ test/labels.test.ts (12 tests | 1 failed) 938ms
+   ❯ stored-story labels (S2M02, F2-01, B-09, B-12) (6)
+     × every stored label in app.js is used exactly as labels.js returns it: no suffix cut, nothing appended (ADV-S3-F02, kills S2M02br) 5ms
+ ❯ test/story-screen-render.test.ts (4 tests | 4 failed) 38ms
+   ❯ rendered story labels say not live (ADV-S3-F02, S3-26, I7) (4)
+     × cg-001: the story screen label and the receipt screen label end with "not live" 18ms
+     × cg-002: the story screen label and the receipt screen label end with "not live" 7ms
+     × cg-003: the story screen label and the receipt screen label end with "not live" 5ms
+     × the rendered label is exactly labels.js storyLabelDetail of the story, with nothing cut or added 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/labels.test.ts > stored-story labels (S2M02, F2-01, B-09, B-12) > every stored label in app.js is used exactly as labels.js returns it: no suffix cut, nothing appended (ADV-S3-F02, kills S2M02br)
+AssertionError: storyLabelDetail(s).slice(0, -10) };
+  const evaluate = asyn: expected 'storyLabelDetail(s).slice(0, -10) };\…' to match /^(storyLabelDetail\(s\)|localLabelDet…/
+
+- Expected:
+/^(storyLabelDetail\(s\)|localLabelDetail\(view\))\s*[,})]/
+
++ Received:
+"storyLabelDetail(s).slice(0, -10) };
+  const evaluate = asyn"
+
+ ❯ test/labels.test.ts:79:26
+     77|       const rest = appJs.slice(m.index!, m.index! + 60);
+     78|       // The call is closed and directly followed by "," "}" or ")": n…
+     79|       expect(rest, rest).toMatch(/^(storyLabelDetail\(s\)|localLabelDe…
+       |                          ^
+     80|     }
+     81|     expect(appJs).toMatch(/storedDetail: storyLabelDetail\(s\) \}/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-001: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Recorded reading · recorded real read…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Recorded reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:49:52.325Z "
+
+ ❯ test/story-screen-render.test.ts:76:25
+     74|       expect(labels[0]).toMatch(/^Recorded reading/);
+     75|       expect(labels[0]).toContain(`recorded ${story.recorded_at}`);
+     76|       expect(labels[0]).toMatch(/ · not live$/);
+       |                         ^
+     77|       // Open the receipt from the story screen, as a visitor would.
+     78|       const link = view.find((n) => n.tag === "a" && n.textContent ===…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-002: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Recorded reading · recorded real read…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Recorded reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:50:57.586Z "
+
+ ❯ test/story-screen-render.test.ts:76:25
+     74|       expect(labels[0]).toMatch(/^Recorded reading/);
+     75|       expect(labels[0]).toContain(`recorded ${story.recorded_at}`);
+     76|       expect(labels[0]).toMatch(/ · not live$/);
+       |                         ^
+     77|       // Open the receipt from the story screen, as a visitor would.
+     78|       const link = view.find((n) => n.tag === "a" && n.textContent ===…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > cg-003: the story screen label and the receipt screen label end with "not live"
+AssertionError: expected 'Recorded reading · recorded real read…' to match / · not live$/
+
+- Expected:
+/ · not live$/
+
++ Received:
+"Recorded reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z "
+
+ ❯ test/story-screen-render.test.ts:76:25
+     74|       expect(labels[0]).toMatch(/^Recorded reading/);
+     75|       expect(labels[0]).toContain(`recorded ${story.recorded_at}`);
+     76|       expect(labels[0]).toMatch(/ · not live$/);
+       |                         ^
+     77|       // Open the receipt from the story screen, as a visitor would.
+     78|       const link = view.find((n) => n.tag === "a" && n.textContent ===…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/story-screen-render.test.ts > rendered story labels say not live (ADV-S3-F02, S3-26, I7) > the rendered label is exactly labels.js storyLabelDetail of the story, with nothing cut or added
+AssertionError: expected 'Recorded reading · recorded real read…' to be 'Recorded reading · recorded real read…' // Object.is equality
+
+Expected: "Recorded reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z · not live"
+Received: "Recorded reading · recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z "
+
+ ❯ test/story-screen-render.test.ts:90:34
+     88|     await ctx.storyScreen("cg-003");
+     89|     const expected = ctx.CertGateLabels.storyLabelDetail({ storedAt: s…
+     90|     expect(storedLabel(view)[0]).toBe(`Recorded reading · ${expected}`…
+       |                                  ^
+     91|   });
+     92| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed | 13 passed (15)
+      Tests  5 failed | 280 passed (285)
+   Start at  21:52:19
+   Duration  6.47s (tests 93%, import 5%, transform 2%)
+
+    Isolate  15 workers spawned · ~318ms startup each (spawn + environment, per file)
+             at least ~363ms faster with isolate: false — reuses workers across files instead of one per file
+

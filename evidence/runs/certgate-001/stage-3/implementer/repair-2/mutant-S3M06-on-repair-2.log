@@ -1,0 +1,92 @@
+# mutant S3M06 on 5842ea4b019e64ea98a8b908f9fccfb610e7742e (branch impl-mut/S3M06-on-repair2, parent 3bb53281b4a6d7cae3bb5df5efa5adf5de5316db) at 2026-10-13T18:44:19Z
+5842ea4b019e64ea98a8b908f9fccfb610e7742e THROWAWAY mutant S3M06 (adversary msg 0a4f6702) on repair 2; never merged
+
+ src/web/live-reader.ts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+diff --git a/src/web/live-reader.ts b/src/web/live-reader.ts
+index 67b0c82..924b9af 100644
+--- a/src/web/live-reader.ts
++++ b/src/web/live-reader.ts
+@@ -119,8 +119,8 @@ function retryAfterMs(h: Headers): number | null {
+ 
+ /** Strip only surrounding Markdown code fences; anything else is passed through unchanged (S3-01). */
+ export function stripCodeFences(s: string): string {
+-  const m = /^\s*```[a-zA-Z]*\s*\n([\s\S]*?)\n?```\s*$/.exec(s);
+-  return m ? m[1]! : s;
++  const m = /\{[\s\S]*\}/.exec(s);
++  return m ? m[0]! : s;
+ }
+ 
+ async function readLimited(res: Response, max: number): Promise<string> {
+# npx vitest run test/live-reader-prose.test.ts (must FAIL)
+
+ RUN  v5.0.4 <scratch-dir>
+
+ ❯ test/live-reader-prose.test.ts (6 tests | 5 failed) 829ms
+   ❯ JSON is never repaired by guessing (ADV-S3-F01, S3-01) (6)
+     × prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read 530ms
+     × prose before and after: C11 invalid_json, status error, review, 1 call, no value read 67ms
+     × trailing text after the JSON: C11 invalid_json, status error, review, 1 call, no value read 64ms
+     × a fence that does not span the whole content: C11 invalid_json, status error, review, 1 call, no value read 54ms
+     × stripCodeFences never extracts JSON out of surrounding text 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > prose before the JSON: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > prose before and after: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > trailing text after the JSON: C11 invalid_json, status error, review, 1 call, no value read
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > a fence that does not span the whole content: C11 invalid_json, status error, review, 1 call, no value read
+AssertionError: expected 'processed' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "processed"
+
+ ❯ test/live-reader-prose.test.ts:47:38
+     45|       const input = loadDatasetCase("cg-004", loadShared("real"));
+     46|       const r = evaluateCase(await readCase({ ...input, reader: new Li…
+     47|       expect(r.readings.case.status).toBe("error");
+       |                                      ^
+     48|       expect(r.decision.proposal).toBe("review");
+     49|       expect(r.receipt.errors.at(-1)!.class).toBe("invalid_json");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/live-reader-prose.test.ts > JSON is never repaired by guessing (ADV-S3-F01, S3-01) > stripCodeFences never extracts JSON out of surrounding text
+AssertionError: expected '{\n  "schema": "certgate.mock-model-o…' to be 'Here:\n{\n  "schema": "certgate.mock-…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,6 +1,5 @@
+- Here:
+  {
+    "schema": "certgate.mock-model-output/1",
+    "case_id": "cg-004",
+    "note": "MOCK model output for the offline pipeline. It is the dataset's correct reading, except for the deviations listed in 'planted'. It is NOT the output of any model.",
+    "fields": {
+
+ ❯ test/live-reader-prose.test.ts:63:50
+     61|   });
+     62|   it("stripCodeFences never extracts JSON out of surrounding text", ()…
+     63|     expect(stripCodeFences(`Here:\n${reading}`)).toBe(`Here:\n${readin…
+       |                                                  ^
+     64|     expect(stripCodeFences(`${reading}\nDone.`)).toBe(`${reading}\nDon…
+     65|     expect(stripCodeFences(`\`\`\`json\n${reading}\n\`\`\``)).toBe(rea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  20:44:23
+   Duration  2.60s (tests 48%, transform 44%, import 6%, worker 2%)
+
+# npx vitest run (full suite)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed | 13 passed (14)
+      Tests  5 failed | 275 passed (280)
+   Start at  20:44:27
+   Duration  18.52s (tests 95%, import 3%, transform 2%)
+

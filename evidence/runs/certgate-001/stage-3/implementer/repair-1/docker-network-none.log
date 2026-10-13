@@ -1,0 +1,50 @@
+# docker build --no-cache of e4132c5173a5c19b9377ac449bf0a12d2554cc7d at 2026-10-13T18:25:16Z
+sha256:52e91a5157dc4c2d8c7832ad24b18722129a5dcd08865446944ead8cde3ea55d
+# docker run --rm --network none certgate:s3-e4132c5 npx vitest run
+
+ RUN  v5.0.4 /app
+
+ ✓ test/rules.test.ts (35 tests) 182ms
+ ✓ test/inputs.test.ts (15 tests) 654ms
+   ✓ spec ESP-014 from its versioned file (S1-12) (4)
+     ✓ puts spec id, revision and file hash into every receipt 372ms
+ ✓ test/reader.test.ts (22 tests) 902ms
+   ✓ failure injection and bounded retry (C11) (14)
+     ✓ cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt 418ms
+ ✓ test/entrypoints.test.ts (11 tests) 630ms
+ ✓ test/evaluation-receipts.test.ts (5 tests) 567ms
+   ✓ live receipts never say the endpoint was off (F3-01) (5)
+     ✓ a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled 501ms
+ ✓ test/channels.test.ts (23 tests) 562ms
+ ✓ test/labels.test.ts (11 tests) 373ms
+   ✓ reading labels never present a mock or stored reading as live (S2M01) (3)
+     ✓ a mock run's view is labelled mock, and nothing mock says live 343ms
+ ✓ test/static.test.ts (46 tests) 47ms
+ ✓ test/human.test.ts (9 tests) 362ms
+ ✓ test/dataset.test.ts (36 tests) 759ms
+   ✓ every dataset case yields its expected outcome through the mock path (30)
+     ✓ cg-001 336ms
+ ✓ test/isolation.test.ts (3 tests) 340ms
+ ✓ test/live-reader.test.ts (12 tests) 4442ms
+   ✓ request shape (C-01, C-12, S3-02) (1)
+     ✓ sends only rendered page images: no text-layer string, no PDF bytes; temperature 0; the frozen instruction 575ms
+   ✓ calling discipline (S3-02) (4)
+     ✓ 429 is retried, honouring Retry-After, at most 3 attempts in all 2197ms
+     ✓ at most 2 requests in flight, across readers 724ms
+ ✓ test/web.test.ts (46 tests) 15919ms
+   ✓ live reading without an endpoint (S2-15, S2-20, S2-31, B-13) (4)
+     ✓ an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted 443ms
+   ✓ live upload policy and deployed site (R3.1 C-02, C-07, S3-24) (5)
+     ✓ the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured) 489ms
+   ✓ live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) (14)
+     ✓ limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour 358ms
+     ✓ check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings 358ms
+     ✓ C11 through HTTP, stub mode timeout: status error, review, 1 call(s), counted once, no secret 357ms
+     ✓ C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret 6158ms
+     ✓ C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret 6149ms
+
+ Test Files  13 passed (13)
+      Tests  274 passed (274)
+   Start at  18:25:35
+   Duration  16.84s (tests 89%, transform 7%, import 4%)
+

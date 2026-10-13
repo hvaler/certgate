@@ -1,0 +1,20 @@
+# clean clone at a892f771e531ca76b621b5a03163b2d3cb4f02d6 tree f0c829e9214e8cc9bcd6643f1e86a98db18d3662 at 2026-10-13T18:49:06Z; MODEL_* unset; suite run twice
+
+added 42 packages in 28s
+
+
+ RUN  v5.0.4 <scratch-dir>
+
+
+ Test Files  14 passed (14)
+      Tests  280 passed (280)
+   Start at  20:49:40
+   Duration  11.77s (tests 91%, transform 6%, import 3%)
+
+# second run
+
+ Test Files  14 passed (14)
+      Tests  280 passed (280)
+   Start at  20:49:54
+   Duration  15.10s (tests 96%, import 2%, transform 1%)
+

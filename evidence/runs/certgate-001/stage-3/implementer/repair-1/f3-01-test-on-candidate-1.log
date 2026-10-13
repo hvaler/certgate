@@ -1,0 +1,87 @@
+# test/evaluation-receipts.test.ts (repair 1) run on candidate 1 0a40432ccce2758d7da490cbcdb3be758e9faaa6 at 2026-10-13T18:24:20Z: must FAIL
+
+ RUN  v5.0.4 <scratch-dir>
+
+ ❯ test/evaluation-receipts.test.ts (5 tests | 5 failed) 462ms
+   ❯ live receipts never say the endpoint was off (F3-01) (5)
+     × a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled 454ms
+     × a failed live reading that reached the endpoint (no reply, e.g. timeout) is not_captured, never off; only endpoint_off is off 2ms
+     × rate-limit headers recorded with the reading are carried; missing ones are labelled, not defaulted 0ms
+     × the evaluation runner stores the reading-time snapshot in every receipt; the regeneration tool uses only recorded data (source check) 1ms
+     × the committed regenerated evaluation receipts: all 27 live, none off, equal to an offline regeneration from the preserved results.json 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/evaluation-receipts.test.ts > live receipts never say the endpoint was off (F3-01) > a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled
+AssertionError: expected 'off' not to be 'off' // Object.is equality
+ ❯ test/evaluation-receipts.test.ts:42:36
+     40|     const r = evaluateCase(await readCase({ ...input, reader: new Live…
+     41|     expect(r.receipt.reading_source).toBe("live");
+     42|     expect(r.receipt.f1.state).not.toBe("off");
+       |                                    ^
+     43|     expect(r.receipt.f1.state).toBe(NOT_CAPTURED);
+     44|     expect(r.receipt.f1.model_reported).toBe("self-dploy/Qwen3.8-27B");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/evaluation-receipts.test.ts > live receipts never say the endpoint was off (F3-01) > a failed live reading that reached the endpoint (no reply, e.g. timeout) is not_captured, never off; only endpoint_off is off
+AssertionError: expected 'no endpoint data captured' to match /nothing was read/
+
+- Expected:
+/nothing was read/
+
++ Received:
+"no endpoint data captured"
+
+ ❯ test/evaluation-receipts.test.ts:54:26
+     52|       const off = notApplicableF1("live", null, cls);
+     53|       expect(off.state).toBe("off");
+     54|       expect(off.detail).toMatch(/nothing was read/);
+       |                          ^
+     55|     }
+     56|     for (const cls of ["timeout", "http_429", "http_5xx", "invalid_jso…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/evaluation-receipts.test.ts > live receipts never say the endpoint was off (F3-01) > rate-limit headers recorded with the reading are carried; missing ones are labelled, not defaulted
+TypeError: replyOnlyF1 is not a function
+ ❯ test/evaluation-receipts.test.ts:64:15
+     62|   });
+     63|   it("rate-limit headers recorded with the reading are carried; missin…
+     64|     const f = replyOnlyF1({ model: "m", completion_tokens: "100", elap…
+       |               ^
+     65|       { endpoint_host: "h", rate_limit: { "x-ratelimit-limit-user-rpm"…
+     66|     expect(f.rate_limit_rpm).toBe("20");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/evaluation-receipts.test.ts > live receipts never say the endpoint was off (F3-01) > the evaluation runner stores the reading-time snapshot in every receipt; the regeneration tool uses only recorded data (source check)
+Error: ENOENT: no such file or directory, open '<scratch-dir>
+ ❯ test/evaluation-receipts.test.ts:73:18
+     71|   });
+     72|   it("the evaluation runner stores the reading-time snapshot in every …
+     73|     const tool = readFileSync(path.join(ROOT, "tools", "evaluate", "re…
+       |                  ^
+     74|     expect(tool).toContain("replyOnlyF1(r.endpoint_response, { endpoin…
+     75|     const src = readFileSync(path.join(ROOT, "tools", "evaluate", "run…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/evaluation-receipts.test.ts > live receipts never say the endpoint was off (F3-01) > the committed regenerated evaluation receipts: all 27 live, none off, equal to an offline regeneration from the preserved results.json
+Error: ENOENT: no such file or directory, open '<scratch-dir>
+ ❯ test/evaluation-receipts.test.ts:81:34
+     79|     const original = JSON.parse(readFileSync(path.join(RUN, "results.j…
+     80|     const run = JSON.parse(readFileSync(path.join(RUN, "run.json"), "u…
+     81|     const committed = JSON.parse(readFileSync(path.join(RUN, REGENERAT…
+       |                                  ^
+     82|     expect(committed).toHaveLength(27);
+     83|     expect(committed).toEqual(regenerate(original, run));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  20:24:22
+   Duration  768ms (tests 77%, import 12%, transform 10%, worker 1%)
+
