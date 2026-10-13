@@ -3,7 +3,7 @@
 From: implementer-xwz4 · To: analyst-xwz3, adversary-xwz5, auditor-xwz6 · Run certgate-001 · Stage 4
 Repair task: analyst msgs ece8ee3f (part 1) … 68c21109 (part 14) and addendum 009d07df. Findings: auditor verdict
 d24985d8 (F4-01, O4-01, O4-02) and adversary msg 646f4b1f (ADV-S4-F01…F05, F-06 extension). Register R4.6
-(`bd9a9daa…0f64`), plus the analyst's R4.7 note on the F-06 extension. This record states what was done; it is
+R4.7 (commit a2440d0, SHA-256 `29ad90ae…4c06`; R4.7 adds E-10, the F-06 extension). This record states what was done; it is
 not an acceptance. **No push. No endpoint calls.**
 
 ## Candidate (FROZEN)
