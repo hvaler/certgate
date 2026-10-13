@@ -1,0 +1,1592 @@
+[
+ {
+  "doc": "README.md",
+  "text": "**CertGate prepares the review of a steel mill inspection certificate against a purchase specification, and proposes release, block or review.",
+  "row": "C-01"
+ },
+ {
+  "doc": "README.md",
+  "text": "A person in Quality decides.** CertGate never releases material on its own.",
+  "row": "C-01"
+ },
+ {
+  "doc": "README.md",
+  "text": "**All data in this repository is fictitious.** Siderúrgica Valdemora S.A. (the mill), Talleres Ribera Norte S.L. (the buyer), the grade TRN-355 and the purchase specification ESP-014 are invented for the demo.",
+  "row": "C-02"
+ },
+ {
+  "doc": "README.md",
+  "text": "The limits in ESP-014 belong to that fictitious company and are **not** the limits of any real standard.",
+  "row": "C-02"
+ },
+ {
+  "doc": "README.md",
+  "text": "Only these synthetic certificates are ever sent to the model endpoint.",
+  "row": "C-02"
+ },
+ {
+  "doc": "README.md",
+  "text": "Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY.md](DEPLOY.md) (Vercel, for the human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) · [EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).",
+  "row": "none: navigation to companion documents"
+ },
+ {
+  "doc": "README.md",
+  "text": "When a batch of steel arrives at a plant, it comes with a mill certificate (an inspection certificate of the EN 10204 3.1 kind): heat or lot, grade, chemical composition and measured mechanical properties.",
+  "row": "none: problem statement (context, not a product capability)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Someone in goods-in or Quality must check that the certificate belongs to that batch and that the values meet the purchase specification.",
+  "row": "none: problem statement (context, not a product capability)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Today this is done by hand, with certificates in different layouts and sometimes scanned.",
+  "row": "none: problem statement (context, not a product capability)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Material out of spec that reaches production means scrap, claims or a recall.",
+  "row": "none: problem statement (context, not a product capability)"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Primary user:** goods-in or Quality technician at a mid-size plant that buys certified material.",
+  "row": "none: intended user (context)"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Who decides:** the Quality manager who signs the release or the block.",
+  "row": "none: intended user (context)"
+ },
+ {
+  "doc": "README.md",
+  "text": "For each case (certificate PDF plus its delivery-note line), CertGate:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "Validates the files (PDF by magic bytes, size limits, not encrypted, has pages) and records their SHA-256.",
+  "row": "C-03"
+ },
+ {
+  "doc": "README.md",
+  "text": "Reads the certificate through two channels:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page images** of every certificate, digital or scanned, and returns the values as one JSON object;",
+  "row": "C-04"
+ },
+ {
+  "doc": "README.md",
+  "text": "the **text layer** of a digital PDF, extracted without any model.",
+  "row": "C-05"
+ },
+ {
+  "doc": "README.md",
+  "text": "A scan has no text layer, so its critical fields need human confirmation, and CertGate says so.",
+  "row": "C-05"
+ },
+ {
+  "doc": "README.md",
+  "text": "Compares the channels.",
+  "row": "C-06"
+ },
+ {
+  "doc": "README.md",
+  "text": "A disagreement makes the field unknown and the case goes to review.",
+  "row": "C-06"
+ },
+ {
+  "doc": "README.md",
+  "text": "Checks internal coherence: heat or lot against the delivery note, expected units and scale jumps, and the printed carbon equivalent against one recomputed from the composition.",
+  "row": "C-07"
+ },
+ {
+  "doc": "README.md",
+  "text": "The formula's source is cited in [docs/sources/cev-formula.md](docs/sources/cev-formula.md).",
+  "row": "C-07"
+ },
+ {
+  "doc": "README.md",
+  "text": "Applies deterministic, versioned rules against the spec, with exact decimals (never binary floating point).",
+  "row": "C-08"
+ },
+ {
+  "doc": "README.md",
+  "text": "Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run receipt without secrets.",
+  "row": "C-09"
+ },
+ {
+  "doc": "README.md",
+  "text": "Proposal precedence: a heat mismatch means review; otherwise block > review > release.",
+  "row": "C-10"
+ },
+ {
+  "doc": "README.md",
+  "text": "Release is proposed only when no review or block condition holds.",
+  "row": "C-10"
+ },
+ {
+  "doc": "README.md",
+  "text": "A scan is never proposed for release until a person has confirmed every critical field.",
+  "row": "C-10"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Endpoint:** AMD Token Factory, the AMD compute of the event (OpenAI-compatible; host `developer.amd.com.cn`).",
+  "row": "C-11"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Model:** requested as `Qwen3.8-27B`; every reply reports it as `self-dploy/Qwen3.8-27B`. Its publisher is the Qwen Team, and its licence, as published by the publisher, is apache-2.0 (https://huggingface.co/Qwen/Qwen3.8-27B, retrieved 2026-10-13; see [docs/sources/model.md](docs/sources/model.md)).",
+  "row": "C-56"
+ },
+ {
+  "doc": "README.md",
+  "text": "**What the model does:** it reads the page images of a certificate into the CertGate reading contract: value, unit, status, and the location where it says it found the value.",
+  "row": "C-04"
+ },
+ {
+  "doc": "README.md",
+  "text": "Requests use temperature 0 and a frozen instruction (SHA-256 `32fad2f9…`).",
+  "row": "C-13"
+ },
+ {
+  "doc": "README.md",
+  "text": "**What the model never does:** it never decides and never explains.",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "The text-layer comparison, the coherence checks, the rules and the proposal run in the CertGate backend without any model, and a person decides.",
+  "row": "C-01"
+ },
+ {
+  "doc": "README.md",
+  "text": "The model's reasoning text is never used or stored.",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "**How it is shown:**",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "The \"Runs on AMD\" panel (`#/amd`) shows only what the endpoint reports: the model list, the key's rate limit and daily spend, and the latency, tokens and cost of the last reading.",
+  "row": "C-15"
+ },
+ {
+  "doc": "README.md",
+  "text": "Every receipt of a real reading (live or recorded) carries a copy of those values from reading time, plus the endpoint reply's id, created time, model and usage.",
+  "row": "C-16"
+ },
+ {
+  "doc": "README.md",
+  "text": "The endpoint does not expose the GPU model, the ROCm version or the serving-stack version.",
+  "row": "C-15"
+ },
+ {
+  "doc": "README.md",
+  "text": "The panel says \"not exposed by the endpoint\" for them, and nothing else claims them.",
+  "row": "C-15"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Cost:** the cost shown is the cost reported by the endpoint; Token Factory credits are free and have no monetary value.",
+  "row": "C-17"
+ },
+ {
+  "doc": "README.md",
+  "text": "Two independent real runs read the same 27 fictitious certificates (cg-004 … cg-030). cg-001 … cg-003 were used to tune the prompt and are excluded.",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "Every figure comes from the committed run artifacts.",
+  "row": "C-21"
+ },
+ {
+  "doc": "README.md",
+  "text": "The full tables, the reporting rules (FC-broad and FC-strict, rule abstention versus failure, confident-on-illegible, aggregates over processed cases, usage reconciliation) and the per-case comparison of the two runs are in [METRICS.md](METRICS.md), which is generated from those artifacts.",
+  "row": "C-47"
+ },
+ {
+  "doc": "README.md",
+  "text": "| | Implementer run | Auditor's independent run |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Artifacts | [evaluation/runs/real-candidate-dd557fd/](evaluation/runs/real-candidate-dd557fd/REPORT.md) | [stage-3/auditor/candidate-3/real-run/eval-retry1/](evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/) |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Candidate · time (UTC) | `dd557fd` · 2026-10-13 17:28–17:49 | `a892f771` · 2026-10-13 19:13–19:31 |",
+  "row": "C-56"
+ },
+ {
+  "doc": "README.md",
+  "text": "| **False conforming** (released when the expected proposal was not release) | **0 of 18** (strict, expected block: 0 of 6) | **0 of 18** (strict: 0 of 6) |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Non-conformities caught | 6 of 6, all proposed block | 6 of 6, all proposed block |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Proposal as expected | 27 of 27 | 26 of 27 (cg-004: review, expected release) |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Failures · retries | 0 of 27 · 0 | 0 of 27 · 0 |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Field readings correct | 591 of 594 | 591 of 594 |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Seconds per certificate | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Cost per certificate | mean 0.00020529 | mean 0.00020863 |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "Costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.",
+  "row": "C-17"
+ },
+ {
+  "doc": "README.md",
+  "text": "The reading path, the prompt and the rules are identical by diff in both candidates and in the accepted candidate `5c904693`.",
+  "row": "C-20"
+ },
+ {
+  "doc": "README.md",
+  "text": "The landing page shows the figures of the implementer run and names that run.",
+  "row": "C-21"
+ },
+ {
+  "doc": "README.md",
+  "text": "They come from `public/figures.json`, which is generated from the artifacts and never written by hand.",
+  "row": "C-21"
+ },
+ {
+  "doc": "README.md",
+  "text": "Start the container in mock mode (no endpoint and no network needed); see \"Run it\".",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "Then open `http://localhost:3000/` in a browser:",
+  "row": "none: instruction to the reader"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Landing:** the problem in one sentence, the four evaluation figures with their denominators, and the fictitious-data notice.",
+  "row": "C-21"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Judge mode, three recorded real runs:** cg-001 (conforming, release proposed), cg-002 (scan out of spec, block) and cg-003 (ambiguous scan, block).",
+  "row": "C-22"
+ },
+ {
+  "doc": "README.md",
+  "text": "Each card is labelled \"recorded real reading … not live\" with its recording date.",
+  "row": "C-22"
+ },
+ {
+  "doc": "README.md",
+  "text": "Judge mode makes no model call and has no limit.",
+  "row": "C-22"
+ },
+ {
+  "doc": "README.md",
+  "text": "**cg-003, the case it refuses to release:** a scan has no second reading channel, so release stays disabled.",
+  "row": "C-23"
+ },
+ {
+  "doc": "README.md",
+  "text": "Confirm every critical field by hand with ReH 358 (the true value) and re-run the rules: release becomes possible, and the person records the decision with a reason.",
+  "row": "C-23"
+ },
+ {
+  "doc": "README.md",
+  "text": "With ReH 338, the proposal is block.",
+  "row": "C-23"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Open the receipt:** it shows the values, both channels, the rules, the endpoint data at reading time, and a JSON download.",
+  "row": "C-24"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Runs on AMD (`#/amd`):** without an endpoint it says \"endpoint off\" with the time of the check.",
+  "row": "C-25"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live reading (container in real mode only):** start the container with the three `MODEL_*` variables (see \"Run it\"), choose a dataset certificate, confirm the third-party notice, and press \"Read live\".",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "A reading takes about 1 to 4 minutes.",
+  "row": "C-57"
+ },
+ {
+  "doc": "README.md",
+  "text": "Requirements: Node.js 24 (local run) or Docker.",
+  "row": "none: requirement of the reader's machine"
+ },
+ {
+  "doc": "README.md",
+  "text": "Live reading runs from the container, not from the deployed site.",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "With these set, the \"Runs on AMD\" panel reads the endpoint, and \"Read live\" can read a dataset certificate.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "A visitor-uploaded file also needs `LIVE_ACCESS_CODE` to be configured and given.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "The CLI reads dataset cases through the offline `MockReader`, which returns the dataset's prepared reading and is labelled `MOCK` in every output.",
+  "row": "C-28"
+ },
+ {
+  "doc": "README.md",
+  "text": "With `CERTGATE_MODE=real` the CLI has no adapter and fails visibly; it never falls back to the mock.",
+  "row": "C-28"
+ },
+ {
+  "doc": "README.md",
+  "text": "Field names for `--confirm`: `certificate_type`, `heat_or_lot`, `grade`, `chemistry.<C|Si|Mn|P|S|Cr|Ni|Mo|Cu|V>`, `cev_printed`, `mechanical.<ReH|Rm|A|KV_1|KV_2|KV_3>`, `kv_temperature`, `inspection_stamp`.",
+  "row": "none: reference list of field names"
+ },
+ {
+  "doc": "README.md",
+  "text": "A confirmation without a unit is taken in the field's expected unit.",
+  "row": "C-54"
+ },
+ {
+  "doc": "README.md",
+  "text": "Open `http://localhost:<PORT>/`. Screens:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "landing and judge mode (`#/`);",
+  "row": "C-58"
+ },
+ {
+  "doc": "README.md",
+  "text": "a recorded run (`#/story/cg-003`);",
+  "row": "C-58"
+ },
+ {
+  "doc": "README.md",
+  "text": "a case kept in this browser (`#/local/<id>`);",
+  "row": "C-58"
+ },
+ {
+  "doc": "README.md",
+  "text": "the \"Runs on AMD\" panel (`#/amd`);",
+  "row": "C-58"
+ },
+ {
+  "doc": "README.md",
+  "text": "each case's receipt, with a JSON download.",
+  "row": "C-58"
+ },
+ {
+  "doc": "README.md",
+  "text": "Every page carries the fictitious-data notice.",
+  "row": "C-29"
+ },
+ {
+  "doc": "README.md",
+  "text": "Pages make no third-party request.",
+  "row": "C-29"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Method and path | Result |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /health` | status and mode |",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /api/f1` | \"Runs on AMD\" data from the configured endpoint, probed at most once per 60 s (`no-store`) |",
+  "row": "C-18"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /api/live/status` | live reading: enabled, limit, remaining this hour, reopening time, windows, upload policy, notice (`no-store`) |",
+  "row": "C-59"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading, or C11 `endpoint_off` with no endpoint (`no-store`) |",
+  "row": "C-59"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `POST /api/stories/<cg-001\\|cg-002\\|cg-003>/evaluate` | `{confirmations?: [{field, value}], confirmed_by?, decision?: {action, reason, decided_by}}`: the recorded reading re-evaluated (no model call) with a person's confirmations and decision; times are stamped by the server |",
+  "row": "C-31"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /stories/<id>.json`, `GET /stories/<id>.recording.json` | recorded run and its stored endpoint reply (versioned static files) |",
+  "row": "C-22"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /figures.json` | landing figures, generated from the evaluation artifacts |",
+  "row": "C-21"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /api/cases`, `POST /api/cases/<id>/process` | Stage 1 dataset API (mock path) |",
+  "row": "C-59"
+ },
+ {
+  "doc": "README.md",
+  "text": "Release is rejected (HTTP 409, and in the core) while the proposal is not release.",
+  "row": "C-30"
+ },
+ {
+  "doc": "README.md",
+  "text": "`GET /health` reports two separate fields.",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "`mode` is the mode of the CLI and the dataset API (`CERTGATE_MODE`, `mock` by default).",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "`reader` is `live` when an endpoint and a model are configured outside the deployed site, and `off` otherwise.",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "A container in real mode therefore answers `\"mode\": \"mock\", \"reader\": \"live\"`: the dataset API still uses the mock, and live reading uses the endpoint.",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "`npx vitest run` makes no endpoint call and passes with `--network none`.",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "The live reader is tested against replies recorded from the endpoint (`test/fixtures/endpoint/`) and against a local stub.",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "The commands that call the endpoint are separate and need the three `MODEL_*` variables:",
+  "row": "none: lead-in to the commands that follow"
+ },
+ {
+  "doc": "README.md",
+  "text": "Browser checks (need Playwright with Chromium, not part of `npm test`): `node test/browser/ui-checks.mjs [outDir]`.",
+  "row": "none: optional developer tooling, not part of npm test"
+ },
+ {
+  "doc": "README.md",
+  "text": "Environment variables only; see [.env.example](.env.example), which has no values (`.env` is ignored by git).",
+  "row": "C-32"
+ },
+ {
+  "doc": "README.md",
+  "text": "Secrets (`MODEL_API_KEY`, `LIVE_ACCESS_CODE`) stay on the server and are never sent to the browser.",
+  "row": "C-32"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Variable | Default | Meaning |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `CERTGATE_MODE` | `mock` | CLI and dataset API: `mock` (offline, dataset readings) or `real` (no adapter: fails visibly) |",
+  "row": "C-28"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `PORT` | `3000` | HTTP port |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `CERTGATE_DATA_DIR` | `<repo>/data` | dataset directory |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `MODEL_BASE_URL` | none | OpenAI-compatible endpoint (AMD Token Factory), including `/v1`; unset = endpoint off |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `MODEL_API_KEY` | none | secret, sent only to that endpoint |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `MODEL_ID` | none | model id requested from the endpoint |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, server-side, per instance; unset, invalid or 0 = disabled; documented deployment value 20 |",
+  "row": "C-51"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_ACCESS_CODE` | none (no default) | needed for live reading of a visitor-uploaded file; without it only dataset certificates are read live |",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per UTC hour before rejection |",
+  "row": "C-52"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_WINDOWS` | none | announced live windows, shown as text |",
+  "row": "C-55"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `VERCEL` | set by Vercel | on the deployed site live reading is unavailable (time budget, see Limitations) |",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "Input limits:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "CLI and container: certificate PDF up to 10 MiB; delivery note up to 1 MiB.",
+  "row": "C-50"
+ },
+ {
+  "doc": "README.md",
+  "text": "Web upload: **up to 3 MiB** of PDF, sent as base64 so the request stays below Vercel's 4.5 MB body limit; delivery note up to 256 KiB.",
+  "row": "C-50"
+ },
+ {
+  "doc": "README.md",
+  "text": "Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).",
+  "row": "none: pointer to a cited source"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Shared service.** AMD Token Factory is a shared service.",
+  "row": "none: heading of a limitation"
+ },
+ {
+  "doc": "README.md",
+  "text": "Per key: about 20–30 requests per minute, 8 concurrent requests, and a rolling daily spend cap read from GET /usage (1, in free credits).",
+  "row": "C-60"
+ },
+ {
+  "doc": "README.md",
+  "text": "During the human's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts.",
+  "row": "C-60"
+ },
+ {
+  "doc": "README.md",
+  "text": "In the band's two evaluation runs there were 0 retries and 0 failures.",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "CertGate keeps at most 2 requests in flight, retries only 429 and 5xx (at most 3 attempts, Retry-After honoured), and waits up to 300 s per attempt.",
+  "row": "C-35"
+ },
+ {
+  "doc": "README.md",
+  "text": "The provider keeps prompts and outputs for about 2 days, so only synthetic data may be sent.",
+  "row": "C-60"
+ },
+ {
+  "doc": "README.md",
+  "text": "Before any live reading the page shows that notice, and the server requires the visitor to confirm it.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).",
+  "row": "C-57"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Deployed site has no live reading (OI-S2-02).**",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "The worst case of one live reading is 3 × 300 s + 2 × 120 s = 1140 s, above the 300 s Vercel function duration.",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "With `VERCEL` set, `/api/live/read` answers 503 \"live reading unavailable on the deployed site; live demonstration from the container\", and the page says so.",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "Judge mode works on the deployed site; live reading is demonstrated from the container.",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live-read limit per instance (OI-S2-01).** The limit is counted on the server, per server instance, in memory.",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "Measured consequence: two instances with a limit of 2 let 4 readings through (test \"the live limit is per instance\" in `test/web.test.ts`).",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour, all drawn on the same endpoint key.",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "A shared store behind the same interface (`src/web/limiter.ts`) would make it global.",
+  "row": "none: design note on a possible change, not a capability"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Uploads.** Without `LIVE_ACCESS_CODE`, live reading is limited to the 30 dataset certificates, matched by SHA-256; with it, a visitor's synthetic file can also be read.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "The access-code path is tested against a local stub with a test-only code, and no real access code is configured on the band's host.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "**cg-003, the ambiguous scan.** The model reads the smudged yield strength confidently as **338** MPa; the true value is 358.",
+  "row": "C-38"
+ },
+ {
+  "doc": "README.md",
+  "text": "It did so in both completed tuning reads, in the recorded story and in the adversary's probe.",
+  "row": "C-38"
+ },
+ {
+  "doc": "README.md",
+  "text": "The product therefore proposes **block** (rule failure plus no second channel), never release, and the scan still needs a person to confirm every critical field.",
+  "row": "C-38"
+ },
+ {
+  "doc": "README.md",
+  "text": "The story card shows what the recorded run shows.",
+  "row": "C-38"
+ },
+ {
+  "doc": "README.md",
+  "text": "The prompt was not tuned to change this.",
+  "row": "C-38"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Decimal comma, no unit.** The model sometimes returns a printed CEV with a decimal comma and no unit (`0,41`).",
+  "row": "C-39"
+ },
+ {
+  "doc": "README.md",
+  "text": "It happened once in each real run, on a different case each time (cg-028 in the implementer run, cg-004 in the auditor's).",
+  "row": "C-39"
+ },
+ {
+  "doc": "README.md",
+  "text": "The text-layer channel check caught it every time, and the case went to review.",
+  "row": "C-39"
+ },
+ {
+  "doc": "README.md",
+  "text": "**No model-written explanation.** The model is not asked for an explanation, and the product never shows one.",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "This deviates from step 7 of the product design (03-DISENO); it was chosen to keep decisions entirely in the deterministic rules (I1).",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "The case file shows the rule reasons.",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Locations are the model's claim.** The page and fragment where the model says it found a value are labelled \"as reported by the model\" and are not verified.",
+  "row": "C-40"
+ },
+ {
+  "doc": "README.md",
+  "text": "On digital PDFs the text layer checks the values, not the locations.",
+  "row": "C-40"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Hostile duplicate field.** A text layer with a spoofed duplicate of a field (cg-022: \"ReH (MPa) 400\" while the table says 340) makes that field unknown.",
+  "row": "C-41"
+ },
+ {
+  "doc": "README.md",
+  "text": "A would-be block becomes review, never release.",
+  "row": "C-41"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Prompt examples.** The reading instruction's examples reuse values of cg-001 (\"0.16\", \"392\", \"QA-07\"). cg-001 is a tuning and story case, outside the 27-case evaluation.",
+  "row": "C-61"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Text-layer parser.** It covers the two fictitious certificate layouts of the dataset, not arbitrary mill certificates.",
+  "row": "C-62"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Cosmetic:** `/favicon.ico` answers 404.",
+  "row": "none: states a missing static file (cosmetic limitation)"
+ },
+ {
+  "doc": "README.md",
+  "text": "**One endpoint and one model.** The results apply to Qwen3.8-27B on AMD Token Factory, as reported on 2026-10-13.",
+  "row": "C-11"
+ },
+ {
+  "doc": "README.md",
+  "text": "A repeat run may differ: the two independent runs differ in one proposal (cg-004, review) and in timing.",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "The dataset has 30 fictitious certificates with planted faults, 25 digital and 5 scanned.",
+  "row": "C-43"
+ },
+ {
+  "doc": "README.md",
+  "text": "All are fictitious: three demo certificates were created before the kickoff, and 27 were created in this run.",
+  "row": "C-43"
+ },
+ {
+  "doc": "README.md",
+  "text": "The expected outcomes were written and committed before any product code.",
+  "row": "C-43"
+ },
+ {
+  "doc": "README.md",
+  "text": "For the cases whose planted fault exists only in the mock, the real-model expectations were written by hand before the first real run ([evaluation/expectations-real-run.json](evaluation/expectations-real-run.json)).",
+  "row": "C-43"
+ },
+ {
+  "doc": "README.md",
+  "text": "See [data/README.md](data/README.md) for provenance, coverage and checksums.",
+  "row": "none: pointer to the dataset README"
+ },
+ {
+  "doc": "README.md",
+  "text": "The codes of [data/expected/README.md](data/expected/README.md), plus these, raised by the product:",
+  "row": "none: lead-in to the table that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Code | When | Effect |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `TEXT_LAYER_MISSING:<field>` | The model channel read a field that the text layer does not contain | review |",
+  "row": "C-63"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `RULE_NOT_EVALUABLE:<field>` | A spec rule's input is unknown | review |",
+  "row": "C-63"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `NOT_A_NUMBER:<field>` | A numeric field holds text that is not a decimal | review |",
+  "row": "C-63"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `READER_ERROR:invalid_output` | Model output parses as JSON but breaks the reading schema | review, status error |",
+  "row": "C-63"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `READER_ERROR:endpoint_not_configured` | `CERTGATE_MODE=real` without an adapter | review, status error |",
+  "row": "C-63"
+ },
+ {
+  "doc": "README.md",
+  "text": "CertGate was built by a band of four Claude Code seats: analyst, implementer, adversary and auditor.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "The implementer alone wrote the product.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "The adversary attacked it, including mutation checks.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "The auditor accepted or rejected each stage independently.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "In Stage 3 it made its own real evaluation run.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "The UI was designed with Claude Design and implemented by the band: the design defines the look, and the behaviour follows the written specification.",
+  "row": "none: design credit (process statement in the dispatch)"
+ },
+ {
+  "doc": "README.md",
+  "text": "The model that reads the certificates in this build runs on AMD Token Factory.",
+  "row": "C-11"
+ },
+ {
+  "doc": "README.md",
+  "text": "[MIT](LICENSE).",
+  "row": "C-65"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The band does not deploy and holds no Vercel or GitHub credentials; the human does this.",
+  "row": "none: division of work between the band and the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Deploy the accepted commit named in the room.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The deployed site is **judge mode only**: three recorded real readings, the case files, human confirmation and decision, the receipts, and the landing figures.",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "It makes **no model call**.",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Live reading runs from the container (README, \"Real mode\"), never from the deployed site.",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Setting | Value |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Framework preset | Other |",
+  "row": "none: Vercel project setting to enter (instruction)"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Root directory | the repository root |",
+  "row": "none: Vercel project setting to enter (instruction)"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Install command | `npm ci` |",
+  "row": "none: Vercel project setting to enter (instruction)"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Build command | `npm run build` |",
+  "row": "none: Vercel project setting to enter (instruction)"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Output directory | `public`, already set in `vercel.json` (`\"outputDirectory\": \"public\"`) |",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Node.js version | 24.x (`package.json` `engines.node` is `>=24`) |",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Function | `api/index.ts`, configured in `vercel.json`; the `/api/*` and `/health` rewrites are in `vercel.json` too |",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Set the **maximum duration to 300 seconds**.",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "`vercel.json` already does it: `\"maxDuration\": 300` for `api/index.ts`.",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Do not lower it.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "300 s is the default and maximum of the **Hobby** plan, and the default of the Pro plan, as quoted in [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md):",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "\"Hobby 300s (5 minutes) 300s (5 minutes)\";",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "source https://vercel.com/docs/functions/limitations, retrieved 2026-10-12.",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Any plan works.",
+  "row": "C-45"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Even 300 s cannot hold one live reading.",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Its worst case is 3 × 300 s + 2 × 120 s = 1140 s (`LIVE_WORST_CASE_MS` in `src/web/limits.ts`).",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "That is why the deployed site has no live reading: with `VERCEL` set, `/api/live/read` answers 503.",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Variable | On Vercel | Why |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_BASE_URL` | **do not set** | Live reading is unavailable on Vercel by design. Without it, the \"Runs on AMD\" panel honestly shows \"endpoint off\", and the shared endpoint key is never exposed to anonymous traffic |",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_API_KEY` | **do not set** | same |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_ID` | **do not set** | same |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_READS_PER_HOUR` | leave unset | live reading is off on Vercel anyway; unset also means \"disabled\" |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_ACCESS_CODE` | leave unset | only meaningful with live reading |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | leave unset | same |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_WINDOWS` | optional | free text shown on the landing, for example the time of a live demo from the container |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `CERTGATE_MODE` | leave unset (`mock`) | dataset API only |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `CERTGATE_DATA_DIR` | leave unset | the function bundles `data/` (`includeFiles` in `vercel.json`) |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `PORT` | leave unset | not used by the Vercel function |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `VERCEL` | **set by Vercel itself**; never set or remove it | it switches live reading off on the deployed site |",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Replace `<site>` with the deployment URL. Each check states its expected result.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "In a browser, at phone width (375 px) and desktop width (1280 px):",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The landing shows the fictitious-data notice and four figures with denominators, and names the evaluation run they come from.",
+  "row": "C-21"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The endpoint pill says \"Model endpoint: off\".",
+  "row": "C-25"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Judge mode lists cg-001, cg-002 and cg-003, each labelled \"recorded real reading … not live\".",
+  "row": "C-22"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "On cg-003, release is disabled.",
+  "row": "C-23"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "After confirming every critical field with ReH 358 and re-running the rules, release becomes possible.",
+  "row": "C-23"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The receipt opens and downloads as JSON.",
+  "row": "C-24"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "\"Read a certificate live\" says \"live reading unavailable on the deployed site; live demonstration from the container\", and \"Read live\" is disabled.",
+  "row": "C-36"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The page makes no request outside the site.",
+  "row": "C-29"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Check the browser network tab.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Known cosmetic issue: `/favicon.ico` answers 404.",
+  "row": "none: states a missing static file (cosmetic limitation)"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Then report the URL in the room so that the auditor can check it: every asset answers 200, and the served files match the committed ones.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Real model, real endpoint: each run read 27 fictitious certificates (cg-004 … cg-030) through AMD Token Factory.",
+  "row": "C-19"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Definitions follow register D3-05 as amended by R3.1 C-08 … C-11 and C-15. cg-001 … cg-003 were used to tune the prompt and are excluded from both runs.",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The two runs are independent: different seats, different clean checkouts, different times.",
+  "row": "C-19"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The landing page shows the figures of the implementer run, and names that run.",
+  "row": "C-21"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Candidate commits: each run names the commit it actually ran (below).",
+  "row": "C-56"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The accepted Stage 3 candidate is `5c904693`.",
+  "row": "C-20"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Between these commits the reading path is identical by diff: the reader's request and parsing, the frozen prompt and the rules.",
+  "row": "C-20"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The later commits changed receipt contents (the F1 snapshot and the \"as reported by the model\" location label), the UI, the upload policy and the tests.",
+  "row": "C-20"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "**False conforming** (the grave error): FC-broad = proposal release where the expected proposal is not release, over all cases whose expected proposal is not release.",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "FC-strict = release where the expected proposal is block, over the expected-block cases (C-08).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Any false conforming in any real run is a REJECT finding with a root-cause line (C-19).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "**Rule abstention** = proposal review with status processed; **failure** = status error, by class; reported separately, each over all evaluated cases (C-09).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "**Per-field accuracy** compares the model channel with the correct reading of each critical field: correct, unknown, wrong, invented (a value where the field is absent), and **confident-on-illegible** (a confident value where the correct reading is illegible), counted separately (C-10).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "**Seconds and cost per certificate** are over processed cases (status not error), with N; a missing reported cost is unknown, never zero (C-11).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Requests use **temperature 0** (C-12).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The runs are reported side by side, with every per-case proposal difference listed below; a difference is never hidden behind one passing run.",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Receipts and run artifacts carry the endpoint reply's id, created time, model and usage as returned (C-14); GET /usage is read before and after each run and reconciled with the sum of per-reply costs (C-15).",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "The tuning cases **cg-001, cg-002 and cg-003** are excluded from the evaluation (D3-03); they are the judge-mode stories.",
+  "row": "C-66"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| | Implementer run (source of the landing figures) | Auditor's independent run |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Artifacts | `evaluation/runs/real-candidate-dd557fd/` | `evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/` |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Candidate commit | `dd557fd2` | `a892f771` |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Prompt SHA-256 | `32fad2f9…` | `32fad2f9…` |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Started → finished (UTC) | 2026-10-13T17:28:48.044Z → 2026-10-13T17:49:07.371Z | 2026-10-13T19:13:55.353Z → 2026-10-13T19:31:41.732Z |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Endpoint host · model requested | developer.amd.com.cn · Qwen3.8-27B | developer.amd.com.cn · Qwen3.8-27B |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Model as reported | self-dploy/Qwen3.8-27B | self-dploy/Qwen3.8-27B |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Outcome | completed, 27 of 27 cases | completed, 27 of 27 cases |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Metric | implementer | auditor |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| **False conforming, FC-broad** (released where the expected proposal was not release) | **0 / 18** | **0 / 18** |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| False conforming, FC-strict (released where the expected proposal was block) | 0 / 6 | 0 / 6 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| FC-broad over all evaluated cases | 0 / 27 | 0 / 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Non-conformities caught (expected block, not released) | 6 / 6 | 6 / 6 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| … of which proposed block | 6 / 6 | 6 / 6 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Proposal equal to the expected proposal | 27 / 27 | 26 / 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Rule abstention (review, status processed) | 12 / 27 | 13 / 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Failures (status error) | 0 / 27 | 0 / 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Requests · retries | 27 · 0 | 27 · 0 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Seconds per certificate (processed; mean · median · N) | 89.6 · 80.6 · 27 | 77.1 · 76.9 · 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Latency per request, ms (mean · median · N) | 89500 · 80554 · 27 | 76988 · 76808 · 27 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Tokens per certificate (total mean · completion mean · reasoning mean) | 4234 · 1441 · 552 | 4211 · 1418 · 529 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Cost per certificate (mean · median · N; cost reported by the endpoint; Token Factory credits are free and have no monetary value) | 0.00020529 · 0.00020112 · 27 (unknown 0) | 0.00020863 · 0.0001993 · 27 (unknown 0) |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Cases: non-conformities caught (both runs) — implementer: cg-005, cg-006, cg-007, cg-012, cg-020, cg-021; auditor: cg-005, cg-006, cg-007, cg-012, cg-020, cg-021.",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "False conforming — implementer: —; auditor: —.",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "No false conforming in either run, so no root-cause line is owed (C-08).",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Case | Expected | implementer | auditor |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-004 | release | release | **review** |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-005 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-006 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-007 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-008 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-009 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-010 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-011 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-012 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-013 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-014 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-015 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-016 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-017 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-018 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-019 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-020 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-021 | block | block | block |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-022 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-023 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-024 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-025 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-026 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-027 | release | release | release |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-028 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-029 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| cg-030 | review | review | review |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Cases where the two runs differ: cg-004.",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "implementer: none.",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "auditor: cg-004 proposed review, expected release (CHANNEL_DISAGREE:cev_printed, CRITICAL_UNKNOWN:cev_printed).",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "No mismatch in either run is a release.",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Category | implementer | auditor |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| correct | 591 / 594 | 591 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| correct absent | 1 / 594 | 1 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| correct unknown | 1 / 594 | 1 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| unknown | 0 / 594 | 0 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| wrong | 1 / 594 | 1 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| invented | 0 / 594 | 0 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| confident on illegible | 0 / 594 | 0 / 594 |",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Every wrong field, with its cause as derived from the recorded values:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "implementer: cg-028 `cev_printed` read `0,41` with no unit, correct `0.41`: **value right (decimal comma), unit missing**; the case was proposed review (CHANNEL_DISAGREE:cev_printed: the model-free text layer disagreed).",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "auditor: cg-004 `cev_printed` read `0,39` with no unit, correct `0.39`: **value right (decimal comma), unit missing**; the case was proposed review (CHANNEL_DISAGREE:cev_printed: the model-free text layer disagreed).",
+  "row": "C-47"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| | implementer | auditor |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| daily_cost_used before → after | 0.002272235229611397 → 0.00781511701643467 | 0.011463937349617481 → 0.01709706149995327 |",
+  "row": "C-48"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "| Delta · sum of per-reply cost · difference | 0.00554288 · 0.00554288 · 0 | 0.00563312 · 0.00563312 · 0 |",
+  "row": "C-48"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "All costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.",
+  "row": "C-17"
+ }
+]

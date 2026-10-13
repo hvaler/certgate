@@ -114,13 +114,28 @@ repoOnly("function duration (F-10, S4-02)", () => {
 repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12)", () => {
   it("no forbidden claim in README, DEPLOY.md, METRICS.md or public", () => {
     const files = ["README.md", "DEPLOY.md", "METRICS.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
-    const forbidden = [/MI3\d\d/, /ROCm \d/, /vLLM \d/, /deployed at/i, /\blive at\b/i, /submitted/i, /winner/i, /qualif/i, /own vLLM endpoint/i, /AMD Instinct/i];
+    const forbidden = [/MI3\d\d/, /ROCm \d/, /vLLM \d/, /deployed at/i, /\blive at\b/i, /submitted/i, /winner/i, /qualif/i, /own vLLM endpoint/i, /AMD Instinct/i,
+      // R4.7 (F-06 extension): no hosted-demo claim or deployment URL. The cited Vercel documentation URL is allowed.
+      /vercel\.app/i, /hosted demo/i, /https?:\/\/(?!localhost|127\.|vercel\.com\/docs\/)[^\s)"'`]*(vercel|netlify)/i];
     for (const f of files) for (const re of forbidden) expect(read(f), `${f}: ${re}`).not.toMatch(re);
   });
   it("no secret-looking value in the docs", () => {
-    const patterns = [/Bearer\s+[A-Za-z0-9._-]{20,}/, /\bsk-[A-Za-z0-9]{10,}/, /\b(KEY|TOKEN|SECRET|PASSWORD|CODE)\s*[=:]\s*["']?[A-Za-z0-9+/._-]{16,}/, /jury-code-77/,
-      /https?:\/\/(?!127\.0\.0\.1|localhost|<site>)[^\s)"'`]*\/v1\b/];
-    for (const f of DOCS) for (const re of patterns) expect(read(f), `${f}: ${re}`).not.toMatch(re);
+    const patterns = [
+      /Bearer\s+[A-Za-z0-9._-]{20,}/,
+      /sk-[A-Za-z0-9_-]{16,}/,
+      // Any NAME_KEY / _TOKEN / _SECRET / _PASSWORD / _CODE followed by = or : and a value on the same line.
+      /[A-Z0-9_]*(KEY|TOKEN|SECRET|PASSWORD|CODE)[ \t]*[=:][ \t]*["']?(?!stub-key\b)[A-Za-z0-9+/._-]{6,}/,
+      /jury-code-77/,
+      /https?:\/\/(?!127\.0\.0\.1|localhost|<site>)[^\s)"'`]*\/v1\b/,
+    ];
+    // High-entropy token: 24 or more of [A-Za-z0-9_-] with at least 4 letter/digit alternations (as in generated
+    // keys), so that file names such as BLOCKER-host-memory-1906Z are not flagged.
+    const highEntropy = (t: string) => (t.match(/[A-Za-z0-9_-]{24,}/g) ?? []).filter((w) => (w.match(/[A-Za-z](?=\d)|\d(?=[A-Za-z])/g) ?? []).length >= 4);
+    for (const f of DOCS) {
+      const t = read(f);
+      for (const re of patterns) expect(t, `${f}: ${re}`).not.toMatch(re);
+      expect(highEntropy(t), `${f}: high-entropy token`).toEqual([]);
+    }
     // The real endpoint values from this host's environment, compared by presence only (never printed).
     for (const v of [process.env.MODEL_API_KEY, process.env.MODEL_BASE_URL, process.env.LIVE_ACCESS_CODE]) {
       if (!v) continue;
@@ -138,5 +153,78 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
       if (bad.test(t)) hits.push(f);
     }
     expect(hits).toEqual([]);
+  });
+});
+
+repoOnly("sentence map (F-02 completeness, ADV-S4-F02)", () => {
+  it("every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason", async () => {
+    // @ts-expect-error plain JS tool
+    const { allUnits, loadMap } = await import("../tools/claims-units.mjs");
+    const map: { doc: string; text: string; row: string }[] = loadMap(ROOT);
+    const key = (u: { doc: string; text: string }) => `${u.doc} :: ${u.text}`;
+    const mapped = new Map(map.map((m) => [key(m), m.row]));
+    const units: { doc: string; text: string }[] = allUnits(ROOT);
+    const missing = units.filter((u) => !mapped.has(key(u))).map(key);
+    expect(missing, "sentences without a claims-map entry (map them in claims-map.json)").toEqual([]);
+    const present = new Set(units.map(key));
+    expect(map.filter((m) => !present.has(key(m))).map(key), "stale claims-map entries").toEqual([]);
+    const rows = new Set([...read("CLAIMS.md").matchAll(/^\| (C-\d+) \|/gm)].map((m) => m[1]!));
+    for (const m of map) {
+      if (m.row.startsWith("none:")) expect(m.row.length, key(m)).toBeGreaterThan(10);
+      else expect(rows.has(m.row), `${key(m)} cites unknown row ${m.row}`).toBe(true);
+    }
+  });
+});
+
+repoOnly("README facts against their sources (ADV-S4-F01, F-04)", () => {
+  const runDirs = {
+    implementer: "evaluation/runs/real-candidate-dd557fd",
+    auditor: "evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1",
+  };
+  it("README provenance facts equal the run artifacts and the publisher record", () => {
+    const readme = read("README.md");
+    const row = readme.split("\n").find((l) => l.startsWith("| Candidate · time (UTC) |"))!;
+    const cells = row.split(" | ");
+    for (const [i, dir] of [[1, runDirs.implementer], [2, runDirs.auditor]] as const) {
+      const run = JSON.parse(read(`${dir}/run.json`));
+      const commit = /`([0-9a-f]{7,40})`/.exec(cells[i]!)![1]!;
+      expect(run.candidate_commit.startsWith(commit), `${dir}: README says ${commit}`).toBe(true);
+      const models = new Set(JSON.parse(read(`${dir}/results.json`)).map((r: any) => r.endpoint_response?.model));
+      expect([...models]).toEqual(["self-dploy/Qwen3.8-27B"]);
+      expect(run.model_requested).toBe("Qwen3.8-27B");
+    }
+    const flat = readme.replace(/\s+/g, " ");
+    expect(flat).toContain("requested as `Qwen3.8-27B`; every reply reports it as `self-dploy/Qwen3.8-27B`");
+    const model = read("docs/sources/model.md");
+    const licence = /`([a-z0-9.-]+)` \("License: ([a-z0-9.-]+)"/.exec(model)!;
+    expect(licence[1]).toBe(licence[2]);
+    expect(flat).toContain(`its licence, as published by the publisher, is ${licence[1]}`);
+    expect(model).toContain("| Publisher | Qwen Team");
+    expect(readme).toContain("Its publisher is the\n  Qwen Team");
+    expect(readme).toContain("https://huggingface.co/Qwen/Qwen3.8-27B, retrieved 2026-10-13");
+  });
+  it("README reading-time range equals the implementer run's min and max", () => {
+    const m = JSON.parse(read(`${runDirs.implementer}/metrics.json`));
+    const lo = Math.round(Number(m.time.seconds_per_certificate_processed.min));
+    const hi = Math.round(Number(m.time.seconds_per_certificate_processed.max));
+    expect(read("README.md").replace(/\s+/g, " ")).toContain(`(${lo}–${hi} s per certificate in the evaluation)`);
+    expect(lo).toBeGreaterThanOrEqual(45);
+    expect(hi).toBeLessThanOrEqual(240); // "about 1 to 4 minutes"
+  });
+  it("the retry and failure sentence equals both runs' artifacts", () => {
+    const readme = read("README.md");
+    for (const dir of Object.values(runDirs)) {
+      const m = JSON.parse(read(`${dir}/metrics.json`));
+      expect(m.retries.cases_with_retry).toEqual([]);
+      expect(m.abstentions.failure.numerator).toBe("0");
+    }
+    expect(readme.replace(/\s+/g, " ")).toContain("In the band's two evaluation runs there were 0 retries and 0 failures.");
+  });
+  it("the prompt examples named in the README occur in the instruction and in cg-001's correct reading", () => {
+    const src = read("src/web/live-reader.ts");
+    const cg1 = JSON.parse(read("data/expected/cg-001.json")).correct_reading;
+    expect([cg1.chemistry.C.value, cg1.mechanical.ReH.value, cg1.inspection_stamp.value]).toEqual(["0.16", "392", "QA-07"]);
+    for (const v of ["0.16", "392", "QA-07"]) expect(src).toContain(`\\"${v}\\"`);
+    expect(read("README.md").replace(/\s+/g, " ")).toContain('reuse values of cg-001 ("0.16", "392", "QA-07")');
   });
 });

@@ -6,7 +6,11 @@ CLAIMS.md exists"):
 - `test:<file>::<title fragment>` names a test whose title contains the fragment;
 - `file:<path>` and `evidence:<path>` name a file or directory that exists.
 
-The completeness of this table is judged by independent enumeration (R4.3 F-02).
+Completeness is checked mechanically. [claims-map.json](claims-map.json) assigns every sentence, list item and
+table row of README.md, DEPLOY.md and METRICS.md (as split by `tools/claims-units.mjs`) either a row below or
+"none: <why it is not a capability>". The test "every sentence of README, DEPLOY.md and METRICS.md is in the claims
+map" fails when a sentence is added or changed without being mapped again. The adversary and the auditor also
+enumerate the sentences independently (R4.3 F-02).
 
 | ID | Doc | Claim | Proof |
 |---|---|---|---|
@@ -47,7 +51,7 @@ The completeness of this table is judged by independent enumeration (R4.3 F-02).
 | C-35 | README | Calling discipline: at most 2 requests in flight, retries only 429 and 5xx, at most 3 attempts, Retry-After honoured, 300 s per attempt | test:test/live-reader.test.ts::429 is retried, honouring Retry-After, at most 3 attempts in all; test:test/live-reader.test.ts::backoff is exponential and capped; test:test/live-reader.test.ts::requests in flight, across readers |
 | C-36 | README, DEPLOY | The deployed site has no live reading (worst case 1140 s above 300 s): 503 with the stated reason; judge mode works there | test:test/web.test.ts::time budget: the worst-case live reading does not fit the deployed function |
 | C-37 | README | The live-read limit is per instance; measured: two instances with a limit of 2 let 4 readings through | test:test/web.test.ts::the live limit is per instance |
-| C-38 | README | Limitation cg-003: the model reads ReH 338; the product proposes block, never release | evidence:public/stories/cg-003.recording.json; test:test/web.test.ts::the cg-003 card makes no claim about which digit the model read |
+| C-38 | README | Limitation cg-003: the model reads ReH 338 (both completed tuning reads, the recorded story, the adversary probe); the product proposes block, never release | evidence:public/stories/cg-003.recording.json; evidence:evaluation/dev-calls.jsonl; evidence:evaluation/runs/real-candidate-dd557fd/REPORT.md; test:test/web.test.ts::the cg-003 card makes no claim about which digit the model read |
 | C-39 | README, METRICS | Decimal comma and no unit, once per run on different cases, caught by the channel check (review) | test:test/metrics-md.test.ts::equals a fresh generation from the committed artifacts; evidence:evaluation/runs/real-candidate-dd557fd/metrics.json |
 | C-40 | README | Locations are labelled "as reported by the model" and not verified | file:src/web/view.ts; evidence:evidence/runs/certgate-001/stage-3/implementer/HANDOFF-S3-candidate-1.md |
 | C-41 | README | A hostile duplicate field in the text layer makes the field unknown: review, never release (cg-022) | test:test/channels.test.ts::a spoofed duplicate field in free text is a conflict |
@@ -59,3 +63,20 @@ The completeness of this table is judged by independent enumeration (R4.3 F-02).
 | C-47 | METRICS | METRICS.md is generated from the committed artifacts and equals a fresh generation | test:test/metrics-md.test.ts::equals a fresh generation from the committed artifacts, byte for byte |
 | C-48 | METRICS | GET /usage delta equals the sum of per-reply costs in both runs | evidence:evaluation/runs/real-candidate-dd557fd/usage-before.json; evidence:evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/usage-after.json |
 | C-49 | README | No claim of AMD hardware or software beyond what the endpoint reports, of deployment, or of submission | test:test/docs.test.ts::no forbidden claim in README, DEPLOY.md, METRICS.md or public |
+| C-50 | README | Input limits: CLI and container PDF up to 10 MiB and delivery note up to 1 MiB; web PDF up to 3 MiB and delivery note up to 256 KiB | test:test/inputs.test.ts::rejects an oversized file; test:test/stage4-claims.test.ts::delivery note: over 1 MiB is rejected; test:test/stage4-claims.test.ts::delivery note: over 256 KiB is rejected by the web upload with 413; test:test/web.test.ts::web upload limit is below the Vercel body limit and enforced |
+| C-51 | README | LIVE_READS_PER_HOUR unset, invalid or 0 disables live reading (fail closed) | test:test/web.test.ts::status: disabled when LIVE_READS_PER_HOUR is unset, 0 or invalid |
+| C-52 | README | LIVE_CODE_FAILURES_PER_HOUR defaults to 5 wrong codes per UTC hour, then rejects | test:test/stage4-claims.test.ts::without LIVE_CODE_FAILURES_PER_HOUR, 5 wrong codes are refused |
+| C-53 | README | CLI exit codes: 0 processed, 2 input rejected, 1 internal error | test:test/stage4-claims.test.ts::0 processed, 2 input rejected, 1 internal error |
+| C-54 | README | A confirmation without a unit is taken in the field's expected unit | test:test/stage4-claims.test.ts::ReH 358 confirmed with no unit is MPa |
+| C-55 | README, DEPLOY | LIVE_WINDOWS is shown as text (status and landing) | test:test/stage4-claims.test.ts::configured: the status carries the text as is; test:test/stage4-claims.test.ts::unset: no window is announced |
+| C-56 | README, METRICS | Provenance facts: run commits (dd557fd, a892f771), model as reported (self-dploy/Qwen3.8-27B), publisher Qwen Team and licence apache-2.0 | test:test/docs.test.ts::README provenance facts equal the run artifacts and the publisher record; file:docs/sources/model.md |
+| C-57 | README | Reading time: about 1 to 4 minutes, 52–208 s per certificate in the evaluation | test:test/docs.test.ts::README reading-time range equals the implementer run's min and max |
+| C-58 | README | Screens: landing and judge mode, recorded run, case kept in the browser, Runs on AMD, receipt with JSON download | evidence:evidence/runs/certgate-001/stage-4/implementer/browser-checks.log; test:test/story-screen-render.test.ts::the story screen label and the receipt screen label end with "not live" |
+| C-59 | README | HTTP API routes as documented (f1, live status, live read, dataset API) | test:test/web.test.ts::probes are cached server-side; test:test/web.test.ts::status: disabled when LIVE_READS_PER_HOUR is unset; test:test/web.test.ts::reads through the adapter; test:test/entrypoints.test.ts::answers /health and processes a dataset case |
+| C-60 | README | Shared-service limits (about 20–30 rpm, 8 concurrent, daily cap 1 in free credits), errors seen by the human, about 2 days retention | evidence:evidence/runs/certgate-001/DISPATCH-2.txt; evidence:test/fixtures/endpoint/usage.json |
+| C-61 | README | The reading instruction's examples reuse cg-001 values ("0.16", "392", "QA-07") | test:test/docs.test.ts::the prompt examples named in the README occur in the instruction and in cg-001's correct reading |
+| C-62 | README | The text-layer parser covers the two fictitious layouts of the dataset | test:test/channels.test.ts::layout B uses a decimal comma, which is normalised; test:test/channels.test.ts::every critical field equals the correct reading |
+| C-63 | README | Product reason codes TEXT_LAYER_MISSING, RULE_NOT_EVALUABLE, NOT_A_NUMBER, READER_ERROR:invalid_output, READER_ERROR:endpoint_not_configured | test:test/channels.test.ts::a field missing from the text layer is not corroborated: review; test:test/rules.test.ts::a rule on an unknown value is not_evaluable, never pass; test:test/reader.test.ts::a model output that breaks the reading schema is invalid output: review; test:test/reader.test.ts::fails visibly and never falls back to the mock |
+| C-64 | README | Built by four Claude Code seats; the auditor accepted or rejected each stage independently and made its own real run in Stage 3 | evidence:evidence/runs/certgate-001/stage-1/auditor/VERDICT-S1-candidate-2.md; evidence:evidence/runs/certgate-001/stage-2/auditor/VERDICT-S2-candidate-2.md; evidence:evidence/runs/certgate-001/stage-3/auditor/VERDICT-S3-candidate-4.md |
+| C-65 | README | Licence MIT | test:test/static.test.ts::LICENSE is MIT |
+| C-66 | METRICS | Reporting rules (FC-broad, FC-strict, rule abstention vs failure, per-field categories, aggregates over processed cases, temperature 0, usage reconciliation, excluded tuning cases) | file:tools/evaluate/metrics.mjs; test:test/metrics-md.test.ts::equals a fresh generation from the committed artifacts |

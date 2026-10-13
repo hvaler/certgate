@@ -208,6 +208,11 @@ Every page carries the fictitious-data notice. Pages make no third-party request
 
 Release is rejected (HTTP 409, and in the core) while the proposal is not release.
 
+`GET /health` reports two separate fields. `mode` is the mode of the CLI and the dataset API (`CERTGATE_MODE`,
+`mock` by default). `reader` is `live` when an endpoint and a model are configured outside the deployed site, and
+`off` otherwise. A container in real mode therefore answers `"mode": "mock", "reader": "live"`: the dataset API
+still uses the mock, and live reading uses the endpoint.
+
 ### Live reading against the local test stub (tests and review only)
 
 ```sh

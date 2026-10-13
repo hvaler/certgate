@@ -29,7 +29,6 @@ runs from the container (README, "Real mode"), never from the deployed site.
 - Even 300 s cannot hold one live reading. Its worst case is 3 × 300 s + 2 × 120 s = 1140 s
   (`LIVE_WORST_CASE_MS` in `src/web/limits.ts`). That is why the deployed site has no live reading: with `VERCEL`
   set, `/api/live/read` answers 503.
-- The judge-mode routes answer in well under a second.
 
 ## 3. Environment variables (names only; never write a value anywhere)
 
