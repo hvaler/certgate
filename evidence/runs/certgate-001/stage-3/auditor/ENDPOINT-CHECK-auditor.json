@@ -12,5 +12,6 @@
   "x_ratelimit_headers": "none",
   "env": { "MODEL_ID_length": "11", "MODEL_BASE_URL_length": "42", "MODEL_API_KEY_length": "51" },
   "host_permission": "allowed (no block)",
-  "note": "The values of MODEL_BASE_URL and MODEL_API_KEY are not recorded."
+  "note": "The values of MODEL_BASE_URL and MODEL_API_KEY are not recorded.",
+  "lease_deviation": "This lease was taken while implementer-xwz4 still held the lease (msg f75d69e5, not yet released), so one extra GET /models was in flight alongside the implementer's calls. Flagged by analyst msg 73032426. From now on the auditor waits for ENDPOINT LEASE RELEASED before taking the lease."
 }
