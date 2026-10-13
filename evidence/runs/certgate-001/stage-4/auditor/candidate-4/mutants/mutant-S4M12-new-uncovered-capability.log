@@ -1,0 +1,36 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+ ❯ test/docs.test.ts (14 tests | 1 failed) 4479ms
+   ❯ sentence map (F-02 completeness, ADV-S4-F02) (1)
+     × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 258ms
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  1 failed | 314 passed (315)
+   Start at  23:40:55
+   Duration  12.81s (tests 95%, import 3%, transform 2%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+AssertionError: sentences without a claims-map entry (map them in claims-map.json): expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "README.md :: Detects forged inspection stamps and altered digits in scanned certificates.",
++ ]
+
+ ❯ test/docs.test.ts:179:91
+    177|     const units: { doc: string; text: string }[] = allUnits(ROOT);
+    178|     const missing = units.filter((u) => !mapped.has(key(u))).map(key);
+    179|     expect(missing, "sentences without a claims-map entry (map them in…
+       |                                                                                           ^
+    180|     const present = new Set(units.map(key));
+    181|     expect(map.filter((m) => !present.has(key(m))).map(key), "stale cl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

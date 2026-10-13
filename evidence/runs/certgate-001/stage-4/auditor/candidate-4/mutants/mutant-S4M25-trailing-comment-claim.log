@@ -1,0 +1,12 @@
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s4c2
+
+
+ Test Files  18 passed (18)
+      Tests  315 passed (315)
+   Start at  23:51:33
+   Duration  7.47s (tests 94%, import 4%, transform 1%)
+
+    Isolate  18 workers spawned · ~243ms startup each (spawn + environment, per file)
+             at least ~382ms faster with isolate: false — reuses workers across files instead of one per file
+
