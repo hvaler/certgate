@@ -124,12 +124,15 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     const positive = [
       /live reading(?: (?:also|works|is|available|runs))* (?:on|from) the deployed site/gi,
       /live reading[^.\n]*\b(?:works?|available|runs?|possible)\b[^.\n]*deployed/gi,
-      // E-11: any sentence or comment naming a "public site" or "public URL" must be a negative one.
-      /[^.#;]*\bpublic (?:site|url)\b[^.;]*/gi,
     ];
     for (const f of files) {
       const t = read(f).replace(/\s+/g, " ");
       for (const re of positive) for (const m of t.matchAll(re)) expect(m[0], `${f}: positive deployed-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
+      // E-11: any clause naming a "public site" or "public URL" must be a negative one. Checked line by line and
+      // clause by clause (". ; #" end a clause), so that a negation elsewhere cannot excuse a claim.
+      for (const line of read(f).split("\n")) {
+        for (const m of line.matchAll(/[^.#;]*\bpublic (?:site|url)\b[^.#;]*/gi)) expect(m[0], `${f}: public-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
+      }
     }
   });
   it("no secret-looking value in the docs", () => {
