@@ -191,6 +191,8 @@ export interface RunReceipt {
   rule_results: RuleResult[];
   /** Copy of the F1 panel data at reading time (S2-13). */
   f1: F1Snapshot;
+  /** Live readings: the endpoint response id, created, model and usage as returned (R3.1 C-14); null for mock. */
+  endpoint_response: Record<string, string | null> | null;
   /** Free text from the model channel, kept only as untrusted text; never used by the decision (I1, F2-04). */
   model_text: { text: string; references: string[]; planted: boolean; untrusted: true; used_for_decision: false } | null;
   notice: string;
@@ -202,16 +204,37 @@ export interface RunReceipt {
  */
 export type ReadingSource = "mock" | "planted" | "live" | "live_no_reading";
 
-/** F1 "Runs on AMD" data, only ever read from the configured endpoint (S2-11). */
+/**
+ * F1 "Runs on AMD" data. Every value is read from the configured endpoint (GET /models, GET /usage, the last
+ * reading's reply); what the endpoint does not expose is said so, never filled from code (S3-08, S3-09).
+ */
 export interface F1Snapshot {
   state: "on" | "off" | "not_applicable_mock";
   checked_at: string | null;
   detail: string;
+  /** Cited fact, not a measurement: the endpoint is AMD Token Factory, the AMD compute named by the event page. */
+  endpoint_name: string | null;
+  endpoint_source: string | null;
+  endpoint_host: string | null;
   model_ids: string[];
+  /** Model id in the last reading's reply, verbatim. */
+  model_reported: string | null;
   gpu: string | null;
   rocm_version: string | null;
   vllm_version: string | null;
   latency_ms: string | null;
+  last_reading_ms: string | null;
+  completion_tokens: string | null;
+  total_tokens: string | null;
   tokens_per_second: string | null;
-  cost_estimate_usd: string | null;
+  /** usage.cost of the last reading as reported by the endpoint; null when not reported (never zero). */
+  cost_reported: string | null;
+  cost_label: string;
+  rate_limit_rpm: string | null;
+  rate_limit_rpm_remaining: string | null;
+  daily_spend_limit: string | null;
+  daily_spend_used: string | null;
+  daily_spend_remaining: string | null;
+  usage_source: string | null;
+  probe_cached: boolean;
 }

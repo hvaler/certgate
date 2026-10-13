@@ -33,16 +33,19 @@ function parseField(key: string, raw: unknown): FieldValue {
   if (f.status === "read" && (f.value === null || (f.value as string).trim() === "")) invalid(`${key}: read without value`);
   if (f.status !== "read" && f.value !== null) invalid(`${key}: ${String(f.status)} with a value`);
   const sr = (f.source_ref ?? {}) as Record<string, unknown>;
+  const fragment = typeof sr.fragment === "string" ? sr.fragment.trim() : "";
+  // A value read without saying where it was read is not a fact: it becomes unknown (S3-01, S1-08).
+  const noSource = f.status === "read" && fragment === "";
   return {
-    value: f.value as string | null,
+    value: noSource ? null : (f.value as string | null),
     unit: (f.unit as string | null | undefined) ?? null,
-    status: f.status as FieldValue["status"],
+    status: noSource ? "unknown" : (f.status as FieldValue["status"]),
     source_ref: {
       channel: "model",
       page: typeof sr.page === "string" ? sr.page : null,
       fragment: typeof sr.fragment === "string" ? sr.fragment : "",
     },
-    note: typeof f.note === "string" ? f.note : undefined,
+    note: noSource ? "read without a source location: treated as unknown" : typeof f.note === "string" ? f.note : undefined,
     planted: f.planted === true ? true : undefined,
   };
 }

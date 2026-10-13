@@ -193,14 +193,14 @@ export function explanationNote(src: RunReceipt["reading_source"]): string {
  * keeps it only as untrusted model text.
  */
 export function explanationView(r: CaseResult, reading: RunReceipt["reading_source"]): CaseView["explanation"] {
-  const expl = r.explanation;
-  if (!expl || reading !== "live") return { available: false, text: null, note: explanationNote(reading) };
-  const fields = r.evaluation?.fields;
-  const verifiable = expl.references.length > 0 && expl.references.every((ref) => {
-    const f = fields?.get(ref);
-    return !!f && f.state === "known" && f.refs.some((s) => s.fragment.trim() !== "");
-  });
-  return verifiable
-    ? { available: true, text: expl.text, note: `model explanation, referencing ${expl.references.join(", ")}; it never decides (I1)` }
-    : { available: false, text: null, note: "The model returned a text, but it is withheld: it has no references to verifiable input. It is kept in the receipt only as untrusted model text and never used for the decision." };
+  void r;
+  // R3.1 C-04: no model-written explanation is requested or shown in this run. The case file shows the
+  // deterministic rule reasons only; any model text is kept in the receipt as untrusted and never displayed.
+  return {
+    available: false,
+    text: null,
+    note: reading === "live"
+      ? "The model only reads the certificate here; it never explains or decides. The reasons above are the deterministic rules."
+      : explanationNote(reading),
+  };
 }

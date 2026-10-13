@@ -1,0 +1,100 @@
+{
+  "recorded_utc": "2026-10-13T17:21:30.018Z",
+  "host": "developer.amd.com.cn",
+  "request": {
+    "method": "POST",
+    "path": "/chat/completions",
+    "model": "Qwen3.8-27B",
+    "case_id": "cg-003",
+    "certificate_sha256": "40899aa26ccec1e0a2e62d63a7abac8098ee0debc38df7c7b7ea121ac3619c01",
+    "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567"
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Tue, 13 Oct 2026 17:21:30 GMT",
+    "x-ratelimit-limit-user-daily-usd": "1",
+    "x-ratelimit-limit-user-rpm": "20",
+    "x-ratelimit-remaining-user-daily-usd": "0.99794626",
+    "x-ratelimit-remaining-user-rpm": "19",
+    "x-ratelimit-reset-user-daily-usd": "1791993600",
+    "x-ratelimit-used-user-daily-usd": "0.00205374"
+  },
+  "body": {
+    "id": "31a2f0c4496b48018c49055983ce586d",
+    "object": "chat.completion",
+    "created": 1791912089,
+    "model": "self-dploy/Qwen3.8-27B",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"schema\":\"certgate.model-output/1\",\"fields\":{\"issuer\":{\"value\":\"SIDERÚRGICA VALDEMORA S.A.\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"header issuer\"}},\"certificate_no\":{\"value\":\"SV-2026-118512\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Certificate no.\"}},\"certificate_type\":{\"value\":\"3.1\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"title 3.1\"}},\"date\":{\"value\":\"2026-09-19\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Fecha / Date\"}},\"heat_or_lot\":{\"value\":\"24-72015\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Heat no.\"}},\"grade\":{\"value\":\"TRN-355\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Grade\"}},\"dimensions\":{\"value\":\"25 x 2000 x 6000\",\"unit\":\"mm\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Product\"}},\"chemistry\":{\"C\":{\"value\":\"0.15\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table C\"}},\"Si\":{\"value\":\"0.19\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Si\"}},\"Mn\":{\"value\":\"1.38\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Mn\"}},\"P\":{\"value\":\"0.011\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table P\"}},\"S\":{\"value\":\"0.005\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table S\"}},\"Cr\":{\"value\":\"0.05\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Cr\"}},\"Ni\":{\"value\":\"0.04\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Ni\"}},\"Mo\":{\"value\":\"0.01\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Mo\"}},\"Cu\":{\"value\":\"0.07\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table Cu\"}},\"V\":{\"value\":\"0.002\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table V\"}}},\"cev_printed\":{\"value\":\"0.40\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"chemistry table CEV\"}},\"mechanical\":{\"ReH\":{\"value\":\"338\",\"unit\":\"MPa\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"mechanical ReH\"}},\"Rm\":{\"value\":\"529\",\"unit\":\"MPa\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"mechanical Rm\"}},\"A\":{\"value\":\"27\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"mechanical A\"}},\"KV_1\":{\"value\":\"61\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"impact Probeta 1\"}},\"KV_2\":{\"value\":\"57\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"impact Probeta 2\"}},\"KV_3\":{\"value\":\"66\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"impact Probeta 3\"}}},\"kv_temperature\":{\"value\":\"-20\",\"unit\":\"°C\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"impact title\"}},\"inspection_stamp\":{\"value\":\"QA-07\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Sello\"}}},\"explanation\":null}",
+          "tool_calls": null,
+          "reasoning": "The user wants a strict JSON transcription of the certificate. I need to read each field carefully, noting units from headers, and mark status. Let me go through the document.\n\nIssuer: \"SIDERÚRGICA VALDEMORA S.A.\"\nCertificate no: \"SV-2026-118512\"\nCertificate type: \"3.1\" (from \"CERTIFICADO DE INSPECCIÓN 3.1\" and \"type 3.1\")\nDate: \"2026-09-19\"\nHeat or lot: \"24-72015\"\nGrade: \"TRN-355\" (the grade code only; the rest is spec reference)\nDimensions: \"25 x 2000 x 6000 mm\" (from \"Chapa 25 x 2000 x 6000 mm\")\n\nChemistry table header \"(% en masa) / (wt %)\" applies to all values including CEV.\nC: 0.15, Si: 0.19, Mn: 1.38, P: 0.011, S: 0.005, Cr: 0.05, Ni: 0.04, Mo: 0.01, Cu: 0.07, V: 0.002\nCEV: 0.40 (unit % from header)\n\nMechanical: ReH (MPa) 338, Rm (MPa) 529, A (%) 27\nImpact: KV -20 °C (J). Probeta 1: 61, Probeta 2: 57, Probeta 3: 66. kv_temperature: -20 °C.\n\nInspection stamp: \"QA-07\"\n\nAll values read clearly. Units: chemistry \"%\", mechanical ReH/Rm \"MPa\", A \"%\", KV \"J\", kv_temperature \"°C\".\n\nNow produce compact JSON.\n"
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "matched_stop": 248046
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2793,
+      "total_tokens": 4122,
+      "completion_tokens": 1329,
+      "prompt_tokens_details": {
+        "cached_tokens": 384,
+        "image_tokens": 1961,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "reasoning_tokens": 448,
+      "cost": 0.0002089738,
+      "cost_details": {
+        "upstream_inference_cost": 0.0002089738,
+        "upstream_inference_prompt_cost": 0.0000845838,
+        "upstream_inference_completions_cost": 0.00012439,
+        "total_cost": 0.0002089738,
+        "input_cost": 0.000084315,
+        "output_cost": 0.00012439,
+        "cached_input_cost": 2.688e-7,
+        "cache_write_input_cost": 0,
+        "request_cost": 0,
+        "web_search_cost": 0,
+        "image_input_cost": null,
+        "image_output_cost": null,
+        "audio_input_cost": null
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 448,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "metadata": {
+      "request_id": "mM2mQBO67gcyg5JSxa2vcIckxCMordMcH4Qd1ksP",
+      "requested_model": "Qwen3.8-27B",
+      "requested_provider": null,
+      "used_model": "Qwen3.8-27B",
+      "used_provider": "self-dploy",
+      "underlying_used_model": "Qwen3.8-27B",
+      "routing": [
+        {
+          "provider": "self-dploy",
+          "model": "Qwen3.8-27B",
+          "status_code": 200,
+          "error_type": "none",
+          "succeeded": true,
+          "apiKeyHash": "ce10dea265c1cb6e0219ebfdc40832cca3d0949c855b2b05409513e79fdc4d91",
+          "logId": "yRGfQBrC9VsgR99WNuOt"
+        }
+      ],
+      "log_id": "yRGfQBrC9VsgR99WNuOt",
+      "organization_id": "oneclick-org-81955",
+      "project_id": "oneclick-project-81955",
+      "discount": null
+    }
+  }
+}

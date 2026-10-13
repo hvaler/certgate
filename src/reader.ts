@@ -11,17 +11,30 @@ export type ReaderErrorClass =
   | "http_5xx"
   | "invalid_json"
   | "invalid_output"
+  | "truncated_output"
   | "endpoint_not_configured";
 
 export const RETRYABLE: ReadonlySet<ReaderErrorClass> = new Set(["timeout", "http_429", "http_5xx"]);
 export const MAX_RETRIES = 2;
 
 export class ReaderError extends Error {
-  constructor(readonly errorClass: ReaderErrorClass, message: string) {
+  /** Delay the server asked for (Retry-After), in milliseconds, when it gave one. */
+  constructor(readonly errorClass: ReaderErrorClass, message: string, readonly retryAfterMs: number | null = null) {
     super(message);
     this.name = "ReaderError";
   }
 }
+
+/** How a reader is retried by the pipeline. The mock keeps the Stage 1 policy (A-14); the live reader its own. */
+export interface RetryPolicy {
+  retryable: ReadonlySet<ReaderErrorClass>;
+  /** Total attempts per read, including the first. */
+  maxAttempts: number;
+  /** Wait before attempt n+1 (n starts at 1), given the error of attempt n. */
+  delayMs(attempt: number, error: ReaderError): number;
+}
+
+export const MOCK_RETRY_POLICY: RetryPolicy = { retryable: RETRYABLE, maxAttempts: MAX_RETRIES + 1, delayMs: () => 0 };
 
 export interface ReadRequest {
   case_id: string;
@@ -41,6 +54,10 @@ export interface ModelReader {
   read(req: ReadRequest): Promise<string>;
   /** Number of read() calls made so far on this instance. */
   readonly calls: number;
+  /** Retry policy; absent means MOCK_RETRY_POLICY. */
+  readonly retry?: RetryPolicy;
+  /** Live readers: identity and usage of the last endpoint response, as returned (R3.1 C-14). */
+  readonly lastResponse?: Record<string, string | null> | null;
   /**
    * Deviations the reader itself declares as planted (dataset mock only). They are known even when read()
    * fails, so a receipt of an injected failure is still labelled planted (register A-01, D1-05, finding F-01).

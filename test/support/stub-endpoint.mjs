@@ -1,5 +1,6 @@
-// TEST DOUBLE, NOT A MODEL (register D2-05, B-01). A local stand-in for an OpenAI-compatible vLLM endpoint and
-// its GPU sidecar, used only by tests and by reviewers to exercise F1, the live-read limit and the C11 paths.
+// TEST DOUBLE, NOT A MODEL (register D2-05, B-01). A local stand-in for an OpenAI-compatible endpoint shaped like
+// AMD Token Factory (GET /models, GET /usage, POST /chat/completions with usage.cost and X-RateLimit headers), used
+// only by tests and by reviewers to exercise F1, the live-read limit and the C11 paths. It calls nothing upstream.
 // It identifies itself as model "certgate-test-stub"; it never reads a certificate. Its chat reply is the mock
 // model output of the dataset case named in the request (or cg-001), relabelled as stub output.
 //
@@ -20,9 +21,12 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
   const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null };
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://stub");
-    const json = (status, body) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(body)); };
+    const json = (status, body, headers = {}) => { res.writeHead(status, { "content-type": "application/json", ...headers }); res.end(JSON.stringify(body)); };
     if (url.pathname === "/v1/models") return json(200, { object: "list", data: [{ id: STUB_MODEL_ID, object: "model" }] });
-    if (url.pathname === "/gpu-info") return json(200, { gpu: "TEST STUB (no GPU)", rocm_version: "stub-0", vllm_version: "stub-0" });
+    if (url.pathname === "/v1/usage") {
+      state.usageCalls = (state.usageCalls ?? 0) + 1;
+      return json(200, { rpm_limit: 20, daily_cost_limit_usd: 1, daily_cost_used_usd: 0.001 * state.chatCalls, daily_cost_remaining_usd: 1 - 0.001 * state.chatCalls });
+    }
     if (url.pathname === "/v1/chat/completions" && req.method === "POST") {
       let body = "";
       req.on("data", (c) => { body += c; });
@@ -38,7 +42,11 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
           case "huge": res.writeHead(200, { "content-type": "application/json" }); return res.end("x".repeat(2 * 1024 * 1024));
           default: {
             const output = readFileSync(state.readingFile ?? path.join(ROOT, "data", "cases", state.caseId, "reading.json"), "utf8");
-            return json(200, { ...(state.omitModel ? {} : { model: state.reportedModel ?? STUB_MODEL_ID }), choices: [{ message: { role: "assistant", content: output } }], usage: { completion_tokens: 420 } });
+            return json(200, {
+              id: `stub-${state.chatCalls}`, created: 1760371200, ...(state.omitModel ? {} : { model: state.reportedModel ?? STUB_MODEL_ID }),
+              choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content: output } }],
+              usage: { prompt_tokens: 1800, completion_tokens: 420, total_tokens: 2220, completion_tokens_details: { reasoning_tokens: 300 }, cost: 0.001 },
+            }, { "x-ratelimit-limit-user-rpm": "20", "x-ratelimit-remaining-user-rpm": "19", "x-ratelimit-limit-user-daily-usd": "1", "x-ratelimit-remaining-user-daily-usd": String(1 - 0.001 * state.chatCalls) });
           }
         }
       });

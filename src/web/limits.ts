@@ -11,8 +11,12 @@ export const WEB_MAX_DELIVERY_BYTES = 256 * 1024;
 /** Request bodies above this are rejected with 413 before parsing; stays below the Vercel limit. */
 export const WEB_MAX_REQUEST_BYTES = 4_400_000;
 
-/** Live adapter: per-attempt timeout and bounded retries; 3 x 60 s + backoff < 300 s, one invocation. */
-export const ADAPTER_ATTEMPT_TIMEOUT_MS = 60_000;
+/** Live adapter calling discipline (dispatch 2, S3-02): client timeout 300 s, at most 3 attempts, 2 in flight. */
+export const ADAPTER_ATTEMPT_TIMEOUT_MS = 300_000;
+export const ADAPTER_MAX_ATTEMPTS = 3;
+export const ADAPTER_MAX_IN_FLIGHT = 2;
+/** Reasoning tokens count toward max_tokens (S3-03): leave room for reasoning and the JSON reading. */
+export const ADAPTER_MAX_TOKENS = 16_384;
 export const ADAPTER_MAX_RESPONSE_BYTES = 1024 * 1024;
 /** F1 probe timeout: the panel must answer quickly even when the endpoint hangs. */
 export const F1_PROBE_TIMEOUT_MS = 3_000;

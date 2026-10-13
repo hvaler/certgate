@@ -1,0 +1,100 @@
+{
+  "recorded_utc": "2026-10-13T17:11:48.739Z",
+  "host": "developer.amd.com.cn",
+  "request": {
+    "method": "POST",
+    "path": "/chat/completions",
+    "model": "Qwen3.8-27B",
+    "case_id": "cg-001",
+    "certificate_sha256": "55c15e2e23d2928af427c633c19ef1605f9e4145ba330c0aec1b469d19eca4c6",
+    "prompt_sha256": "be2c9042b07247f5a5362ae08d8d0b8df5d01d9ba875f384007a78f4b1ad81bf"
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Tue, 13 Oct 2026 17:11:48 GMT",
+    "x-ratelimit-limit-user-daily-usd": "1",
+    "x-ratelimit-limit-user-rpm": "20",
+    "x-ratelimit-remaining-user-daily-usd": "0.99910611",
+    "x-ratelimit-remaining-user-rpm": "19",
+    "x-ratelimit-reset-user-daily-usd": "1791993600",
+    "x-ratelimit-used-user-daily-usd": "0.00089389"
+  },
+  "body": {
+    "id": "f0e2d4a93cd044ec8d42ede76b4cedfc",
+    "object": "chat.completion",
+    "created": 1791911507,
+    "model": "self-dploy/Qwen3.8-27B",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"schema\": \"certgate.model-output/1\",\n  \"fields\": {\n    \"issuer\": {\n      \"value\": \"SIDERÚRGICA VALDEMORA S.A.\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"header top-left company name\"\n      }\n    },\n    \"certificate_no\": {\n      \"value\": \"SV-2026-118204\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Nº certificado / Certificate no. row\"\n      }\n    },\n    \"certificate_type\": {\n      \"value\": \"3.1\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"header top-right title CERTIFICADO DE INSPECCIÓN 3.1\"\n      }\n    },\n    \"date\": {\n      \"value\": \"2026-09-14\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Fecha / Date row\"\n      }\n    },\n    \"heat_or_lot\": {\n      \"value\": \"24-71830\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Colada / Heat no. row\"\n      }\n    },\n    \"grade\": {\n      \"value\": \"TRN-355\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Calidad / Grade row\"\n      }\n    },\n    \"dimensions\": {\n      \"value\": \"20 x 2000 x 6000\",\n      \"unit\": \"mm\",\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Producto / Product row\"\n      }\n    },\n    \"chemistry\": {\n      \"C\": {\n        \"value\": \"0.16\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column C\"\n        }\n      },\n      \"Si\": {\n        \"value\": \"0.21\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Si\"\n        }\n      },\n      \"Mn\": {\n        \"value\": \"1.42\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Mn\"\n        }\n      },\n      \"P\": {\n        \"value\": \"0.012\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column P\"\n        }\n      },\n      \"S\": {\n        \"value\": \"0.006\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column S\"\n        }\n      },\n      \"Cr\": {\n        \"value\": \"0.04\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Cr\"\n        }\n      },\n      \"Ni\": {\n        \"value\": \"0.03\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Ni\"\n        }\n      },\n      \"Mo\": {\n        \"value\": \"0.01\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Mo\"\n        }\n      },\n      \"Cu\": {\n        \"value\": \"0.05\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column Cu\"\n        }\n      },\n      \"V\": {\n        \"value\": \"0.002\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"HEAT ANALYSIS table, column V\"\n        }\n      }\n    },\n    \"cev_printed\": {\n      \"value\": \"0.41\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"HEAT ANALYSIS table, column CEV\"\n      }\n    },\n    \"mechanical\": {\n      \"ReH\": {\n        \"value\": \"392\",\n        \"unit\": \"MPa\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"MECHANICAL TESTS table, column ReH (MPa)\"\n        }\n      },\n      \"Rm\": {\n        \"value\": \"538\",\n        \"unit\": \"MPa\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"MECHANICAL TESTS table, column Rm (MPa)\"\n        }\n      },\n      \"A\": {\n        \"value\": \"26\",\n        \"unit\": \"%\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"MECHANICAL TESTS table, column A (%)\"\n        }\n      },\n      \"KV_1\": {\n        \"value\": \"64\",\n        \"unit\": \"J\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"IMPACT TEST table, column Probeta 1\"\n        }\n      },\n      \"KV_2\": {\n        \"value\": \"71\",\n        \"unit\": \"J\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"IMPACT TEST table, column Probeta 2\"\n        }\n      },\n      \"KV_3\": {\n        \"value\": \"58\",\n        \"unit\": \"J\",\n        \"status\": \"read\",\n        \"source_ref\": {\n          \"page\": \"1\",\n          \"fragment\": \"IMPACT TEST table, column Probeta 3\"\n        }\n      }\n    },\n    \"kv_temperature\": {\n      \"value\": \"-20\",\n      \"unit\": \"°C\",\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"IMPACT TEST section header KV, -20 °C (J)\"\n      }\n    },\n    \"inspection_stamp\": {\n      \"value\": \"QA-07\",\n      \"unit\": null,\n      \"status\": \"read\",\n      \"source_ref\": {\n        \"page\": \"1\",\n        \"fragment\": \"Sello line and stamp box bottom-right\"\n      }\n    }\n  },\n  \"explanation\": null\n}",
+          "tool_calls": null,
+          "reasoning": "The user wants a strict JSON transcription of a steel mill inspection certificate. I need to read every field carefully from the image and produce the exact schema.\n\nLet me go through the document systematically.\n\nIssuer: \"SIDERÚRGICA VALDEMORA S.A.\" at top left.\n\nCertificate no: \"SV-2026-118204\"\n\nCertificate type: \"3.1\" (from \"CERTIFICADO DE INSPECCIÓN 3.1\" and \"type 3.1 according to EN 10204\")\n\nDate: \"2026-09-14\"\n\nHeat or lot: \"24-71830\" (Colada / Heat no.)\n\nGrade: \"TRN-355\" (the grade code only, not the spec reference)\n\nDimensions: \"20 x 2000 x 6000 mm\" (from \"Chapa 20 x 2000 x 6000 mm\"). The product is \"Chapa 20 x 2000 x 6000 mm\". The dimensions field should be the dimensions. I'll put \"20 x 2000 x 6000\" with unit \"mm\". Actually the printed text is \"Chapa 20 x 2000 x 6000 mm\". The dimensions are 20 x 2000 x 6000 mm. I'll set value \"20 x 2000 x 6000\" unit \"mm\".\n\nChemistry (wt %):\nC: 0.16\nSi: 0.21\nMn: 1.42\nP: 0.012\nS: 0.006\nCr: 0.04\nNi: 0.03\nMo: 0.01\nCu: 0.05\nV: 0.002\nUnit: % (from header \"% en masa / wt %\")\n\nCEV printed: 0.41 (column CEV). No unit printed for CEV. So unit null.\n\nMechanical:\nReH: 392 MPa\nRm: 538 MPa\nA: 26 %\nKV_1: 64 J\nKV_2: 71 J\nKV_3: 58 J\nUnit for KV: J (from header \"IMPACT TEST KV, -20 °C (J)\")\n\nkv_temperature: -20 °C. The header says \"-20 °C\". So value \"-20\" unit \"°C\".\n\nInspection stamp: \"QA-07\" (Sello: QA-07 and the box QA-07).\n\nNow source_ref fragments. Each read value needs a fragment.\n\nLet me build the JSON.\n\nFor issuer, fragment: \"header top-left company name\".\ncertificate_no: \"Nº certificado row\".\ncertificate_type: \"header top-right title\".\ndate: \"Fecha / Date row\".\nheat_or_lot: \"Colada / Heat no. row\".\ngrade: \"Calidad / Grade row\".\ndimensions: \"Producto / Product row\".\nchemistry each: \"HEAT ANALYSIS table, column C\" etc.\ncev_printed: \"HEAT ANALYSIS table, column CEV\".\nmechanical ReH: \"MECHANICAL TESTS table, column ReH (MPa)\".\netc.\nkv_temperature: \"IMPACT TEST section header\".\ninspection_stamp: \"Sello line / stamp box\".\n\nAll statuses read.\n\nNow produce JSON only.\n"
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "matched_stop": 248046
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2666,
+      "total_tokens": 5356,
+      "completion_tokens": 2690,
+      "prompt_tokens_details": {
+        "cached_tokens": 2624,
+        "image_tokens": 1961,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "reasoning_tokens": 799,
+      "cost": 0.0002475368,
+      "cost_details": {
+        "upstream_inference_cost": 0.0002475368,
+        "upstream_inference_prompt_cost": 0.0000033068,
+        "upstream_inference_completions_cost": 0.00024423,
+        "total_cost": 0.0002475368,
+        "input_cost": 0.00000147,
+        "output_cost": 0.00024423,
+        "cached_input_cost": 0.0000018368,
+        "cache_write_input_cost": 0,
+        "request_cost": 0,
+        "web_search_cost": 0,
+        "image_input_cost": null,
+        "image_output_cost": null,
+        "audio_input_cost": null
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 799,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "metadata": {
+      "request_id": "FtE5Y3pRxovgkoeX4q5rq72xdo1rQGqallhXTn9F",
+      "requested_model": "Qwen3.8-27B",
+      "requested_provider": null,
+      "used_model": "Qwen3.8-27B",
+      "used_provider": "self-dploy",
+      "underlying_used_model": "Qwen3.8-27B",
+      "routing": [
+        {
+          "provider": "self-dploy",
+          "model": "Qwen3.8-27B",
+          "status_code": 200,
+          "error_type": "none",
+          "succeeded": true,
+          "apiKeyHash": "ce10dea265c1cb6e0219ebfdc40832cca3d0949c855b2b05409513e79fdc4d91",
+          "logId": "pAKZmvUmfA7PeExGUtEM"
+        }
+      ],
+      "log_id": "pAKZmvUmfA7PeExGUtEM",
+      "organization_id": "oneclick-org-81955",
+      "project_id": "oneclick-project-81955",
+      "discount": null
+    }
+  }
+}

@@ -6,7 +6,7 @@ import { evaluate, readerErrorDecision, RULES_VERSION, type Evaluation } from ".
 import { CRITICAL_FIELDS, NUMERIC_FIELDS } from "./fields.js";
 import { sha256, validateCertificate, validateDeliveryNote } from "./input-file.js";
 import { parseModelOutput, type ModelReading, type PlantedEntry } from "./model-output.js";
-import { MAX_RETRIES, ReaderError, RETRYABLE, type ModelReader } from "./reader.js";
+import { MOCK_RETRY_POLICY, ReaderError, type ModelReader } from "./reader.js";
 import { extractTextLayer, type TextLayerResult } from "./text-layer.js";
 import type { Case, Decision, DeliveryLine, F1Snapshot, FieldConfirmation, HumanAction, RunReceipt, Spec } from "./types.js";
 import { normaliseDecimalText } from "./decimal.js";
@@ -38,6 +38,7 @@ export interface CaseReadings {
   reader_error: ReaderErrorRecord | null;
   /** Every failed reader attempt, including attempts a retry recovered from. */
   reader_errors: ReaderErrorRecord[];
+  endpoint_response: Record<string, string | null> | null;
   reader: { reader_id: string; kind: "mock" | "live"; model_id: string; requested_model_id: string | null; model_version: string; vllm_version: string; rocm_version: string; calls: number; planted: PlantedEntry[] };
   timings: Record<string, string>;
   /** F1 snapshot taken at reading time (S2-13); null outside the live path. */
@@ -67,7 +68,8 @@ type ReaderErrorRecord = { class: string; detail: string; injected: boolean; rec
 /** Bounded retry. Every failed attempt is recorded, also those a later retry recovered from (ADV-S1-F04). */
 async function readWithRetry(reader: ModelReader, req: { case_id: string; certificate: Uint8Array }, errors: ReaderErrorRecord[]) {
   const injected = reader.planted.some((p) => p.kind === "failure");
-  for (let attempt = 0; ; attempt++) {
+  const policy = reader.retry ?? MOCK_RETRY_POLICY;
+  for (let attempt = 1; ; attempt++) {
     try {
       const text = await reader.read(req);
       const model = parseModelOutput(text);
@@ -76,7 +78,11 @@ async function readWithRetry(reader: ModelReader, req: { case_id: string; certif
     } catch (e) {
       if (!(e instanceof ReaderError)) throw e;
       errors.push({ class: e.errorClass, detail: injected ? `INJECTED (mock, planted): ${e.message}` : e.message, injected, recovered: false });
-      if (RETRYABLE.has(e.errorClass) && attempt < MAX_RETRIES) continue;
+      if (policy.retryable.has(e.errorClass) && attempt < policy.maxAttempts) {
+        const wait = policy.delayMs(attempt, e);
+        if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+        continue;
+      }
       throw e;
     }
   }
@@ -132,6 +138,7 @@ export async function readCase(input: CaseInput): Promise<CaseReadings> {
   const reader = input.reader;
   return {
     case: c, delivery_line: line, text_layer: textLayer, model, model_output_sha256: modelSha, reader_error: readerError, reader_errors: readerErrors,
+    endpoint_response: reader.lastResponse ?? null,
     reader: { reader_id: reader.reader_id, kind: reader.kind, model_id: reader.model_id, requested_model_id: reader.requested_model_id ?? null, model_version: reader.model_version,
       vllm_version: reader.vllm_version, rocm_version: reader.rocm_version, calls: reader.calls, planted: reader.planted },
     timings, f1: input.f1 ?? null, spec: input.spec, plausibility: input.plausibility, mode: input.mode,
@@ -269,6 +276,7 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     channel_checks: r.evaluation?.channel_checks ?? [],
     rule_results: r.evaluation?.rule_results ?? [],
     f1: rd.f1 ?? notApplicableF1(rd.reader.kind),
+    endpoint_response: rd.endpoint_response,
     model_text: rd.model?.explanation
       ? { text: rd.model.explanation.text, references: rd.model.explanation.references, planted: rd.model.explanation.planted, untrusted: true, used_for_decision: false }
       : null,
@@ -277,13 +285,18 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
 }
 
 
-/** F1 copy for runs that did not use a live endpoint (S2-13: mock run => off / not applicable). */
+export const COST_LABEL = "cost reported by the endpoint; Token Factory credits are free and have no monetary value";
+
+/** F1 copy for runs that did not use a live endpoint (S2-13: mock run => not applicable). */
 export function notApplicableF1(kind: "mock" | "live"): F1Snapshot {
   return {
     state: kind === "mock" ? "not_applicable_mock" : "off",
     checked_at: null,
     detail: kind === "mock" ? "mock reading: no model and no endpoint were used" : "no endpoint data captured",
-    model_ids: [], gpu: null, rocm_version: null, vllm_version: null, latency_ms: null,
-    tokens_per_second: null, cost_estimate_usd: null,
+    endpoint_name: null, endpoint_source: null, endpoint_host: null, model_ids: [], model_reported: null,
+    gpu: null, rocm_version: null, vllm_version: null, latency_ms: null, last_reading_ms: null,
+    completion_tokens: null, total_tokens: null, tokens_per_second: null, cost_reported: null, cost_label: COST_LABEL,
+    rate_limit_rpm: null, rate_limit_rpm_remaining: null, daily_spend_limit: null, daily_spend_used: null,
+    daily_spend_remaining: null, usage_source: null, probe_cached: false,
   };
 }

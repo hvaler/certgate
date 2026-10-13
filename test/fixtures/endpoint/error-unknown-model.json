@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-13T17:07:42.073Z",
+  "host": "developer.amd.com.cn",
+  "request": {
+    "method": "POST",
+    "path": "/chat/completions",
+    "model": "certgate-no-such-model"
+  },
+  "status": 404,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Tue, 13 Oct 2026 17:07:42 GMT"
+  },
+  "body": {
+    "detail": {
+      "error": {
+        "message": "Model certgate-no-such-model is not available",
+        "type": "invalid_request_error",
+        "code": "model_not_found"
+      }
+    }
+  }
+}

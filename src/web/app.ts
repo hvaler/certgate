@@ -19,7 +19,7 @@ import { summary } from "../cli.js";
 import { loadWebConfig, type WebConfig } from "./config.js";
 import { probeF1 } from "./f1.js";
 import { InMemoryHourlyCounter, type HourlyCounter } from "./limiter.js";
-import { LiveReader } from "./live-reader.js";
+import { LiveReader, type LiveCallInfo } from "./live-reader.js";
 import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES } from "./limits.js";
 import { toView } from "./view.js";
 import type { PlantedEntry } from "../model-output.js";
@@ -54,6 +54,8 @@ export interface AppDeps {
   codeFailureCounter?: HourlyCounter;
   /** Test-only override of adapter timeouts; never reachable over HTTP. */
   adapterTimeoutMs?: number;
+  /** Test-only override of retry backoff; never reachable over HTTP. */
+  backoffBaseMs?: number;
 }
 
 const NO_STORE = { "cache-control": "no-store" };
@@ -129,7 +131,7 @@ export function createHandler(deps: AppDeps = {}) {
   const codeFailures = deps.codeFailureCounter ?? new InMemoryHourlyCounter(cfg.liveCodeFailuresPerHour, clock);
   let shared: Shared | null = null;
   const getShared = () => (shared ??= loadShared("mock"));
-  let lastLive: { completion_tokens: string | null; elapsed_ms: string } | null = null;
+  let lastLive: LiveCallInfo | null = null;
 
   function liveStatus() {
     const p = liveCounter.peek();
@@ -187,13 +189,10 @@ export function createHandler(deps: AppDeps = {}) {
     if (!slot.ok) {
       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: slot.reopens_at });
     }
-    const reader = new LiveReader(
-      { baseUrl: cfg.modelBaseUrl!, modelId: cfg.modelId ?? "unknown", apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs },
-      { vllm: f1.vllm_version, rocm: f1.rocm_version },
-    );
+    const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: cfg.modelId ?? "unknown", apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
     const r = await processCase({ ...inputBase, reader, f1 });
-    if (reader.lastUsage) {
-      lastLive = reader.lastUsage;
+    if (reader.lastCall) {
+      lastLive = reader.lastCall;
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);
     }
     return { counted: true, remaining_this_hour: String(slot.remaining), ...viewJson(r) };

@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-13T17:08:00.278Z",
+  "host": "developer.amd.com.cn",
+  "request": {
+    "method": "POST",
+    "path": "/chat/completions",
+    "model": "Qwen3.8-27B",
+    "key": "an invalid test key"
+  },
+  "status": 401,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Tue, 13 Oct 2026 17:08:00 GMT"
+  },
+  "body": {
+    "error": {
+      "message": "Unauthorized: Invalid LLMGateway API token. The token could not be found. Go to the LLMGateway 'API Keys' page to generate a new token.",
+      "type": "invalid_request_error",
+      "param": null,
+      "code": "invalid_api_key"
+    }
+  }
+}
