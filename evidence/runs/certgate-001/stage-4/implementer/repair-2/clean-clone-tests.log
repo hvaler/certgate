@@ -1,0 +1,11 @@
+# clean checkout at a130bbf468bccce5d3faa1a4e3cf707dda3139c1 tree acaad466c8bafb5169a49b61e7d2b262f3e3b515 at 2026-10-13T21:12:52Z; MODEL_* unset; lockfile unchanged
+
+added 42 packages in 10s
+
+ Test Files  18 passed (18)
+      Tests  315 passed (315)
+METRICS.md matches a fresh generation
+# unmapped sentences:
+0
+# stale map entries:
+0
