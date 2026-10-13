@@ -20,3 +20,15 @@ export const ADAPTER_MAX_TOKENS = 16_384;
 export const ADAPTER_MAX_RESPONSE_BYTES = 1024 * 1024;
 /** F1 probe timeout: the panel must answer quickly even when the endpoint hangs. */
 export const F1_PROBE_TIMEOUT_MS = 3_000;
+/** Retry backoff of the live adapter: base and cap (Retry-After is honoured when larger, up to the cap). */
+export const ADAPTER_BACKOFF_BASE_MS = 2_000;
+export const ADAPTER_BACKOFF_CAP_MS = 120_000;
+
+/**
+ * Worst-case time of one live reading (S3-24, C-07): every attempt runs to the client timeout and every wait
+ * between attempts reaches the cap. 3 x 300 s + 2 x 120 s = 1140 s, above the 300 s Vercel function duration,
+ * so live reading is unavailable on the deployed site and is demonstrated from the container.
+ */
+export const LIVE_WORST_CASE_MS = ADAPTER_ATTEMPT_TIMEOUT_MS * ADAPTER_MAX_ATTEMPTS + ADAPTER_BACKOFF_CAP_MS * (ADAPTER_MAX_ATTEMPTS - 1);
+export const LIVE_FITS_DEPLOYED_FUNCTION = LIVE_WORST_CASE_MS < VERCEL_MAX_DURATION_MS;
+export const DEPLOYED_LIVE_UNAVAILABLE = "live reading unavailable on the deployed site; live demonstration from the container";

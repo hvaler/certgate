@@ -271,7 +271,11 @@ function buildReceipt(r: CaseResult, timings: Record<string, string>): RunReceip
     spec: { spec_id: rd.spec.spec_id, revision: rd.spec.version, grade: rd.spec.grade },
     delivery: rd.delivery_line ? { delivery_note: rd.delivery_line.delivery_note, line: rd.delivery_line.line } : null,
     values: fields
-      ? [...fields.values()].map((f) => ({ field: f.key, value: f.value, unit: f.unit, source: `${f.state} (${f.source})` }))
+      ? [...fields.values()].map((f) => ({
+        field: f.key, value: f.value, unit: f.unit, source: `${f.state} (${f.source})`,
+        // R3.1 C-03: a page/fragment given by a real model is labelled as its own claim, never as verified.
+        location: f.refs[0] ? `page ${f.refs[0].page ?? "?"} · ${f.refs[0].fragment}${f.refs[0].channel === "model" && rd.reader.kind === "live" ? " (as reported by the model)" : ""}` : null,
+      }))
       : [],
     channel_checks: r.evaluation?.channel_checks ?? [],
     rule_results: r.evaluation?.rule_results ?? [],

@@ -28,10 +28,12 @@ interface Probe {
 
 // Server-side cache of the last probe per base URL (C-06). Per instance, like the live-read counter.
 const cache = new Map<string, Probe>();
+// Probes in flight per base URL: concurrent requests share one upstream probe instead of each starting one.
+const pending = new Map<string, Promise<Probe>>();
 let upstreamCalls = 0;
 /** Number of upstream probe calls made by this process (tests assert the cache). */
 export const f1UpstreamCalls = () => upstreamCalls;
-export function clearF1Cache() { cache.clear(); }
+export function clearF1Cache() { cache.clear(); pending.clear(); }
 
 const str = (v: unknown) => (typeof v === "string" && v.trim() !== "" && v.length <= 200 ? v : null);
 
@@ -54,6 +56,20 @@ async function probe(cfg: WebConfig, clock: () => Date): Promise<Probe> {
   const now = clock();
   const hit = cache.get(cfg.modelBaseUrl!);
   if (hit && now.getTime() - hit.at < F1_CACHE_MS) return hit;
+  const inFlight = pending.get(cfg.modelBaseUrl!);
+  if (inFlight) return { ...(await inFlight) };
+  const fresh = probeUpstream(cfg, now);
+  pending.set(cfg.modelBaseUrl!, fresh);
+  try {
+    const p = await fresh;
+    cache.set(cfg.modelBaseUrl!, p);
+    return { ...p, at: -1 };
+  } finally {
+    pending.delete(cfg.modelBaseUrl!);
+  }
+}
+
+async function probeUpstream(cfg: WebConfig, now: Date): Promise<Probe> {
   const p: Probe = { at: now.getTime(), checked_at: now.toISOString(), ok: false, detail: "endpoint unreachable", model_ids: [], latency_ms: null, usage: {} };
   try {
     const models = await get(`${cfg.modelBaseUrl}/models`, cfg.modelApiKey);
@@ -84,8 +100,7 @@ async function probe(cfg: WebConfig, clock: () => Date): Promise<Probe> {
       // Usage unknown; the endpoint itself answered.
     }
   }
-  cache.set(cfg.modelBaseUrl!, p);
-  return { ...p, at: -1 };
+  return p;
 }
 
 /** Tokens per second = completion tokens / measured reading time (S3-08). Unknown if either is missing. */

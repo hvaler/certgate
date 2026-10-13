@@ -14,11 +14,12 @@
     return READING_TEXT[rc.reading_source] || `unknown reading source: ${rc.reading_source}`;
   }
 
-  /** A stored story: always its original stored time (the static file), plus a re-evaluation time if any (F2-01). */
+  /** A recorded story: always its recording time (the static file), plus a re-evaluation time if any (F2-01, S3-18). */
   function storyLabelDetail(s) {
+    const base = `recorded real reading · ${s.model || "model not reported"} · recorded ${s.storedAt}`;
     return s.evaluatedAt
-      ? `mock reading, no model · stored ${s.storedAt} · re-evaluated by the server at ${s.evaluatedAt} with the confirmations and decision given · not live`
-      : `mock reading, no model · stored ${s.storedAt} · not live`;
+      ? `${base} · re-evaluated by the server at ${s.evaluatedAt} from the recorded reading, with the confirmations and decision given · not live`
+      : `${base} · not live`;
   }
 
   /** A case kept in this browser: its reading label and its original receipt time; never "live" (B-09). */

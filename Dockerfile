@@ -1,5 +1,5 @@
 # CertGate local container. The build fetches npm dependencies; the running service needs no network in
-# mock mode (it reads only files baked into the image).
+# mock mode (it reads only files baked into the image). A live reading calls MODEL_BASE_URL when configured.
 FROM node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -24,6 +24,7 @@ COPY config ./config
 COPY data ./data
 COPY docs ./docs
 COPY tools ./tools
+COPY evaluation ./evaluation
 COPY public ./public
 COPY api ./api
 COPY vercel.json ./

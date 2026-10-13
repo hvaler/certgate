@@ -10,7 +10,7 @@ import { CaseInputError, listDatasetCases, loadDatasetCase, loadShared, type Sha
 import { getMode, REPO_ROOT } from "../config.js";
 import { DeliveryNoteError } from "../delivery.js";
 import { InputRejected, validateCertificate, validateDeliveryNote } from "../input-file.js";
-import { ConfirmationError, evaluateCase, HumanDecisionError, processCase, readCase, recordHumanDecision, type CaseResult } from "../pipeline.js";
+import { ConfirmationError, HumanDecisionError, processCase, recordHumanDecision, type CaseResult } from "../pipeline.js";
 import { ReaderError, type ModelReader, type ReadRequest } from "../reader.js";
 import { exportReceipt } from "../receipt.js";
 import { CRITICAL_FIELDS } from "../fields.js";
@@ -18,14 +18,17 @@ import type { FieldConfirmation, HumanAction } from "../types.js";
 import { summary } from "../cli.js";
 import { loadWebConfig, type WebConfig } from "./config.js";
 import { probeF1 } from "./f1.js";
+import { datasetCertificateHashes } from "./dataset-hashes.js";
 import { InMemoryHourlyCounter, type HourlyCounter } from "./limiter.js";
 import { LiveReader, type LiveCallInfo } from "./live-reader.js";
-import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES } from "./limits.js";
+import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES, DEPLOYED_LIVE_UNAVAILABLE, LIVE_FITS_DEPLOYED_FUNCTION } from "./limits.js";
 import { toView } from "./view.js";
 import type { PlantedEntry } from "../model-output.js";
 
 /** The three judge-mode stories (S2-14). */
 export const STORY_IDS = ["cg-001", "cg-002", "cg-003"] as const;
+/** Shown on the page and required to be confirmed before any live reading (R3.1 C-02 b). */
+export const LIVE_NOTICE = "The file is sent to AMD Token Factory, a third-party service that keeps prompts and outputs for about 2 days. Send only synthetic, fictitious certificates, never real data.";
 export const PUBLIC_DIR = path.join(REPO_ROOT, "public");
 
 /** Web uploads never reach MockReader (B-13): with no endpoint they fail as C11 endpoint_off (S2-20). */
@@ -135,10 +138,17 @@ export function createHandler(deps: AppDeps = {}) {
 
   function liveStatus() {
     const p = liveCounter.peek();
-    const enabled = cfg.liveReadsPerHour > 0;
+    const deployedOff = cfg.deployedSite && !LIVE_FITS_DEPLOYED_FUNCTION;
+    const enabled = cfg.liveReadsPerHour > 0 && !deployedOff;
     return {
       enabled,
-      reason: enabled ? (p.remaining > 0 ? "open within the limit" : "limit reached this hour") : "live reading disabled: LIVE_READS_PER_HOUR not set or 0",
+      reason: deployedOff ? DEPLOYED_LIVE_UNAVAILABLE
+        : enabled ? (p.remaining > 0 ? "open within the limit" : "limit reached this hour") : "live reading disabled: LIVE_READS_PER_HOUR not set or 0",
+      deployed_site: cfg.deployedSite,
+      upload_policy: cfg.liveAccessCode !== null
+        ? "any synthetic PDF, with the access code"
+        : "dataset certificates only (matched by SHA-256); uploaded files need the access code, which is not configured here",
+      notice: LIVE_NOTICE,
       limit_per_hour: String(cfg.liveReadsPerHour),
       remaining_this_hour: String(enabled ? p.remaining : 0),
       reopens_at: p.reopens_at,
@@ -152,10 +162,14 @@ export function createHandler(deps: AppDeps = {}) {
   }
 
   async function liveRead(body: Record<string, unknown>) {
+    // 0. Deployed site: the live path's time budget does not fit the function duration (S3-24, C-07).
+    if (cfg.deployedSite && !LIVE_FITS_DEPLOYED_FUNCTION) throw new HttpError(503, DEPLOYED_LIVE_UNAVAILABLE);
     // 1. Input shape and size (not counted when rejected, B-03).
     if (typeof body.certificate_base64 !== "string") throw new HttpError(400, "certificate_base64 is required");
     const cert = Buffer.from(body.certificate_base64, "base64");
     if (cert.length > WEB_MAX_CERTIFICATE_BYTES) throw new HttpError(413, `certificate exceeds the web limit of ${WEB_MAX_CERTIFICATE_BYTES} bytes`);
+    // 1b. The visitor confirmed the third-party notice: the file goes to AMD Token Factory and must be synthetic (C-02 b).
+    if (body.synthetic_confirmed !== true) throw new HttpError(400, `confirm the notice first: ${LIVE_NOTICE}`);
     const csv = typeof body.delivery_csv === "string" ? Buffer.from(body.delivery_csv, "utf8") : null;
     if (csv && csv.length > WEB_MAX_DELIVERY_BYTES) throw new HttpError(413, `delivery note exceeds ${WEB_MAX_DELIVERY_BYTES} bytes`);
     const line = typeof body.delivery_line === "string" ? body.delivery_line : null;
@@ -164,6 +178,11 @@ export function createHandler(deps: AppDeps = {}) {
       const t = codeFailures.tryConsume();
       if (!t.ok) throw new HttpError(429, "too many wrong access codes this hour", { reopens_at: t.reopens_at });
       throw new HttpError(403, "wrong or missing access code; no live reading was used");
+    }
+    // 2b. Without a configured access code only the dataset certificates can be read live (C-02 a).
+    const certSha = createHash("sha256").update(cert).digest("hex");
+    if (cfg.liveAccessCode === null && !datasetCertificateHashes().has(certSha)) {
+      throw new HttpError(403, "live reading of an uploaded file needs the access code, which is not configured on this server; only the dataset certificates can be read live here");
     }
     // 3. Validate the documents before anything is counted.
     const inputBase = {
@@ -203,8 +222,11 @@ export function createHandler(deps: AppDeps = {}) {
     const now = clock().toISOString();
     const by = typeof body.confirmed_by === "string" ? body.confirmed_by.trim() : "";
     const confirmations = parseConfirmations(body.confirmations, by, now);
-    const readings = await readCase(loadDatasetCase(id, getShared()));
-    let r = evaluateCase(readings, confirmations);
+    // The story's recorded real reading, replayed; never the mock and never a new endpoint call (S3-18).
+    const { replayStory, storyView } = await import("../tools/build-stories.js");
+    const replay = await replayStory(id, confirmations, undefined, clock);
+    const rec = replay.rec;
+    let r = replay.r;
     const d = body.decision as Record<string, unknown> | undefined;
     if (d) {
       r = recordHumanDecision(r, {
@@ -213,7 +235,7 @@ export function createHandler(deps: AppDeps = {}) {
       });
     }
     const out = viewJson(r);
-    return { ...out, note: `stored mock reading of ${id}, re-evaluated by the server at ${now} with the confirmations and decision given` };
+    return { ...out, view: { ...out.view, ...storyView(r, rec) }, note: `recorded real reading of ${id} (${rec.recorded_at}), re-evaluated by the server at ${now} with the confirmations and decision given; not live` };
   }
 
   function serveStatic(urlPath: string, res: ServerResponse) {

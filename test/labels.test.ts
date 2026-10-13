@@ -9,7 +9,7 @@ import { ROOT, runCase } from "./helpers.js";
 
 type Labels = {
   readingText: (rc: { reading_source: string }) => string;
-  storyLabelDetail: (s: { storedAt: string; evaluatedAt: string | null }) => string;
+  storyLabelDetail: (s: { storedAt: string; evaluatedAt: string | null; model?: string | null }) => string;
   localLabelDetail: (v: { reading_label: string; receipt: { created_at: string } }) => string;
   releaseAllowed: (v: { proposal: string; status: string } | null) => boolean;
 };
@@ -46,16 +46,24 @@ describe("reading labels never present a mock or stored reading as live (S2M01)"
 
 describe("stored-story labels (S2M02, F2-01, B-09, B-12)", () => {
   const L = loadLabels();
-  it("a stored story shows its original stored time, says mock and not live", () => {
-    const s = L.storyLabelDetail({ storedAt: "2026-10-12T18:35:51.742Z", evaluatedAt: null });
-    expect(s).toBe("mock reading, no model · stored 2026-10-12T18:35:51.742Z · not live");
+  it("a recorded story shows its recording time and model, says recorded and not live (S3-18)", () => {
+    const s = L.storyLabelDetail({ storedAt: "2026-10-13T18:35:51.742Z", evaluatedAt: null, model: "self-dploy/Qwen3.8-27B" });
+    expect(s).toBe("recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T18:35:51.742Z · not live");
   });
-  it("a re-evaluated story keeps the original stored time and adds the re-evaluation time", () => {
-    const s = L.storyLabelDetail({ storedAt: "2026-10-12T18:35:51.742Z", evaluatedAt: "2026-10-12T19:10:00.000Z" });
-    expect(s).toContain("stored 2026-10-12T18:35:51.742Z");
-    expect(s).toContain("re-evaluated by the server at 2026-10-12T19:10:00.000Z");
-    expect(s).toMatch(/mock reading, no model/);
+  it("a re-evaluated story keeps the recording time and adds the re-evaluation time", () => {
+    const s = L.storyLabelDetail({ storedAt: "2026-10-13T18:35:51.742Z", evaluatedAt: "2026-10-13T19:10:00.000Z", model: "m" });
+    expect(s).toContain("recorded 2026-10-13T18:35:51.742Z");
+    expect(s).toContain("re-evaluated by the server at 2026-10-13T19:10:00.000Z from the recorded reading");
+    expect(s).toMatch(/^recorded real reading/);
     expect(s).toMatch(/not live$/);
+  });
+  it("every story label in app.js says not live: the judge cards and the story screen (S3-26, kills S2M02b)", () => {
+    // S2M02b dropped " · not live" from the judge-card story label in app.js; this test fails on that mutant.
+    const card = /`\$\{s\.id\} · recorded real reading · [^`]*`/.exec(appJs);
+    expect(card, "judge card label").not.toBeNull();
+    expect(card![0]).toMatch(/ · not live`$/);
+    expect(appJs).toMatch(/storedDetail: storyLabelDetail\(s\)/);
+    expect(appJs).toMatch(/recorded: read from the endpoint at \$\{rc\.created_at\}; stored, not live/);
   });
   it("a case held in the browser keeps its reading label and receipt time, never live", () => {
     const s = L.localLabelDetail({ reading_label: "live attempt · no reading", receipt: { created_at: "2026-10-12T19:00:00.000Z" } });

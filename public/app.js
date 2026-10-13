@@ -72,48 +72,59 @@ function f1Panel(f1, title, note) {
     h("dl", { class: "kv" },
       h("dt", {}, "State"), h("dd", {}, `${f1.state} · ${f1.detail}`),
       h("dt", {}, "Checked at"), h("dd", {}, v(f1.checked_at)),
+      h("dt", {}, "Endpoint"), h("dd", {}, f1.endpoint_name ? `${f1.endpoint_name} · ${v(f1.endpoint_host)}` : v(f1.endpoint_host)),
       h("dt", {}, "Model(s) listed"), h("dd", {}, f1.model_ids && f1.model_ids.length ? f1.model_ids.join(", ") : "none"),
+      h("dt", {}, "Model (as reported)"), h("dd", {}, v(f1.model_reported)),
       h("dt", {}, "GPU"), h("dd", {}, v(f1.gpu)),
       h("dt", {}, "ROCm · vLLM"), h("dd", {}, `${v(f1.rocm_version)} · ${v(f1.vllm_version)}`),
-      h("dt", {}, "Latency (ms)"), h("dd", {}, v(f1.latency_ms)),
+      h("dt", {}, "Probe latency (ms)"), h("dd", {}, v(f1.latency_ms)),
+      h("dt", {}, "Last reading (ms)"), h("dd", {}, v(f1.last_reading_ms)),
+      h("dt", {}, "Tokens (completion · total)"), h("dd", {}, `${v(f1.completion_tokens)} · ${v(f1.total_tokens)}`),
       h("dt", {}, "Tokens / s"), h("dd", {}, v(f1.tokens_per_second)),
-      h("dt", {}, "Cost estimate (USD)"), h("dd", {}, v(f1.cost_estimate_usd)),
+      h("dt", {}, "Cost"), h("dd", {}, `${v(f1.cost_reported)} · ${f1.cost_label || "cost reported by the endpoint"}`),
+      h("dt", {}, "Rate limit (req/min · remaining)"), h("dd", {}, `${v(f1.rate_limit_rpm)} · ${v(f1.rate_limit_rpm_remaining)}`),
+      h("dt", {}, "Daily spend (limit · used · remaining)"), h("dd", {}, `${v(f1.daily_spend_limit)} · ${v(f1.daily_spend_used)} · ${v(f1.daily_spend_remaining)}`),
+      h("dt", {}, "Read from"), h("dd", {}, `${v(f1.usage_source)}${f1.probe_cached ? " · probe cached (at most one probe per 60 s)" : ""}`),
     ),
   );
 }
 
 // ---------------------------------------------------------------- landing (S2-01, S2-30) and judge mode (F2)
 async function landing(focus) {
-  const [stories, status] = await Promise.all([api("/stories/index.json"), api("/api/live/status")]);
+  const [stories, status, figs] = await Promise.all([api("/stories/index.json"), api("/api/live/status"), api("/figures.json")]);
   const list = (stories.body && stories.body.stories) || [];
+  const fg = figs.ok ? figs.body : null;
+  const model = fg && fg.model_reported && fg.model_reported.length ? fg.model_reported.join(", ") : "the configured model";
   const hero = h("section", { class: "card stack", "aria-labelledby": "hero" },
     h("div", { class: "eyebrow" }, "FOR QUALITY ENGINEERS RECEIVING CERTIFIED STEEL"),
     h("h1", { id: "hero" }, "Catch the out-of-spec batch before it enters production"),
     h("p", {}, "Every batch of steel arrives with a mill certificate. Someone in Quality checks it by hand against the purchase spec: different mills, different layouts, often scanned. CertGate puts every value next to the spec and its place in the document, and proposes release, block or review. ",
       h("strong", {}, "A person decides.")),
-    h("p", { class: "note" }, "Where AMD fits: reading each certificate and explaining the result is meant to be done by an open model that vLLM serves from an AMD GPU. ",
-      h("strong", {}, "In this build no AMD hardware is used:"), " no model and no endpoint are used, and every reading shown here is a mock reading prepared with the fictitious dataset."),
+    h("p", { class: "note" }, "Where AMD fits: each certificate page is read, as an image, by the open model ", h("strong", {}, model),
+      " (as reported by the endpoint), served by AMD Token Factory. The model only reads; it never explains or decides. GPU, ROCm and vLLM versions are not exposed by the endpoint, so none is claimed here."),
     h("div", { class: "btns" },
       h("a", { class: "btn primary", href: "#/story/cg-003" }, "See the case it refuses to release"),
-      h("a", { class: "btn", href: "#/judge" }, "All three stored runs")),
+      h("a", { class: "btn", href: "#/judge" }, "All three recorded runs")),
   );
-  const figures = h("section", { class: "card stack", "aria-labelledby": "figs" },
-    h("h2", { id: "figs", class: "eyebrow" }, "MEASURED ON [N] FICTITIOUS CERTIFICATES"),
-    h("div", { class: "figures", "data-figures": "placeholders" },
-      fig("[n]", "false conforming (released when it should not) · of [N]"),
-      fig("[n / N]", "non-conformities caught"),
-      fig("[s]", "seconds per certificate"),
-      fig("[USD]", "cost per certificate")),
-    h("p", { class: "muted small" }, "Placeholders. These figures are filled only from an evaluation run, with their denominators. No evaluation has run in this build."),
-  );
+  const figures = fg ? h("section", { class: "card stack", "aria-labelledby": "figs" },
+    h("h2", { id: "figs", class: "eyebrow" }, `MEASURED ON ${fg.evaluated_cases} FICTITIOUS CERTIFICATES · REAL MODEL`),
+    h("div", { class: "figures", "data-figures": "evaluation" },
+      fig(`${fg.false_conforming.broad.n} of ${fg.false_conforming.broad.of}`, `false conforming (released when the expected proposal was not release) · strict: ${fg.false_conforming.strict.n} of ${fg.false_conforming.strict.of} expected block`),
+      fig(`${fg.non_conformities_caught.n} / ${fg.non_conformities_caught.of}`, `non-conformities caught (not released) · ${fg.non_conformities_caught.blocked} blocked`),
+      fig(`${fg.seconds_per_certificate.mean} s`, `seconds per certificate · mean, median ${fg.seconds_per_certificate.median} s · N = ${fg.seconds_per_certificate.n} processed`),
+      fig(fg.cost_per_certificate.mean === null ? "unknown" : fg.cost_per_certificate.mean, `cost per certificate · mean over N = ${fg.cost_per_certificate.n} · ${fg.cost_per_certificate.label}`)),
+    h("p", { class: "muted small" }, `Generated from the evaluation artifacts in ${fg.generated_from} (candidate ${String(fg.candidate_commit).slice(0, 7)}, run ${fg.run_started_utc}); cases ${fg.excluded_cases.join(", ")} were used to tune the prompt and are excluded. Failures: ${fg.failures.n} of ${fg.failures.of}.`),
+  ) : h("section", { class: "card stack", "aria-labelledby": "figs" },
+    h("h2", { id: "figs", class: "eyebrow" }, "EVALUATION FIGURES"),
+    h("p", { class: "muted small" }, "No evaluation figures are available in this build."));
   const judge = h("section", { class: "stack", id: "judge", "aria-labelledby": "judge-title" },
-    h("h2", { id: "judge-title" }, "Judge mode · three stored runs (mock readings, no model)"),
-    h("p", { class: "muted" }, "Stored results, each with its receipt. They are not re-read live. Judge mode has no limit."),
+    h("h2", { id: "judge-title" }, "Judge mode · three recorded real runs"),
+    h("p", { class: "muted" }, "Real readings by the model, recorded with their receipt and endpoint data, and stored. They are not re-read live. Judge mode has no limit and makes no model call."),
     h("div", { class: "cards" }, list.map((s) => h("a", { class: "card story", href: `#/story/${s.id}` },
       badge(s.proposal === "release" ? "RELEASE PROPOSED" : s.proposal.toUpperCase(), s.proposal),
       h("strong", {}, s.title),
       h("span", { class: "muted small" }, s.kind),
-      h("span", { class: "small mono" }, `${s.id} · stored · mock reading, no model · ${s.stored_at}`)))),
+      h("span", { class: "small mono" }, `${s.id} · recorded real reading · ${s.model_reported || "model not reported"} · ${s.stored_at} · not live`)))),
   );
   const nodes = [hero, figures, judge, await liveSection(status.body), explainSection()];
   render(...nodes);
@@ -127,7 +138,7 @@ function fig(val, label) {
 function explainSection() {
   return h("section", { class: "card stack", "aria-labelledby": "who" },
     h("h2", { id: "who" }, "What decides, what reads, who signs"),
-    h("p", {}, h("strong", {}, "The model"), " reads the certificate and explains, with the source of every value. An AMD GPU is meant to serve it; in this build a mock reader stands in for it and says so everywhere."),
+    h("p", {}, h("strong", {}, "The model"), " reads the certificate page images and reports each value with the place it says it found it (as reported by the model). It never explains and never decides."),
     h("p", {}, h("strong", {}, "The text layer"), ", read without any model, checks the critical fields when the PDF has one."),
     h("p", {}, h("strong", {}, "Versioned rules"), " compare each value with spec ESP-014 in exact decimals."),
     h("p", {}, h("strong", {}, "A person"), " releases, blocks or asks for a new certificate."));
@@ -143,8 +154,10 @@ async function liveSection(st) {
   const code = st && st.access_code_required ? h("input", { id: "live-code", type: "password", autocomplete: "off" }) : null;
   const exhausted = st && st.enabled && st.remaining_this_hour === "0";
   const canRead = !!(st && st.enabled && !exhausted);
-  const btn = h("button", { class: "btn primary", type: "button", disabled: !canRead, onclick: () => doLiveRead(pdf, csv, line, code, msg, btn) }, "Read live");
+  const confirm = h("input", { id: "live-confirm", type: "checkbox" });
+  const btn = h("button", { class: "btn primary", type: "button", disabled: !canRead, onclick: () => doLiveRead(pdf, csv, line, code, confirm, msg, btn) }, "Read live");
   const why = !st ? "Live status unavailable."
+    : st.deployed_site && !st.enabled ? `${st.reason}.`
     : !st.enabled ? "Live reading is disabled on this server (no hourly limit configured)."
     : exhausted ? `Live readings for this hour are used up. Read live reopens at ${st.reopens_at}.`
     : on ? "The model endpoint is up." : "The model endpoint is off right now: a reading would not happen, and nothing is counted.";
@@ -159,6 +172,9 @@ async function liveSection(st) {
       code ? h("div", { class: "field" }, h("label", { for: "live-code" }, "Access code for live reading"), code) : null),
     h("p", { class: "small" }, "Live readings are limited to ", h("strong", {}, st ? st.limit_per_hour : "?"), " per hour for everyone, counted on the server, per server instance in this build. Remaining this hour: ",
       h("strong", { id: "live-remaining" }, st ? st.remaining_this_hour : "?"), ". Judge mode has no limit."),
+    h("p", { class: "small" }, "What can be read live here: ", h("strong", {}, st ? st.upload_policy : "?"), "."),
+    h("p", { class: "note", id: "live-notice" }, st ? st.notice : ""),
+    h("div", { class: "field" }, h("label", { for: "live-confirm" }, confirm, " I have read the notice: the file is synthetic and may be sent to AMD Token Factory.")),
     h("p", { class: "small" }, why),
     h("div", { class: "btns" }, btn), msg);
 }
@@ -172,11 +188,12 @@ function readFileAs(file, kind) {
   });
 }
 
-async function doLiveRead(pdf, csv, line, code, msg, btn) {
+async function doLiveRead(pdf, csv, line, code, confirm, msg, btn) {
   msg.textContent = "";
   if (!pdf.files[0]) { msg.textContent = "Choose a certificate PDF first."; return; }
+  if (!confirm.checked) { msg.textContent = "Confirm the notice first: the file goes to a third-party service and must be synthetic."; return; }
   btn.disabled = true;
-  msg.textContent = "Sending… the server checks the file, the endpoint and the limit.";
+  msg.textContent = "Sending… the server checks the file, the endpoint and the limit. A real reading takes about one to four minutes.";
   try {
     const dataUrl = await readFileAs(pdf.files[0], "base64");
     const body = {
@@ -184,6 +201,7 @@ async function doLiveRead(pdf, csv, line, code, msg, btn) {
       delivery_csv: csv.files[0] ? await readFileAs(csv.files[0], "text") : null,
       delivery_line: line.value.trim() || null,
       access_code: code ? code.value : undefined,
+      synthetic_confirmed: confirm.checked,
     };
     const r = await post("/api/live/read", body);
     if (!r.ok) {
@@ -322,14 +340,14 @@ async function storyScreen(id) {
   if (!r.ok) return render(h("p", { class: "error" }, "Unknown story."));
   const story = r.body;
   // storedAt is the static file's created_at and never changes, even after a server re-evaluation (F2-01, B-12).
-  session.story = { id, view: story.view, storedAt: story.view.receipt.created_at, confirmations: [], by: "", evaluatedAt: null };
+  session.story = { id, view: story.view, storedAt: story.recorded_at || story.stored_at, model: story.model_reported, confirmations: [], by: "", evaluatedAt: null };
   drawStory();
 }
 
 function drawStory() {
   const s = session.story;
   const view = s.view;
-  const ctx = { storedTitle: "Stored reading", storedDetail: storyLabelDetail(s) };
+  const ctx = { storedTitle: "Recorded reading", storedDetail: storyLabelDetail(s) };
   const evaluate = async (extra) => {
     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;
@@ -405,7 +423,7 @@ function receiptScreen(view, opts) {
         h("dt", {}, "Spec"), h("dd", {}, `${rc.spec.spec_id} rev. ${rc.spec.revision} · SHA-256 ${rc.hashes.spec_sha256}`),
         h("dt", {}, "Rules version"), h("dd", {}, rc.rules_version),
         h("dt", {}, "Reader"), h("dd", {}, `${rc.reader.model_id} · calls ${rc.reader.calls}`),
-        h("dt", {}, "Reading source"), h("dd", {}, readingText(rc)))),
+        h("dt", {}, "Reading source"), h("dd", {}, opts.kind === "story" ? `recorded: read from the endpoint at ${rc.created_at}; stored, not live` : readingText(rc)))),
     h("section", { class: "card stack" }, h("h2", {}, "Values, channels and rules"),
       h("div", { class: "tablebox" }, h("table", {},
         h("thead", {}, h("tr", {}, ["Field", "Value", "Model channel", "Text layer", "Result"].map((x) => h("th", { scope: "col" }, x)))),

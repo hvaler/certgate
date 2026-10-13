@@ -8,7 +8,7 @@ import { createHash } from "node:crypto";
 import type { PlantedEntry } from "../model-output.js";
 import { renderPagesToJpeg } from "../pdf.js";
 import { ReaderError, type ModelReader, type ReadRequest, type ReaderErrorClass, type RetryPolicy } from "../reader.js";
-import { ADAPTER_ATTEMPT_TIMEOUT_MS, ADAPTER_MAX_ATTEMPTS, ADAPTER_MAX_IN_FLIGHT, ADAPTER_MAX_RESPONSE_BYTES, ADAPTER_MAX_TOKENS } from "./limits.js";
+import { ADAPTER_ATTEMPT_TIMEOUT_MS, ADAPTER_BACKOFF_BASE_MS, ADAPTER_BACKOFF_CAP_MS, ADAPTER_MAX_ATTEMPTS, ADAPTER_MAX_IN_FLIGHT, ADAPTER_MAX_RESPONSE_BYTES, ADAPTER_MAX_TOKENS } from "./limits.js";
 
 /** Field skeleton the model fills in; mirrors docs/schemas/model-output.schema.json. */
 const FIELD = '{"value": "<string or null>", "unit": "<string or null>", "status": "read|unknown|absent", "source_ref": {"page": "1", "fragment": "<label, table and column where you read it>"}}';
@@ -163,11 +163,11 @@ export class LiveReader implements ModelReader {
   readonly retry: RetryPolicy;
 
   constructor(private readonly o: LiveReaderOptions) {
-    const base = o.backoffBaseMs ?? 2000;
+    const base = o.backoffBaseMs ?? ADAPTER_BACKOFF_BASE_MS;
     this.retry = {
       retryable: new Set<ReaderErrorClass>(["http_429", "http_5xx"]),
       maxAttempts: ADAPTER_MAX_ATTEMPTS,
-      delayMs: (attempt, e) => Math.min(120_000, Math.max(e.retryAfterMs ?? 0, base * 2 ** (attempt - 1))),
+      delayMs: (attempt, e) => Math.min(ADAPTER_BACKOFF_CAP_MS, Math.max(e.retryAfterMs ?? 0, base * 2 ** (attempt - 1))),
     };
   }
 

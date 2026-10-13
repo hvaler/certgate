@@ -4,7 +4,7 @@ import { label } from "../evaluate.js";
 import { CHEMISTRY, CRITICAL_FIELDS } from "../fields.js";
 import { limitOf } from "../spec.js";
 import type { CaseResult } from "../pipeline.js";
-import type { RunReceipt } from "../types.js";
+import type { RunReceipt, SourceRef } from "../types.js";
 
 export interface ViewRow {
   field: string;
@@ -52,6 +52,13 @@ const NAMES: Record<string, string> = {
   kv_temperature: "KV test temperature", inspection_stamp: "Inspection stamp", "mechanical.KV_1": "KV specimen 1",
   "mechanical.KV_2": "KV specimen 2", "mechanical.KV_3": "KV specimen 3",
 };
+
+/** A location given by a real model is its own claim, not verified (R3.1 C-03). */
+export const MODEL_LOCATION_NOTE = "as reported by the model";
+function sourceText(ref: SourceRef, kind: "mock" | "live"): string {
+  const where = `page ${ref.page ?? "?"} · ${ref.fragment}`;
+  return ref.channel === "model" && kind === "live" ? `${where} (${MODEL_LOCATION_NOTE})` : where;
+}
 
 export function readingLabel(src: RunReceipt["reading_source"]): string {
   switch (src) {
@@ -112,7 +119,7 @@ export function toView(r: CaseResult): CaseView {
     rows.push({
       field: key, label: NAMES[key] ?? `${short}${f.unit ? ` (${f.unit})` : ""}`, value: f.value, unit: f.unit, state: f.state,
       value_source: f.source, model_value: c?.model_value ?? null, text_layer_value: c?.text_layer_value ?? null, channels,
-      spec: specText, source: ref ? `page ${ref.page ?? "?"} · ${ref.fragment}` : "—", result, critical: true,
+      spec: specText, source: ref ? sourceText(ref, r.readings.reader.kind) : "—", result, critical: true,
     });
   }
   if (e?.cev_recomputed) {
@@ -187,11 +194,7 @@ export function explanationNote(src: RunReceipt["reading_source"]): string {
   }
 }
 
-/**
- * A model explanation is shown only when it comes from a live reading AND every one of its references names a
- * field that was read with a source in the document (S2-10, I1, F2-04). Otherwise it is withheld; the receipt
- * keeps it only as untrusted model text.
- */
+/** No model explanation is ever shown (R3.1 C-04); the receipt keeps any model text only as untrusted. */
 export function explanationView(r: CaseResult, reading: RunReceipt["reading_source"]): CaseView["explanation"] {
   void r;
   // R3.1 C-04: no model-written explanation is requested or shown in this run. The case file shows the

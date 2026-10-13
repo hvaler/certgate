@@ -2,14 +2,10 @@
 // .env.example. Secrets (MODEL_API_KEY, LIVE_ACCESS_CODE) never leave the server.
 
 export interface WebConfig {
-  /** Base URL of the OpenAI-compatible endpoint (vLLM). No default: unset means "endpoint off". */
+  /** Base URL of the OpenAI-compatible endpoint (AMD Token Factory). No default: unset means "endpoint off". */
   modelBaseUrl: string | null;
   modelApiKey: string | null;
   modelId: string | null;
-  /** Small sidecar route next to vLLM that reports GPU and ROCm (S2-11). */
-  gpuInfoUrl: string | null;
-  /** Configured GPU price in USD per hour, as a decimal string (S2-36). Unset means cost "unknown". */
-  gpuCostPerHour: string | null;
   /** Live readings per UTC hour; unset, invalid or 0 disables live reading (S2-16, fail closed). */
   liveReadsPerHour: number;
   liveAccessCode: string | null;
@@ -17,6 +13,11 @@ export interface WebConfig {
   liveCodeFailuresPerHour: number;
   /** Announced live windows, free text shown as is (D2-07). */
   liveWindows: string | null;
+  /**
+   * Running as the deployed Vercel function (Vercel sets VERCEL=1). The live path's time budget does not fit the
+   * function duration there (S3-24, C-07), so live reading is unavailable on the deployed site.
+   */
+  deployedSite: boolean;
 }
 
 const nonEmpty = (v: string | undefined) => (v === undefined || v.trim() === "" ? null : v.trim());
@@ -32,11 +33,10 @@ export function loadWebConfig(env: NodeJS.ProcessEnv = process.env): WebConfig {
     modelBaseUrl: nonEmpty(env.MODEL_BASE_URL)?.replace(/\/+$/, "") ?? null,
     modelApiKey: nonEmpty(env.MODEL_API_KEY),
     modelId: nonEmpty(env.MODEL_ID),
-    gpuInfoUrl: nonEmpty(env.GPU_INFO_URL),
-    gpuCostPerHour: nonEmpty(env.GPU_COST_PER_HOUR),
     liveReadsPerHour: count(env.LIVE_READS_PER_HOUR, 0),
     liveAccessCode: nonEmpty(env.LIVE_ACCESS_CODE),
     liveCodeFailuresPerHour: count(env.LIVE_CODE_FAILURES_PER_HOUR, 5),
     liveWindows: nonEmpty(env.LIVE_WINDOWS),
+    deployedSite: nonEmpty(env.VERCEL) !== null,
   };
 }

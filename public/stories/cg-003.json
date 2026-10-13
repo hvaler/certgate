@@ -1,19 +1,21 @@
 {
-  "story_schema": "certgate.story/1",
+  "story_schema": "certgate.story/2",
   "stored": true,
-  "stored_at": "2026-10-12T19:05:49.062Z",
-  "stored_label": "stored · mock reading, no model · 2026-10-12T19:05:49.062Z",
-  "title": "The scan it refuses to release",
+  "recorded": true,
+  "stored_at": "2026-10-13T17:52:09.471Z",
+  "recorded_at": "2026-10-13T17:52:09.471Z",
+  "stored_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T17:52:09.471Z · not live",
+  "model_reported": "self-dploy/Qwen3.8-27B",
+  "title": "The ambiguous scan",
   "summary": {
     "case_id": "cg-003",
     "status": "processed",
-    "proposal": "review",
+    "proposal": "block",
     "human_required": true,
-    "reading_source": "mock",
+    "reading_source": "live",
     "reasons": [
-      "CRITICAL_UNKNOWN:ReH",
       "NO_SECOND_CHANNEL",
-      "RULE_NOT_EVALUABLE:ReH"
+      "RULE_FAIL:ReH"
     ],
     "human_confirmation_required": [
       "certificate_type",
@@ -39,28 +41,24 @@
       "mechanical.KV_2",
       "mechanical.KV_3"
     ],
-    "note": "CertGate only proposes. A person decides. All data is fictitious. The reading is MOCK (no model)."
+    "note": "CertGate only proposes. A person decides. All data is fictitious. The reading came from the live endpoint; model as reported by the endpoint: self-dploy/Qwen3.8-27B (requested: Qwen3.8-27B)."
   },
+  "recording": "cg-003.recording.json",
   "view": {
     "view_schema": "certgate.view/1",
     "case_id": "cg-003",
     "status": "processed",
-    "proposal": "review",
+    "proposal": "block",
     "reasons": [
-      {
-        "code": "CRITICAL_UNKNOWN:ReH",
-        "effect": "review",
-        "detail": "mechanical.ReH could not be read with confidence"
-      },
       {
         "code": "NO_SECOND_CHANNEL",
         "effect": "review",
         "detail": "no text layer: 22 critical field(s) need human confirmation"
       },
       {
-        "code": "RULE_NOT_EVALUABLE:ReH",
-        "effect": "review",
-        "detail": "mechanical.ReH unknown"
+        "code": "RULE_FAIL:ReH",
+        "effect": "block",
+        "detail": "ReH 338 is below the minimum 355 MPa"
       }
     ],
     "human_confirmation_required": [
@@ -87,14 +85,14 @@
       "mechanical.KV_2",
       "mechanical.KV_3"
     ],
-    "reading_source": "mock",
-    "reading_label": "mock reading · no model",
+    "reading_source": "live",
+    "reading_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T17:52:09.471Z · not live",
     "certificate": {
       "kind": "scanned PDF, no text layer",
       "certificate_no": "SV-2026-118512",
       "heat": "24-72015",
-      "issuer": "Siderúrgica Valdemora S.A.",
-      "dimensions": "Chapa 25 x 2000 x 6000 mm"
+      "issuer": "SIDERÚRGICA VALDEMORA S.A.",
+      "dimensions": "25 x 2000 x 6000"
     },
     "delivery": {
       "delivery_note": "ALB-2026-0917",
@@ -112,7 +110,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "3.1 (EN 10204)",
-        "source": "page 1 · document title",
+        "source": "page 1 · header inspection type (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -127,7 +125,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "= delivery line 3: 24-72015",
-        "source": "page 1 · Colada / Heat no.",
+        "source": "page 1 · header Heat no. (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -142,7 +140,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "TRN-355 (ordered TRN-355)",
-        "source": "page 1 · Calidad / Grade",
+        "source": "page 1 · header Grade (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -157,7 +155,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.45 %",
-        "source": "page 1 · heat analysis table, column CEV",
+        "source": "page 1 · chemistry table CEV (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -172,7 +170,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "-20 °C",
-        "source": "page 1 · impact test heading",
+        "source": "page 1 · impact test header (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -187,7 +185,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "required",
-        "source": "page 1 · signature block, Sello",
+        "source": "page 1 · footer stamp (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -202,7 +200,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.20 %",
-        "source": "page 1 · heat analysis table, column C",
+        "source": "page 1 · chemistry table C (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -217,7 +215,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.55 %",
-        "source": "page 1 · heat analysis table, column Si",
+        "source": "page 1 · chemistry table Si (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -232,7 +230,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 1.60 %",
-        "source": "page 1 · heat analysis table, column Mn",
+        "source": "page 1 · chemistry table Mn (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -247,7 +245,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.025 %",
-        "source": "page 1 · heat analysis table, column P",
+        "source": "page 1 · chemistry table P (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -262,7 +260,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.025 %",
-        "source": "page 1 · heat analysis table, column S",
+        "source": "page 1 · chemistry table S (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -277,7 +275,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "no limit in ESP-014 (used for CEV)",
-        "source": "page 1 · heat analysis table, column Cr",
+        "source": "page 1 · chemistry table Cr (as reported by the model)",
         "result": "info",
         "critical": true
       },
@@ -292,7 +290,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "no limit in ESP-014 (used for CEV)",
-        "source": "page 1 · heat analysis table, column Ni",
+        "source": "page 1 · chemistry table Ni (as reported by the model)",
         "result": "info",
         "critical": true
       },
@@ -307,7 +305,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "no limit in ESP-014 (used for CEV)",
-        "source": "page 1 · heat analysis table, column Mo",
+        "source": "page 1 · chemistry table Mo (as reported by the model)",
         "result": "info",
         "critical": true
       },
@@ -322,7 +320,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≤ 0.55 %",
-        "source": "page 1 · heat analysis table, column Cu",
+        "source": "page 1 · chemistry table Cu (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -337,23 +335,23 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "no limit in ESP-014 (used for CEV)",
-        "source": "page 1 · heat analysis table, column V",
+        "source": "page 1 · chemistry table V (as reported by the model)",
         "result": "info",
         "critical": true
       },
       {
         "field": "mechanical.ReH",
-        "label": "ReH",
-        "value": null,
-        "unit": null,
-        "state": "unknown",
+        "label": "ReH (MPa)",
+        "value": "338",
+        "unit": "MPa",
+        "state": "known",
         "value_source": "model",
-        "model_value": null,
+        "model_value": "338",
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≥ 355 MPa",
-        "source": "page 1 · mechanical tests table, column ReH",
-        "result": "unknown",
+        "source": "page 1 · mechanical table ReH (as reported by the model)",
+        "result": "fail",
         "critical": true
       },
       {
@@ -367,7 +365,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≥ 470 and ≤ 630 MPa",
-        "source": "page 1 · mechanical tests table, column Rm",
+        "source": "page 1 · mechanical table Rm (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -382,7 +380,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "≥ 20 %",
-        "source": "page 1 · mechanical tests table, column A",
+        "source": "page 1 · mechanical table A (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -397,7 +395,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "mean of 3 >= 27 J (sum >= 81)",
-        "source": "page 1 · impact test table, Probeta 1",
+        "source": "page 1 · impact table Probeta 1 (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -412,7 +410,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "mean of 3 >= 27 J (sum >= 81)",
-        "source": "page 1 · impact test table, Probeta 2",
+        "source": "page 1 · impact table Probeta 2 (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -427,7 +425,7 @@
         "text_layer_value": null,
         "channels": "no_second_channel",
         "spec": "mean of 3 >= 27 J (sum >= 81)",
-        "source": "page 1 · impact test table, Probeta 3",
+        "source": "page 1 · impact table Probeta 3 (as reported by the model)",
         "result": "pass",
         "critical": true
       },
@@ -450,81 +448,76 @@
     "counts": {
       "checks": "22",
       "pass": "17",
-      "fail": "0",
-      "unknown": "1"
+      "fail": "1",
+      "unknown": "0"
     },
     "steps": [
       {
         "name": "Case created",
         "status": "done",
-        "duration_ms": "2.203",
+        "duration_ms": "2.621",
         "note": "file type and size checked, hash recorded"
       },
       {
-        "name": "Model reading · mock (no model)",
+        "name": "Model reading · live endpoint",
         "status": "done",
-        "duration_ms": "0.172",
-        "note": "mock reading · no model"
+        "duration_ms": "94518.184",
+        "note": "live reading from the configured endpoint"
       },
       {
         "name": "Text layer",
         "status": "not_available",
-        "duration_ms": "0.011",
+        "duration_ms": "0.012",
         "note": "not available: scan, no text layer"
       },
       {
         "name": "Internal coherence and rules against ESP-014",
         "status": "done",
-        "duration_ms": "0.368",
+        "duration_ms": "0.559",
         "note": "measured together: heat, units, CEV recomputed; versioned rules in exact decimals"
       },
       {
         "name": "Proposal",
         "status": "done",
         "duration_ms": null,
-        "note": "review · a person decides"
+        "note": "block · a person decides"
       }
     ],
     "explanation": {
       "available": false,
       "text": null,
-      "note": "There is no model explanation: this is a mock reading, no model was used."
+      "note": "The model only reads the certificate here; it never explains or decides. The reasons above are the deterministic rules."
     },
     "receipt": {
       "receipt_schema": "certgate.receipt/1",
       "case_id": "cg-003",
-      "run_id": "fbc490e7-7540-4c07-b82f-2e7cc2e252c3",
-      "created_at": "2026-10-12T19:05:49.062Z",
-      "mode": "mock",
-      "reading_source": "mock",
+      "run_id": "e8afadab-b9f5-4e64-8eda-e86566d5af9c",
+      "created_at": "2026-10-13T17:52:09.471Z",
+      "mode": "real",
+      "reading_source": "live",
       "reader": {
-        "reader_id": "mock-reader",
-        "reading_source": "mock",
-        "model_id": "MOCK (no model; dataset reading)",
-        "requested_model_id": null,
-        "model_version": "not applicable (mock)",
-        "vllm_version": "not applicable (mock)",
-        "rocm_version": "not applicable (mock)",
+        "reader_id": "live-reader-openai-compatible",
+        "reading_source": "live",
+        "model_id": "self-dploy/Qwen3.8-27B",
+        "requested_model_id": "Qwen3.8-27B",
+        "model_version": "as reported by the endpoint",
+        "vllm_version": "not exposed by the endpoint",
+        "rocm_version": "not exposed by the endpoint",
         "calls": "1"
       },
       "planted": [],
       "status": "processed",
-      "proposal": "review",
+      "proposal": "block",
       "reasons": [
-        {
-          "code": "CRITICAL_UNKNOWN:ReH",
-          "effect": "review",
-          "detail": "mechanical.ReH could not be read with confidence"
-        },
         {
           "code": "NO_SECOND_CHANNEL",
           "effect": "review",
           "detail": "no text layer: 22 critical field(s) need human confirmation"
         },
         {
-          "code": "RULE_NOT_EVALUABLE:ReH",
-          "effect": "review",
-          "detail": "mechanical.ReH unknown"
+          "code": "RULE_FAIL:ReH",
+          "effect": "block",
+          "detail": "ReH 338 is below the minimum 355 MPa"
         }
       ],
       "human_required": true,
@@ -556,17 +549,17 @@
       "confirmations": [],
       "channel_available": false,
       "timings_ms": {
-        "validate": "2.203",
-        "text_layer": "0.011",
-        "model_reading": "0.172",
-        "evaluation": "0.368"
+        "validate": "2.621",
+        "text_layer": "0.012",
+        "model_reading": "94518.184",
+        "evaluation": "0.559"
       },
       "errors": [],
       "hashes": {
         "certificate_sha256": "40899aa26ccec1e0a2e62d63a7abac8098ee0debc38df7c7b7ea121ac3619c01",
         "certificate_size": "161559",
         "delivery_note_sha256": "15a7247a6c1c2bc55894f5c2a633b5282b784b4ef0d0c6cad2b09bf40f643fe3",
-        "model_output_sha256": "f677045deff58fb24a789cb75d5caa5017077b80bc2a5fe7f2dbd7bd0ca787bd",
+        "model_output_sha256": "bf8205bfd47949c2464d8e023306fd9b07852d0106df86a7cc579a3124eff3b7",
         "spec_sha256": "2e949172707428a69e046b256ee0374203d30a3b64e139fd062db8bb8337b7c1"
       },
       "rules_version": "certgate-rules-1.0.0",
@@ -584,159 +577,185 @@
       "values": [
         {
           "field": "issuer",
-          "value": "Siderúrgica Valdemora S.A.",
+          "value": "SIDERÚRGICA VALDEMORA S.A.",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header issuer (as reported by the model)"
         },
         {
           "field": "certificate_no",
           "value": "SV-2026-118512",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header Certificate no. (as reported by the model)"
         },
         {
           "field": "certificate_type",
           "value": "3.1",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header inspection type (as reported by the model)"
         },
         {
           "field": "date",
           "value": "2026-09-19",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header Date (as reported by the model)"
         },
         {
           "field": "heat_or_lot",
           "value": "24-72015",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header Heat no. (as reported by the model)"
         },
         {
           "field": "grade",
           "value": "TRN-355",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · header Grade (as reported by the model)"
         },
         {
           "field": "dimensions",
-          "value": "Chapa 25 x 2000 x 6000 mm",
-          "unit": null,
-          "source": "known (model)"
+          "value": "25 x 2000 x 6000",
+          "unit": "mm",
+          "source": "known (model)",
+          "location": "page 1 · header Product (as reported by the model)"
         },
         {
           "field": "cev_printed",
           "value": "0.40",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table CEV (as reported by the model)"
         },
         {
           "field": "kv_temperature",
           "value": "-20",
           "unit": "°C",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · impact test header (as reported by the model)"
         },
         {
           "field": "inspection_stamp",
           "value": "QA-07",
           "unit": null,
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · footer stamp (as reported by the model)"
         },
         {
           "field": "chemistry.C",
           "value": "0.15",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table C (as reported by the model)"
         },
         {
           "field": "chemistry.Si",
           "value": "0.19",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Si (as reported by the model)"
         },
         {
           "field": "chemistry.Mn",
           "value": "1.38",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Mn (as reported by the model)"
         },
         {
           "field": "chemistry.P",
           "value": "0.011",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table P (as reported by the model)"
         },
         {
           "field": "chemistry.S",
           "value": "0.005",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table S (as reported by the model)"
         },
         {
           "field": "chemistry.Cr",
           "value": "0.05",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Cr (as reported by the model)"
         },
         {
           "field": "chemistry.Ni",
           "value": "0.04",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Ni (as reported by the model)"
         },
         {
           "field": "chemistry.Mo",
           "value": "0.01",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Mo (as reported by the model)"
         },
         {
           "field": "chemistry.Cu",
           "value": "0.07",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table Cu (as reported by the model)"
         },
         {
           "field": "chemistry.V",
           "value": "0.002",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · chemistry table V (as reported by the model)"
         },
         {
           "field": "mechanical.ReH",
-          "value": null,
-          "unit": null,
-          "source": "unknown (model)"
+          "value": "338",
+          "unit": "MPa",
+          "source": "known (model)",
+          "location": "page 1 · mechanical table ReH (as reported by the model)"
         },
         {
           "field": "mechanical.Rm",
           "value": "529",
           "unit": "MPa",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · mechanical table Rm (as reported by the model)"
         },
         {
           "field": "mechanical.A",
           "value": "27",
           "unit": "%",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · mechanical table A (as reported by the model)"
         },
         {
           "field": "mechanical.KV_1",
           "value": "61",
           "unit": "J",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · impact table Probeta 1 (as reported by the model)"
         },
         {
           "field": "mechanical.KV_2",
           "value": "57",
           "unit": "J",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · impact table Probeta 2 (as reported by the model)"
         },
         {
           "field": "mechanical.KV_3",
           "value": "66",
           "unit": "J",
-          "source": "known (model)"
+          "source": "known (model)",
+          "location": "page 1 · impact table Probeta 3 (as reported by the model)"
         }
       ],
       "channel_checks": [
@@ -754,7 +773,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "document title"
+              "fragment": "header inspection type"
             }
           ]
         },
@@ -772,7 +791,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "Colada / Heat no."
+              "fragment": "header Heat no."
             }
           ]
         },
@@ -790,7 +809,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "Calidad / Grade"
+              "fragment": "header Grade"
             }
           ]
         },
@@ -808,7 +827,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column CEV"
+              "fragment": "chemistry table CEV"
             }
           ]
         },
@@ -826,7 +845,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "impact test heading"
+              "fragment": "impact test header"
             }
           ]
         },
@@ -844,7 +863,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "signature block, Sello"
+              "fragment": "footer stamp"
             }
           ]
         },
@@ -862,7 +881,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column C"
+              "fragment": "chemistry table C"
             }
           ]
         },
@@ -880,7 +899,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Si"
+              "fragment": "chemistry table Si"
             }
           ]
         },
@@ -898,7 +917,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Mn"
+              "fragment": "chemistry table Mn"
             }
           ]
         },
@@ -916,7 +935,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column P"
+              "fragment": "chemistry table P"
             }
           ]
         },
@@ -934,7 +953,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column S"
+              "fragment": "chemistry table S"
             }
           ]
         },
@@ -952,7 +971,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Cr"
+              "fragment": "chemistry table Cr"
             }
           ]
         },
@@ -970,7 +989,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Ni"
+              "fragment": "chemistry table Ni"
             }
           ]
         },
@@ -988,7 +1007,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Mo"
+              "fragment": "chemistry table Mo"
             }
           ]
         },
@@ -1006,7 +1025,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column Cu"
+              "fragment": "chemistry table Cu"
             }
           ]
         },
@@ -1024,14 +1043,14 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "heat analysis table, column V"
+              "fragment": "chemistry table V"
             }
           ]
         },
         {
           "field": "mechanical.ReH",
-          "model_value": null,
-          "model_unit": null,
+          "model_value": "338",
+          "model_unit": "MPa",
           "text_layer_value": null,
           "text_layer_unit": null,
           "agree": false,
@@ -1042,7 +1061,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "mechanical tests table, column ReH"
+              "fragment": "mechanical table ReH"
             }
           ]
         },
@@ -1060,7 +1079,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "mechanical tests table, column Rm"
+              "fragment": "mechanical table Rm"
             }
           ]
         },
@@ -1078,7 +1097,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "mechanical tests table, column A"
+              "fragment": "mechanical table A"
             }
           ]
         },
@@ -1096,7 +1115,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "impact test table, Probeta 1"
+              "fragment": "impact table Probeta 1"
             }
           ]
         },
@@ -1114,7 +1133,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "impact test table, Probeta 2"
+              "fragment": "impact table Probeta 2"
             }
           ]
         },
@@ -1132,7 +1151,7 @@
             {
               "channel": "model",
               "page": "1",
-              "fragment": "impact test table, Probeta 3"
+              "fragment": "impact table Probeta 3"
             }
           ]
         }
@@ -1203,10 +1222,10 @@
           "input_field_refs": [
             "mechanical.ReH"
           ],
-          "outcome": "not_evaluable",
+          "outcome": "fail",
           "expected": ">= 355 MPa",
-          "observed": null,
-          "reason": "mechanical.ReH unknown"
+          "observed": "338",
+          "reason": "ReH 338 is below the minimum 355 MPa"
         },
         {
           "rule_id": "ESP-014.r3.Rm",
@@ -1279,16 +1298,57 @@
         }
       ],
       "f1": {
-        "state": "not_applicable_mock",
-        "checked_at": null,
-        "detail": "mock reading: no model and no endpoint were used",
-        "model_ids": [],
-        "gpu": null,
-        "rocm_version": null,
-        "vllm_version": null,
-        "latency_ms": null,
-        "tokens_per_second": null,
-        "cost_estimate_usd": null
+        "state": "on",
+        "checked_at": "2026-10-13T17:53:43.992Z",
+        "detail": "read from the configured endpoint",
+        "endpoint_name": "AMD Token Factory",
+        "endpoint_source": "https://notebooks.amd.com/tokenfactory (event page: \"The event is hosted on notebooks.amd.com/tokenfactory.\")",
+        "endpoint_host": "developer.amd.com.cn",
+        "model_ids": [
+          "DeepSeek-V4.1-Flash",
+          "DeepSeek-V4-Flash",
+          "DeepSeek-V4-Flash-Vision-Exp",
+          "Gemma-4-31B-IT",
+          "GLM-5.3-Flash",
+          "MiMo-V2.6-Flash",
+          "MinerU2.5-Pro",
+          "MiniCPM5-2B",
+          "MiniCPM-V-4.7-1B",
+          "MiniCPM-V-4.7-35B-A3B",
+          "Qwen3.8-27B",
+          "Qwen3.8-Flash-Next"
+        ],
+        "model_reported": "self-dploy/Qwen3.8-27B",
+        "gpu": "not exposed by the endpoint",
+        "rocm_version": "not exposed by the endpoint",
+        "vllm_version": "not exposed by the endpoint",
+        "latency_ms": "353",
+        "last_reading_ms": "94399",
+        "completion_tokens": "1296",
+        "total_tokens": "4089",
+        "tokens_per_second": "13.73",
+        "cost_reported": "0.0001906226",
+        "cost_label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value",
+        "rate_limit_rpm": "20",
+        "rate_limit_rpm_remaining": "19",
+        "daily_spend_limit": "1",
+        "daily_spend_used": "0.00821526",
+        "daily_spend_remaining": "0.99178474",
+        "usage_source": "X-RateLimit headers of the last reading",
+        "probe_cached": false
+      },
+      "endpoint_response": {
+        "response_id": "eefd31e02f49415188d357e76309c42a",
+        "created": "1791914023",
+        "model": "self-dploy/Qwen3.8-27B",
+        "finish_reason": "stop",
+        "prompt_tokens": "2793",
+        "completion_tokens": "1296",
+        "reasoning_tokens": "407",
+        "total_tokens": "4089",
+        "cost_reported": "0.0001906226",
+        "elapsed_ms": "94399",
+        "input": "page_images"
       },
       "model_text": null,
       "notice": "All data is fictitious: Siderúrgica Valdemora S.A., Talleres Ribera Norte S.L., grade TRN-355 and spec ESP-014 are invented for this demo."

@@ -55,7 +55,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
     json(404, { error: "not found (stub)" });
   });
   return new Promise((resolve) => server.listen(port, "127.0.0.1", () => {
-    resolve({ server, state, url: `http://127.0.0.1:${server.address().port}`, close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(() => r()); }) });
+    resolve({ server, state, url: `http://127.0.0.1:${server.address().port}/v1`, close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(() => r()); }) });
   }));
 }
 

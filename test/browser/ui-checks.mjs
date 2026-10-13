@@ -2,7 +2,7 @@
 // Not part of `vitest run` (the image has no browser). Needs Playwright with a Chromium available:
 //   npm i --no-save playwright   (or any install where require("playwright") resolves)
 //   node test/browser/ui-checks.mjs [outDir]
-// It starts its own CertGate server (mock mode, no endpoint) and its own TEST STUB for the B-16 check.
+// It starts its own CertGate server (no endpoint; judge mode replays the recorded stories) and its own TEST STUB for the B-16 check.
 import { createRequire } from "node:module";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -53,19 +53,19 @@ try {
   await page.screenshot({ path: path.join(out, "cg-003-confirmed-1280.png"), fullPage: true });
 
   // F2-01: after a server re-evaluation, every screen shows the ORIGINAL stored time and the re-evaluation time.
-  const storedAt = JSON.parse((await (await fetch(`${plain.base}/stories/cg-003.json`)).text())).view.receipt.created_at;
+  const storedAt = JSON.parse((await (await fetch(`${plain.base}/stories/cg-003.json`)).text())).recorded_at;
   const caseLabel = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
-  check("F2-01: case file label keeps the original stored time and says re-evaluated", caseLabel.includes(`stored ${storedAt}`) && /re-evaluated by the server at /.test(caseLabel), caseLabel);
+  check("F2-01: case file label keeps the original stored time and says re-evaluated", caseLabel.includes(`recorded ${storedAt}`) && /re-evaluated by the server at /.test(caseLabel), caseLabel);
   await page.fill("#who", "Q. Manager");
   await page.fill("#why", "all critical fields confirmed on the original");
   await page.click("#release-btn");
   await page.waitForSelector("text=Decision recorded", { timeout: 5000 }).catch(() => {});
   const afterDecision = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
-  check("F2-01: label after a decision keeps the original stored time", afterDecision.includes(`stored ${storedAt}`) && /re-evaluated/.test(afterDecision), afterDecision);
+  check("F2-01: label after a decision keeps the original stored time", afterDecision.includes(`recorded ${storedAt}`) && /re-evaluated/.test(afterDecision), afterDecision);
   await page.click("text=Open the receipt");
   await page.waitForSelector("text=Download JSON", { timeout: 5000 }).catch(() => {});
   const receiptLabel = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
-  check("F2-01: receipt screen keeps the original stored time and says re-evaluated", receiptLabel.includes(`stored ${storedAt}`) && /re-evaluated by the server at /.test(receiptLabel), receiptLabel);
+  check("F2-01: receipt screen keeps the original stored time and says re-evaluated", receiptLabel.includes(`recorded ${storedAt}`) && /re-evaluated by the server at /.test(receiptLabel), receiptLabel);
 
   // B-21: nothing entered on case A carries to case B
   await page.goto(`${plain.base}/#/story/cg-001`);
@@ -84,6 +84,12 @@ try {
   await page.setInputFiles("#live-pdf", path.join(ROOT, "data", "cases", "cg-001", "certificate.pdf"));
   await page.setInputFiles("#live-csv", path.join(ROOT, "data", "delivery", "ALB-2026-0917.csv"));
   await page.fill("#live-line", "1");
+  // C-02 b: without the confirmed notice nothing is sent.
+  await page.click("button:has-text('Read live')");
+  const noConfirm = await page.locator("#live-msg").innerText();
+  check("C-02: Read live without the confirmed third-party notice sends nothing", /Confirm the notice first/.test(noConfirm) && !page.url().includes("#/local/"), noConfirm);
+  check("C-02: the notice names AMD Token Factory, about 2 days, synthetic", /AMD Token Factory[\s\S]*about 2 days[\s\S]*synthetic/.test(await page.locator("#live-notice").innerText()));
+  await page.check("#live-confirm");
   await page.click("button:has-text('Read live')");
   await page.waitForFunction(() => location.hash.startsWith("#/local/") && document.querySelector("[data-stored-label]"), null, { timeout: 10000 });
   const t1 = await page.locator("[data-stored-label]").innerText({ timeout: 3000 }).catch(() => "(no label)");
@@ -110,6 +116,7 @@ try {
   await p2.goto(`${live.base}/#/`);
   await p2.waitForSelector("#live-pdf");
   await p2.setInputFiles("#live-pdf", path.join(ROOT, "data", "cases", "cg-001", "certificate.pdf"));
+  await p2.check("#live-confirm");
   await p2.click("button:has-text('Read live')");
   await p2.waitForFunction(() => location.hash.startsWith("#/local/") && document.querySelector("#case-title"), null, { timeout: 10000 });
   await p2.waitForTimeout(500);

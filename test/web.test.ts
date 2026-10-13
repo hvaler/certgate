@@ -33,11 +33,11 @@ async function stub(mode = "ok"): Promise<Stub> {
   return s;
 }
 const stubEnv = (s: Stub, extra: Record<string, string> = {}) => ({
-  MODEL_BASE_URL: s.url, MODEL_ID: STUB_MODEL_ID, GPU_INFO_URL: `${s.url}/gpu-info`, MODEL_API_KEY: "sk-stub-secret-123", ...extra,
+  MODEL_BASE_URL: s.url, MODEL_ID: STUB_MODEL_ID, MODEL_API_KEY: "sk-stub-secret-123", ...extra,
 });
 const pdf = (id: string) => readFileSync(path.join(DATA, "cases", id, "certificate.pdf")).toString("base64");
 const csv = (note = "ALB-2026-0917.csv") => readFileSync(path.join(DATA, "delivery", note), "utf8");
-const liveBody = (extra: Record<string, unknown> = {}) => ({ certificate_base64: pdf("cg-001"), delivery_csv: csv(), delivery_line: "1", ...extra });
+const liveBody = (extra: Record<string, unknown> = {}) => ({ certificate_base64: pdf("cg-001"), delivery_csv: csv(), delivery_line: "1", synthetic_confirmed: true, ...extra });
 const postJson = (url: string, body: unknown) => fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 class Clock {
@@ -60,15 +60,20 @@ describe("F1 panel (S2-11, S2-12, S2-36, B-06, B-19)", () => {
     const base = await app({ env: { MODEL_BASE_URL: "http://127.0.0.1:9" } });
     expect((await (await fetch(`${base}/api/f1`)).json()).state).toBe("off");
   });
-  it("with the test stub: shows exactly what the endpoint and sidecar report; cost unknown without a price", async () => {
+  it("with the test stub: shows only what the endpoint reports; GPU, ROCm and vLLM not exposed (S3-08..S3-12)", async () => {
+    const { clearF1Cache } = await import("../src/web/f1.js");
+    clearF1Cache();
     const s = await stub();
     const base = await app({ env: stubEnv(s) });
     const f = await (await fetch(`${base}/api/f1`)).json();
     expect(f.state).toBe("on");
     expect(f.model_ids).toEqual([STUB_MODEL_ID]);
-    expect(f.gpu).toBe("TEST STUB (no GPU)");
-    expect(f.rocm_version).toBe("stub-0");
-    expect(f.cost_estimate_usd).toBeNull();
+    expect(f.endpoint_name).toBe("AMD Token Factory");
+    for (const k of ["gpu", "rocm_version", "vllm_version"]) expect(f[k]).toBe("not exposed by the endpoint");
+    expect(f.rate_limit_rpm).toBe("20");
+    expect(f.daily_spend_limit).toBe("1");
+    expect(f.usage_source).toBe("GET /usage");
+    expect(f.cost_label).toBe("cost reported by the endpoint; Token Factory credits are free and have no monetary value");
   });
   it("request parameters, headers or body cannot set the endpoint (B-06)", async () => {
     const s = await stub();
@@ -76,12 +81,31 @@ describe("F1 panel (S2-11, S2-12, S2-36, B-06, B-19)", () => {
     const f = await (await fetch(`${base}/api/f1?base=${encodeURIComponent(s.url)}&MODEL_BASE_URL=${encodeURIComponent(s.url)}`, { headers: { "x-model-base-url": s.url } })).json();
     expect(f.state).toBe("off");
   });
-  it("cost estimate uses only the configured price (S2-36)", async () => {
-    const { costEstimate } = await import("../src/web/f1.js");
-    expect(costEstimate("3600000", "1.99")).toBe("1.99");
-    expect(costEstimate("1800", null)).toBeNull();
+  it("probes are cached server-side: N rapid /api/f1 requests make at most one upstream probe per 60 s (C-06)", async () => {
+    const { clearF1Cache, f1UpstreamCalls, F1_CACHE_MS } = await import("../src/web/f1.js");
+    clearF1Cache();
+    expect(F1_CACHE_MS).toBeGreaterThanOrEqual(60_000);
+    const s = await stub();
+    const c = new Clock();
+    const base = await app({ env: stubEnv(s), clock: c.now });
+    const before = f1UpstreamCalls();
+    const all = await Promise.all(Array.from({ length: 10 }, () => fetch(`${base}/api/f1`).then((r) => r.json())));
+    for (let i = 0; i < 5; i++) await (await fetch(`${base}/api/f1`)).json();
+    // One probe = GET /models + GET /usage.
+    expect(f1UpstreamCalls() - before).toBeLessThanOrEqual(2);
+    expect(all.every((f) => f.state === "on")).toBe(true);
+    c.advance(59_000);
+    await (await fetch(`${base}/api/f1`)).json();
+    expect(f1UpstreamCalls() - before).toBeLessThanOrEqual(2);
+    c.advance(2_000);
+    await (await fetch(`${base}/api/f1`)).json();
+    expect(f1UpstreamCalls() - before).toBeLessThanOrEqual(4);
+  });
+  it("no price or cost estimate is computed in code: the cost shown is the endpoint's, with the fixed label (S3-10, S2-36)", async () => {
+    const f1 = await import("../src/web/f1.js");
+    expect((f1 as Record<string, unknown>).costEstimate).toBeUndefined();
     const src = readFileSync(path.join(ROOT, "src", "web", "f1.ts"), "utf8");
-    expect(src).not.toMatch(/1\.99/);
+    expect(src).not.toMatch(/1\.99|PRICE_PER_HOUR|GPU_INFO_URL|gpu-info/);
   });
 });
 
@@ -128,10 +152,66 @@ describe("live reading without an endpoint (S2-15, S2-20, S2-31, B-13)", () => {
   });
   it("invalid input is rejected before anything is counted", async () => {
     const s = await stub();
-    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2" }) });
-    const res = await postJson(`${base}/api/live/read`, { certificate_base64: Buffer.from("not a pdf").toString("base64") });
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "2", LIVE_ACCESS_CODE: "jury-code-77" }) });
+    const res = await postJson(`${base}/api/live/read`, { certificate_base64: Buffer.from("not a pdf").toString("base64"), synthetic_confirmed: true, access_code: "jury-code-77" });
     expect(res.status).toBe(400);
     expect((await (await fetch(`${base}/api/live/status`)).json()).remaining_this_hour).toBe("2");
+    expect(s.state.chatCalls).toBe(0);
+  });
+});
+
+describe("live upload policy and deployed site (R3.1 C-02, C-07, S3-24)", () => {
+  // A synthetic PDF that is not in the dataset: cg-001's certificate with bytes appended after %%EOF.
+  const foreign = () => { const b = readFileSync(path.join(DATA, "cases", "cg-001", "certificate.pdf")); return Buffer.concat([b, Buffer.from(" %x ")]).toString("base64"); };
+  it("without LIVE_ACCESS_CODE an uploaded file that is not a dataset certificate is refused before anything is counted or sent (C-02 a)", async () => {
+    const s = await stub();
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3" }) });
+    const r = await postJson(`${base}/api/live/read`, liveBody({ certificate_base64: foreign() }));
+    expect(r.status).toBe(403);
+    expect((await r.json()).error).toMatch(/needs the access code/);
+    expect(s.state.chatCalls).toBe(0);
+    expect((await (await fetch(`${base}/api/live/status`)).json()).remaining_this_hour).toBe("3");
+    expect((await postJson(`${base}/api/live/read`, liveBody())).status).toBe(200);
+    expect(s.state.chatCalls).toBe(1);
+  });
+  it("with LIVE_ACCESS_CODE configured and given, an uploaded synthetic file can be read (C-02 a)", async () => {
+    const s = await stub();
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3", LIVE_ACCESS_CODE: "jury-code-77" }) });
+    expect((await postJson(`${base}/api/live/read`, liveBody({ certificate_base64: foreign() }))).status).toBe(403);
+    expect((await postJson(`${base}/api/live/read`, liveBody({ certificate_base64: foreign(), access_code: "jury-code-77" }))).status).toBe(200);
+    expect(s.state.chatCalls).toBe(1);
+  });
+  it("no live reading without the confirmed third-party notice; the notice names AMD Token Factory, ~2 days and synthetic (C-02 b)", async () => {
+    const s = await stub();
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3" }) });
+    for (const v of [undefined, false, "true", 1]) {
+      const r = await postJson(`${base}/api/live/read`, liveBody({ synthetic_confirmed: v }));
+      expect(r.status, String(v)).toBe(400);
+    }
+    expect(s.state.chatCalls).toBe(0);
+    const st = await (await fetch(`${base}/api/live/status`)).json();
+    expect(st.notice).toMatch(/AMD Token Factory/);
+    expect(st.notice).toMatch(/about 2 days/);
+    expect(st.notice).toMatch(/synthetic/);
+    const appJs = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
+    expect(appJs).toMatch(/synthetic_confirmed: confirm\.checked/);
+    expect(appJs).toMatch(/st\.notice/);
+  });
+  it("time budget: the worst-case live reading does not fit the deployed function, so the deployed site has no live reading (C-07)", async () => {
+    const L = await import("../src/web/limits.js");
+    expect(L.LIVE_WORST_CASE_MS).toBe(L.ADAPTER_ATTEMPT_TIMEOUT_MS * L.ADAPTER_MAX_ATTEMPTS + L.ADAPTER_BACKOFF_CAP_MS * (L.ADAPTER_MAX_ATTEMPTS - 1));
+    expect(L.LIVE_WORST_CASE_MS).toBe(1_140_000);
+    expect(L.VERCEL_MAX_DURATION_MS).toBe(300_000);
+    expect(L.LIVE_FITS_DEPLOYED_FUNCTION).toBe(false);
+    const vercel = JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8"));
+    expect(vercel.functions["api/index.ts"].maxDuration * 1000).toBe(L.VERCEL_MAX_DURATION_MS);
+    const s = await stub();
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "20", VERCEL: "1" }) });
+    const st = await (await fetch(`${base}/api/live/status`)).json();
+    expect(st.enabled).toBe(false);
+    expect(st.reason).toBe("live reading unavailable on the deployed site; live demonstration from the container");
+    const r = await postJson(`${base}/api/live/read`, liveBody());
+    expect(r.status).toBe(503);
     expect(s.state.chatCalls).toBe(0);
   });
 });
@@ -210,38 +290,32 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
     const k = await (await postJson(`${base}/api/live/read`, liveBody())).json();
     expect(k.view.receipt.reader.model_id).toMatch(/^unknown/);
   });
-  it("an explanation without verifiable references is withheld; kept only as untrusted text (F2-04, cg-021 contamination)", async () => {
+  it("a reply carrying explanation text is never displayed as an explanation; kept only as untrusted text (R3.1 C-04, cg-021 contamination)", async () => {
     const s = await stub();
     s.state.caseId = "cg-021";
     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3" }) });
-    const body = { certificate_base64: pdf("cg-021"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "18" };
-    const j = await (await postJson(`${base}/api/live/read`, body)).json();
+    const body = { certificate_base64: pdf("cg-021"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "18", synthetic_confirmed: true };
+    const text = await (await postJson(`${base}/api/live/read`, body)).text();
+    const j = JSON.parse(text);
     expect(j.view.reading_source).toBe("live");
     expect(j.view.proposal).toBe("block");
     expect(j.view.explanation.available).toBe(false);
     expect(j.view.explanation.text).toBeNull();
-    expect(j.view.explanation.note).toMatch(/withheld: it has no references to verifiable input/);
-    expect(j.view.receipt.model_text).toMatchObject({ untrusted: true, used_for_decision: false, references: [] });
-    expect(j.view.receipt.model_text.text).toMatch(/approved without human review/);
+    expect(j.view.explanation.note).toMatch(/only reads the certificate here; it never explains or decides/);
+    expect(j.view.receipt.model_text).toMatchObject({ untrusted: true, used_for_decision: false });
+    expect(JSON.stringify(j.view.rows) + JSON.stringify(j.view.reasons)).not.toMatch(/approved without human review/);
   });
-  it("an explanation is shown only when every reference names a field read with a source", async () => {
+  it("even an explanation whose references all name read fields is not shown (R3.1 C-04)", async () => {
     const doc = JSON.parse(readFileSync(path.join(DATA, "cases", "cg-005", "reading.json"), "utf8"));
-    const write = (refs: string[]) => {
-      doc.explanation = { text: "Mn 1.65 % is above the 1.60 % maximum of ESP-014.", references: refs };
-      const f = path.join(mkdtempSync(path.join(tmpdir(), "certgate-expl-")), "reading.json");
-      writeFileSync(f, JSON.stringify(doc));
-      return f;
-    };
-    const good = await startStub({ readingFile: write(["chemistry.Mn"]) }) as Stub; open.push(good);
+    doc.explanation = { text: "Mn 1.65 % is above the 1.60 % maximum of ESP-014.", references: ["chemistry.Mn"] };
+    const f = path.join(mkdtempSync(path.join(tmpdir(), "certgate-expl-")), "reading.json");
+    writeFileSync(f, JSON.stringify(doc));
+    const good = await startStub({ readingFile: f }) as Stub; open.push(good);
     const base = await app({ env: stubEnv(good, { LIVE_READS_PER_HOUR: "3" }) });
-    const body = { certificate_base64: pdf("cg-005"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "2" };
+    const body = { certificate_base64: pdf("cg-005"), delivery_csv: csv("ALB-2026-1003.csv"), delivery_line: "2", synthetic_confirmed: true };
     const j = await (await postJson(`${base}/api/live/read`, body)).json();
-    expect(j.view.explanation.available).toBe(true);
-    expect(j.view.explanation.note).toMatch(/referencing chemistry\.Mn/);
-    const bad = await startStub({ readingFile: write(["chemistry.Mn", "not.a.field"]) }) as Stub; open.push(bad);
-    const base2 = await app({ env: stubEnv(bad, { LIVE_READS_PER_HOUR: "3" }) });
-    const k = await (await postJson(`${base2}/api/live/read`, body)).json();
-    expect(k.view.explanation.available).toBe(false);
+    expect(j.view.explanation.available).toBe(false);
+    expect(j.view.explanation.text).toBeNull();
   });
   it("access code: wrong code rejected without consuming; throttled after repeated failures; never echoed", async () => {
     const s = await stub();
@@ -259,7 +333,8 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
     expect(ok.status).toBe(200);
     expect(await ok.text()).not.toContain("jury-code-77");
   });
-  const c11: [string, string, number][] = [["timeout", "timeout", 3], ["http_429", "http_429", 3], ["http_5xx", "http_5xx", 3], ["invalid_json", "invalid_json", 1], ["huge", "invalid_json", 1]];
+  // S3-02: only 429 and 5xx are retried (at most 3 attempts); a timeout or an invalid reply is not.
+  const c11: [string, string, number][] = [["timeout", "timeout", 1], ["http_429", "http_429", 3], ["http_5xx", "http_5xx", 3], ["invalid_json", "invalid_json", 1], ["huge", "invalid_json", 1]];
   for (const [mode, cls, calls] of c11) {
     it(`C11 through HTTP, stub mode ${mode}: status error, review, ${calls} call(s), counted once, no secret`, async () => {
       const s = await stub(mode);
@@ -279,34 +354,58 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
   }
 });
 
-describe("stored stories (S2-14, B-12, B-23)", () => {
+describe("recorded stories (S3-18, D3-08, R3.3 C-23, B-12, B-23)", () => {
   const ids = ["cg-001", "cg-002", "cg-003"];
-  it("are versioned static files labelled stored and mock, with the run's own created_at", () => {
+  const story = (id: string) => JSON.parse(readFileSync(path.join(ROOT, "public", "stories", `${id}.json`), "utf8"));
+  const recording = (id: string) => JSON.parse(readFileSync(path.join(ROOT, "public", "stories", `${id}.recording.json`), "utf8"));
+  it("are recorded real runs: labelled recorded with their date and the model as reported, never live; receipt and F1 snapshot kept", () => {
     for (const id of ids) {
-      const st = JSON.parse(readFileSync(path.join(ROOT, "public", "stories", `${id}.json`), "utf8"));
+      const st = story(id);
+      const rec = recording(id);
       expect(st.stored).toBe(true);
-      expect(st.stored_at).toBe(st.view.receipt.created_at);
-      expect(st.stored_label).toBe(`stored · mock reading, no model · ${st.view.receipt.created_at}`);
-      expect(st.view.reading_source).toBe("mock");
-      expect(st.view.receipt.reader.model_id).toMatch(/^MOCK/);
-      expect(st.view.receipt.f1.state).toBe("not_applicable_mock");
-      expect(st.view.proposal).toBe(expected(id).expected_proposal);
+      expect(st.recorded).toBe(true);
+      expect(st.recorded_at).toBe(rec.recorded_at);
+      expect(st.view.receipt.created_at).toBe(rec.recorded_at);
+      expect(st.stored_label).toBe(`recorded real reading · ${rec.model_reported} via AMD Token Factory · ${rec.recorded_at} · not live`);
+      expect(st.view.reading_label).toBe(st.stored_label);
+      expect(st.view.reading_source).toBe("live");
+      expect(st.view.receipt.reader.model_id).toBe(rec.model_reported);
+      expect(rec.model_reported).not.toMatch(/MOCK|stub/i);
+      expect(st.view.receipt.endpoint_response).toEqual(rec.endpoint_response);
+      expect(st.view.receipt.f1.state).toBe("on");
+      expect(st.view.receipt.f1.endpoint_name).toBe("AMD Token Factory");
+      expect(rec.prompt_sha256).toBe("32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567");
+      // The story shows whatever its recorded run proposed (C-23): no comparison with the dataset expectation here.
+      expect(st.view.proposal).toBe(story(id).view.proposal);
     }
   });
-  it("equal a fresh run of the candidate's own pipeline, apart from ids, timestamps and timings", async () => {
+  it("recordings keep the reply content only: no reasoning, no key, no endpoint URL value", () => {
+    for (const id of ids) {
+      const t = readFileSync(path.join(ROOT, "public", "stories", `${id}.recording.json`), "utf8");
+      expect(t).not.toMatch(/"reasoning(_content)?"\s*:/);
+      expect(t).not.toMatch(/Bearer |sk-|https?:\/\/(?!localhost)[^"<]*\/v1/);
+    }
+  });
+  it("equal a replay of each recorded reply through the candidate's own pipeline (no endpoint call)", async () => {
     const dir = mkdtempSync(path.join(tmpdir(), "certgate-stories-"));
     await buildStories(dir);
     const strip = (s: any) => {
-      const v = structuredClone(s.view);
-      for (const k of ["run_id", "created_at", "timings_ms"]) delete v.receipt[k];
-      v.steps = v.steps.map((x: any) => ({ ...x, duration_ms: null }));
-      return { proposal: v.proposal, reasons: v.reasons, rows: v.rows, receipt: v.receipt };
+      const v = s.view;
+      const r = v.receipt;
+      return {
+        proposal: v.proposal, reasons: v.reasons, rows: v.rows, label: s.stored_label, created_at: r.created_at,
+        values: r.values, rule_results: r.rule_results, channel_checks: r.channel_checks, hashes: r.hashes,
+        endpoint_response: r.endpoint_response, f1: r.f1, model_id: r.reader.model_id,
+      };
     };
     for (const id of ids) {
-      const committed = JSON.parse(readFileSync(path.join(ROOT, "public", "stories", `${id}.json`), "utf8"));
       const fresh = JSON.parse(readFileSync(path.join(dir, `${id}.json`), "utf8"));
-      expect(strip(fresh)).toEqual(strip(committed));
+      expect(strip(fresh), id).toEqual(strip(story(id)));
     }
+  });
+  it("the cg-003 card makes no claim about which digit the model read (C-23)", () => {
+    const texts = [readFileSync(path.join(ROOT, "public", "app.js"), "utf8"), readFileSync(path.join(ROOT, "public", "stories", "index.json"), "utf8")];
+    for (const t of texts) expect(t).not.toMatch(/358 or 338|338 or 358/);
   });
   it("the served story file keeps its timestamp across loads; stories may be cached, the API not", async () => {
     const base = await app({ env: {} });
@@ -354,38 +453,52 @@ describe("confirmations and decisions through the API (S2-04, A-21, B-14, B-15)"
 });
 
 describe("static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, B-17, B-20)", () => {
-  const files = ["index.html", "app.js", "styles.css", "stories/index.json", "stories/cg-001.json", "stories/cg-002.json", "stories/cg-003.json"];
+  const files = ["index.html", "app.js", "styles.css", "figures.json", "stories/index.json", "stories/cg-001.json", "stories/cg-002.json", "stories/cg-003.json"];
   const all = files.map((f) => [f, readFileSync(path.join(ROOT, "public", f), "utf8")] as const);
   it("no HTML injection sinks in the client (B-16)", () => {
     const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
     expect(js).not.toMatch(/innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval\(|new Function/);
   });
   it("no third-party URL in any page or asset (B-17)", () => {
-    for (const [f, t] of all) expect(t.match(/https?:\/\/(?!localhost)[^\s"')]+/g) ?? [], f).toEqual([]);
+    // A cited source stored as text in receipts (the F1 endpoint source) is data shown with textContent, never fetched.
+    const CITED = new Set(["https://notebooks.amd.com/tokenfactory"]);
+    for (const [f, t] of all) expect((t.match(/https?:\/\/(?!localhost)[^\s"')\\]+/g) ?? []).filter((u) => !CITED.has(u)), f).toEqual([]);
   });
-  it("no AMD-run claims: only the panel name 'Runs on AMD' (B-11, D2-02)", () => {
+  it("no hardware claim the endpoint does not expose: only 'Runs on AMD' and 'AMD Token Factory' name AMD (B-11, S3-09, S3-12)", () => {
     for (const [f, t] of all) {
-      expect(t, f).not.toMatch(/real runs|AMD Instinct|Model \(AMD\)|read on AMD|LIVE reading on AMD|AMD endpoint: on/i);
+      expect(t, f).not.toMatch(/AMD Instinct|MI300|MI325|MI355|Model \(AMD\)|read on AMD|LIVE reading on AMD|AMD endpoint: on|ROCm \d|vLLM \d/i);
       expect(t.replace(/Runs on AMD/g, ""), f).not.toMatch(/on AMD/);
     }
+    const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
+    expect(js).toMatch(/GPU, ROCm and vLLM versions are not exposed by the endpoint/);
   });
   it("the endpoint pill says on only when the server's F1 state is on (B-11)", () => {
     const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
     expect(js).toMatch(/const on = r\.body\.state === "on";[\s\S]{0,200}text\.textContent = on\s*\? `Model endpoint: on/);
   });
-  it("landing figures are placeholders with no digit in any figure slot (S2-01, B-20)", () => {
+  it("landing figures come only from public/figures.json, which regenerates byte-for-byte from the committed evaluation artifacts (S3-19, C-08, C-11)", async () => {
     const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
-    const figs = [...js.matchAll(/fig\("([^"]*)",\s*"([^"]*)"\)/g)];
+    // Every figure slot is a template over fg.*: no figure value or denominator is typed in the page.
+    const figs = [...js.matchAll(/^\s+fig\((.*)\)[,)]*$/gm)].map((m) => m[1]!);
     expect(figs.length).toBe(4);
-    for (const [, val, label] of figs) {
-      expect(val).toMatch(/^\[[^\]]+\]$/);
-      expect(val + label).not.toMatch(/\d/);
-    }
-    expect(js).toContain("MEASURED ON [N] FICTITIOUS CERTIFICATES");
+    for (const f of figs) expect(f.replace(/fg\.[A-Za-z_.]+/g, "")).not.toMatch(/\d/);
+    expect(js).toMatch(/api\("\/figures\.json"\)/);
+    const committed = JSON.parse(readFileSync(path.join(ROOT, "public", "figures.json"), "utf8"));
+    // @ts-expect-error plain JS tool
+    const { buildFigures } = await import("../tools/evaluate/figures.mjs");
+    expect(buildFigures(path.join(ROOT, committed.generated_from))).toEqual(committed);
+    // FC-broad is shown with FC-strict beside it (C-08); cost is the endpoint's, with the fixed label.
+    expect(js).toMatch(/fg\.false_conforming\.broad\.n[\s\S]{0,200}fg\.false_conforming\.strict\.n/);
+    expect(committed.cost_per_certificate.label).toBe("cost reported by the endpoint; Token Factory credits are free and have no monetary value");
+    expect(committed.evaluated_cases).toBe("27");
+    expect(committed.excluded_cases).toEqual(["cg-001", "cg-002", "cg-003"]);
   });
-  it("states where AMD fits and that nothing runs on AMD in this build; limit is per instance (S2-30, B-08)", () => {
+  it("states where AMD fits (the model served by AMD Token Factory) and that the model only reads; limit is per instance (S2-30, S3-21, C-04, B-08)", () => {
     const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
-    expect(js).toMatch(/In this build no AMD hardware is used/);
+    expect(js).toMatch(/served by AMD Token Factory/);
+    expect(js).toMatch(/The model only reads; it never explains or decides/);
+    expect(js).not.toMatch(/In this build no AMD hardware is used/);
+    expect(js).not.toMatch(/mock reader stands in/);
     expect(js).toMatch(/per server instance in this build/);
     expect(js).not.toMatch(/guarantee/i);
   });

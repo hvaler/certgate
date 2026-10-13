@@ -5,21 +5,27 @@
       "title": "Conforming",
       "kind": "conforming digital certificate",
       "proposal": "release",
-      "stored_at": "2026-10-12T19:05:49.048Z"
+      "stored_at": "2026-10-13T17:49:52.325Z",
+      "recorded": true,
+      "model_reported": "self-dploy/Qwen3.8-27B"
     },
     {
       "id": "cg-002",
       "title": "Out of spec",
       "kind": "scanned certificate out of spec",
       "proposal": "block",
-      "stored_at": "2026-10-12T19:05:49.057Z"
+      "stored_at": "2026-10-13T17:50:57.586Z",
+      "recorded": true,
+      "model_reported": "self-dploy/Qwen3.8-27B"
     },
     {
       "id": "cg-003",
-      "title": "The scan it refuses to release",
-      "kind": "ambiguous scan",
-      "proposal": "review",
-      "stored_at": "2026-10-12T19:05:49.062Z"
+      "title": "The ambiguous scan",
+      "kind": "ambiguous scan (smudged digit)",
+      "proposal": "block",
+      "stored_at": "2026-10-13T17:52:09.471Z",
+      "recorded": true,
+      "model_reported": "self-dploy/Qwen3.8-27B"
     }
   ]
 }
