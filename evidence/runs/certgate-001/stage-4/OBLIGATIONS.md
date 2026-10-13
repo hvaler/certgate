@@ -1,6 +1,6 @@
 # Obligation register — Stage 4 (delivery)
 
-Run: certgate-001 · Stage: 4 · Register version: **R4.0 (draft)** (analyst-xwz3, 2026-10-13) · Prepared during Stage 3; binding only when dispatched after Stage 3 is ACCEPTED. Input revision: the Stage 3 accepted candidate (filled at dispatch). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
+Run: certgate-001 · Stage: 4 · Register version: **R4.0** (analyst-xwz3, 2026-10-13, dispatched at Stage 4 start ~20:01Z) · **Input revision: Stage 3 ACCEPTED candidate 4 `5c904693423574846e17994331a628cc06d735ef` (tree `1ed386fd25d993f1d37b823eadddfa7040b19dae`)**, auditor msg 6e4c01d3, verdict record commit 4a6f28c (committed-blob SHA-256 348ac2315af6467c686c1c64284cae55457d020131041d81706a8ca1f2975773). Sources at Stage 4 start: `stage-4/SOURCES.sha256` (unchanged since Stage 3 start). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
 
 ## Scope statement (D4-01)
 
@@ -33,3 +33,19 @@ Stage 4 delivers documentation, deployment instructions, generated metrics, an e
 | D4-02 | Push and "remote head equals local head" | The band never pushes. When the delivery candidate is accepted, the analyst posts a directed request in the room to the human (`hugo.valer`) naming the exact commit to push. The auditor then checks `git ls-remote` against the local head. If the human has not pushed before the hard stop, the check is listed as **not done** | `.claude/settings.local.json` deny list; Y §S4 Acceptance |
 | D4-03 | Anonymous GitHub API | Read-only anonymous requests to `api.github.com` (repo visibility, licence) are allowed; no token is used or stored | Y §S4 Acceptance |
 | D4-04 | Final head vs accepted candidate | Evidence-only commits after the accepted candidate are allowed; the auditor states the product tree of the accepted candidate and confirms later commits touch only `evidence/` (and the redaction of S4-12 if it lands after) | X §ACCEPTANCE |
+
+## Items carried from Stage 3 into the delivery (each must appear, accurately, in README limitations / METRICS / REPORT as stated)
+
+| ID | Source | Obligation | Owner |
+|---|---|---|---|
+| S4-15 | Auditor O3-02 (msg c613a03b, 6e4c01d3) | State that the model sometimes returns a CEV with a **decimal comma and no unit**; it appeared in both real runs on a different case each time (implementer run cg-028, auditor run cg-004) and was always caught by the channel check (⇒ review) | implementer |
+| S4-16 | Auditor O3-04 | The landing figures and METRICS name the **run that produced them** (implementer evaluation run, candidate/commit and prompt SHA) and mention the auditor's **independent second run** with its own figures (FC-broad 0/18, FC-strict 0/6, caught 6/6, 26/27 as expected, mean 77.1 s, 0.00020863 reported cost/cert) | implementer |
+| S4-17 | R3.3 C-23 | Limitation: on the ambiguous scan cg-003 the model reads the smudged ReH confidently as 338 (true 358); the product proposes **block**, never release, and requires human confirmation; the story card shows what the recorded run shows | implementer |
+| S4-18 | R3.1 C-04 | Limitation / deviation: **no model-written explanation** in this build (deviation from 03-DISENO step 7), chosen to protect I1; the case file shows deterministic rule reasons | implementer |
+| S4-19 | A-16 / auditor msg 3ca000f7 | Limitation: a hostile duplicate field in the text layer turns a would-be block into review (cg-022), never release | implementer |
+| S4-20 | Dispatch 2 §OPEN; S3-23, S3-24 | Limitations: OI-S2-01 (live limit per instance, with measured consequence) and OI-S2-02 (deployed live path: as implemented — e.g. live reading unavailable on Vercel, live demo from the container) stated exactly as the accepted code behaves | implementer |
+| S4-21 | Adversary observations msg 7d0d6556 | Prompt examples reuse cg-001 values ("0.16", "392", "QA-07") — cg-001 is a tuning/story case outside the evaluation; state it. The stale "text layer" comment in `live-reader.ts` may be fixed in Stage 4 (code-comment-only change) | implementer |
+| S4-22 | Auditor O3-03 | `/favicon.ico` returns 404: fix (static asset) or list as known cosmetic issue | implementer |
+| S4-23 | Shared service (Y §RUN) | README states the shared-service limits observed (≈20–30 rpm, 8 concurrent, daily cap 1 USD of free credits, 429/504/timeouts seen by the human; 0 retries/failures in the band's two evaluation runs) and that inputs are retained by the provider ~2 days, so only synthetic data may be sent | implementer |
+
+Any product-code change in Stage 4 (beyond docs, comments, static favicon) requires the auditor to re-verify the affected Stage 1–3 obligations; prefer docs-only changes.

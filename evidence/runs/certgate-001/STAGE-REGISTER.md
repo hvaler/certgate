@@ -13,3 +13,6 @@ Open items carried from Stage 1: ADV-S1-F04 (→ S2-33, must fix before Stage 2 
 Clock note: analyst and auditor timestamps differ by a few minutes; each seat records its own clock.| 2 | **ACCEPTED** (candidate 2, repair cycle 1 of 5) | b7f4a546fee6784d3312c19b74817807f6f0114d | 33bb040e5a21ce9fa1b92f0f1dd80708808bf3ad | ACCEPTED (mock/stored path, no endpoint, no deploy), record 2d6d6d11 (SHA-256 617d023f…66e4) | R2.2 (2ac05d62) | auditor 29/29 killed; adversary 30/34 killed + 3 equivalents, S2M02b observation | ~18:12Z → 19:39Z (auditor clock), ~87 of 300 min | 863c3ff1 |
 
 Terminal result for dispatch 1: **Stages 1 and 2 ACCEPTED (internal verification, mock/stored path only)**. Final report: final/FINAL-REPORT.md.
+
+| 3 | REJECTED (candidates 1–3: F3-01; ADV-S3-F01; ADV-S3-F02) then **ACCEPTED** (candidate 4, repair cycle 3 of 5) | 5c904693423574846e17994331a628cc06d735ef | 1ed386fd25d993f1d37b823eadddfa7040b19dae | ACCEPTED (real reading on AMD Token Factory, Qwen3.8-27B; not deployment/submission), record 4a6f28c (348ac231…5773) | R3.3 (0b683879) | S3 12/12, S2 and S1 lists killed (re-based where code moved) | 16:54Z → ~20:01Z, ~187 of 360 min | 6e4c01d3 |
+| 4 | ACTIVE | — | — | — | R4.0 | — | started ~20:01Z | — |
