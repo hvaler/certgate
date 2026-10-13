@@ -1,0 +1,7 @@
+{
+  "schema": "certgate.tuning-exclusions/1",
+  "register": "R3.0, decision D3-03, row S3-15",
+  "rule": "Prompt tuning uses only these cases. They are excluded from the final evaluation, whose denominator is every other dataset case. Any other case touched while developing the prompt is added here before the final run.",
+  "excluded": ["cg-001", "cg-002", "cg-003"],
+  "committed_before_final_run": true
+}
