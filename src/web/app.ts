@@ -257,7 +257,10 @@ export function createHandler(deps: AppDeps = {}) {
       const p = url.pathname;
       const m = req.method ?? "GET";
       if (m === "GET" && (p === "/health" || p === "/api/health")) {
-        return send(res, 200, { status: "ok", mode: getMode(env), reader: "no model in this build", notice: "All data is fictitious." }, NO_STORE);
+        // The reader state from the loaded configuration only (R4.5 E-08): "live" when an endpoint and model are
+        // configured outside the deployed site, otherwise "off". No claim beyond that.
+        const reader = cfg.modelBaseUrl !== null && cfg.modelId !== null && !cfg.deployedSite ? "live" : "off";
+        return send(res, 200, { status: "ok", mode: getMode(env), reader, notice: "All data is fictitious." }, NO_STORE);
       }
       if (m === "GET" && p === "/api/f1") return send(res, 200, await probeF1(cfg, clock, lastLive), NO_STORE);
       if (m === "GET" && p === "/api/live/status") return send(res, 200, liveStatus(), NO_STORE);

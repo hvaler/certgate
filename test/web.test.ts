@@ -75,6 +75,18 @@ describe("F1 panel (S2-11, S2-12, S2-36, B-06, B-19)", () => {
     expect(f.usage_source).toBe("GET /usage");
     expect(f.cost_label).toBe("cost reported by the endpoint; Token Factory credits are free and have no monetary value");
   });
+  it("/health reports the reader state from the configuration only: off, live, and off on the deployed site (R4.5 E-08)", async () => {
+    const s = await stub();
+    const none = await (await fetch(`${await app({ env: {} })}/health`)).json();
+    expect(none).toEqual({ status: "ok", mode: "mock", reader: "off", notice: "All data is fictitious." });
+    const live = await (await fetch(`${await app({ env: stubEnv(s) })}/health`)).json();
+    expect(live.reader).toBe("live");
+    const deployed = await (await fetch(`${await app({ env: stubEnv(s, { VERCEL: "1" }) })}/health`)).json();
+    expect(deployed.reader).toBe("off");
+    // /health only reads configuration: it never calls the endpoint.
+    expect(s.state.chatCalls).toBe(0);
+    expect(readFileSync(path.join(ROOT, "src", "web", "app.ts"), "utf8")).not.toMatch(/no model in this build/);
+  });
   it("request parameters, headers or body cannot set the endpoint (B-06)", async () => {
     const s = await stub();
     const base = await app({ env: {} });
@@ -206,7 +218,8 @@ describe("live upload policy and deployed site (R3.1 C-02, C-07, S3-24)", () => 
     expect(statuses).toEqual([200, 200, 200, 200, 429, 429]);
     expect(s.state.chatCalls).toBe(4);
     const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
-    expect(readme).toMatch(/with N instances the real ceiling\s+is N × 20 live readings per\s+hour/);
+    expect(readme).toMatch(/two instances with a limit of 2 let 4 readings through/);
+    expect(readme).toMatch(/With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour/);
   });
   it("time budget: the worst-case live reading does not fit the deployed function, so the deployed site has no live reading (C-07)", async () => {
     const L = await import("../src/web/limits.js");

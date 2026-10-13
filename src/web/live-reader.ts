@@ -1,7 +1,7 @@
 // Real model reader (S3-01..S3-03): an OpenAI-compatible chat-completions call to the configured endpoint
-// (AMD Token Factory in this run). It sends the certificate's text layer (digital PDF) or its page images
-// (scan), asks for the CertGate reading as one JSON object, and returns that JSON text unchanged except for
-// surrounding code fences. The pipeline validates it; invalid output is a C11 failure, never repaired.
+// (AMD Token Factory in this run). It sends only the rendered page images of every certificate, digital or scanned
+// (never the text layer, R3.1 C-01), asks for the CertGate reading as one JSON object, and returns that JSON text
+// unchanged except for one code fence spanning the whole content. The pipeline validates it; invalid output is a C11 failure, never repaired.
 // URL and model id come only from server configuration (B-06). The API key is sent only to that endpoint and
 // is never logged, stored or returned (I6). The model's reasoning text is never used (I1).
 import { createHash } from "node:crypto";

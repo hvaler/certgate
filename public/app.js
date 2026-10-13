@@ -438,8 +438,10 @@ function receiptScreen(view, opts) {
 async function amdScreen() {
   const f1 = await refreshF1();
   render(h("div", { class: "row" }, f1Panel(f1 || { state: "off", detail: "status unavailable", model_ids: [] }, "Runs on AMD",
-    "Read now from the configured model endpoint and its sidecar. With no endpoint configured, it says endpoint off with the time of this check. Nothing is typed by hand.")),
-    h("p", { class: "muted" }, "In this build no endpoint is configured and no AMD hardware is used."));
+    "Read now from the configured model endpoint (GET /models and GET /usage, probed at most once per 60 s). With no endpoint configured, it says endpoint off with the time of this check. Nothing is typed by hand.")),
+    h("p", { class: "muted", id: "amd-state" }, f1 && f1.state === "on"
+      ? "Endpoint on: AMD Token Factory. The values above are as reported by the endpoint."
+      : `Endpoint off (${f1 && f1.detail ? f1.detail : "status unavailable"}): judge mode shows the recorded readings only.`));
 }
 
 async function route() {
