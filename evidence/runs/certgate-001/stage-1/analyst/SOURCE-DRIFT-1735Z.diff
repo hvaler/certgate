@@ -1,7 +1,7 @@
-diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03new.md"
+diff --git "a/<temp>\\cgdiff\\03old.md" "b/<temp>\\cgdiff\\03new.md"
 index 1f67832..a4841db 100644
---- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03old.md"
-+++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\03new.md"
+--- "a/<temp>\\cgdiff\\03old.md"
++++ "b/<temp>\\cgdiff\\03new.md"
 @@ -178,11 +178,13 @@ denominadores. Mientras no existan, se muestran sus marcadores, nunca cifras inv
  
  Nunca se presenta como lectura en vivo una respuesta guardada: la pantalla dice cuál es cuál.
@@ -21,10 +21,10 @@ index 1f67832..a4841db 100644
  
  **F4 · Encaje con Vercel.** La web y las funciones del backend van en Vercel. Implica:
  - **sin SQLite local**: los relatos del modo jurado son ficheros estáticos versionados en el repositorio, y los
-diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02new.md"
+diff --git "a/<temp>\\cgdiff\\02old.md" "b/<temp>\\cgdiff\\02new.md"
 index ff1a03b..830a415 100644
---- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02old.md"
-+++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\02new.md"
+--- "a/<temp>\\cgdiff\\02old.md"
++++ "b/<temp>\\cgdiff\\02new.md"
 @@ -66,6 +66,12 @@ Consecuencias de calendario:
  fiable, memoria que necesita y si vLLM lo soporta en ROCm según la documentación oficial. **No elegirlo por fama
  ni por catálogo genérico**: probarlo con dos o tres certificados sintéticos (uno escaneado) antes de fijarlo.
@@ -38,10 +38,10 @@ index ff1a03b..830a415 100644
  **Gate de arranque del producto:** no dar por cerrada la arquitectura hasta que A3 y A4 tengan una prueba real.
  Si el 12 de octubre a las 17:00 no la tienen, se aplica la regla de `05-BANDA-Y-CALENDARIO.md`.
  
-diff --git "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01old.md" "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01new.md"
+diff --git "a/<temp>\\cgdiff\\01old.md" "b/<temp>\\cgdiff\\01new.md"
 index d757f9d..8510bba 100644
---- "a/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01old.md"
-+++ "b/C:\\Users\\hugo_\\AppData\\Local\\Temp\\cgdiff\\01new.md"
+--- "a/<temp>\\cgdiff\\01old.md"
++++ "b/<temp>\\cgdiff\\01new.md"
 @@ -29,12 +29,17 @@ historial, con su estado. Una cita que no esté aquí no es una regla vigente.
  | Intelligent Industry: demo | «Show your product processing realistic industrial data and producing a useful alert, explanation, recommendation, or action. Make it clear who would use the product and what result it improves.» | pagina | 2026-10-12 | entrega |
  | Reinvent Commerce: previsiones | «Do not use a language model as the only forecasting method.» | pagina | 2026-10-12 | tecnico |
