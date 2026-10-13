@@ -1,6 +1,7 @@
 // Sentence map for the claims table (R4.3 F-02, ADV-S4-F02). Splits README.md, DEPLOY.md and METRICS.md into
-// units (each sentence of prose and list items, and each table row; code blocks, headings and HTML comments are not
-// units). claims-map.json assigns every unit either a CLAIMS.md row ("C-nn") or "none: <why it is not a
+// units (each sentence of prose and list items, each table row, each heading, each `#` comment line in a code
+// block and each line of a language-less code block; shell commands and HTML comments are not units).
+// claims-map.json assigns every unit either a CLAIMS.md row ("C-nn") or "none: <why it is not a
 // capability>". test/docs.test.ts fails when a unit is missing from the map, when a map entry no longer occurs, or
 // when a row is unknown: a sentence that is added or changed must be mapped again.
 //
@@ -20,6 +21,7 @@ export function units(text) {
   const out = [];
   const lines = text.replace(/\r\n/g, "\n").split("\n");
   let inFence = false;
+  let fenceLang = "";
   let inComment = false;
   let block = [];
   const flush = () => {
@@ -32,12 +34,21 @@ export function units(text) {
   };
   for (const raw of lines) {
     const line = raw.trimEnd();
-    if (/^\s*```/.test(line)) { flush(); inFence = !inFence; continue; }
-    if (inFence) continue;
+    const fence = /^\s*```\s*([A-Za-z0-9_-]*)/.exec(line);
+    if (fence) { flush(); inFence = !inFence; fenceLang = inFence ? fence[1] : ""; continue; }
+    if (inFence) {
+      // Inside code: a "#" comment line is prose a reader takes as a statement (ADV-S4-F06), and a fenced block
+      // with no language (CLI usage, layout) is text, so each of its non-empty lines is a unit. Commands are not.
+      const comment = /^\s*#\s+(.*\S)/.exec(line);
+      if (comment) out.push(norm(comment[1]));
+      else if (fenceLang === "" && line.trim() !== "") out.push(norm(line));
+      continue;
+    }
     if (/^\s*<!--/.test(line)) { flush(); inComment = !line.includes("-->"); continue; }
     if (inComment) { if (line.includes("-->")) inComment = false; continue; }
     if (line.trim() === "") { flush(); continue; }
-    if (/^#{1,6}\s/.test(line)) { flush(); continue; }
+    const heading = /^#{1,6}\s+(.*\S)/.exec(line);
+    if (heading) { flush(); out.push(norm(heading[1])); continue; }
     if (/^\s*\|/.test(line)) {
       flush();
       if (/^\s*\|[\s|:-]+\|\s*$/.test(line)) continue; // separator row

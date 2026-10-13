@@ -118,6 +118,17 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
       // R4.7 (F-06 extension): no hosted-demo claim or deployment URL. The cited Vercel documentation URL is allowed.
       /vercel\.app/i, /hosted demo/i, /https?:\/\/(?!localhost|127\.|vercel\.com\/docs\/)[^\s)"'`]*(vercel|netlify)/i];
     for (const f of files) for (const re of forbidden) expect(read(f), `${f}: ${re}`).not.toMatch(re);
+    // ADV-S4-F06: no positive claim that live reading works on the deployed site, in prose, headings or code
+    // comments. The documented negative sentences ("unavailable on the deployed site", "runs from the container,
+    // not from the deployed site") are allowed: a match is a finding only if it carries no negation.
+    const positive = [
+      /live reading(?: (?:also|works|is|available|runs))* (?:on|from) the deployed site/gi,
+      /live reading[^.\n]*\b(?:works?|available|runs?|possible)\b[^.\n]*deployed/gi,
+    ];
+    for (const f of files) {
+      const t = read(f).replace(/\s+/g, " ");
+      for (const re of positive) for (const m of t.matchAll(re)) expect(m[0], `${f}: positive deployed-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
+    }
   });
   it("no secret-looking value in the docs", () => {
     const patterns = [

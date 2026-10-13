@@ -276,6 +276,8 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).
     band's two evaluation runs there were 0 retries and 0 failures.
   - CertGate keeps at most 2 requests in flight, retries only 429 and 5xx (at most 3 attempts, Retry-After
     honoured), and waits up to 300 s per attempt.
+  - A reply that is not one JSON object (JSON wrapped in prose or followed by text, empty content, or a reply cut
+    off by the token limit) is a failure (status error, proposal review), never repaired by guessing.
   - The provider keeps prompts and outputs for about 2 days, so only synthetic data may be sent. Before any live
     reading the page shows that notice, and the server requires the visitor to confirm it.
 - **Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).

@@ -1593,5 +1593,335 @@
   "doc": "METRICS.md",
   "text": "All costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.",
   "row": "C-17"
+ },
+ {
+  "doc": "README.md",
+  "text": "CertGate",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Problem and user",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "What it does",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "What runs on AMD, and how it is shown",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Evaluation (real model)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Demo procedure",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Run it",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Build the image",
+  "row": "none: comment naming the command below (build the image)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Mock mode: the web UI at http://localhost:3000 (no endpoint: judge mode shows the recorded real runs; \"endpoint off\")",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "The service on PORT, reachable from the host (a published port needs a network; the service itself makes",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "no outbound call in mock mode)",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "The service fully offline: with --network none no port can be published, so query it from inside",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "One dataset case through the CLI, inside the image",
+  "row": "C-28"
+ },
+ {
+  "doc": "README.md",
+  "text": "The test suite inside the image (makes no endpoint call; the checks over the delivery documents and evidence,",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "test/docs.test.ts and test/metrics-md.test.ts, are skipped there because the image carries neither)",
+  "row": "C-27"
+ },
+ {
+  "doc": "README.md",
+  "text": "Local",
+  "row": "none: comment naming the commands below (local run)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Real mode: live reading against AMD Token Factory (container or local)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "MODEL_BASE_URL, MODEL_API_KEY and MODEL_ID come from your environment; never write their values anywhere.",
+  "row": "C-32"
+ },
+ {
+  "doc": "README.md",
+  "text": "CLI",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "certgate list",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "certgate process --case <id> dataset case data/cases/<id>",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "certgate process --case-dir <dir> [--line <n>] [--delivery <csv>]",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "<dir>/certificate.pdf, <dir>/reading.json (mock model output), <dir>/delivery.csv (or --delivery);",
+  "row": "C-28"
+ },
+ {
+  "doc": "README.md",
+  "text": "the paired delivery line from --line or <dir>/case.json \"delivery_line\"",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "options:",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "--out <file> also write the output to a file",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "--receipt-only print only the receipt JSON",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "--confirm <field>=<value> human confirmation of a critical field (repeatable; value \"absent\" = not on document)",
+  "row": "C-09"
+ },
+ {
+  "doc": "README.md",
+  "text": "--confirmed-by <name>",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "--decide <release|block|request_new_certificate> --reason <text> --decided-by <name>",
+  "row": "none: CLI usage syntax (command and option names)"
+ },
+ {
+  "doc": "README.md",
+  "text": "exit codes: 0 processed (any proposal, including reader errors), 2 input rejected, 1 internal error",
+  "row": "C-53"
+ },
+ {
+  "doc": "README.md",
+  "text": "Web UI and HTTP API",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Live reading against the local test stub (tests and review only)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Evaluation, metrics and stories",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Configuration",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Limitations",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Dataset",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Reason codes",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Repository layout",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "src/ product code (TypeScript, Node 24)",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "public/ web UI, recorded stories, landing figures",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "api/ Vercel function entry",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "test/ tests (vitest), runnable offline; test/browser: Playwright checks",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "config/ band-defined plausibility ranges (not from any standard)",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "data/ fictitious dataset, spec ESP-014 r3, delivery notes",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "docs/ cited sources",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "evaluation/ real-run expectations, tuning exclusions, development call log, evaluation runs",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "tools/ dataset generator (Python, dev-time), evaluation, metrics and development tools",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "evidence/ stage records of the band (registers, handoffs, verdicts, logs)",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "How it was built",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "License",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Deploying CertGate on Vercel (for the human)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "1. Project settings",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "2. Function duration",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "3. Environment variables (names only; never write a value anywhere)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "4. Checks after deploying",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "\"reason\": \"live reading unavailable on the deployed site; live demonstration from the container\"",
+  "row": "C-36"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "CertGate evaluation metrics",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Reporting rules",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Runs",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Headline",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Per-case proposals, both runs (C-12)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Proposal mismatches",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Per-field accuracy (model channel against the correct reading)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "METRICS.md",
+  "text": "Usage reconciliation (GET /usage before and after each run, C-15)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "A reply that is not one JSON object (JSON wrapped in prose or followed by text, empty content, or a reply cut off by the token limit) is a failure (status error, proposal review), never repaired by guessing.",
+  "row": "C-42"
  }
 ]
