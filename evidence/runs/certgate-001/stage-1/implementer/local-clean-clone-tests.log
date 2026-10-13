@@ -5,7 +5,7 @@ added 42 packages in 5s
 > tsc -p tsconfig.json
 
 
- RUN  v5.0.4 C:/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad/clone-31335ee
+ RUN  v5.0.4 <scratch-dir>
 
 
  Test Files  9 passed (9)

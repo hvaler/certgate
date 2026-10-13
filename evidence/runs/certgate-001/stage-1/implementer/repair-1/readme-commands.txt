@@ -2542,7 +2542,7 @@ $ npm test
 > vitest run
 
 
- RUN  v5.0.4 C:/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad/clone-9d04499
+ RUN  v5.0.4 <scratch-dir>
 
 
  Test Files  9 passed (9)
