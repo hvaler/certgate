@@ -1,0 +1,114 @@
+2026-10-13T19:14:58.890Z cg-005 processed block (expected block) 62565 ms attempts=1
+2026-10-13T19:15:28.482Z cg-004 processed review (expected release) 92174 ms attempts=1
+2026-10-13T19:16:22.975Z cg-006 processed block (expected block) 84075 ms attempts=1
+2026-10-13T19:16:54.575Z cg-007 processed block (expected block) 86080 ms attempts=1
+2026-10-13T19:17:33.963Z cg-008 processed release (expected release) 70976 ms attempts=1
+2026-10-13T19:18:04.461Z cg-009 processed release (expected release) 69880 ms attempts=1
+2026-10-13T19:18:54.670Z cg-010 processed review (expected review) 80700 ms attempts=1
+2026-10-13T19:19:56.400Z cg-011 processed review (expected review) 111932 ms attempts=1
+2026-10-13T19:20:37.767Z cg-012 processed block (expected block) 103090 ms attempts=1
+2026-10-13T19:21:02.082Z cg-013 processed review (expected review) 65675 ms attempts=1
+2026-10-13T19:21:59.416Z cg-014 processed release (expected release) 81640 ms attempts=1
+2026-10-13T19:22:25.577Z cg-015 processed review (expected review) 83487 ms attempts=1
+2026-10-13T19:23:02.711Z cg-016 processed review (expected review) 63286 ms attempts=1
+2026-10-13T19:23:46.360Z cg-017 processed review (expected review) 80777 ms attempts=1
+2026-10-13T19:24:03.013Z cg-018 processed release (expected release) 60295 ms attempts=1
+2026-10-13T19:25:04.571Z cg-019 processed review (expected review) 78202 ms attempts=1
+2026-10-13T19:25:19.001Z cg-020 processed block (expected block) 75980 ms attempts=1
+2026-10-13T19:26:21.465Z cg-021 processed block (expected block) 76885 ms attempts=1
+2026-10-13T19:26:38.844Z cg-022 processed review (expected review) 79835 ms attempts=1
+2026-10-13T19:27:28.186Z cg-023 processed release (expected release) 66714 ms attempts=1
+2026-10-13T19:28:00.683Z cg-024 processed release (expected release) 81832 ms attempts=1
+2026-10-13T19:28:35.185Z cg-025 processed review (expected review) 66991 ms attempts=1
+2026-10-13T19:29:09.259Z cg-026 processed release (expected release) 68567 ms attempts=1
+2026-10-13T19:29:44.396Z cg-027 processed release (expected release) 69202 ms attempts=1
+2026-10-13T19:30:32.887Z cg-028 processed review (expected review) 83619 ms attempts=1
+2026-10-13T19:30:53.888Z cg-029 processed review (expected review) 69462 ms attempts=1
+2026-10-13T19:31:40.785Z cg-030 processed review (expected review) 67890 ms attempts=1
+{
+ "fc_broad": {
+  "numerator": "0",
+  "denominator": "18",
+  "cases": []
+ },
+ "fc_strict": {
+  "numerator": "0",
+  "denominator": "6",
+  "cases": []
+ },
+ "fc_broad_over_all": {
+  "numerator": "0",
+  "denominator": "27"
+ },
+ "non_conformities_caught": {
+  "numerator": "6",
+  "denominator": "6",
+  "cases": [
+   "cg-005",
+   "cg-006",
+   "cg-007",
+   "cg-012",
+   "cg-020",
+   "cg-021"
+  ]
+ },
+ "non_conformities_blocked": {
+  "numerator": "6",
+  "denominator": "6",
+  "cases": [
+   "cg-005",
+   "cg-006",
+   "cg-007",
+   "cg-012",
+   "cg-020",
+   "cg-021"
+  ]
+ },
+ "proposal_agreement": {
+  "numerator": "26",
+  "denominator": "27",
+  "cases": [
+   "cg-005",
+   "cg-006",
+   "cg-007",
+   "cg-008",
+   "cg-009",
+   "cg-010",
+   "cg-011",
+   "cg-012",
+   "cg-013",
+   "cg-014",
+   "cg-015",
+   "cg-016",
+   "cg-017",
+   "cg-018",
+   "cg-019",
+   "cg-020",
+   "cg-021",
+   "cg-022",
+   "cg-023",
+   "cg-024",
+   "cg-025",
+   "cg-026",
+   "cg-027",
+   "cg-028",
+   "cg-029",
+   "cg-030"
+  ]
+ },
+ "seconds_per_certificate": {
+  "mean": "77.1",
+  "median": "76.9",
+  "n": "27",
+  "over": "processed cases (status != error)"
+ },
+ "cost_per_certificate": {
+  "mean": "0.00020863",
+  "median": "0.0001993",
+  "n": "27",
+  "unknown": "0",
+  "over": "processed cases with a reported cost",
+  "label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value"
+ }
+}
+artifacts: evaluation\runs\auditor-a892f77-retry1

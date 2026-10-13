@@ -1,0 +1,67 @@
+0
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 188[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 1035[2mms[22m[39m
+   [32m✓[39m spec ESP-014 from its versioned file (S1-12) [2m(4)[22m
+     [33m[2m✓[22m[39m puts spec id, revision and file hash into every receipt[33m 711[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 1348[2mms[22m[39m
+   [32m✓[39m failure injection and bounded retry (C11) [2m(14)[22m
+     [33m[2m✓[22m[39m cg-023 endpoint_off: status error, review, exactly 1 reader call(s), error class in receipt[33m 590[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1550[2mms[22m[39m
+   [32m✓[39m CLI [2m(10)[22m
+     [33m[2m✓[22m[39m processes a named dataset case and prints proposal and receipt (exit 0)[33m 544[2mms[22m[39m
+ [32m✓[39m test/evaluation-receipts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1723[2mms[22m[39m
+   [32m✓[39m live receipts never say the endpoint was off (F3-01) [2m(5)[22m
+     [33m[2m✓[22m[39m a live reading through the pipeline with no F1 probe: state not_captured_in_evaluation_run, reply values filled[33m 1553[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 1649[2mms[22m[39m
+   [32m✓[39m text-layer extraction without any model [2m(19)[22m
+     [33m[2m✓[22m[39m cg-001: every critical field equals the correct reading[33m 673[2mms[22m[39m
+     [33m[2m✓[22m[39m cg-004: every critical field equals the correct reading[33m 311[2mms[22m[39m
+ [32m✓[39m test/labels.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 552[2mms[22m[39m
+   [32m✓[39m reading labels never present a mock or stored reading as live (S2M01) [2m(3)[22m
+     [33m[2m✓[22m[39m a mock run's view is labelled mock, and nothing mock says live[33m 534[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 719[2mms[22m[39m
+   [32m✓[39m per-field human confirmation re-runs coherence and rules (A-07, A-21) [2m(6)[22m
+     [33m[2m✓[22m[39m (a) cert-03 with every critical field confirmed and ReH 358 proposes release[33m 408[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 1271[2mms[22m[39m
+   [32m✓[39m every dataset case yields its expected outcome through the mock path [2m(30)[22m
+     [33m[2m✓[22m[39m cg-001[33m 482[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 682[2mms[22m[39m
+   [32m✓[39m consecutive cases do not contaminate each other [2m(3)[22m
+     [33m[2m✓[22m[39m A -> B, B -> A and B alone give identical receipts for B (minus ids and timings)[33m 511[2mms[22m[39m
+ [32m✓[39m test/live-reader.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 6957[2mms[22m[39m
+   [32m✓[39m request shape (C-01, C-12, S3-02) [2m(1)[22m
+     [33m[2m✓[22m[39m sends only rendered page images: no text-layer string, no PDF bytes; temperature 0; the frozen instruction[33m 948[2mms[22m[39m
+   [32m✓[39m recorded replies (S3-06, C-14) [2m(4)[22m
+     [33m[2m✓[22m[39m a recorded real reading parses and carries response id, created, model and usage as returned[33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m the recorded cg-001 reply through the pipeline gives the recorded proposal; the receipt copies the response identity[33m 415[2mms[22m[39m
+     [33m[2m✓[22m[39m error shape {"error":…} (invalid key, 401): C11, message kept, not retried, key never in the message[33m 449[2mms[22m[39m
+   [32m✓[39m C11 under the real reader (S3-03, C-05) [2m(2)[22m
+     [33m[2m✓[22m[39m finish_reason length is a C11 failure (truncated_output), even with content[33m 487[2mms[22m[39m
+     [33m[2m✓[22m[39m empty content with the JSON only in the reasoning is a C11 failure; the reasoning is never used (C-05)[33m 616[2mms[22m[39m
+   [32m✓[39m calling discipline (S3-02) [2m(4)[22m
+     [33m[2m✓[22m[39m 429 is retried, honouring Retry-After, at most 3 attempts in all[33m 2373[2mms[22m[39m
+     [33m[2m✓[22m[39m at most 2 requests in flight, across readers[33m 850[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m46 tests[22m[2m)[22m[33m 19369[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [33m[2m✓[22m[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[33m 477[2mms[22m[39m
+   [32m✓[39m live upload policy and deployed site (R3.1 C-02, C-07, S3-24) [2m(5)[22m
+     [33m[2m✓[22m[39m without LIVE_ACCESS_CODE an uploaded file that is not a dataset certificate is refused before anything is counted or sent (C-02 a)[33m 462[2mms[22m[39m
+     [33m[2m✓[22m[39m with LIVE_ACCESS_CODE configured and given, an uploaded synthetic file can be read (C-02 a)[33m 391[2mms[22m[39m
+     [33m[2m✓[22m[39m the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured)[33m 1184[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(14)[22m
+     [33m[2m✓[22m[39m limit: exhausted is rejected by the server with the reopening time; reopens at the next UTC hour[33m 558[2mms[22m[39m
+     [33m[2m✓[22m[39m check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings[33m 561[2mms[22m[39m
+     [33m[2m✓[22m[39m a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)[33m 369[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 1 call(s), counted once, no secret[33m 387[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode http_429: status error, review, 3 call(s), counted once, no secret[33m 6252[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode http_5xx: status error, review, 3 call(s), counted once, no secret[33m 6294[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[32m274 passed[39m[22m[90m (274)[39m
+[2m   Start at [22m 18:32:09
+[2m   Duration [22m 20.59s[2m (tests 91%, import 4%, transform 4%, worker 1%)[22m
+
