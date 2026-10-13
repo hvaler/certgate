@@ -1,0 +1,1055 @@
+{
+  "schema": "certgate.evaluation-metrics/1",
+  "definitions": "D3-05 as amended by R3.1 C-08 (FC-strict/FC-broad), C-09 (rule abstention vs failure), C-10 (confident-on-illegible), C-11 (cost/time over processed cases; missing cost = unknown), C-15 (usage reconciliation)",
+  "run": {
+    "candidate_commit": "dd557fd2395db09566dc193c69e4dc30600ef7db",
+    "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567",
+    "started_utc": "2026-10-13T17:28:48.044Z",
+    "finished_utc": "2026-10-13T17:49:07.371Z",
+    "blocked": null
+  },
+  "evaluated_cases": {
+    "count": "27",
+    "cases": [
+      "cg-004",
+      "cg-005",
+      "cg-006",
+      "cg-007",
+      "cg-008",
+      "cg-009",
+      "cg-010",
+      "cg-011",
+      "cg-012",
+      "cg-013",
+      "cg-014",
+      "cg-015",
+      "cg-016",
+      "cg-017",
+      "cg-018",
+      "cg-019",
+      "cg-020",
+      "cg-021",
+      "cg-022",
+      "cg-023",
+      "cg-024",
+      "cg-025",
+      "cg-026",
+      "cg-027",
+      "cg-028",
+      "cg-029",
+      "cg-030"
+    ],
+    "excluded": [
+      "cg-001",
+      "cg-002",
+      "cg-003"
+    ]
+  },
+  "headline": {
+    "fc_broad": {
+      "numerator": "0",
+      "denominator": "18",
+      "cases": []
+    },
+    "fc_strict": {
+      "numerator": "0",
+      "denominator": "6",
+      "cases": []
+    },
+    "fc_broad_over_all": {
+      "numerator": "0",
+      "denominator": "27"
+    },
+    "non_conformities_caught": {
+      "numerator": "6",
+      "denominator": "6",
+      "cases": [
+        "cg-005",
+        "cg-006",
+        "cg-007",
+        "cg-012",
+        "cg-020",
+        "cg-021"
+      ]
+    },
+    "non_conformities_blocked": {
+      "numerator": "6",
+      "denominator": "6",
+      "cases": [
+        "cg-005",
+        "cg-006",
+        "cg-007",
+        "cg-012",
+        "cg-020",
+        "cg-021"
+      ]
+    },
+    "proposal_agreement": {
+      "numerator": "27",
+      "denominator": "27",
+      "cases": [
+        "cg-004",
+        "cg-005",
+        "cg-006",
+        "cg-007",
+        "cg-008",
+        "cg-009",
+        "cg-010",
+        "cg-011",
+        "cg-012",
+        "cg-013",
+        "cg-014",
+        "cg-015",
+        "cg-016",
+        "cg-017",
+        "cg-018",
+        "cg-019",
+        "cg-020",
+        "cg-021",
+        "cg-022",
+        "cg-023",
+        "cg-024",
+        "cg-025",
+        "cg-026",
+        "cg-027",
+        "cg-028",
+        "cg-029",
+        "cg-030"
+      ]
+    },
+    "seconds_per_certificate": {
+      "mean": "89.6",
+      "median": "80.6",
+      "n": "27",
+      "over": "processed cases (status != error)"
+    },
+    "cost_per_certificate": {
+      "mean": "0.00020529",
+      "median": "0.00020112",
+      "n": "27",
+      "unknown": "0",
+      "over": "processed cases with a reported cost",
+      "label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value"
+    }
+  },
+  "false_conforming_root_causes": [],
+  "proposal_mismatches": [],
+  "abstentions": {
+    "rule_abstention": {
+      "numerator": "12",
+      "denominator": "27",
+      "cases": [
+        "cg-010",
+        "cg-011",
+        "cg-013",
+        "cg-015",
+        "cg-016",
+        "cg-017",
+        "cg-019",
+        "cg-022",
+        "cg-025",
+        "cg-028",
+        "cg-029",
+        "cg-030"
+      ]
+    },
+    "failure": {
+      "numerator": "0",
+      "denominator": "27",
+      "cases": []
+    },
+    "failure_by_class": {}
+  },
+  "per_field_accuracy": {
+    "over": "critical fields of processed cases, model channel vs correct reading",
+    "totals": {
+      "correct": {
+        "numerator": "591",
+        "denominator": "594"
+      },
+      "correct_unknown": {
+        "numerator": "1",
+        "denominator": "594"
+      },
+      "wrong": {
+        "numerator": "1",
+        "denominator": "594"
+      },
+      "correct_absent": {
+        "numerator": "1",
+        "denominator": "594"
+      }
+    },
+    "by_field": {
+      "certificate_type": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "heat_or_lot": {
+        "correct": {
+          "numerator": "26",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        },
+        "correct_unknown": {
+          "numerator": "1",
+          "denominator": "27",
+          "cases": [
+            "cg-017"
+          ]
+        }
+      },
+      "grade": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.C": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Si": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Mn": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.P": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.S": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Cr": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Ni": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Mo": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.Cu": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "chemistry.V": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "cev_printed": {
+        "correct": {
+          "numerator": "26",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-029",
+            "cg-030"
+          ]
+        },
+        "wrong": {
+          "numerator": "1",
+          "denominator": "27",
+          "cases": [
+            "cg-028"
+          ]
+        }
+      },
+      "mechanical.ReH": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "mechanical.Rm": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "mechanical.A": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "mechanical.KV_1": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "mechanical.KV_2": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "mechanical.KV_3": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "kv_temperature": {
+        "correct": {
+          "numerator": "27",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-028",
+            "cg-029",
+            "cg-030"
+          ]
+        }
+      },
+      "inspection_stamp": {
+        "correct": {
+          "numerator": "26",
+          "denominator": "27",
+          "cases": [
+            "cg-004",
+            "cg-005",
+            "cg-006",
+            "cg-007",
+            "cg-008",
+            "cg-009",
+            "cg-010",
+            "cg-011",
+            "cg-012",
+            "cg-013",
+            "cg-014",
+            "cg-015",
+            "cg-016",
+            "cg-017",
+            "cg-018",
+            "cg-019",
+            "cg-020",
+            "cg-021",
+            "cg-022",
+            "cg-023",
+            "cg-024",
+            "cg-025",
+            "cg-026",
+            "cg-027",
+            "cg-029",
+            "cg-030"
+          ]
+        },
+        "correct_absent": {
+          "numerator": "1",
+          "denominator": "27",
+          "cases": [
+            "cg-028"
+          ]
+        }
+      }
+    },
+    "confident_on_illegible": []
+  },
+  "time": {
+    "seconds_per_certificate_processed": {
+      "mean": "89.6",
+      "median": "80.6",
+      "min": "52",
+      "max": "207.7",
+      "n": "27"
+    },
+    "seconds_per_certificate_all": {
+      "mean": "89.6",
+      "median": "80.6",
+      "n": "27"
+    },
+    "latency_ms_per_request": {
+      "mean": "89500",
+      "median": "80554",
+      "min": "51786",
+      "max": "207611",
+      "n": "27"
+    }
+  },
+  "tokens": {
+    "total_per_certificate": {
+      "mean": "4234",
+      "median": "4165",
+      "n": "27"
+    },
+    "completion_per_certificate": {
+      "mean": "1441",
+      "n": "27"
+    },
+    "reasoning_per_certificate": {
+      "mean": "552",
+      "n": "27"
+    }
+  },
+  "retries": {
+    "per_case": {
+      "cg-004": "0",
+      "cg-005": "0",
+      "cg-006": "0",
+      "cg-007": "0",
+      "cg-008": "0",
+      "cg-009": "0",
+      "cg-010": "0",
+      "cg-011": "0",
+      "cg-012": "0",
+      "cg-013": "0",
+      "cg-014": "0",
+      "cg-015": "0",
+      "cg-016": "0",
+      "cg-017": "0",
+      "cg-018": "0",
+      "cg-019": "0",
+      "cg-020": "0",
+      "cg-021": "0",
+      "cg-022": "0",
+      "cg-023": "0",
+      "cg-024": "0",
+      "cg-025": "0",
+      "cg-026": "0",
+      "cg-027": "0",
+      "cg-028": "0",
+      "cg-029": "0",
+      "cg-030": "0"
+    },
+    "requests": "27",
+    "cases_with_retry": []
+  },
+  "usage_reconciliation": {
+    "usage_before_daily_cost_used": "0.002272235229611397",
+    "usage_after_daily_cost_used": "0.00781511701643467",
+    "usage_after_daily_cost_remaining": "0.9921848829835653",
+    "usage_delta": "0.00554288",
+    "sum_of_per_request_cost": "0.00554288",
+    "responses_with_reported_cost": "27",
+    "requests_in_artifacts": "27",
+    "difference": "0",
+    "note": "GET /usage reports the key's daily cost; it is read once before and once after the run. Any difference is reported, not hidden (C-15); the per-request sum covers the last response of each case (failed attempts carry no usage); the two GET /usage reads are not in it."
+  }
+}

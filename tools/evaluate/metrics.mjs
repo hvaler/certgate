@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const frac = (num, den) => ({ numerator: String(num), denominator: String(den), cases: undefined });
 const withCases = (list, den) => ({ numerator: String(list.length), denominator: String(den), cases: list });
-const dec = (x, places = 3) => (x === null || !Number.isFinite(x) ? null : x.toFixed(places).replace(/\.?0+$/, ""));
+const dec = (x, places = 3) => (x === null || !Number.isFinite(x) ? null : places === 0 ? x.toFixed(0) : x.toFixed(places).replace(/0+$/, "").replace(/\.$/, ""));
 
 function median(xs) {
   if (xs.length === 0) return null;

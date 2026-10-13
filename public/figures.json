@@ -1,0 +1,53 @@
+{
+  "figures_schema": "certgate.figures/1",
+  "generated_from": "evaluation/runs/real-candidate-dd557fd",
+  "candidate_commit": "dd557fd2395db09566dc193c69e4dc30600ef7db",
+  "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567",
+  "run_started_utc": "2026-10-13T17:28:48.044Z",
+  "run_finished_utc": "2026-10-13T17:49:07.371Z",
+  "blocked": null,
+  "evaluated_cases": "27",
+  "excluded_cases": [
+    "cg-001",
+    "cg-002",
+    "cg-003"
+  ],
+  "model_reported": [
+    "self-dploy/Qwen3.8-27B"
+  ],
+  "endpoint": "AMD Token Factory",
+  "false_conforming": {
+    "broad": {
+      "n": "0",
+      "of": "18",
+      "label": "false conforming: released when the expected proposal was not release"
+    },
+    "strict": {
+      "n": "0",
+      "of": "6",
+      "label": "of them, released when the expected proposal was block"
+    }
+  },
+  "non_conformities_caught": {
+    "n": "6",
+    "of": "6",
+    "blocked": "6"
+  },
+  "seconds_per_certificate": {
+    "mean": "89.6",
+    "median": "80.6",
+    "n": "27",
+    "over": "processed cases (status != error)"
+  },
+  "cost_per_certificate": {
+    "mean": "0.00020529",
+    "median": "0.00020112",
+    "n": "27",
+    "unknown": "0",
+    "label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value"
+  },
+  "failures": {
+    "n": "0",
+    "of": "27"
+  }
+}
