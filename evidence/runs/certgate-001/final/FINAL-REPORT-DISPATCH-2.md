@@ -168,7 +168,7 @@ Also run: cg-029 (KV test temperature) and cg-030 (certificate type 3.1), both r
 |---|---|---|---|---|
 | Stage 3 | 16:54Z (dispatch 2 received) | ~20:01Z (acceptance) | ~187 min | 360 min |
 | Stage 4 | ~20:01Z | ~22:20Z (acceptance) | ~139 min | 300 min |
-| Dispatch 2, received → this report | 16:54Z | ~22:45Z | ~351 min | 660 min (run total ends 03:54Z on 2026-10-14; hard stop 2026-10-17T18:00Z) |
+| Dispatch 2, received → this report | 16:54Z | ~22:25Z (report committed) | ~331 min | 660 min (run total ends 03:54Z on 2026-10-14; hard stop 2026-10-17T18:00Z) |
 
 - **Repair cycles:** Stage 3 used 3 of 5; Stage 4 used 4 of 5.
 - **Infrastructure retries:**
