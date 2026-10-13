@@ -1,0 +1,22 @@
+PASS  cg-002: Release disabled on a block proposal
+PASS  cg-003: Release disabled before confirmation
+PASS  cg-003: Release enabled after every critical field confirmed with ReH 358
+PASS  F2-01: case file label keeps the original stored time and says re-evaluated  [Recorded reading
+· recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z · re-evaluated by the server at 2026-10-13T20:30:24.280Z from the recorded reading, with the confirmations and decision given · not live]
+PASS  F2-01: label after a decision keeps the original stored time  [Recorded reading
+· recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z · re-evaluated by the server at 2026-10-13T20:30:24.588Z from the recorded reading, with the confirmations and decision given · not live]
+PASS  F2-01: receipt screen keeps the original stored time and says re-evaluated  [Stored reading
+· recorded real reading · self-dploy/Qwen3.8-27B · recorded 2026-10-13T17:52:09.471Z · re-evaluated by the server at 2026-10-13T20:30:24.588Z from the recorded reading, with the confirmations and decision given · not live]
+PASS  C12/B-21: decision fields empty on the next case
+PASS  C12/B-21: story inputs are not written to browser storage
+PASS  C-02: Read live without the confirmed third-party notice sends nothing  [Confirm the notice first: the file goes to a third-party service and must be synthetic.]
+PASS  C-02: the notice names AMD Token Factory, about 2 days, synthetic
+PASS  S2-20: upload with no endpoint is a live attempt with no reading, review  [Stored in this browser
+· live attempt · no reading · 2026-10-13T20:30:24.904Z · not live]
+PASS  B-09: reopened from browser storage it is labelled stored, never live  [Stored in this browser
+· live attempt · no reading · 2026-10-13T20:30:24.904Z · not live]
+PASS  F2-02: an upload's explanation does not claim a mock reading  [Explanation
+
+There is no model explanation: this was a live attempt and nothing was read.]
+PASS  B-17: no third-party request
+PASS  B-16: HTML in document fields is shown as text and never executed  [Certificate <img src=x onerror="window.__pwned=1">SV-<b>1</b> · heat 24-71830]

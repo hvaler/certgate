@@ -1,0 +1,52 @@
+# README 'Run it' commands at 02c5c36b79f35d8a1c13955411b6b17f80a84b22, 2026-10-13T20:29:26Z; image tag certgate (as in README)
+$ docker build --no-cache -t certgate .
+sha256:d4b1a0e6abbf07007e39319ae462c681fe7fdd4580fddb498d6b4357d6e2cddd
+$ docker run --rm -d --name certgate-ui -p 3000:3000 -e PORT=3000 certgate
+$ curl -s http://localhost:3000/health ; curl -s -o /dev/null -w %{http_code} http://localhost:3000/
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "off",
+  "notice": "All data is fictitious."
+}
+
+200
+$ docker stop certgate-ui
+stopped
+$ docker run --rm -d --name certgate -p 3000:3000 -e PORT=3000 certgate
+$ curl -X POST http://localhost:3000/api/cases/cg-003/process
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CRITICAL_UNKNOWN:ReH",
+
+$ docker stop certgate
+stopped
+$ docker run --rm --network none -e PORT=3000 certgate sh -c (fetch from inside, as in README)
+CertGate listening on http://localhost:3000 (mode mock)
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+    "human_required": true,
+    "reading_source": "mock",
+    "reasons": [
+      "CRITICAL_UNKNOWN:ReH",
+
+$ docker run --rm --network none certgate node dist/src/cli.js process --case cg-003
+{
+  "summary": {
+    "case_id": "cg-003",
+    "status": "processed",
+    "proposal": "review",
+$ docker run --rm --network none certgate npx vitest run
+ ↓ test/docs.test.ts (9 tests | 9 skipped)
+ ↓ test/metrics-md.test.ts (3 tests | 3 skipped)
+ Test Files  15 passed | 2 skipped (17)
+      Tests  288 passed | 12 skipped (300)
