@@ -1,13 +1,15 @@
 // S4-03: METRICS.md is generated from the committed Stage 3 evaluation artifacts and must equal a fresh generation.
 // S4-16: it names the run behind the landing figures and shows the auditor's independent run next to it.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
 // @ts-expect-error plain JS tool
 import { buildMetricsMd, RUNS } from "../tools/evaluate/metrics-md.mjs";
 
-describe("METRICS.md (S4-03, S4-16)", () => {
+// Repository check: the image has no evidence/ and no METRICS.md (see test/docs.test.ts), so it is skipped there.
+const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "METRICS.md"));
+describe.skipIf(!REPO)("METRICS.md (S4-03, S4-16)", () => {
   it("equals a fresh generation from the committed artifacts, byte for byte", () => {
     const committed = readFileSync(path.join(ROOT, "METRICS.md"), "utf8").replace(/\r\n/g, "\n");
     expect(committed).toBe(buildMetricsMd());

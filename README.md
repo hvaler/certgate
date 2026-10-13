@@ -137,7 +137,8 @@ docker run --rm --network none -e PORT=3000 certgate sh -c 'node dist/src/server
 # One dataset case through the CLI, inside the image
 docker run --rm --network none certgate node dist/src/cli.js process --case cg-003
 
-# The full test suite inside the image (makes no endpoint call)
+# The test suite inside the image (makes no endpoint call; the checks over the delivery documents and evidence,
+# test/docs.test.ts and test/metrics-md.test.ts, are skipped there because the image carries neither)
 docker run --rm --network none certgate npx vitest run
 
 # Local

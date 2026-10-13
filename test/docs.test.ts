@@ -8,19 +8,24 @@ import { ROOT } from "./helpers.js";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
 const DOCS = ["README.md", "DEPLOY.md", "METRICS.md", "CLAIMS.md", "EVIDENCE-INDEX.md", ".env.example"];
+// These are checks over the repository's delivery documents and evidence. The Docker image carries neither
+// (.dockerignore excludes evidence/, and the Dockerfile copies only README.md of the documents), so inside the
+// image they are reported as skipped; they run in every checkout of the repository.
+const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "CLAIMS.md"));
+const repoOnly = describe.skipIf(!REPO);
 
-describe("claims table (S4-05, F-02)", () => {
-  const rows = read("CLAIMS.md").split("\n").filter((l) => /^\| C-\d+ \|/.test(l));
+repoOnly("claims table (S4-05, F-02)", () => {
+  const rows = () => read("CLAIMS.md").split("\n").filter((l) => /^\| C-\d+ \|/.test(l));
   it("has a row per capability sentence, each with at least one proof", () => {
-    expect(rows.length).toBeGreaterThanOrEqual(40);
-    for (const r of rows) {
+    expect(rows().length).toBeGreaterThanOrEqual(40);
+    for (const r of rows()) {
       const cells = r.split(" | ");
       expect(cells.length, r).toBeGreaterThanOrEqual(4);
       expect(cells.at(-1)!, r).toMatch(/(test|file|evidence):/);
     }
   });
   it("every proof cited in CLAIMS.md exists: test titles are found in their file, paths exist", () => {
-    for (const r of rows) {
+    for (const r of rows()) {
       const proof = r.split(" | ").at(-1)!.replace(/ \|$/, "");
       // Items are separated by "; " before the next "test:", "file:" or "evidence:"; titles may contain ";".
       for (const item of proof.split(/;\s*(?=(?:test|file|evidence):)/)) {
@@ -40,12 +45,12 @@ describe("claims table (S4-05, F-02)", () => {
   });
 });
 
-describe("README figures (F-08 b, S4-01)", () => {
-  const runs = {
-    implementer: JSON.parse(read("evaluation/runs/real-candidate-dd557fd/metrics.json")),
-    auditor: JSON.parse(read("evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/metrics.json")),
-  };
+repoOnly("README figures (F-08 b, S4-01)", () => {
   it("README evaluation figures equal the generated metrics of both runs", () => {
+    const runs = {
+      implementer: JSON.parse(read("evaluation/runs/real-candidate-dd557fd/metrics.json")),
+      auditor: JSON.parse(read("evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/metrics.json")),
+    };
     const readme = read("README.md");
     const table = readme.slice(readme.indexOf("## Evaluation (real model)"), readme.indexOf("## Demo procedure"));
     const of = (x: { numerator: string; denominator: string }) => `${x.numerator} of ${x.denominator}`;
@@ -65,7 +70,7 @@ describe("README figures (F-08 b, S4-01)", () => {
   });
 });
 
-describe("environment variables (F-09)", () => {
+repoOnly("environment variables (F-09)", () => {
   const readByCode = () => {
     const names = new Set<string>();
     const walk = (d: string) => {
@@ -92,7 +97,7 @@ describe("environment variables (F-09)", () => {
   });
 });
 
-describe("function duration (F-10, S4-02)", () => {
+repoOnly("function duration (F-10, S4-02)", () => {
   it("DEPLOY.md duration equals vercel.json maxDuration and cites the Vercel record", () => {
     const vercel = JSON.parse(read("vercel.json"));
     const max = vercel.functions["api/index.ts"].maxDuration;
@@ -106,7 +111,7 @@ describe("function duration (F-10, S4-02)", () => {
   });
 });
 
-describe("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12)", () => {
+repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12)", () => {
   it("no forbidden claim in README, DEPLOY.md, METRICS.md or public", () => {
     const files = ["README.md", "DEPLOY.md", "METRICS.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
     const forbidden = [/MI3\d\d/, /ROCm \d/, /vLLM \d/, /deployed at/i, /\blive at\b/i, /submitted/i, /winner/i, /qualif/i, /own vLLM endpoint/i, /AMD Instinct/i];
