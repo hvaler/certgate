@@ -349,7 +349,9 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
   for (const [mode, cls, calls] of c11) {
     it(`C11 through HTTP, stub mode ${mode}: status error, review, ${calls} call(s), counted once, no secret`, async () => {
       const s = await stub(mode);
-      const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "5" }), adapterTimeoutMs: 300 });
+      // Only the timeout mode needs a short attempt timeout; the other modes answer at once and must not be
+      // turned into timeouts by a loaded machine. Back-off shortened so the retried modes stay fast.
+      const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "5" }), adapterTimeoutMs: mode === "timeout" ? 300 : 30_000, backoffBaseMs: 1 });
       const text = await (await postJson(`${base}/api/live/read`, liveBody())).text();
       const j = JSON.parse(text);
       expect(j.counted).toBe(true);
