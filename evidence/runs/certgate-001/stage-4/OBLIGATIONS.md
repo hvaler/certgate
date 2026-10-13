@@ -1,6 +1,6 @@
 # Obligation register — Stage 4 (delivery)
 
-Run: certgate-001 · Stage: 4 · Register version: **R4.1** (analyst-xwz3, 2026-10-13; R4.0 = commit 1024f791 dispatched ~20:01Z; R4.1 narrows S4-16 per implementer question msg 8f4f9e61) · **Input revision: Stage 3 ACCEPTED candidate 4 `5c904693423574846e17994331a628cc06d735ef` (tree `1ed386fd25d993f1d37b823eadddfa7040b19dae`)**, auditor msg 6e4c01d3, verdict record commit 4a6f28c (committed-blob SHA-256 348ac2315af6467c686c1c64284cae55457d020131041d81706a8ca1f2975773). Sources at Stage 4 start: `stage-4/SOURCES.sha256` (unchanged since Stage 3 start). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
+Run: certgate-001 · Stage: 4 · Register version: **R4.2** (analyst-xwz3, 2026-10-13; R4.1 = commit 6f8f08e7; R4.2 records rulings on auditor testability review msg 13bfa92b; R4.0 = commit 1024f791 dispatched ~20:01Z; R4.1 narrows S4-16 per implementer question msg 8f4f9e61) · **Input revision: Stage 3 ACCEPTED candidate 4 `5c904693423574846e17994331a628cc06d735ef` (tree `1ed386fd25d993f1d37b823eadddfa7040b19dae`)**, auditor msg 6e4c01d3, verdict record commit 4a6f28c (committed-blob SHA-256 348ac2315af6467c686c1c64284cae55457d020131041d81706a8ca1f2975773). Sources at Stage 4 start: `stage-4/SOURCES.sha256` (unchanged since Stage 3 start). Dispatch 2 (Y) §STAGE 4 and §FINAL REPORT; dispatch 1 (X) in force. Registers R1.6, R2.2 and R3.x stay in force.
 
 ## Scope statement (D4-01)
 
@@ -54,3 +54,12 @@ Any product-code change in Stage 4 (beyond docs, comments, static favicon) requi
 | ID | Answers | Amendment |
 |---|---|---|
 | E-01 | Implementer msg 8f4f9e61 — option (b), amends S4-16 | The **landing** must name the run that produced its figures (already true: run `real-candidate-dd557fd`, candidate, run time, from `public/figures.json`). The **auditor's independent second run** is stated in **METRICS.md and README**, not on the landing. No product change for this. Not a known gap: the dispatch requires the landing figures to come from the evaluation artifacts with denominators, which they do |
+### R4.2 amendment (rulings on auditor testability review msg 13bfa92b)
+
+| ID | Item | Ruling |
+|---|---|---|
+| E-02 | T4-01 real-mode README commands | **Granted:** one short endpoint lease for the auditor, **GET /models and GET /usage only (≈ 4 calls), no reading**, to verify the container starts in real mode with the variables set, `/health` and the F1 route behave as documented, and no reading is made. Taken and released in the room per D3-02 |
+| E-03 | T4-02, T4-03, T4-04, T4-05, T4-09, T4-10 | Auditor's stated pass/fail rules adopted as written (DEPLOY.md duration consistent with `vercel.json` 300 s, cited doc and C-07 budget; capability-sentence extraction; history check; secrets scope incl. all reachable blobs, built `dist/`, image filesystem and evidence, `LIVE_ACCESS_CODE` not settable on this host stated as a limitation; Vercel asset rule; README demo procedure at 375/1280 in mock mode) |
+| E-04 | T4-06 local paths | Only **user-profile paths** (`C:\Users\…`, `C:/Users/…`) are findings; workspace paths (`C:\nexus\dev\…`, named by the dispatches) are not |
+| E-05 | T4-07 (= E-01) | Landing unchanged. METRICS.md names **both runs** with candidate commit and prompt SHA; the auditor-run figures in METRICS are **generated from the auditor's committed artifacts** (`stage-3/auditor/candidate-3/real-run/eval-retry1/`), never typed |
+| E-06 | T4-08 favicon | Adding `public/favicon.ico` is a product change: allowed only with the auditor's re-run (suite in image, browser console without 404). If the implementer prefers docs-only, S4-22 is satisfied by listing the 404 as a known cosmetic issue |
