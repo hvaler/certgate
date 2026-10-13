@@ -57,3 +57,29 @@ describe("Runs on AMD screen text follows the F1 state (R4.5 E-08)", () => {
     expect(view.textContent).not.toMatch(/sidecar/);
   });
 });
+
+// Stage 4 repair 2 (README C-15): the panel's GPU, ROCm and vLLM rows in both states, as rendered.
+describe("Runs on AMD panel rows for GPU, ROCm and vLLM in both states (README C-15)", () => {
+  const rowValue = (view: FakeNode, label: string) => {
+    const dts = view.find((n) => n.tag === "dt");
+    const i = dts.findIndex((n) => n.textContent === label);
+    const dd = view.find((n) => n.tag === "dd")[i];
+    return dd ? dd.textContent : null;
+  };
+  it("endpoint on: GPU and ROCm · vLLM say \"not exposed by the endpoint\"", async () => {
+    const { ctx, view } = await loadApp(ROOT, { "/api/f1": { state: "on", detail: "read from the configured endpoint", checked_at: "2026-10-13T21:00:00.000Z", model_ids: ["Qwen3.8-27B"], endpoint_name: "AMD Token Factory", endpoint_host: "h", gpu: "not exposed by the endpoint", rocm_version: "not exposed by the endpoint", vllm_version: "not exposed by the endpoint", cost_label: "cost reported by the endpoint; Token Factory credits are free and have no monetary value" } });
+    await ctx.amdScreen();
+    expect(rowValue(view, "GPU")).toBe("not exposed by the endpoint");
+    expect(rowValue(view, "ROCm · vLLM")).toBe("not exposed by the endpoint · not exposed by the endpoint");
+  });
+  it("endpoint off: GPU, ROCm · vLLM and every other endpoint value show \"unknown\"", async () => {
+    const off = { state: "off", detail: "no endpoint configured", checked_at: "2026-10-13T21:00:00.000Z", endpoint_name: null, endpoint_host: null, model_ids: [], model_reported: null, gpu: null, rocm_version: null, vllm_version: null, latency_ms: null, last_reading_ms: null, completion_tokens: null, total_tokens: null, tokens_per_second: null, cost_reported: null, cost_label: "cost reported by the endpoint; Token Factory credits are free and have no monetary value", rate_limit_rpm: null, rate_limit_rpm_remaining: null, daily_spend_limit: null, daily_spend_used: null, daily_spend_remaining: null, usage_source: null, probe_cached: false };
+    const { ctx, view } = await loadApp(ROOT, { "/api/f1": off });
+    await ctx.amdScreen();
+    expect(rowValue(view, "GPU")).toBe("unknown");
+    expect(rowValue(view, "ROCm · vLLM")).toBe("unknown · unknown");
+    expect(rowValue(view, "Model(s) listed")).toBe("none");
+    for (const label of ["Model (as reported)", "Probe latency (ms)", "Last reading (ms)", "Tokens / s"]) expect(rowValue(view, label), label).toBe("unknown");
+    expect(view.textContent).not.toMatch(/not exposed by the endpoint/);
+  });
+});

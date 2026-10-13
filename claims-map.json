@@ -191,7 +191,12 @@
  },
  {
   "doc": "README.md",
-  "text": "The panel says \"not exposed by the endpoint\" for them, and nothing else claims them.",
+  "text": "With the endpoint on, the panel says \"not exposed by the endpoint\" for them; with it off, they show \"unknown\", like the other endpoint values (the model list shows \"none\").",
+  "row": "C-15"
+ },
+ {
+  "doc": "README.md",
+  "text": "Nothing else claims them.",
   "row": "C-15"
  },
  {

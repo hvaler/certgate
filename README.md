@@ -62,8 +62,10 @@ critical field.
     and daily spend, and the latency, tokens and cost of the last reading.
   - Every receipt of a real reading (live or recorded) carries a copy of those values from reading time, plus the
     endpoint reply's id, created time, model and usage.
-  - The endpoint does not expose the GPU model, the ROCm version or the serving-stack version. The panel says
-    "not exposed by the endpoint" for them, and nothing else claims them.
+  - The endpoint does not expose the GPU model, the ROCm version or the serving-stack version. With the endpoint
+    on, the panel says "not exposed by the endpoint" for them; with it off, they show "unknown", like the other
+    endpoint values (the model list shows "none").
+    Nothing else claims them.
 - **Cost:** the cost shown is the cost reported by the endpoint; Token Factory credits are free and have no
   monetary value.
 
