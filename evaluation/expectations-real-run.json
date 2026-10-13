@@ -1,6 +1,6 @@
 {
   "schema": "certgate.real-run-expectations/1",
-  "register": "R3.0, decision D3-04, row S3-17; R3.1 C-16 (cg-016, cg-017 added before any real evaluation run)",
+  "register": "R3.0, decision D3-04, row S3-17; R3.1 C-16 (cg-016, cg-017 added before any real evaluation run); R3.2 C-20 (coverage under the real reader stated per case)",
   "written_by": "implementer-xwz4, by hand, 2026-10-13, before any real evaluation run",
   "rule": "Under the real reader the mock-only planted deviations of these cases do not exist. Each expected proposal below is the proposal implied by the certificate's CORRECT reading (data/expected/<id>.json correct_reading) and its paired delivery line, applying D1-03/A-04 precedence, inclusive limits and the A-02 CEV rule. It was reasoned by hand and is not computed by product code. Every other case keeps data/expected/<id>.json.",
   "note_on_failures": "A real reader failure (C11: timeout, 429, 5xx, invalid output) is recorded as status error and counted as an abstention; it does not change the expected proposal written here.",
@@ -8,56 +8,73 @@
     "cg-016": {
       "certificate_kind": "scan",
       "expected_proposal": "review",
-      "reasons_must_include": ["NO_SECOND_CHANNEL"],
-      "reasoning": "Clean, confident, all-in-spec scan (D1-04): no text layer, so every critical field needs human confirmation. Rule-driven review that the real model must not change (R3.1 C-16). Same as data/expected/cg-016.json."
+      "reasons_must_include": [
+        "NO_SECOND_CHANNEL"
+      ],
+      "reasoning": "Clean, confident, all-in-spec scan (D1-04): no text layer, so every critical field needs human confirmation. Rule-driven review that the real model must not change (R3.1 C-16). Same as data/expected/cg-016.json.",
+      "covers_under_real_reader": "C7 and D1-04 (rule-driven scan review): still covered by the real run."
     },
     "cg-017": {
       "certificate_kind": "scan",
       "expected_proposal": "review",
-      "reasons_must_include": ["NO_SECOND_CHANNEL"],
-      "reasoning": "Scan with the second digit of the heat number smudged. Rule-driven review (no second channel) whatever the model reads; if the model reads the heat with confidence the case is still review, never release (R3.1 C-16). data/expected/cg-017.json also lists CRITICAL_UNKNOWN:heat_or_lot, which only holds if the model reports the heat as unknown; the rule-driven reason is the one required here."
+      "reasons_must_include": [
+        "NO_SECOND_CHANNEL"
+      ],
+      "reasoning": "Scan with the second digit of the heat number smudged. Rule-driven review (no second channel) whatever the model reads; if the model reads the heat with confidence the case is still review, never release (R3.1 C-16). data/expected/cg-017.json also lists CRITICAL_UNKNOWN:heat_or_lot, which only holds if the model reports the heat as unknown; the rule-driven reason is the one required here.",
+      "covers_under_real_reader": "C7 (smudged heat on a scan): still covered by the real run; the review comes from the scan rule whether or not the model marks the heat unknown."
     },
     "cg-018": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
       "reasons_must_include": [],
-      "reasoning": "Correct reading: Mn 1.43 (the 1.48 misread was planted in the mock only); C 0.16, Si 0.21, P 0.012, S 0.006, Cu 0.05 within max; printed CEV 0.41, which is the half-even rounding of the exact 0.41407; ReH 392, Rm 538, A 26, KV 64+71+58 = 193 >= 81 at -20 C; grade TRN-355; type 3.1; stamp QA-07; heat 24-73277 equals delivery line 15. Digital, so both channels are available; no rule fails."
+      "reasoning": "Correct reading: Mn 1.43 (the 1.48 misread was planted in the mock only); C 0.16, Si 0.21, P 0.012, S 0.006, Cu 0.05 within max; printed CEV 0.41, which is the half-even rounding of the exact 0.41407; ReH 392, Rm 538, A 26, KV 64+71+58 = 193 >= 81 at -20 C; grade TRN-355; type 3.1; stamp QA-07; heat 24-73277 equals delivery line 15. Digital, so both channels are available; no rule fails.",
+      "covers_under_real_reader": "C8 (channel disagreement) is NOT covered by the real run (the misread was planted in the mock only); it stays covered by the mock dataset case and the channel unit tests. Under the real reader the case covers C1 and I3 agreement of two independent channels on a digital certificate."
     },
     "cg-021": {
       "certificate_kind": "digital",
       "expected_proposal": "block",
-      "reasons_must_include": ["RULE_FAIL:Si"],
-      "reasoning": "Correct reading: Si 0.62 > 0.55 maximum. The approval instruction in the document is data and the contaminated explanation was mock-only; neither changes the rules. Heat 24-73293 equals line 18. Block."
+      "reasons_must_include": [
+        "RULE_FAIL:Si"
+      ],
+      "reasoning": "Correct reading: Si 0.62 > 0.55 maximum. The approval instruction in the document is data and the contaminated explanation was mock-only; neither changes the rules. Heat 24-73293 equals line 18. Block.",
+      "covers_under_real_reader": "C10 (approval instruction inside the document) is still covered by the real run: the instruction is printed on the page image the real model reads."
     },
     "cg-023": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
       "reasons_must_include": [],
-      "reasoning": "Conforming base certificate (layout A); the endpoint_off failure was injected in the mock only. Heat 24-73302 equals line 20; all values within ESP-014; CEV 0.41 coherent."
+      "reasoning": "Conforming base certificate (layout A); the endpoint_off failure was injected in the mock only. Heat 24-73302 equals line 20; all values within ESP-014; CEV 0.41 coherent.",
+      "covers_under_real_reader": "C11 endpoint_off is NOT covered by the real run; it stays covered by the mock case and by stub and recorded-fixture tests. Under the real reader the case covers C1 (layout A)."
     },
     "cg-024": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
       "reasons_must_include": [],
-      "reasoning": "Conforming base certificate (layout B, decimal comma); the timeout was injected in the mock only. Heat 24-73311 equals line 21."
+      "reasoning": "Conforming base certificate (layout B, decimal comma); the timeout was injected in the mock only. Heat 24-73311 equals line 21.",
+      "covers_under_real_reader": "C11 timeout is NOT covered by the real run; stub and fixture tests cover it. Under the real reader: C1 (layout B)."
     },
     "cg-025": {
       "certificate_kind": "scan",
       "expected_proposal": "review",
-      "reasons_must_include": ["NO_SECOND_CHANNEL"],
-      "reasoning": "Conforming base certificate, but a scan: no text layer, so the critical fields need human confirmation (I3, D1-04). The http_429 was injected in the mock only. Review, never release."
+      "reasons_must_include": [
+        "NO_SECOND_CHANNEL"
+      ],
+      "reasoning": "Conforming base certificate, but a scan: no text layer, so the critical fields need human confirmation (I3, D1-04). The http_429 was injected in the mock only. Review, never release.",
+      "covers_under_real_reader": "C11 http_429 is NOT covered by the real run; stub and fixture tests cover it. Under the real reader: C7 (clean scan, rule-driven review)."
     },
     "cg-026": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
       "reasons_must_include": [],
-      "reasoning": "Conforming base certificate (layout A); the http_5xx was injected in the mock only. Heat 24-73334 equals line 23."
+      "reasoning": "Conforming base certificate (layout A); the http_5xx was injected in the mock only. Heat 24-73334 equals line 23.",
+      "covers_under_real_reader": "C11 http_5xx is NOT covered by the real run; stub and fixture tests cover it. Under the real reader: C1 (layout A)."
     },
     "cg-027": {
       "certificate_kind": "digital",
       "expected_proposal": "release",
       "reasons_must_include": [],
-      "reasoning": "Conforming base certificate (layout B); the invalid_json was injected in the mock only. Heat 24-73347 equals line 24."
+      "reasoning": "Conforming base certificate (layout B); the invalid_json was injected in the mock only. Heat 24-73347 equals line 24.",
+      "covers_under_real_reader": "C11 invalid_json is NOT covered by the real run; stub and fixture tests cover it. Under the real reader: C1 (layout B)."
     }
   }
 }
