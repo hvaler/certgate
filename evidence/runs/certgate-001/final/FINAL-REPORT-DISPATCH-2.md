@@ -234,3 +234,9 @@ The band did not submit anything and claims no submission.
 - **Forbidden-claim patterns:** the patterns of `test/docs.test.ts` (F-06 and E-10), applied to this file, give **0 matches**.
 - **User-profile paths:** **0**.
 - **Secrets:** the report and `band-usage-agents-dispatch2.txt` were compared against the host's `MODEL_API_KEY` and `MODEL_BASE_URL` values, counting matches only. **Both give 0.** Only the host name appears.
+
+## 11. Corrections after auditor verification (msg 24722863, record `stage-4/auditor/FINAL-REPORT-VERIFICATION.md`, commit af88607)
+
+- **C1 (section 4):** the adversary report `MUTATION-5c90469.md` has SHA-256 `9b957a54…4a43`, not `9b957a54…3a` as written above. The value is the auditor's; the file is in the adversary's clone, not in this repository, so the analyst could not re-hash it. Section 4 is left as written; this note corrects it, and earlier text is not rewritten.
+
+Everything else was verified by the auditor as written.
