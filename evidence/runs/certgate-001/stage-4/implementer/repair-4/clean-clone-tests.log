@@ -1,0 +1,14 @@
+# clean checkout at b0ec67a663d1caeb9496ff4b75bec163c837d0b3 tree 8688691982ba6e211bd55374743dab8c21161749 at 2026-10-13T22:05:59Z; MODEL_* unset; lockfile unchanged
+
+added 42 packages in 4s
+
+ Test Files  18 passed (18)
+      Tests  317 passed (317)
+METRICS.md matches a fresh generation
+# unmapped units:
+0
+# stale map entries:
+0
+# map: units 401 mapped to rows 300 none 101 rows used 65
+# CLAIMS rows:
+68
