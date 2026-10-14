@@ -130,7 +130,7 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 - One extra Gemma reading of the story certificate cg-003 is kept as evidence only, outside the evaluation and the
   demo ([gemma-read-cg-003.json](evidence/runs/certgate-001/stage-5/implementer/endpoint/gemma-read-cg-003.json)):
   Gemma read the smudged ReH as 338 MPa, as the recorded Qwen story reading does, so the proposal was block.
-- Dated facts reported by the human, not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint
+- Dated facts reported by the operator (the human), not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint
   returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered
   correctly. The comparison run above started after that re-test.
 

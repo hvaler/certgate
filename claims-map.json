@@ -2116,7 +2116,7 @@
  },
  {
   "doc": "README.md",
-  "text": "Dated facts reported by the human, not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered correctly.",
+  "text": "Dated facts reported by the operator (the human), not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered correctly.",
   "row": "C-74"
  },
  {
