@@ -1,0 +1,13 @@
+real Redis Redis server v=7.4.10 sha=00000000:0 mal, --network none, scripts read from dist of bec22567 at 2026-10-14T15:09:51Z
+COUNT_ATTEMPT_SCRIPT sha1: 5f010c665661; DEL_IF_EQUALS_SCRIPT sha1: e9f69f2beb75
+-- client A, per-client limit 2: 4 attempts (expect counted 1,1,0,0; global stops at 2)
+A#1 -> 1 1 1 
+A#2 -> 2 2 1 
+A#3 -> 3 2 0 
+A#4 -> 4 2 0 
+-- client B, 1 attempt (global continues: 3)
+B#1 -> 1 3 1 
+TTL cA=7200 g=7200
+-- compare-and-delete
+del with wrong token -> 0 ; value now jobX
+del with right token -> 1 ; exists now 0

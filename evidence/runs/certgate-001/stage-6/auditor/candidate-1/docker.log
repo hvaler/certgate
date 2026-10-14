@@ -1,0 +1,13 @@
+start 2026-10-14T15:00:52Z commit bec225675bf653d092b7aa2a304ee347e602a134
+#27 unpacking to docker.io/library/certgate-audit-s6c1:bec22567 1.5s done
+#27 DONE 7.8s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/1ndirk72rrf2yhg4v7iyqhsb4
+image sha256:4d3b3be07c98a79d5adb04276b6595f47c50d2457dbf1766f90514b56b070d88
+MODEL_*/LIVE_ACCESS_CODE/store vars in container: 0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  354 passed | 28 skipped (382)
+MODEL_*/LIVE_ACCESS_CODE/store vars in container: 0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  354 passed | 28 skipped (382)
+end 2026-10-14T15:01:59Z
