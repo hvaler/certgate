@@ -1,0 +1,10 @@
+docker image of 730bd43976932b39653544438375d017bee7b608 2026-10-14T15:41:49Z
+sha256:1cfcecd760b74856b22fee81872a2a7ae8985a403791c9994d3ec3ed542da940
+--- image suite x2, --network none; first line = count of MODEL_*, LIVE_ACCESS_CODE and store variables in the container ---
+0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  364 passed | 28 skipped (392)
+0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  364 passed | 28 skipped (392)
+2026-10-14T15:42:46Z

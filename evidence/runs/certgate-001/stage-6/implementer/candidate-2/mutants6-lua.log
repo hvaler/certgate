@@ -1,0 +1,12 @@
+base 9996a6bcccee466d8c34fab7499ffbc42be4dbd5 2026-10-14T15:18:23Z
+lua_count_guard_true applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+lua_count_guard_true: Tests  2 failed | 382 passed (384)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the two Lua scripts in src/ are exactly the texts verified on real Redis (pinned SHA-256)
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+lua_del_no_compare applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+lua_del_no_compare: Tests  2 failed | 382 passed (384)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the two Lua scripts in src/ are exactly the texts verified on real Redis (pinned SHA-256)
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+done 2026-10-14T15:19:07Z
