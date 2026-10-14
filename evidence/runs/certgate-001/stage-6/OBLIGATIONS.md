@@ -1,6 +1,6 @@
 # Obligation register — Stage 6 (live reading on the deployed site)
 
-Run: certgate-001 · Stage: 6 · Register version: **R6.0** (analyst-xwz3, 2026-10-14).
+Run: certgate-001 · Stage: 6 · Register version: **R6.1** (analyst-xwz3, 2026-10-14; R6.0 = commit 47a951b; R6.1 accepts adversary challenge msg 41f6ca68, CH6-01…CH6-19, with rulings H-02 and H-11).
 Dispatch 4: room msg `980db228-2297-4439-984a-8370e4a940cd` from hugo.valer, received ~12:36Z. Verbatim copy: `evidence/runs/certgate-001/DISPATCH-4.txt`.
 Dispatches 1–3 remain in force except where dispatch 4 changes them.
 
@@ -44,3 +44,101 @@ Dispatches 1–3 remain in force except where dispatch 4 changes them.
 | D6-02 | **Endpoint lease.** The implementer may make at most **3 real readings**, for a container smoke test of the new job API under the lease, announced and released. All other development and tests use the stub or the fake store. The auditor's live checks after deployment use the auditor's own lease: at most 3 live readings plus GETs. Headroom is checked first. The adversary makes no endpoint calls unless granted |
 | D6-03 | **Order of work:** design note → challenge → ruling → candidate 1 → adversary and auditor local checks → verdict on local acceptance → push request → the human's deployment steps → auditor live checks (S6-13) → final Stage 6 verdict → addendum |
 | D6-04 | **Credits** are free and have no monetary value. Costs are reported as the endpoint reports them |
+
+## R6.1 amendments (adversary challenge msg 41f6ca68; all accepted)
+
+| ID | Ruling |
+|---|---|
+| H-ALL | **CH6-01, CH6-03…CH6-10 and CH6-12…CH6-19 are accepted as written** (verbatim text in the appendix below). Each is binding on the design note and on candidate 1, and each named mutant needs a named killer |
+| H-02 | **CH6-02 ruling.** The code-failure limit is enforced **per client and globally**. The per-client key is a SHA-256 of the client address Vercel provides (`x-forwarded-for`, first hop, or `x-real-ip`), never stored raw, and it is limited by `LIVE_CODE_FAILURES_PER_HOUR`. The global ceiling is 10 × that value per hour, so one anonymous visitor cannot lock the judge out. DEPLOY.md states both limits, the lockout, and how the human clears it: the store key names, or wait for the window to end |
+| H-11 | **CH6-11 ruling.** On the deployed site, F1 is **cached server-side** for at least 60 s, with its honest `checked_at` shown. GET /models and GET /usage are made at most once per cache period across instances. A live receipt takes a fresh F1 snapshot at reading time |
+| H-19 | CH6-19 is accepted. The poll interval is at least 2 s, with the cheap rejection paths as written. DEPLOY.md cites the store's quota, and live reading is refused when the quota is exhausted |
+
+### Appendix: adversary challenge msg 41f6ca68, verbatim
+
+@hugo.valer/analyst-xwz3 @hugo.valer/implementer-xwz4 @hugo.valer/auditor-xwz6 ADVERSARY CHALLENGE to Stage 6 register R6.0 (commit 47a951b), checked against dispatch 4. It lists gaps a candidate could pass through while every R6.0 row stays green. The design note (D6-01) should answer each one. I issue no verdict.
+
+**CH6-01 [S6-01: code transport and the compare].**
+- The code goes in a request header only, never in the query string, because Vercel request logs record URLs.
+- It is never stored in a job record and never echoed in an error.
+- Compare HMAC or SHA-256 digests of equal length with `timingSafeEqual`. On raw strings of unequal length, `timingSafeEqual` throws, and the resulting 500 leaks the length.
+- An empty or whitespace-only `LIVE_ACCESS_CODE` counts as unset.
+- The failure counter is incremented atomically **before** the result is used. Once the limit is reached, even the correct code is refused until the window ends.
+- Mutants: plain `===`; counting after success only; a code accepted from the query string.
+
+**CH6-02 [S6-01: global failure limit as a lockout].** A global failure counter lets any anonymous visitor lock the judge out for an hour with a few wrong codes. Rule one way or the other: global only (as R6.0 says), or global plus a per-client key. Either way, DEPLOY.md states the lockout and how the human clears it (the store key name, or wait for the window to end).
+
+**CH6-03 [S6-01, S6-05: "behaves exactly as at 409fb69a"].** Needs a named check: with no code set and `VERCEL=1`, every existing route answers byte for byte as at 409fb69a, with a golden test over status, body and relevant headers. Also, the live endpoints must return the same refusal whether the code is missing, empty or unset, so a visitor cannot probe whether live reading is configured.
+
+**CH6-04 [S6-03, S6-04: no silent fallback on Vercel].** If `VERCEL` and the code are set but the store variables are missing or unreachable, live reading is **refused with an honest reason**. It never falls back to the in-process queue, because a per-instance queue silently breaks the 2-in-flight and hourly limits. Killer: a test with `VERCEL=1`, the code set and no store, which expects a refusal and zero endpoint calls.
+
+**CH6-05 [S6-02, S6-03: who starts a queued job, and the time budget].** If the reading runs in the POST invocation (`waitUntil`), a job queued behind 2 others has to wait inside that same invocation. Then queue wait + PDF render + reading + any retry must all fit under the configured `maxDuration`.
+- The design must say who starts a queued job: the POST invocation waiting, or a poll request claiming it.
+- Bound the queue length, so that worst-case wait plus budget stays under 300 s. Beyond that bound, refuse with "busy, try later", which counts as a refusal and not as a failed reading.
+- The test reads `maxDuration` from `vercel.json` and asserts every budget against it.
+- Mutant: timeout ≥ limit, or an unbounded queue.
+
+**CH6-06 [S6-03: slot lease correctness].**
+- A slot is taken with a unique token (SET NX PX, or a Lua or MULTI script), never read-then-write.
+- It is released only by compare-and-delete on its own token. Otherwise a late finisher whose lease expired releases another job's slot, and 3 readings run.
+- The lease TTL is at least the job budget.
+- The two-instance test runs real interleaved concurrency (`Promise.all` against one fake store with an artificial delay between read and write), not sequential calls.
+- Mutants: release without the token check; a TTL shorter than the budget; read-then-write admission.
+
+**CH6-07 [S6-02: dead workers].**
+- If the instance dies mid-reading, the job must not stay in "reading on AMD" forever.
+- A poll past `started_at + budget + margin` (server time) turns it into **failed: timed out**, with retry offered, and its slot comes back through the TTL.
+- Never "done", never a stored result.
+- Killer: a fake-store test with a job left in "reading" and the clock advanced.
+
+**CH6-08 [S6-03: what the hourly limit counts].**
+- Count at admission, atomically, so a failed or timed-out reading still consumes its unit. Otherwise retries can burn the quota without bound.
+- A bounded internal retry counts as part of the same job, and each endpoint call is still counted against the D2 discipline.
+- State whether the window is fixed or sliding.
+- Refusals ("busy", "limit reached", "wrong code") are not jobs.
+
+**CH6-09 [S6-02: job privacy and inputs].**
+- Job ids are random with at least 128 bits. A poll returns only that job.
+- The upload size is capped before admission.
+- Say where the certificate bytes live between POST and reading. In the invocation's memory is preferred; if they go in the store, they need a TTL, a cited size limit for the store's REST request, and deletion when the job ends.
+- A job record expires (TTL) and holds no code, key or raw provider error.
+
+**CH6-10 [S6-02, I6: failure reasons].** A failed job shows a reason **class**, such as `timeout`, `endpoint 429`, `endpoint 5xx`, `invalid model output` or `busy`, never the raw error text. Raw fetch, store and provider errors can carry the base-URL path or headers. The full error goes to server logs only after redaction.
+
+**CH6-11 [S6-07: F1 must not spend the quota per page view].** If every anonymous page view triggers a server-side call to the endpoint, it eats into the ~20 requests per minute that live readings need. F1 is either cached server-side with its honest `checked_at` shown, or globally rate-limited. A live receipt takes a fresh F1 snapshot at reading time. Mutant: F1 hard-coded to "on" (already in S6-14).
+
+**CH6-12 [S6-08, CH5-01: reported vs requested model].**
+- The live receipt shows the requested `MODEL_ID` and the model **as reported**.
+- If the reported model does not match the requested family, for example `/gemma-4-31b/i` for Gemma, the job is marked failed (`model mismatch`) rather than shown as a Gemma reading.
+- Mutant: the deployed model id hard-coded, or the reported model ignored.
+
+**CH6-13 [I7: a "done" job must hold a fresh reading].** A job's result is built only from the endpoint response obtained in that job: an endpoint `id`/`created` plus the job id and timestamps in the receipt. Stored stories never pass through the job store or the job API. Mutants: a job's "done" returning a story recording; a failed job returning the last good result for the same file (a hash-keyed cache is also a stored result).
+
+**CH6-14 [S6-01, S6-11: secrets scan with sentinels].**
+- Tests set sentinel values for `MODEL_API_KEY`, `LIVE_ACCESS_CODE` and the store token.
+- They then scan the built `public/` and **every API response body and header**, error paths included: wrong code, store down, endpoint 500, timeout.
+- The base-URL path never appears in a response either; the host may.
+
+**CH6-15 [S6-04: store env names].**
+- Cite the exact names the Marketplace Upstash integration injects (some integrations inject `KV_REST_API_URL`/`KV_REST_API_TOKEN`, others `UPSTASH_REDIS_REST_URL`/`..._TOKEN`), with the doc and retrieval date.
+- Never use a read-only token for writes.
+- No new dependency, per R6.0. If one is added, pin it, state its licence and add the lockfile entry.
+
+**CH6-16 [S6-06: samples].**
+- Samples are served from a fixed allow-list, by id, not by a path parameter: no traversal, correct content type.
+- A test checks the served bytes equal the dataset files' hashes.
+- The consent stays on the upload path too, not only on the screen.
+
+**CH6-17 [S6-05: container parity].** The in-process queue enforces the same limits in-process (2 in flight, hourly, failure limit) and shows the same states. Run the same state-machine tests against both store implementations.
+
+**CH6-19 [S6-02, S6-04: polling abuse and store quota].** Every poll is a store read, and the Upstash free tier has a command and request quota (cite it). A tight client loop or an anonymous poll flood can exhaust it, taking down live reading and the limits with it.
+- The poll endpoint answers unknown or expired ids cheaply, with one bounded read and no writes.
+- The browser polls at a fixed interval of at least 2 s.
+- The server rejects polls without a well-formed id before touching the store.
+- DEPLOY.md states the store quota and what happens when it runs out. The answer must be that live reading is refused, never a fallback.
+
+**CH6-18 [S6-14: earlier mutants].** If `src/web/app.ts` or the live-reader plumbing moves, re-run my Stage 3/4 web and receipt mutants and the Stage 5 b/c identity and request mutants. The Qwen and Gemma request golden hashes stay as killers.
+
+I will build the Stage 6 mutant set from S6-14 plus CH6-01…17 against candidate 1. I make no endpoint calls unless granted.
+
+[3e47b667-b685-4655-8f34-cc0dad08ab30] 8b49fdc7-d7af-46f5-b439-d09baf77b876 from hugo.valer/adversary-xwz5: @hugo.valer/analyst-xwz3 Received all 18 parts of the Stage 6 handoff (655939ab, 9662ffe9 through 6b001591). Task A is done: my R6.0 challenge CH6-01 to CH6-19 is msg 41f6ca68. Next is task B, the D6-01 design note, as soon as it is posted. No endpoint calls.
