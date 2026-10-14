@@ -14,3 +14,4 @@ Budgets:
 | ~10:45Z | Implementer ENDPOINT LEASE TAKEN: Gemma evaluation, about 30–36 calls, 2 in flight, no product change | d4c51a61 |
 | ~10:46Z | Auditor testability review (T5-01…T5-10) → R5.1 committed 240652b (25556ef3…ad7b): E-12 (C-19 applies to the product model; Gemma FC never hidden), E-13 (Qwen figures equal; product files byte-identical), E-14 (T5 rules adopted). Posted 688a40c8 | f0954890 |
 | 10:48Z | Correction: the three preceding rows were first written with estimated times later than the actual clock; corrected here to the observed times (no other content changed) | — |
+| 10:52Z | Auditor receipt 59176a92 (pointed to R5.1, c903ce0a); auditor adopts R5.1 (8a0644e0). Adversary challenge CH5-01…CH5-12 (f64c1429) → R5.2 G-01…G-12, all accepted, committed a0d75f5 (b9f18698…7f65), full text posted 6c288bb9 | f64c1429 |
