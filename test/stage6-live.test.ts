@@ -277,6 +277,21 @@ describe("code and lease guards that only show across instances or over time (S6
     expect(rs.map((r) => r.status), JSON.stringify(rs.map((r) => r.body.error))).toEqual([202, 202, 202, 202]);
     for (const r of rs) expect((await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed")).body.state).toBe("done");
   });
+  it("past the job's deadline the reader starts no attempt: it refuses before any request (W-03)", async () => {
+    const s = await stub();
+    const { DeadlineReader } = await import("../src/web/deadline-reader.js");
+    const r = new DeadlineReader({ baseUrl: s.url, modelId: STUB_MODEL_ID, apiKey: KEY, backoffBaseMs: 1 }, Date.now() - 1);
+    await expect(r.read({ case_id: "cg-004", certificate: cert("cg-004") })).rejects.toMatchObject({ errorClass: "timeout", message: "the job's deadline was reached before this attempt" });
+    expect(s.state.chatCalls).toBe(0);
+  });
+  it("an internal error during a job is reported as internal, never as an endpoint failure (W-06)", async () => {
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    const store = new MemoryStore();
+    const jobs = new LiveJobs(store, () => new Date(), { ...DEPLOYED_LIVE_BUDGET, pollMs: 5 });
+    const job = await jobs.admit(10, STUB_MODEL_ID, new Date());
+    await jobs.run(job, () => Promise.reject(new Error("a bug in the receipt export")));
+    expect(JSON.parse((await store.get(KEYS.job(job.job_id)))!)).toMatchObject({ state: "failed", reason_class: "internal", reason: REASONS.internal, result: null });
+  });
   it("two workers that look for a slot at the same moment on a slow store take two different slots: admission is atomic SET NX, never read-then-write (CH6-06)", async () => {
     const { LiveJobs } = await import("../src/web/live-jobs.js");
     const store = new MemoryStore();
