@@ -268,12 +268,24 @@ describe("code and lease guards that only show across instances or over time (S6
     expect(st.body.code_failures_this_hour_global).toBe("2");
     expect((await startJob(base, { client: "203.0.113.5" })).status).toBe(202);
   });
+  it("an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)", async () => {
+    const s = await stub({ delayMs: 300 });
+    const store = new MemoryStore();
+    store.delayMs = 5;
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const rs = await Promise.all([1, 2, 3, 4].map((i) => startJob(base, { client: `198.51.100.${i}` })));
+    expect(rs.map((r) => r.status), JSON.stringify(rs.map((r) => r.body.error))).toEqual([202, 202, 202, 202]);
+    for (const r of rs) expect((await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed")).body.state).toBe("done");
+  });
   it("an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)", async () => {
     let t = Date.parse("2026-10-14T13:00:00.000Z");
     const clock = () => new Date((t += 5));
     const store = new MemoryStore(() => t);
     const { LiveJobs } = await import("../src/web/live-jobs.js");
     const jobs = new LiveJobs(store, clock, DEPLOYED_LIVE_BUDGET);
+    // Two readings hold both slots, so the queue may hold exactly 2 waiting jobs.
+    await store.setNx(KEYS.slot(0), "reading-1", 300_000);
+    await store.setNx(KEYS.slot(1), "reading-2", 300_000);
     const a = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
     const b = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
     await expect(jobs.admit(10, STUB_MODEL_ID, new Date(t - 5_000))).rejects.toMatchObject({ status: 429, extra: { reason_class: "busy" } });

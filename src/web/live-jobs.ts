@@ -115,14 +115,22 @@ export class LiveJobs {
     };
     // W-04: take a place in the queue first, then look at it, so a burst cannot overfill the queue; a busy refusal
     // gives the place back and consumes nothing (it comes before the hourly count).
-    // A-01: the queue is scored by admission time (FIFO by admission), and the bound counts the jobs waiting, so
+    // A-01: the queue is scored by admission time (FIFO by admission), and the bound counts the jobs ahead, so
     // a request that arrived earlier but reaches admission later cannot jump the queue or overfill it. The
     // deadline is still measured from arrival (J-14, created_at).
     await this.store.zremBelow(KEYS.queue, this.pruneBefore());
     await this.store.zadd(KEYS.queue, this.now(), job.job_id);
-    const waiting = await this.store.zcard(KEYS.queue);
+    // W-07: the queue holds jobs about to take a free slot as well as jobs that must wait; its capacity is the free
+    // slots plus maxWaiting, and the rank by admission says where this job stands (exact under concurrency, since
+    // every job is added before it looks).
+    // A job that has just taken a slot is still in the queue until it removes itself, so it is not counted twice.
+    // The holders are read before the rank: a job taking a slot in between is then still counted in the queue,
+    // never lost from both, so an interleaving can only err towards admitting.
+    const holders = (await Promise.all(Array.from({ length: this.budget.slots }, (_, i) => this.store.get(KEYS.slot(i))))).filter((v): v is string => v !== null);
     const rankOrNull = await this.store.zrank(KEYS.queue, job.job_id);
-    if (waiting > this.budget.maxWaiting || rankOrNull === null) {
+    const holderRanks = await Promise.all(holders.map((h) => this.store.zrank(KEYS.queue, h)));
+    const ahead = rankOrNull === null ? 0 : rankOrNull - holderRanks.filter((r) => r !== null && r < rankOrNull).length;
+    if (rankOrNull === null || ahead >= this.budget.maxWaiting + (this.budget.slots - holders.length)) {
       await this.store.zrem(KEYS.queue, job.job_id);
       throw new Refusal(429, REASONS.busy, { reason_class: "busy" });
     }
