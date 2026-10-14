@@ -128,7 +128,9 @@ describe("job state machine on both store implementations (S6-02, CH6-17, J-11)"
 
 describe("global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05)", () => {
   it("4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy", async () => {
-    const s = await stub({ delayMs: 1_500 });
+    // F7-01 sweep: each reading holds its slot for 8 s, far longer than the admission phase takes on a loaded runner,
+    // so the 5th job meets 2 reading and 2 waiting and must be busy (with 1.5 s a slot could free up first).
+    const s = await stub({ delayMs: 8_000 });
     const store = new MemoryStore();
     store.delayMs = 2;
     const a = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
@@ -140,7 +142,7 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
     const started = [...first, ...second];
     expect(started.map((x) => x.status)).toEqual([202, 202, 202, 202]);
     const busy = await startJob(a);
-    expect(busy.status).toBe(429);
+    expect(busy.status, `5th job: ${JSON.stringify(busy.body)}`).toBe(429);
     expect(busy.body).toMatchObject({ reason_class: "busy", error: REASONS.busy });
     const ids = started.map((x) => String(x.body.job_id));
     let maxReading = 0;
