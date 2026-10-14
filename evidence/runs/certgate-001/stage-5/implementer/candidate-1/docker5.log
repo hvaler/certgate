@@ -1,0 +1,15 @@
+docker image of ddb75eca79c1e66b06456ebce45992ccd140eafa 2026-10-14T11:18:11Z
+sha256:d000aaf645c9af4d78d2cf4aa0a722382ad1ad231b17dbd647643030a355e7f5
+--- image test suite, --network none; first line = count of MODEL_* variables in the container ---
+0
+ Test Files  18 passed | 2 skipped (20)
+      Tests  305 passed | 27 skipped (332)
+--- service fully offline (--network none) ---
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "off",
+  "notice": "All data is fictitious."
+}
+
+2026-10-14T11:18:37Z
