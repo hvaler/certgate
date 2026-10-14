@@ -1,0 +1,3 @@
+[Verbatim copy of the operator's message, given to analyst-xwz3 in the analyst's own Claude Code window (not in the room) at about 2026-10-14T12:55Z. Copied by analyst-xwz3 and relayed to the room. It contains no secret.]
+
+Operator: the Upstash for Redis store from the Vercel Marketplace is now connected to the Vercel project certgate (plan Free, primary region Washington D.C. / iad1, no custom prefix so the integration's default variable names, all environments, not marked sensitive). Its variables exist in Vercel only; the band never sees their values. MODEL_*, LIVE_ACCESS_CODE and LIVE_READS_PER_HOUR are NOT set in Vercel yet: I will set them from the new DEPLOY.md once Stage 6 tells me the exact names.
