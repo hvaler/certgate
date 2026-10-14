@@ -39,6 +39,7 @@ export const REASONS = {
   invalid_model_output: "the model reply could not be used as a reading (not one valid JSON reading)",
   model_mismatch: "the endpoint reported a different model than the one requested; the reading is not shown",
   store_unavailable: "the shared store is unavailable; live reading refused",
+  internal: "internal error while preparing the reading; it is not an endpoint failure",
 } as const;
 export type ReasonClass = keyof typeof REASONS;
 
@@ -56,6 +57,8 @@ export interface JobRecord {
   result: unknown;
 }
 export type Outcome = { kind: "done"; result: Record<string, unknown> } | { kind: "failed"; reason_class: ReasonClass };
+
+export interface CodeAttempt { over: boolean; reopens_at: string; keys: { client: string; global: string }; countedGlobal: boolean }
 
 export class Refusal extends Error {
   constructor(readonly status: number, message: string, readonly extra: Record<string, unknown> = {}) {
@@ -87,14 +90,16 @@ export class LiveJobs {
    * J-02, count first: every code attempt INCRs the per-client and the global counter in one atomic request before
    * any comparison. Over either limit: refused, no comparison. The caller DECRs both (`forgiveCode`) on a correct code.
    */
-  async countCodeAttempt(client: string, perClient: number): Promise<{ over: boolean; reopens_at: string }> {
+  async countCodeAttempt(client: string, perClient: number): Promise<CodeAttempt> {
     const d = this.clock();
-    const [c, g] = await this.store.incrPair(KEYS.codeFailClient(client, hourKey(d)), KEYS.codeFailGlobal(hourKey(d)), WINDOW_TTL_S);
-    return { over: perClient <= 0 || c > perClient || g > perClient * GLOBAL_CODE_FAILURE_FACTOR, reopens_at: nextHour(d) };
+    const keys = { client: KEYS.codeFailClient(client, hourKey(d)), global: KEYS.codeFailGlobal(hourKey(d)) };
+    // W-01: the global unit is counted only while this client is within its own limit.
+    const n = await this.store.countAttempt(keys.client, keys.global, perClient, WINDOW_TTL_S);
+    return { over: perClient <= 0 || n.client > perClient || n.global > perClient * GLOBAL_CODE_FAILURE_FACTOR, reopens_at: nextHour(d), keys, countedGlobal: n.countedGlobal };
   }
-  async forgiveCode(client: string): Promise<void> {
-    const h = hourKey(this.clock());
-    await this.store.decrPair(KEYS.codeFailClient(client, h), KEYS.codeFailGlobal(h));
+  /** W-05: gives back exactly the units this attempt counted, in the hour it counted them. */
+  async forgiveCode(attempt: CodeAttempt): Promise<void> {
+    await this.store.forgiveAttempt(attempt.keys.client, attempt.keys.global, attempt.countedGlobal);
   }
 
   /**
@@ -104,17 +109,26 @@ export class LiveJobs {
    */
   async admit(readsPerHour: number, modelRequested: string, arrivedAt: Date): Promise<JobRecord & { position: number }> {
     const d = this.clock();
-    await this.store.zremBelow(KEYS.queue, this.pruneBefore());
-    if ((await this.store.zcard(KEYS.queue)) >= this.budget.maxWaiting) throw new Refusal(429, REASONS.busy, { reason_class: "busy" });
-    const n = await this.store.incr(KEYS.reads(hourKey(d)), WINDOW_TTL_S);
-    if (readsPerHour <= 0 || n > readsPerHour) throw new Refusal(429, "live readings exhausted this hour", { reopens_at: nextHour(d) });
     const job: JobRecord = {
       job_id: randomBytes(16).toString("hex"), state: "queued", created_at: arrivedAt.toISOString(), started_at: null, finished_at: null,
       model_requested: modelRequested, reason_class: null, reason: null, result: null,
     };
-    await this.store.set(KEYS.job(job.job_id), JSON.stringify(job), JOB_TTL_S);
+    // W-04: take a place in the queue first, then look at it, so a burst cannot overfill the queue; a busy refusal
+    // gives the place back and consumes nothing (it comes before the hourly count).
+    await this.store.zremBelow(KEYS.queue, this.pruneBefore());
     await this.store.zadd(KEYS.queue, arrivedAt.getTime(), job.job_id);
-    return { ...job, position: ((await this.store.zrank(KEYS.queue, job.job_id)) ?? 0) + 1 };
+    const rank = (await this.store.zrank(KEYS.queue, job.job_id)) ?? 0;
+    if (rank >= this.budget.maxWaiting) {
+      await this.store.zrem(KEYS.queue, job.job_id);
+      throw new Refusal(429, REASONS.busy, { reason_class: "busy" });
+    }
+    const n = await this.store.incr(KEYS.reads(hourKey(d)), WINDOW_TTL_S);
+    if (readsPerHour <= 0 || n > readsPerHour) {
+      await this.store.zrem(KEYS.queue, job.job_id);
+      throw new Refusal(429, "live readings exhausted this hour", { reopens_at: nextHour(d) });
+    }
+    await this.store.set(KEYS.job(job.job_id), JSON.stringify(job), JOB_TTL_S);
+    return { ...job, position: rank + 1 };
   }
 
   private async save(job: JobRecord) {
@@ -165,7 +179,7 @@ export class LiveJobs {
     }
     const remaining = Math.max(1_000, created + this.budget.deadlineMs - startedAt.getTime());
     const reading = work(Math.min(remaining, this.budget.readBudgetMs))
-      .catch((): Outcome => ({ kind: "failed", reason_class: "endpoint_5xx" }))
+      .catch((): Outcome => ({ kind: "failed", reason_class: "internal" }))
       .finally(() => this.store.delIfEquals(KEYS.slot(slot), job.job_id).catch(() => false));
     let timer: ReturnType<typeof setTimeout> | undefined;
     const deadline = new Promise<"deadline">((r) => { timer = setTimeout(() => r("deadline"), remaining); });

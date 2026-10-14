@@ -3,7 +3,7 @@
 // in memory, on 127.0.0.1, so the REST adapter's wire format is tested offline (CH6-17). `down()` makes it answer
 // 500 with a body that carries a sentinel, to check that store errors never leak.
 import { createServer } from "node:http";
-import { DEL_IF_EQUALS_SCRIPT } from "../../src/web/live-store.js";
+import { COUNT_ATTEMPT_SCRIPT, DEL_IF_EQUALS_SCRIPT } from "../../src/web/live-store.js";
 
 export async function startFakeUpstash({ token = "fake-store-token", now = () => Date.now() } = {}) {
   const kv = new Map();
@@ -34,6 +34,13 @@ export async function startFakeUpstash({ token = "fake-store-token", now = () =>
       }
       case "EXPIRE": { const e = live(a[0]); if (!e) return 0; e.exp = now() + Number(a[1]) * 1000; return 1; }
       case "EVAL": {
+        if (a[0] === COUNT_ATTEMPT_SCRIPT) {
+          const [, , kc, kg, ttl, limit] = a;
+          const c = run(["INCR", kc]); run(["EXPIRE", kc, ttl]);
+          let g = Number(live(kg)?.v ?? 0); let counted = 0;
+          if (c <= Number(limit)) { g = run(["INCR", kg]); run(["EXPIRE", kg, ttl]); counted = 1; }
+          return [c, g, counted];
+        }
         if (a[0] !== DEL_IF_EQUALS_SCRIPT) throw new Error("unknown script");
         const e = live(a[2]);
         if (e && e.v === a[3]) { kv.delete(a[2]); return 1; }

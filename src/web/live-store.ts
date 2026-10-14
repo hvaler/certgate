@@ -10,10 +10,14 @@ export interface LiveStore {
   readonly kind: "upstash" | "memory";
   /** INCR key and EXPIRE it, in one atomic request (J-16). Returns the new value. */
   incr(key: string, ttlSeconds: number): Promise<number>;
-  /** INCR two keys (and EXPIRE them) in one atomic request (J-02). */
-  incrPair(a: string, b: string, ttlSeconds: number): Promise<[number, number]>;
-  /** DECR two keys in one atomic request (J-02: a correct code is not a failure). */
-  decrPair(a: string, b: string): Promise<void>;
+  /**
+   * One code attempt, atomically (J-02, W-01): INCR the client key; INCR the global key only while the client is
+   * within its limit, so one client over its limit cannot push the global count to its ceiling. Returns both counts
+   * and whether the global key was counted.
+   */
+  countAttempt(client: string, global: string, perClient: number, ttlSeconds: number): Promise<{ client: number; global: number; countedGlobal: boolean }>;
+  /** Gives one unit back on the client key, and on the global key when that attempt counted there (J-02, W-05). */
+  forgiveAttempt(client: string, global: string, countedGlobal: boolean): Promise<void>;
   get(key: string): Promise<string | null>;
   set(key: string, value: string, ttlSeconds: number): Promise<void>;
   /** SET key value NX PX ttl: true when this call took the key. */
@@ -51,13 +55,15 @@ export class MemoryStore implements LiveStore {
     await this.tick();
     return this.incrNow(key, ttlSeconds);
   }
-  async incrPair(a: string, b: string, ttlSeconds: number): Promise<[number, number]> {
+  async countAttempt(client: string, global: string, perClient: number, ttlSeconds: number) {
     await this.tick();
-    return [this.incrNow(a, ttlSeconds), this.incrNow(b, ttlSeconds)];
+    const c = this.incrNow(client, ttlSeconds);
+    if (c <= perClient) return { client: c, global: this.incrNow(global, ttlSeconds), countedGlobal: true };
+    return { client: c, global: Number(this.live(global)?.v ?? 0), countedGlobal: false };
   }
-  async decrPair(a: string, b: string) {
+  async forgiveAttempt(client: string, global: string, countedGlobal: boolean) {
     await this.tick();
-    for (const k of [a, b]) {
+    for (const k of countedGlobal ? [client, global] : [client]) {
       const e = this.live(k);
       if (e) this.values.set(k, { v: String(Number(e.v) - 1), exp: e.exp });
     }
@@ -122,6 +128,8 @@ export class MemoryStore implements LiveStore {
 
 /** Atomic compare-and-delete, run by the store (Upstash REST API: Scripting supported). */
 export const DEL_IF_EQUALS_SCRIPT = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+/** One code attempt (W-01): the global key counts only while the client is within its limit. */
+export const COUNT_ATTEMPT_SCRIPT = "local c = redis.call('incr', KEYS[1]); redis.call('expire', KEYS[1], ARGV[1]); local g = tonumber(redis.call('get', KEYS[2]) or '0'); local counted = 0; if c <= tonumber(ARGV[2]) then g = redis.call('incr', KEYS[2]); redis.call('expire', KEYS[2], ARGV[1]); counted = 1 end; return {c, g, counted}";
 
 /** Upstash Redis REST API through fetch (no client library). The token is never logged or returned. */
 export class UpstashRestStore implements LiveStore {
@@ -177,12 +185,14 @@ export class UpstashRestStore implements LiveStore {
     const [n] = await this.multi([["INCR", key], ["EXPIRE", key, ttlSeconds]]);
     return Number(n);
   }
-  async incrPair(a: string, b: string, ttlSeconds: number): Promise<[number, number]> {
-    const r = await this.multi([["INCR", a], ["EXPIRE", a, ttlSeconds], ["INCR", b], ["EXPIRE", b, ttlSeconds]]);
-    return [Number(r[0]), Number(r[2])];
+  async countAttempt(client: string, global: string, perClient: number, ttlSeconds: number) {
+    const r = await this.cmd("EVAL", COUNT_ATTEMPT_SCRIPT, 2, client, global, ttlSeconds, perClient);
+    const [c, g, counted] = (Array.isArray(r) ? r : []).map(Number);
+    if (!Number.isFinite(c) || !Number.isFinite(g)) throw new StoreUnavailable("shared store answered an unexpected count");
+    return { client: c!, global: g!, countedGlobal: counted === 1 };
   }
-  async decrPair(a: string, b: string) {
-    await this.multi([["DECR", a], ["DECR", b]]);
+  async forgiveAttempt(client: string, global: string, countedGlobal: boolean) {
+    await this.multi(countedGlobal ? [["DECR", client], ["DECR", global]] : [["DECR", client]]);
   }
   async get(key: string) {
     const r = await this.cmd("GET", key);

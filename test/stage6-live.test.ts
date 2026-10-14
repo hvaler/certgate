@@ -128,7 +128,11 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
     store.delayMs = 2;
     const a = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
     const b = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
-    const started = await Promise.all([startJob(a), startJob(b), startJob(a), startJob(b)]);
+    // Two jobs take the two slots; two more wait behind them; a fifth would be a third waiting job: busy.
+    const first = await Promise.all([startJob(a), startJob(b)]);
+    for (const [k, r] of first.entries()) await poll(k ? b : a, String(r.body.job_id), (x) => x === "reading");
+    const second = await Promise.all([startJob(a), startJob(b)]);
+    const started = [...first, ...second];
     expect(started.map((x) => x.status)).toEqual([202, 202, 202, 202]);
     const busy = await startJob(a);
     expect(busy.status).toBe(429);
@@ -221,7 +225,7 @@ describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", (
     expect((await startJob(base, { code: "wrong", client: "198.51.100.1" })).status).toBe(429);
     expect((await startJob(base, { code: CODE, client: "203.0.113.9" })).status).toBe(429);
     const st = await call(`${base}/api/live/status`, { headers: { "x-forwarded-for": "198.51.100.3" } });
-    expect(st.body).toMatchObject({ code_failures_this_hour_global: "12", code_failures_this_hour_this_client: "1", code_failure_limit_per_client: "1", code_failure_ceiling_global: "10" });
+    expect(st.body).toMatchObject({ code_failures_this_hour_global: "11", code_failures_this_hour_this_client: "1", code_failure_limit_per_client: "1", code_failure_ceiling_global: "10" });
   });
 });
 
@@ -239,17 +243,29 @@ describe("code and lease guards that only show across instances or over time (S6
     const b = await serve({ env, liveStore: store, liveBudget: FAST });
     expect([(await startJob(a, { code: "x" })).status, (await startJob(b, { code: "x" })).status, (await startJob(a, { code: "x" })).status]).toEqual([403, 403, 429]);
   });
-  it("a crashed holder's slot comes back through its lease TTL: after two readings time out, a third job reads once the leases expire", async () => {
-    const s = await stub({ mode: "timeout" });
-    const store = new MemoryStore();
-    const budget = { ...FAST, queueMaxWaitMs: 4_000, deadlineMs: 5_000, readBudgetMs: 300, leaseTtlMs: 1_200 };
-    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: budget, adapterTimeoutMs: 10_000 });
-    const [j1, j2] = await Promise.all([startJob(base), startJob(base)]);
-    await poll(base, String(j1.body.job_id), (x) => x === "failed");
-    await poll(base, String(j2.body.job_id), (x) => x === "failed");
-    const j3 = await startJob(base);
-    const r = await poll(base, String(j3.body.job_id), (x) => x === "reading" || x === "failed", 4_000);
-    expect(r.body.state).toBe("reading");
+  it("a crashed holder's slot comes back through its lease TTL (fake clock): a job whose holder hangs forever cannot block the slot past the TTL", async () => {
+    let now = Date.parse("2026-10-14T13:00:00.000Z");
+    const store = new MemoryStore(() => now);
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    const budget = { ...DEPLOYED_LIVE_BUDGET, slots: 1, pollMs: 5 };
+    const jobs = new LiveJobs(store, () => new Date(now), budget);
+    const hung = await jobs.admit(5, STUB_MODEL_ID, new Date(now));
+    void jobs.run(hung, () => new Promise(() => undefined)); // the holder never finishes: a crashed instance
+    while ((await store.get(KEYS.slot(0))) !== hung.job_id) await new Promise((r) => setTimeout(r, 5));
+    now += budget.leaseTtlMs + 1;
+    const next = await jobs.admit(5, STUB_MODEL_ID, new Date(now));
+    const ran = jobs.run(next, async () => ({ kind: "failed", reason_class: "timeout" }));
+    for (let i = 0; i < 200 && (await store.get(KEYS.slot(0))) !== next.job_id && JSON.parse((await store.get(KEYS.job(next.job_id)))!).state === "queued"; i++) await new Promise((r) => setTimeout(r, 5));
+    await ran;
+    expect(JSON.parse((await store.get(KEYS.job(next.job_id)))!).started_at).not.toBeNull();
+  });
+  it("one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)", async () => {
+    const s = await stub();
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "2" }), liveStore: new MemoryStore(), liveBudget: FAST });
+    for (let i = 0; i < 20; i++) await startJob(base, { code: "wrong", client: "198.51.100.77" });
+    const st = await call(`${base}/api/live/status`);
+    expect(st.body.code_failures_this_hour_global).toBe("2");
+    expect((await startJob(base, { client: "203.0.113.5" })).status).toBe(202);
   });
   it("a late finisher never frees another job's slot: release is compare-and-delete on the job's own token", async () => {
     const store = new MemoryStore();
@@ -269,15 +285,33 @@ describe("code and lease guards that only show across instances or over time (S6
 });
 
 describe("timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10)", () => {
-  it("a reading that outlives the deadline fails as timed out; its slot stays leased until the TTL", async () => {
+  it("a reading that outlives the deadline fails as timed out; the attempt ends at the deadline, no attempt starts after it, and the slot comes back (W-03)", async () => {
     const s = await stub({ mode: "timeout" });
     const store = new MemoryStore();
-    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: { ...FAST, deadlineMs: 400, readBudgetMs: 400, leaseTtlMs: 5_000 }, adapterTimeoutMs: 5_000 });
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: { ...FAST, deadlineMs: 1_500, readBudgetMs: 1_500, leaseTtlMs: 5_000 }, adapterTimeoutMs: 60_000, backoffBaseMs: 1 });
     const r = await startJob(base);
     const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done", 5_000);
     expect(f.body).toMatchObject({ state: "failed", reason_class: "timeout", reason: REASONS.timeout, result: null });
-    expect(await store.get(KEYS.slot(0))).toBe(r.body.job_id);
-    expect((await call(`${base}/api/live/status`)).body.in_flight).toBe("1");
+    for (let i = 0; i < 100 && (await store.get(KEYS.slot(0))) !== null; i++) await new Promise((x) => setTimeout(x, 20));
+    await new Promise((x) => setTimeout(x, 300));
+    expect(s.state.inFlight, "no provider request is left open after the deadline").toBe(0);
+    expect(s.state.chatCalls, "no attempt starts after the deadline").toBe(1);
+    expect(await store.get(KEYS.slot(0))).toBeNull();
+    expect((await call(`${base}/api/live/status`)).body.in_flight).toBe("0");
+  });
+  it("a done job carries no provider text: a 429 whose body has a marker and a path, then a good reply (W-02)", async () => {
+    const s = await stub({ mode: "http_429", errorText: "marker-q7 /private-base-path-x" });
+    const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST, backoffBaseMs: 1 });
+    setTimeout(() => { s.state.mode = "ok"; }, 150);
+    const r = await startJob(base);
+    const d = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
+    expect(d.body.state).toBe("done");
+    expect(s.state.chatCalls).toBeGreaterThan(1);
+    expect(d.text).not.toContain("marker-q7");
+    expect(d.text).not.toContain("private-base-path-x");
+    const errs = ((d.body.result as { view: { receipt: { errors: { class: string; detail: string }[] } } }).view.receipt.errors);
+    expect(errs.length).toBeGreaterThan(0);
+    for (const e of errs) expect(e.detail).toBe(`attempt failed (${e.class}); it was retried`);
   });
   for (const [mode, cls] of [["http_5xx", "endpoint_5xx"], ["http_429", "endpoint_429"], ["http_4xx", "endpoint_4xx"], ["invalid_json", "invalid_model_output"]] as const) {
     it(`${mode} -> failed ${cls} with its fixed text; the provider's error text (with sentinels) never reaches a response`, async () => {
@@ -364,6 +398,17 @@ describe("deployed site with live reading disabled answers as at 409fb69a (S6-01
     const now = await record(createApp);
     expect(Object.keys(now)).toEqual(Object.keys(golden));
     for (const k of Object.keys(golden)) expect(now[k], k).toEqual(golden[k]);
+  });
+  it("with the store, the limit and the endpoint all configured but no access code, live reading stays off on the deployed site (S6-01)", async () => {
+    const s = await stub();
+    const env: Record<string, string> = deployedEnv(s.url);
+    delete env.LIVE_ACCESS_CODE;
+    const base = await serve({ env, liveStore: new MemoryStore(), liveBudget: FAST });
+    expect((await call(`${base}/api/live/status`)).body).toMatchObject({ enabled: false, reason: DEPLOYED_LIVE_UNAVAILABLE });
+    expect((await call(`${base}/health`)).body.reader).toBe("off");
+    const r = await startJob(base, { code: null });
+    expect({ status: r.status, body: r.body }).toEqual({ status: 503, body: { status: "rejected", error: DEPLOYED_LIVE_UNAVAILABLE } });
+    expect(s.state.chatCalls).toBe(0);
   });
   it("the new live routes give one identical refusal with no code header, an empty one or a wrong one; nothing is called", async () => {
     const s = await stub();

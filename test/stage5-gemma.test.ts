@@ -24,7 +24,7 @@ const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROO
 const repoOnly = describe.skipIf(!REPO);
 /** Product files Stage 6 changes or adds (its handoff lists each with the reason); nothing else may differ. */
 export const STAGE6_MAY_CHANGE = new Set([
-  "src/web/app.ts", "src/web/limits.ts", "src/web/live-store.ts", "src/web/live-jobs.ts", "api/index.ts",
+  "src/web/app.ts", "src/web/limits.ts", "src/web/live-store.ts", "src/web/live-jobs.ts", "src/web/deadline-reader.ts", "api/index.ts",
   "package.json", "package-lock.json", "public/app.js",
 ]);
 type Run = { key: string; dir: string; results: string; model?: RegExp };

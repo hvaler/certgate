@@ -21,7 +21,8 @@ import { probeF1 } from "./f1.js";
 import { datasetCertificateHashes } from "./dataset-hashes.js";
 import { InMemoryHourlyCounter, type HourlyCounter } from "./limiter.js";
 import { LiveReader, type LiveCallInfo } from "./live-reader.js";
-import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES, DEPLOYED_LIVE_UNAVAILABLE, LIVE_FITS_DEPLOYED_FUNCTION, DEPLOYED_LIVE_BUDGET, CONTAINER_LIVE_BUDGET, type LiveBudget } from "./limits.js";
+import { DeadlineReader } from "./deadline-reader.js";
+import { ADAPTER_ATTEMPT_TIMEOUT_MS, WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES, DEPLOYED_LIVE_UNAVAILABLE, LIVE_FITS_DEPLOYED_FUNCTION, DEPLOYED_LIVE_BUDGET, CONTAINER_LIVE_BUDGET, type LiveBudget } from "./limits.js";
 import { MemoryStore, StoreUnavailable, UpstashRestStore, storeEnv, type LiveStore } from "./live-store.js";
 import { JOB_ID, KEYS, LiveJobs, REASONS, Refusal, WINDOW_TTL_S, hourKey, type Outcome, type ReasonClass } from "./live-jobs.js";
 import { getDataDir } from "../config.js";
@@ -354,7 +355,7 @@ export function createHandler(deps: AppDeps = {}) {
       const attempt = await jobs!.countCodeAttempt(client, cfg.liveCodeFailuresPerHour);
       if (attempt.over) throw new HttpError(429, "too many wrong access codes this hour", { reopens_at: attempt.reopens_at });
       if (!codeMatches(req.headers[ACCESS_CODE_HEADER], cfg.liveAccessCode)) throw new HttpError(403, "wrong or missing access code; no live reading was used");
-      await jobs!.forgiveCode(client);
+      await jobs!.forgiveCode(attempt);
     } else if (!datasetCertificateHashes().has(createHash("sha256").update(cert).digest("hex"))) {
       throw new HttpError(403, "live reading of an uploaded file needs the access code, which is not configured on this server; only the dataset certificates can be read live here");
     }
@@ -377,7 +378,8 @@ export function createHandler(deps: AppDeps = {}) {
     const job = await jobs!.admit(cfg.liveReadsPerHour, cfg.modelId!, arrivedAt);
     const requested = cfg.modelId!;
     const work = async (attemptTimeoutMs: number): Promise<Outcome> => {
-      const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: requested, apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs ?? attemptTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
+      // W-03: each attempt ends by the job's deadline, and none starts after it (deadline-reader.ts).
+      const reader = new DeadlineReader({ baseUrl: cfg.modelBaseUrl!, modelId: requested, apiKey: cfg.modelApiKey, backoffBaseMs: deps.backoffBaseMs }, Date.now() + attemptTimeoutMs, deps.adapterTimeoutMs ?? ADAPTER_ATTEMPT_TIMEOUT_MS);
       const r = await processCase({ ...inputBase, reader, f1 });
       if (r.receipt.status === "error" || !reader.lastCall) {
         if (reader.attempts.at(-1)?.outcome === "http_4xx") return { kind: "failed", reason_class: "endpoint_4xx" };
@@ -389,7 +391,11 @@ export function createHandler(deps: AppDeps = {}) {
       if (!reported.toLowerCase().includes(requested.toLowerCase())) return { kind: "failed", reason_class: "model_mismatch" };
       lastLive = reader.lastCall;
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);
-      return { kind: "done", result: { counted: true, ...viewJson(r) } };
+      // W-02 (CH6-10): the job API never returns provider text: each recorded error keeps its class only.
+      const out = viewJson(r);
+      const rc = out.view.receipt as { errors?: { class: string; detail: string }[] };
+      for (const e of rc.errors ?? []) e.detail = `attempt failed (${e.class}); it was retried`;
+      return { kind: "done", result: { counted: true, ...out } };
     };
     defer(jobs!.run(job, work));
     return {
