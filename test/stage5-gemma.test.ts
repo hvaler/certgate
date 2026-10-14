@@ -14,7 +14,7 @@ import { buildMetricsMd, fcRootCauses, GEMMA_RUNS, proposalDifferences, QWEN_MOD
 // @ts-expect-error plain JS tool
 import { buildFigures } from "../tools/evaluate/figures.mjs";
 // @ts-expect-error plain JS helper
-import { ALLOWED, prizeFindings } from "./support/prize-check.mjs";
+import { ALLOWED_PRIZE_CLAUSES, prizeFindings, prizeText } from "./support/prize-check.mjs";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
 const json = (f: string) => JSON.parse(read(f));
@@ -201,10 +201,11 @@ repoOnly("README Gemma section (S5-10, G-05, G-08, S5-15 a)", () => {
   });
 });
 
-describe("prize check, fail closed (S5-11, G-09, R5.5 E-17, S5-15 e)", () => {
+describe("prize check, fail closed (S5-11, G-09, R5.5 E-17, R5.6 E-18, R5.7 E-19, S5-15 e)", () => {
+  const I = "\u0456"; // Cyrillic i, a look-alike of Latin i
   it("flags every sentence with a prize word that is not on the allow-list, negated or not", () => {
     const flagged = [
-      // F5-01 (auditor verdict e0b691a0) A1-A7, S5M-e2/e3 (adversary 31240af4), e4-e8 (adversary 18a5af25).
+      // F5-01 (auditor verdicts e0b691a0, 2e8c019d) A1-A7; S5M-e2/e3 (adversary 31240af4); e4-e8 (adversary 18a5af25).
       "CertGate is eligible for the Gemma prize.",
       "CertGate is not just a comparison: it is eligible for the Gemma prize.",
       "CertGate never invents a value and is eligible for the Gemma prize.",
@@ -217,18 +218,48 @@ describe("prize check, fail closed (S5-11, G-09, R5.5 E-17, S5-15 e)", () => {
       "Not only is CertGate eligible for the Gemma prize, it is a likely winner.",
       "CertGate is a frontrunner in Google's Gemma track on AMD.",
       "Without question CertGate deserves the Gemma prize.",
-      "not a toy, it is eligible for the prize",
+      // E-19 item 4.
+      "CertGate does not compete for any prize, but it qualifies for the Gemma award.",
       "CertGate does not compete for any prize.",
+      "not a toy, it is eligible for the prize",
       "CertGate qualifies for the Gemma prize.",
       "We entered the Google prize; it is the best use of Gemma.",
+      "CertGate is ranked second; it places third in the Gemma category and earned an honourable mention.",
+      "CertGate was shortlisted as a runner-up on the podium.",
     ];
     for (const s of flagged) expect(prizeFindings(s), s).not.toEqual([]);
   });
+  it("normalises before matching: an appended claim, look-alike letters, emphasis and zero-width characters do not hide a prize word (E-18, e13-e17)", () => {
+    const flagged = [
+      // e13: the allowed sentence with a claim appended is not the allowed sentence.
+      "This comparison makes no claim about any prize or award, although CertGate is eligible for one.",
+      // e14, e15: Cyrillic i (U+0456) inside "prize" and "eligible", as the only prize words.
+      `CertGate takes the Gemma pr${I}ze.`,
+      `CertGate is el${I}gible for Gemma on AMD.`,
+      `CertGate is eligible for the Gemma pr${I}ze.`,
+      // e16: markdown emphasis splitting a word.
+      "CertGate is eli**gible** for Gemma on AMD.",
+      "CertGate is eli_gible_ for Gemma on AMD.",
+      // e17: a zero-width space inside a word.
+      "CertGate is eli\u200Bgible for Gemma on AMD.",
+      "CertGate is el\uFEFFigible for Gemma on AMD.",
+      // Greek look-alikes and full-width letters (NFKC).
+      "CertGate is the w\u03B9nner on AMD.",
+      "CertGate is ｅｌｉｇｉｂｌｅ for Gemma.",
+    ];
+    for (const s of flagged) expect(prizeFindings(s), JSON.stringify(s)).not.toEqual([]);
+  });
   it("accepts exactly the allow-listed sentences, and nothing about windows", () => {
-    expect([...ALLOWED.keys()]).toEqual(["This comparison makes no claim about any prize or award."]);
-    for (const s of ALLOWED.keys()) expect(prizeFindings(s), s).toEqual([]);
-    expect(prizeFindings("This comparison makes no claim about any prize or award, and it is eligible.")).not.toEqual([]);
+    expect([...ALLOWED_PRIZE_CLAUSES.keys()]).toEqual(["This comparison makes no claim about any prize or award.", "Enter at least one value."]);
+    for (const s of ALLOWED_PRIZE_CLAUSES.keys()) expect(prizeFindings(s), s).toEqual([]);
+    for (const reason of ALLOWED_PRIZE_CLAUSES.values()) expect(reason.length).toBeGreaterThan(10);
     expect(prizeFindings("Announced live windows are shown as text; the window is configured.")).toEqual([]);
+  });
+  it("in public JavaScript only string literals are checked: identifiers are code, strings are text", () => {
+    expect(prizeFindings(prizeText("public/app.js", "for (const [k, v] of Object.entries(props)) {}"))).toEqual([]);
+    expect(prizeFindings(prizeText("public/app.js", 'show("Enter at least one value.");'))).toEqual([]);
+    expect(prizeFindings(prizeText("public/app.js", 'show("CertGate is eligible for the Gemma prize.");'))).not.toEqual([]);
+    expect(prizeFindings(prizeText("public/app.js", "const t = `Winner on AMD`;"))).not.toEqual([]);
   });
   it("accepts the kickoff quote only inside quotation marks with its source", () => {
     const q = 'The kickoff said "the best use of Gemma models challenge" (01-REGLAS, "Kickoff en directo").';

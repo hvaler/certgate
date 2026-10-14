@@ -6,7 +6,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
 // @ts-expect-error plain JS helper
-import { prizeFindings } from "./support/prize-check.mjs";
+import { ALLOWED_PRIZE_CLAUSES, prizeFindings, prizeSentences, prizeText } from "./support/prize-check.mjs";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
 const DOCS = ["README.md", "DEPLOY.md", "METRICS.md", "CLAIMS.md", "EVIDENCE-INDEX.md", ".env.example"];
@@ -136,8 +136,14 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
         for (const m of line.matchAll(/[^.#;]*\bpublic (?:site|url)\b[^.#;]*/gi)) expect(m[0], `${f}: public-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
       }
       // Stage 5 (S5-11, G-09): no prize, award, win, eligibility, qualification, entry or submission claim.
-      expect(prizeFindings(read(f)), `${f}: prize claim`).toEqual([]);
+      expect(prizeFindings(prizeText(f, read(f))), `${f}: prize claim`).toEqual([]);
     }
+  });
+  it("every prize allow-list entry still occurs, as a whole sentence, in a checked file (E-19 item 3)", () => {
+    const files = ["README.md", "DEPLOY.md", "METRICS.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
+    const seen = new Set(files.flatMap((f) => prizeSentences(prizeText(f, read(f)))));
+    expect(ALLOWED_PRIZE_CLAUSES.size).toBeGreaterThan(0);
+    for (const s of ALLOWED_PRIZE_CLAUSES.keys()) expect(seen.has(s), `stale allow-list entry: ${s}`).toBe(true);
   });
   it("no secret-looking value in the docs", () => {
     const patterns = [
