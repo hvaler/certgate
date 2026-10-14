@@ -193,11 +193,17 @@ repoOnly("README Gemma section (S5-10, G-05, G-08, S5-15 a)", () => {
 });
 
 describe("prize check (S5-11, E-14, G-09, S5-15 e)", () => {
-  it("flags a prize, award, eligibility or entry claim and accepts a negated clause", () => {
+  it("flags a prize, award, eligibility, entry or challenge claim and accepts a negated clause", () => {
     expect(prizeFindings("CertGate is eligible for the Gemma prize.")).not.toEqual([]);
     expect(prizeFindings("CertGate qualifies for the Gemma prize.")).not.toEqual([]);
     expect(prizeFindings("We entered the Google prize; it is the best use of Gemma.")).not.toEqual([]);
     expect(prizeFindings("This comparison makes no claim about any prize or award.")).toEqual([]);
+    // ADV-S5-F01: a negation of something else does not excuse a claim; challenge and contender words count.
+    expect(prizeFindings("CertGate is not just a comparison: it is eligible for the Gemma prize.")).not.toEqual([]);
+    expect(prizeFindings("CertGate is not a toy, it is eligible for the Gemma prize.")).not.toEqual([]);
+    expect(prizeFindings("not a toy, it is eligible for the prize")).not.toEqual([]);
+    expect(prizeFindings("CertGate is a strong contender for Google's Gemma challenge on AMD.")).not.toEqual([]);
+    expect(prizeFindings("CertGate does not compete for any prize.")).toEqual([]);
   });
   it("accepts the kickoff quote only inside quotation marks with its source", () => {
     const q = 'The kickoff said "the best use of Gemma models challenge" (01-REGLAS, "Kickoff en directo").';
