@@ -1,0 +1,25 @@
+auditor clean clone dc228d10636cc3cf7b12f3b1226e88027cce12b2 tree cf0dcba04e9b0c2e041a8955b0e107b313311149 at 2026-10-14T19:40:34Z (vitest --maxWorkers=4)
+MODEL_*/LIVE_ACCESS_CODE in env: 0
+added 67 packages in 51s
+dirty after npm ci: 0
+
+run 1 19:41:30:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 2 19:42:07:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 3 19:42:41:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 4 19:43:14:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 5 19:43:47:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+METRICS.md matches a fresh generation
+previews --check ok
+diagrams --check ok
+unmapped 0 stale 0
+end 2026-10-14T19:44:19Z

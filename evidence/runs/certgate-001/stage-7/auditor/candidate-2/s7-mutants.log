@@ -1,0 +1,38 @@
+Q1-queue-timeout-never: KILLED | src/web/live-jobs.ts | build rc 0 | Tests  2 failed | 483 passed (485)
+    × a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token 30253ms
+    × S6M-c6 (J-04): a job that times out in the queue removes its own queue entry at once, not only at the 70 s prune 5ms
+R1-allowlist-gains-cg-020: KILLED | src/web/app.ts | build rc 0 | Tests  2 failed | 483 passed (485)
+    × traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404 19ms
+    × the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key 6ms
+R2-request-path-reaches-fs: KILLED | src/web/app.ts | build rc 0 | Tests  3 failed | 482 passed (485)
+    × traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404 13ms
+    × a live result's original is chosen by the certificate bytes (SHA-256): each sample maps to its own preview; a story's or another case's hash is 404 (CH7-04) 19ms
+    × the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key 2ms
+R3-by-cert-maps-stories-too: KILLED | src/web/app.ts | build rc 0 | Tests  2 failed | 483 passed (485)
+    × a live result's original is chosen by the certificate bytes (SHA-256): each sample maps to its own preview; a story's or another case's hash is 404 (CH7-04) 101ms
+    × the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key 4ms
+R4-nosniff-dropped: KILLED | src/web/app.ts | build rc 0 | Tests  1 failed | 484 passed (485)
+    × the three stories and the three samples answer 200 with image/png, nosniff, and exactly the committed preview bytes 97ms
+F1-flag-dropped-from-evaluate: KILLED | src/web/app.ts | build rc 0 | Tests  1 failed | 484 passed (485)
+    × the evaluate route carries the same flag and date 490ms
+F2-flag-dropped-from-storyView: KILLED | src/tools/build-stories.ts | build rc 0 | Tests  1 failed | 484 passed (485)
+    × the evaluate route carries the same flag and date 584ms
+F3-flag-on-live-result: KILLED | src/web/app.ts | build rc 0 | Tests  1 failed | 484 passed (485)
+    × a live job result never carries the flag 267ms
+C1-client-always-dataset-original: KILLED | public/app.js | build rc 0 | Tests  1 failed | 484 passed (485)
+    × the page offers the original beside the values for every story, by bytes for a sample live result, and says plainly that a non-sample upload is the user's own file 7ms
+D1-fake-diagram-node: KILLED | tools/diagrams.mjs | build rc 0 | Tests  4 failed | 482 passed (486)
+    × architecture: node vllm -> src/web/app.ts contains "vLLM on MI300X" 8ms
+    × docs/diagrams/architecture.svg 4ms
+    × README architecture block 1ms
+    × architecture: no vLLM, MI300, Evolus or GPU in node or edge labels 1ms
+D2-readme-mermaid-edited: KILLED | README.md | build rc 0 | Tests  3 failed | 482 passed (485)
+    × README architecture block 5ms
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 7ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 22ms
+S1-capture-records-har: KILLED | tools/capture-screenshots.mjs | build rc 0 | Tests  1 failed | 484 passed (485)
+    × never uses recordHar 8ms
+P1-preview-byte-changed: KILLED | data/previews/cg-003.png | Tests  2 failed | 483 passed (485)
+    × a fresh run of tools/previews.mjs equals every committed PNG; the README lists each hash next to its PDF 602ms
+    × no secret-looking value in the docs 13ms
+clone clean after revert: True
