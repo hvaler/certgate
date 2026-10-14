@@ -1,6 +1,6 @@
 # Obligation register — Stage 6 (live reading on the deployed site)
 
-Run: certgate-001 · Stage: 6 · Register version: **R6.2** (analyst-xwz3, 2026-10-14; R6.1 = commit 295c59e; R6.2 adopts auditor T6-01…T6-10, msg c3f96035; R6.0 = commit 47a951b; R6.1 accepts adversary challenge msg 41f6ca68, CH6-01…CH6-19, with rulings H-02 and H-11).
+Run: certgate-001 · Stage: 6 · Register version: **R6.3** (analyst-xwz3, 2026-10-14; R6.2 = commit 2cc6bdb; R6.3 rules on design note 7c8234e1 after auditor ed2c7a0c and adversary 9ddc9096; R6.1 = commit 295c59e; R6.2 adopts auditor T6-01…T6-10, msg c3f96035; R6.0 = commit 47a951b; R6.1 accepts adversary challenge msg 41f6ca68, CH6-01…CH6-19, with rulings H-02 and H-11).
 Dispatch 4: room msg `980db228-2297-4439-984a-8370e4a940cd` from hugo.valer, received ~12:36Z. Verbatim copy: `evidence/runs/certgate-001/DISPATCH-4.txt`.
 Dispatches 1–3 remain in force except where dispatch 4 changes them.
 
@@ -68,6 +68,33 @@ Dispatches 1–3 remain in force except where dispatch 4 changes them.
 | T6-08 | **The live reading.** Under its own lease, with headroom checked, the auditor makes **one** reading of a downloaded, hash-matched sample with the code, polling queued → reading → done. Pass requires: `reading_source` live; the reported model matches `/gemma-4-31b/i`; the F1 snapshot shows on, the same model and a latency; and the page labels it live with its model. The proposal is recorded against the expectation; a mismatch is reported, not a rejection in itself. At most 3 readings in total |
 | T6-09 | **Container.** Docker `--no-cache` with `--network none`, 0 MODEL_*, no code and no store variables. The suite passes, and the in-process queue shows the same states against the stub |
 | T6-10 | **Model naming.** The landing and stories name Qwen3.8-27B and their runs. The live screen and receipt name the reported model. A METRICS.md pointer covers the Gemma comparison. No `Gemma-4-31B-IT` literal is used as a default in `src/` or `public/`. Checked live and by test |
+
+## R6.3: ruling on design note D6-01 (implementer 7c8234e1; auditor ed2c7a0c points 1-5; adversary 9ddc9096 DN-01…DN-18)
+
+The design is **approved with these mandatory changes**. Each one is binding on candidate 1 and needs a named test or killer.
+
+| ID | Ruling |
+|---|---|
+| J-01 | **Per-client and global failure limits (H-02; DN-01, auditor 1).** Keys: `codefail:c:<sha256(client addr)>:<hour>` with limit `LIVE_CODE_FAILURES_PER_HOUR`, and `codefail:g:<hour>` with limit 10× that value. `/api/live/status` reports both counts (T6-04). DEPLOY.md states both limits and how to clear them |
+| J-02 | **Count first (DN-02).** For every code attempt, INCR the per-client and the global counters atomically, in one pipeline or MULTI request, **before** comparing. If either new value is over its limit, answer 429 with no comparison. **On a correct code, DECR both counters in the same atomic way**, so that a judge's successful attempts never count as failures. Killer: N parallel wrong codes against one MemoryStore with an artificial delay give exactly `limit` 403s and the rest 429 |
+| J-03 | **Lease TTL ≥ budget, per environment (DN-03).** On Vercel the TTL is 310 s. In the container the TTL is at least the container worst case (≥ 1200 s), or the lease is refreshed while the reading runs. Release is compare-and-delete on the job's own token. Killer: a fake clock past the TTL with the reading still running still shows at most 2 in flight |
+| J-04 | **No ghost queue entries (DN-04).** Prune at `now − (QUEUE_MAX_WAIT + 10 s)`. A job that fails in the queue ZREMs its own entry. Killer: a dead queued entry, 2 free slots and a new job that starts within one tick |
+| J-05 | **Read-only polls (DN-05, H-19).** A poll does `GET job:<id>`, plus `ZRANK` only while the job is queued. **No writes.** Pruning happens at admission and at slot attempts. Malformed ids are rejected before the store is touched. The queued-job loop checks at most once per 2 s. DEPLOY.md cites the Upstash free-tier quota, with the per-reading command count worked out |
+| J-06 | **Orphaned jobs (DN-06, auditor 2).** A poll derives **failed** with a fixed timeout reason, without writing, when either: the job is `reading` and now > `started_at + JOB_DEADLINE + 10 s`; or the job is `queued` and now > `created_at + QUEUE_MAX_WAIT + 10 s`; or the job is non-terminal and now > `created_at + 300 s`. The result offers a retry and never shows a stored result. Killer: a fake clock |
+| J-07 | **Reason classes only (DN-07, CH6-10).** The job API returns `reason_class` (timeout, endpoint_429, endpoint_5xx, endpoint_4xx, invalid_model_output, model_mismatch, busy, queue_timeout, store_unavailable) with a **fixed text per class**. Raw provider or store text goes only to a redacted server log. Killer: stub error bodies containing the sentinel key and base-URL path never appear in any job response |
+| J-08 | **Disabled means unchanged (DN-08, T6-03, auditor minor).** With live reading disabled on Vercel, every existing route, including `/api/live/read` and its 503 text, answers byte for byte as at 409fb69a. The new endpoints give **one identical refusal** whether there is no header, an empty code, or the code is unset. Missing-configuration detail goes only to server logs and DEPLOY.md |
+| J-09 | **Global F1 cache (DN-09, H-11, auditor 3).** The cache lives in the store with TTL ≥ 60 s: at most one GET /models and one GET /usage per period across instances, with an honest `checked_at`. Killer: two instances sharing one store, 10 concurrent `/api/f1` calls, one stub hit. In the container the cache is in-process |
+| J-10 | **Model mismatch (DN-10, CH6-12).** If the reported model does not match the requested `MODEL_ID` (case-insensitive, prefix/suffix tolerant, e.g. `self-dploy/` + id), the job fails with `model_mismatch`. The receipt shows both the requested and the reported model. Killer: a stub reporting another model |
+| J-11 | **Freshness (DN-11, CH6-13).** A done receipt carries the endpoint `id`/`created` as reported, the job id, `started_at`/`finished_at` and `reading_source: live`. A test shows that the job module imports neither `RecordedReader` nor `public/stories` |
+| J-12 | **Code transport (DN-12).** The code is taken from the POST body field `access_code` or a header only, **never from the query string**, and is never stored in a job record. Killer: a query-string code is refused and not compared |
+| J-13 | **Ids and uploads (DN-13).** Job ids are **16 random bytes in hex (128 bits)**, not `randomUUID`. The upload size cap is checked before INCR and before job creation |
+| J-14 | **Deadline measured from request arrival (DN-14).** `maxDuration: 300` stays explicit in `vercel.json`, and the T6-06 test reads it |
+| J-15 | **Store errors (DN-15, CH6-04).** A store error at admission means refusal (`store_unavailable`, no job, no endpoint call). At a slot attempt, it means job failed. If the final `SET job` fails, the job is never shown as done: J-06 turns it into failed. Never continue without the limits |
+| J-16 | **Atomic counters (DN-16, CH6-08).** INCR and EXPIRE go in one pipeline or MULTI request. A job that times out in the queue **consumes** its hourly unit. Refusals (wrong code, busy, limit, store unavailable) are not jobs and consume nothing |
+| J-17 | **Samples (DN-17).** The three sample ids come from a fixed allow-list, never used to build a path. Killer: `../` and unknown ids answer 404 |
+| J-18 | **New dependency (DN-18, auditor 5).** `@vercel/functions@3.10.1` and `@vercel/oidc@4.0.1` are **approved**, with their licences named, lockfile pins and the docs cited in `docs/sources/`. Docker `--no-cache` with `--network none` installs from the lockfile and passes. The bundle scan stays clean, because the dependency is server-only |
+| J-19 | **Byte-identity baseline (auditor 4, T6-01).** The baseline changes only for `public/app.js`, `vercel.json`, the package files and new files. Any changed entry for a reading-path file, `data/`, `config/`, `evaluation/`, `figures.json` or the stories means REJECT |
+| J-20 | The candidate 1 handoff answers **every CH6, DN and J item by number** |
 
 ### Appendix: adversary challenge msg 41f6ca68, verbatim
 
