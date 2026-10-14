@@ -1,0 +1,84 @@
+{
+ "cases": 27,
+ "FC_broad": "0 / 18",
+ "FC_broad_cases": [],
+ "FC_broad_over_all": "0 / 27",
+ "FC_strict": "0 / 6",
+ "FC_strict_cases": [],
+ "nonconformities_caught": "6 / 6",
+ "blocked": "5 / 6",
+ "nonconforming_cases": [
+  "cg-005",
+  "cg-006",
+  "cg-007",
+  "cg-012",
+  "cg-020",
+  "cg-021"
+ ],
+ "proposal_equals_expected": "26 / 27",
+ "mismatches": [
+  [
+   "cg-021",
+   "review",
+   "block"
+  ]
+ ],
+ "rule_abstention": "13 / 27",
+ "failures": "0 / 27",
+ "per_field": {
+  "correct": 591,
+  "correct_unknown": 0,
+  "correct_absent": 1,
+  "wrong_value": 0,
+  "unit_missing_value_right": 0,
+  "invented": 0,
+  "confident_on_illegible": 1,
+  "missed": 1,
+  "total": 594
+ },
+ "per_field_disagreements_with_reported_category": [
+  [
+   "cg-021",
+   "chemistry.Si",
+   "unknown",
+   "missed",
+   "0.62",
+   null,
+   null
+  ]
+ ],
+ "seconds_per_certificate": {
+  "mean": 35.1,
+  "median": 26.0,
+  "min": 20.3,
+  "max": 139.4,
+  "N": 27
+ },
+ "latency_ms": {
+  "mean": 34969,
+  "median": 25863,
+  "N": 27
+ },
+ "tokens_per_certificate": {
+  "total_mean": 2003,
+  "completion_mean": 934,
+  "reasoning_mean": 0
+ },
+ "cost_per_certificate": {
+  "mean": "0.00006653",
+  "median": "0.00006630",
+  "N": 27,
+  "unknown": 0,
+  "sum": "0.0017963757"
+ },
+ "attempts": 27,
+ "retries": 0,
+ "usage_delta_cost": "0.001796374097466469",
+ "sum_reply_costs": "0.0017963757",
+ "usage_delta_minus_sum": "-1.602533531E-9",
+ "usage_delta_requests": 27,
+ "models_reported": [
+  "self-dploy/Gemma-4-31B-IT"
+ ],
+ "problems": []
+}
