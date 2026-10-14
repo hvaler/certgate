@@ -1,0 +1,60 @@
+fixture test\fixtures\endpoint\gemma-read-cg-003.json
+{
+ "case": "cg-003",
+ "status": "processed",
+ "proposal": "block",
+ "reasons": [
+  "NO_SECOND_CHANNEL",
+  "RULE_FAIL:ReH"
+ ],
+ "reader": {
+  "model_reported": "self-dploy/Gemma-4-31B-IT",
+  "finish": "stop",
+  "tokens": "2001",
+  "completion": "932",
+  "cost": "0.0000757981",
+  "elapsed_ms": "25947",
+  "rate": {
+   "x-ratelimit-limit-user-daily-usd": "1",
+   "x-ratelimit-limit-user-rpm": "20",
+   "x-ratelimit-remaining-user-daily-usd": "0.98012741",
+   "x-ratelimit-remaining-user-rpm": "19",
+   "x-ratelimit-reset-user-daily-usd": "1791993600",
+   "x-ratelimit-used-user-daily-usd": "0.01987259"
+  }
+ },
+ "attempts": [
+  {
+   "started_at": "2026-10-14T10:55:53.834Z",
+   "elapsed_ms": "25947",
+   "outcome": "ok",
+   "http_status": "200",
+   "detail": null
+  }
+ ],
+ "errors": [],
+ "values": [
+  "certificate_type=3.1 [known (model)]",
+  "heat_or_lot=24-72015 [known (model)]",
+  "grade=TRN-355 [known (model)]",
+  "cev_printed=0.40 % [known (model)]",
+  "kv_temperature=-20 °C [known (model)]",
+  "inspection_stamp=QA-07 [known (model)]",
+  "chemistry.C=0.15 % [known (model)]",
+  "chemistry.Si=0.19 % [known (model)]",
+  "chemistry.Mn=1.38 % [known (model)]",
+  "chemistry.P=0.011 % [known (model)]",
+  "chemistry.S=0.005 % [known (model)]",
+  "chemistry.Cr=0.05 % [known (model)]",
+  "chemistry.Ni=0.04 % [known (model)]",
+  "chemistry.Mo=0.01 % [known (model)]",
+  "chemistry.Cu=0.07 % [known (model)]",
+  "chemistry.V=0.002 % [known (model)]",
+  "mechanical.ReH=338 MPa [known (model)]",
+  "mechanical.Rm=529 MPa [known (model)]",
+  "mechanical.A=27 % [known (model)]",
+  "mechanical.KV_1=61 J [known (model)]",
+  "mechanical.KV_2=57 J [known (model)]",
+  "mechanical.KV_3=66 J [known (model)]"
+ ]
+}

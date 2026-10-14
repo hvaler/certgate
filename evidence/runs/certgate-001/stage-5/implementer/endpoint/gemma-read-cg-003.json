@@ -1,0 +1,100 @@
+{
+  "recorded_utc": "2026-10-14T10:56:19.789Z",
+  "host": "developer.amd.com.cn",
+  "request": {
+    "method": "POST",
+    "path": "/chat/completions",
+    "model": "Gemma-4-31B-IT",
+    "case_id": "cg-003",
+    "certificate_sha256": "40899aa26ccec1e0a2e62d63a7abac8098ee0debc38df7c7b7ea121ac3619c01",
+    "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567"
+  },
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Wed, 14 Oct 2026 10:56:19 GMT",
+    "x-ratelimit-limit-user-daily-usd": "1",
+    "x-ratelimit-limit-user-rpm": "20",
+    "x-ratelimit-remaining-user-daily-usd": "0.98012741",
+    "x-ratelimit-remaining-user-rpm": "19",
+    "x-ratelimit-reset-user-daily-usd": "1791993600",
+    "x-ratelimit-used-user-daily-usd": "0.01987259"
+  },
+  "body": {
+    "id": "fb634acf2f1642c28cada6257d3d8749",
+    "object": "chat.completion",
+    "created": 1791975379,
+    "model": "self-dploy/Gemma-4-31B-IT",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"schema\":\"certgate.model-output/1\",\"fields\":{\"issuer\":{\"value\":\"SIDERÚRGICA VALDEMORA S.A.\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"header\"}},\"certificate_no\":{\"value\":\"SV-2026-118512\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Nº certificado\"}},\"certificate_type\":{\"value\":\"3.1\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"header\"}},\"date\":{\"value\":\"2026-09-19\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Fecha\"}},\"heat_or_lot\":{\"value\":\"24-72015\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Colada\"}},\"grade\":{\"value\":\"TRN-355\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Calidad\"}},\"dimensions\":{\"value\":\"Chapa 25 x 2000 x 6000 mm\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Producto\"}},\"chemistry\":{\"C\":{\"value\":\"0.15\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS C\"}},\"Si\":{\"value\":\"0.19\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Si\"}},\"Mn\":{\"value\":\"1.38\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Mn\"}},\"P\":{\"value\":\"0.011\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS P\"}},\"S\":{\"value\":\"0.005\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS S\"}},\"Cr\":{\"value\":\"0.05\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Cr\"}},\"Ni\":{\"value\":\"0.04\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Ni\"}},\"Mo\":{\"value\":\"0.01\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Mo\"}},\"Cu\":{\"value\":\"0.07\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS Cu\"}},\"V\":{\"value\":\"0.002\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS V\"}}},\"cev_printed\":{\"value\":\"0.40\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"HEAT ANALYSIS CEV\"}},\"mechanical\":{\"ReH\":{\"value\":\"338\",\"unit\":\"MPa\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"MECHANICAL TESTS ReH\"}},\"Rm\":{\"value\":\"529\",\"unit\":\"MPa\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"MECHANICAL TESTS Rm\"}},\"A\":{\"value\":\"27\",\"unit\":\"%\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"MECHANICAL TESTS A\"}},\"KV_1\":{\"value\":\"61\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"IMPACT TEST Probeta 1\"}},\"KV_2\":{\"value\":\"57\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"IMPACT TEST Probeta 2\"}},\"KV_3\":{\"value\":\"66\",\"unit\":\"J\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"IMPACT TEST Probeta 3\"}}},\"kv_temperature\":{\"value\":\"-20\",\"unit\":\"°C\",\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"IMPACT TEST KV\"}},\"inspection_stamp\":{\"value\":\"QA-07\",\"unit\":null,\"status\":\"read\",\"source_ref\":{\"page\":\"1\",\"fragment\":\"Sello\"}}},\"explanation\":null}",
+          "reasoning_content": null,
+          "tool_calls": null
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "matched_stop": 106
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1069,
+      "total_tokens": 2001,
+      "completion_tokens": 932,
+      "prompt_tokens_details": {
+        "cached_tokens": 783,
+        "image_tokens": 266,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "reasoning_tokens": 0,
+      "cost": 0.0000757981,
+      "cost_details": {
+        "upstream_inference_cost": 0.0000757981,
+        "upstream_inference_prompt_cost": 0.000010558100000000001,
+        "upstream_inference_completions_cost": 0.00006524,
+        "total_cost": 0.0000757981,
+        "input_cost": 0.00001001,
+        "output_cost": 0.00006524,
+        "cached_input_cost": 5.481e-7,
+        "cache_write_input_cost": 0,
+        "request_cost": 0,
+        "web_search_cost": 0,
+        "image_input_cost": null,
+        "image_output_cost": null,
+        "audio_input_cost": null
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "metadata": {
+      "request_id": "9PvZpUVR61xOWHhWclZdMMB0Ka678xiP9Xf58PLY",
+      "requested_model": "Gemma-4-31B-IT",
+      "requested_provider": null,
+      "used_model": "Gemma-4-31B-IT",
+      "used_provider": "self-dploy",
+      "underlying_used_model": "Gemma-4-31B-IT",
+      "routing": [
+        {
+          "provider": "self-dploy",
+          "model": "Gemma-4-31B-IT",
+          "status_code": 200,
+          "error_type": "none",
+          "succeeded": true,
+          "apiKeyHash": "5fb4c390fd97cd4551063e8f176b498f6a7e019cba8e674ae39e10a311f81f8d",
+          "logId": "QXFxlKwzqhHJ151kEx4w"
+        }
+      ],
+      "log_id": "QXFxlKwzqhHJ151kEx4w",
+      "organization_id": "oneclick-org-81955",
+      "project_id": "oneclick-project-81955",
+      "discount": null
+    }
+  }
+}
