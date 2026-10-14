@@ -1,0 +1,8 @@
+start 2026-10-14T17:52:05Z commit 9759d3af0b23e532f71cf0072112b4d5dce6c612 (6.7 GB free)
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/qan5ax8vw6r8pvy9mqz74eqmf
+image sha256:bc0ee26c98b2f719048f3a91d87ac06136d2435f716d7c4fa3c2abe3c594d558
+MODEL_*/LIVE_ACCESS_CODE/store vars in container: 0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  369 passed | 28 skipped (397)
+end 2026-10-14T17:52:40Z

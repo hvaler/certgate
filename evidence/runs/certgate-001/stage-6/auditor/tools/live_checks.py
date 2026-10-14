@@ -80,6 +80,13 @@ st, _, r1 = http("POST", "/api/live/jobs", job_body); say(f"POST /api/live/jobs 
 st, _, r2 = http("POST", "/api/live/jobs", job_body, {"x-live-access-code": "auditor-wrong-code-0000"}); say(f"POST /api/live/jobs with a wrong code: {st} {(r2 or {}).get('error')}")
 st, _, s1 = http("GET", "/api/live/status"); save("status-after-refusals.json", s1)
 say(f"after refusals: codefail client/global {s0.get('code_failures_this_hour_this_client')}->{s1.get('code_failures_this_hour_this_client')} / {s0.get('code_failures_this_hour_global')}->{s1.get('code_failures_this_hour_global')}; used {s0.get('used_this_hour')}->{s1.get('used_this_hour')}")
+# K-04 (R6.5): is x-vercel-forwarded-for platform-set? Same client count with a forged header means yes.
+st_p, _, kp = http("GET", "/api/live/status")
+st_f, _, kf = http("GET", "/api/live/status", headers={"x-vercel-forwarded-for": "203.0.113.99"})
+save("k04-status-plain.json", {"status": st_p, "code_failures_this_hour_this_client": kp.get("code_failures_this_hour_this_client")})
+save("k04-status-forged.json", {"status": st_f, "forged_header": "x-vercel-forwarded-for: 203.0.113.99", "code_failures_this_hour_this_client": kf.get("code_failures_this_hour_this_client")})
+k04 = "PASS (platform-set)" if kp.get("code_failures_this_hour_this_client") == kf.get("code_failures_this_hour_this_client") else "FAIL (client header passes through)"
+say(f"K-04: plain {st_p} client count {kp.get('code_failures_this_hour_this_client')}; forged x-vercel-forwarded-for {st_f} client count {kf.get('code_failures_this_hour_this_client')} -> {k04}")
 
 if do_read:
     # 5. Usage before, then one real reading through the site, then usage after

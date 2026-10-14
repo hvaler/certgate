@@ -1,0 +1,52 @@
+A1-lockout-ignored: KILLED | src/web/app.ts | build rc 0 | Tests  6 failed | 391 passed (397)
+    × count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429 332ms
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 200ms
+    × K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit 224ms
+    × a client's wrong codes are counted across instances: limit 2, alternating instances, the 3rd attempt is refused 30ms
+A2-code-bypass: KILLED | src/web/app.ts | build rc 0 | Tests  11 failed | 386 passed (397)
+    × count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429 2011ms
+    × a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading 3062ms
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 45ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 194ms
+A8-no-forgive-on-correct: KILLED | src/web/app.ts | build rc 0 | Tests  2 failed | 395 passed (397)
+    × a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading 244ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 123ms
+D1-del-script-always-deletes: KILLED | src/web/live-store.ts | build rc 0 | Tests  2 failed | 395 passed (397)
+    × upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported 445ms
+    × the only Lua script in src/ is exactly the text verified on real Redis (pinned SHA-256), and no other EVAL exists 7ms
+K1-key-from-xff: KILLED | src/web/app.ts | build rc 0 | Tests  6 failed | 391 passed (397)
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 31ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 59ms
+    × K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit 83ms
+    × K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read 3ms
+K1b-key-from-x-real-ip: KILLED | src/web/app.ts | build rc 0 | Tests  6 failed | 391 passed (397)
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 38ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 115ms
+    × K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit 68ms
+    × K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read 5ms
+K1c-container-trusts-header: KILLED | src/web/app.ts | build rc 0 | Tests  2 failed | 395 passed (397)
+    × K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read 11ms
+    × K-01 in the container: no header is trusted; rotating X-Forwarded-For and X-Real-IP from one socket still hits the per-client limit 29ms
+K2-global-before-compare: KILLED | src/web/app.ts | build rc 0 | Tests  5 failed | 392 passed (397)
+    × no value of the first case appears in the second 41ms
+    × a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading 518ms
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 233ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 30ms
+K2b-global-also-on-correct: KILLED | src/web/app.ts | build rc 0 | Tests  2 failed | 395 passed (397)
+    × a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading 482ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 133ms
+K3-global-ceiling-blocks-correct: KILLED | src/web/live-jobs.ts | build rc 0 | Tests  3 failed | 394 passed (397)
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 53ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 36ms
+    × K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit 129ms
+K4-wrong-code-not-counted-globally: KILLED | src/web/app.ts | build rc 0 | Tests  3 failed | 394 passed (397)
+    × K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202 242ms
+    × K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back 58ms
+    × one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01) 302ms
+K5-incr-two-requests: KILLED | src/web/live-store.ts | build rc 0 | Tests  1 failed | 396 passed (397)
+    × S6M-g6 (J-16): on Upstash, incr and forgive are each ONE REST request (multi-exec), never INCR then a separate EXPIRE 21ms
+K6-kv-fallback-dropped: KILLED | src/web/live-store.ts | build rc 0 | Tests  3 failed | 394 passed (397)
+    × env var names documented in README and DEPLOY.md equal the names read by src (both directions) 53ms
+    × env reads in src equal the .env.example keys 28ms
+    × the store variables: the Upstash names first, else the KV_* names the deployed integration set (operator report 5c1ce2c6); the read-only token is never used 9ms
+clone clean after revert: True
