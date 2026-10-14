@@ -1,0 +1,27 @@
+auditor clean clone 4ef04b272e0766caaf34b934e28230bf60a52f8c tree 7ce51055fb5dedb65c88d91fa4016856695c5504 at 2026-10-14T19:13:14Z (vitest --maxWorkers=4)
+MODEL_*/LIVE_ACCESS_CODE in env: 0
+added 67 packages in 17s
+dirty after npm ci: 0
+
+run 1 19:13:35:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 2 19:13:58:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 3 19:14:29:
+     × a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token 6329ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+AssertionError: expected { …(10) } to match object { state: 'failed', …(3) }
+ Test Files  1 failed | 23 passed (24)
+      Tests  1 failed | 484 passed (485)
+run 4 19:15:03:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+run 5 19:15:32:
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+METRICS.md matches a fresh generation
+unmapped 0 stale 0
+end 2026-10-14T19:15:55Z
