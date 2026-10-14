@@ -277,6 +277,24 @@ describe("code and lease guards that only show across instances or over time (S6
     expect(rs.map((r) => r.status), JSON.stringify(rs.map((r) => r.body.error))).toEqual([202, 202, 202, 202]);
     for (const r of rs) expect((await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed")).body.state).toBe("done");
   });
+  it("two workers that look for a slot at the same moment on a slow store take two different slots: admission is atomic SET NX, never read-then-write (CH6-06)", async () => {
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    const store = new MemoryStore();
+    store.delayMs = 20;
+    const jobs = new LiveJobs(store, () => new Date(), { ...DEPLOYED_LIVE_BUDGET, pollMs: 5 });
+    const a = await jobs.admit(10, STUB_MODEL_ID, new Date());
+    const b = await jobs.admit(10, STUB_MODEL_ID, new Date());
+    const hang = () => new Promise<never>(() => undefined);
+    void jobs.run(a, hang);
+    void jobs.run(b, hang);
+    for (let i = 0; i < 200; i++) {
+      const [s0, s1] = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
+      if (s0 && s1) break;
+      await new Promise((r) => setTimeout(r, 10));
+    }
+    const holders = [await store.get(KEYS.slot(0)), await store.get(KEYS.slot(1))];
+    expect(holders.sort()).toEqual([a.job_id, b.job_id].sort());
+  });
   it("the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy", async () => {
     // Two queued jobs take both slots exactly between two concurrent admissions' read of the holders and their rank.
     const { LiveJobs } = await import("../src/web/live-jobs.js");
