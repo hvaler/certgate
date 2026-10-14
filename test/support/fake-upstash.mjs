@@ -13,7 +13,7 @@ export const VERIFIED_COUNT_ATTEMPT_SCRIPT = "local c = redis.call('incr', KEYS[
 export async function startFakeUpstash({ token = "fake-store-token", now = () => Date.now() } = {}) {
   const kv = new Map();
   const zs = new Map();
-  const state = { commands: 0, multis: 0, down: false, downBody: "store failure (fake)" };
+  const state = { requests: 0, commands: 0, multis: 0, down: false, downBody: "store failure (fake)" };
   const live = (k) => { const e = kv.get(k); if (e && e.exp !== null && e.exp <= now()) { kv.delete(k); return undefined; } return e; };
   const z = (k) => { if (!zs.has(k)) zs.set(k, new Map()); return zs.get(k); };
   function run(cmd) {
@@ -71,6 +71,7 @@ export async function startFakeUpstash({ token = "fake-store-token", now = () =>
     req.on("data", (c) => { body += c; });
     req.on("end", () => {
       const reply = (status, obj) => { res.writeHead(status, { "content-type": "application/json" }); res.end(JSON.stringify(obj)); };
+      state.requests++;
       if (state.down) return reply(500, { error: state.downBody });
       if (req.headers.authorization !== `Bearer ${token}`) return reply(401, { error: "Unauthorized" });
       let cmds;

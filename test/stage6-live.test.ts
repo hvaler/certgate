@@ -648,3 +648,134 @@ describe("what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T
     expect(js).toMatch(/Math\.max\(2, Number\(r\.body\.poll_interval_s\) \|\| 2\) \* 1000/);
   });
 });
+
+// ADV-S6-F01 items 2-8 (auditor 48a9ad70, analyst addendum 46e4579e): one killer per surviving mutant.
+const WRITE_OPS = new Set(["incr", "countAttempt", "forgiveAttempt", "set", "setNx", "delIfEquals", "zadd", "zrem", "zremBelow"]);
+/** A MemoryStore that records every operation (name and arguments), so a test can count store calls and writes. */
+function recordingStore(now?: () => number) {
+  const inner = new MemoryStore(now);
+  const ops: { op: string; args: unknown[] }[] = [];
+  const store = new Proxy(inner, {
+    get(t, p) {
+      const f = (t as unknown as Record<string | symbol, unknown>)[p];
+      if (typeof f !== "function") return f;
+      return (...args: unknown[]) => { ops.push({ op: String(p), args }); return (f as (...a: unknown[]) => unknown).apply(t, args); };
+    },
+  }) as MemoryStore;
+  const writes = () => ops.filter((o) => WRITE_OPS.has(o.op));
+  return { store, ops, writes };
+}
+
+describe("killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13)", () => {
+  it("S6M-g6 (J-16): on Upstash, incr and countAttempt are each ONE REST request (multi-exec or EVAL), never INCR then a separate EXPIRE", async () => {
+    const f = await startFakeUpstash({ token: STORE_TOKEN });
+    open.push(f);
+    const store = new UpstashRestStore(f.url, STORE_TOKEN);
+    let r0 = f.state.requests;
+    expect(await store.incr("certgate:live:reads:test", 7200)).toBe(1);
+    expect(f.state.requests - r0, "incr is one request").toBe(1);
+    expect(f.state.multis, "incr goes through /multi-exec").toBe(1);
+    r0 = f.state.requests;
+    await store.countAttempt("certgate:live:codefail:c:x:test", "certgate:live:codefail:g:test", 5, 7200);
+    expect(f.state.requests - r0, "countAttempt is one request (EVAL)").toBe(1);
+    expect(f.kv.get("certgate:live:reads:test")?.exp, "the counted key has its TTL from the same request").not.toBeNull();
+  });
+  it("S6M-c7 (J-05): a poll makes zero store writes, in every state (queued, reading, done, failed, orphan), and so does the status count", async () => {
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const { store, writes } = recordingStore(() => t);
+    const jobs = new LiveJobs(store, () => new Date(t), DEPLOYED_LIVE_BUDGET);
+    const ids: string[] = [];
+    for (const state of ["queued", "reading", "done", "failed"] as const) {
+      const j = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
+      const started = state === "queued" ? null : new Date(t).toISOString();
+      await store.set(KEYS.job(j.job_id), JSON.stringify({ ...j, position: undefined, state, started_at: started }), 3600);
+      ids.push(j.job_id);
+    }
+    const before = writes().length;
+    const views = await Promise.all(ids.map((id) => jobs.view(id)));
+    expect(views.map((v) => v!.state)).toEqual(["queued", "reading", "done", "failed"]);
+    await jobs.counts(5, "c".repeat(32));
+    t += 400_000; // every unfinished job is now an orphan: derived as failed, still without a write
+    const orphans = await Promise.all(ids.map((id) => jobs.view(id)));
+    expect(orphans.map((v) => v!.state)).toEqual(["failed", "failed", "done", "failed"]);
+    expect(writes().slice(before).map((o) => o.op), "store writes during polls").toEqual([]);
+  });
+  it("S6M-a6 (H-02): the per-client code-failure key holds a 32-hex hash of the address, never the address itself", async () => {
+    const s = await stub();
+    const { store, ops } = recordingStore();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const addr = "198.51.100.42";
+    expect((await startJob(base, { code: "wrong", client: addr })).status).toBe(403);
+    const attempts = ops.filter((o) => o.op === "countAttempt");
+    expect(attempts.length).toBe(1);
+    const clientKey = String(attempts[0]!.args[0]);
+    const m = clientKey.match(/^certgate:live:codefail:c:([^:]+):/);
+    expect(m, clientKey).not.toBeNull();
+    expect(m![1]).toMatch(/^[0-9a-f]{32}$/);
+    expect(m![1]).toBe(createHash("sha256").update(addr, "utf8").digest("hex").slice(0, 32));
+    const keysSeen = ops.flatMap((o) => o.args.filter((a): a is string => typeof a === "string"));
+    expect(keysSeen.filter((k) => k.includes(addr)), "the raw address in a store key").toEqual([]);
+  });
+  it("S6M-e1 (J-06): a reading orphan fails at started_at + deadline + 10 s (281 s), before the 300 s backstop", async () => {
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const store = new MemoryStore(() => t);
+    const jobs = new LiveJobs(store, () => new Date(t), DEPLOYED_LIVE_BUDGET);
+    const j = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
+    await store.set(KEYS.job(j.job_id), JSON.stringify({ ...j, position: undefined, state: "reading", started_at: new Date(t).toISOString() }), 3600);
+    const t0 = t;
+    t = t0 + 279_000;
+    expect((await jobs.view(j.job_id))!.state, "at 279 s still reading").toBe("reading");
+    t = t0 + 281_000;
+    expect(await jobs.view(j.job_id), "at 281 s, before the 300 s backstop").toMatchObject({ state: "failed", reason_class: "timeout", result: null });
+  });
+  it("S6M-c6 (J-04): a job that times out in the queue removes its own queue entry at once, not only at the 70 s prune", async () => {
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const store = new MemoryStore(() => t);
+    const jobs = new LiveJobs(store, () => new Date(t), DEPLOYED_LIVE_BUDGET, async () => undefined);
+    const j = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
+    expect(await store.zrank(KEYS.queue, j.job_id)).toBe(0);
+    t += DEPLOYED_LIVE_BUDGET.queueMaxWaitMs + 1;
+    await jobs.run(j, async () => { throw new Error("must not run"); });
+    expect(await jobs.view(j.job_id)).toMatchObject({ state: "failed", reason_class: "queue_timeout" });
+    expect(await store.zrank(KEYS.queue, j.job_id), "own queue entry gone right after queue_timeout").toBeNull();
+    expect(await store.zcard(KEYS.queue)).toBe(0);
+  });
+  it("S6M-c12 (A-01): a missing rank at admission (fault-injected store) is refused as busy and consumes no hourly unit", async () => {
+    const { LiveJobs, Refusal } = await import("../src/web/live-jobs.js");
+    class NullRank extends MemoryStore {
+      override async zrank() { return null; }
+    }
+    const store = new NullRank();
+    const jobs = new LiveJobs(store, () => new Date(), DEPLOYED_LIVE_BUDGET);
+    const err = await jobs.admit(10, STUB_MODEL_ID, new Date()).then(() => null, (e: unknown) => e);
+    expect(err).toBeInstanceOf(Refusal);
+    expect(err).toMatchObject({ status: 429, message: REASONS.busy });
+    const st = await jobs.counts(5, "c".repeat(32));
+    expect(st.used_this_hour, "no hourly unit").toBe(0);
+    expect(st.waiting, "no queue entry left").toBe(0);
+  });
+  it("S6M-f5: with the endpoint not on (F1 off), the job POST is refused 503 before admission: no hourly unit, no queue entry, no job", async () => {
+    const { store, ops } = recordingStore();
+    // A closed local port: the F1 check finds no endpoint.
+    const base = await serve({ env: deployedEnv("http://127.0.0.1:9/v1"), liveStore: store, liveBudget: FAST });
+    const r = await startJob(base);
+    expect(r.status).toBe(503);
+    expect(String(r.body.error)).toMatch(/^no live endpoint/);
+    const st = await call(`${base}/api/live/status`);
+    expect(st.body.used_this_hour).toBe("0");
+    expect(ops.filter((o) => (o.op === "incr" && String(o.args[0]).includes(":reads:")) || o.op === "zadd" || (o.op === "set" && String(o.args[0]).includes(":job:"))), "admission writes").toEqual([]);
+  });
+  it("S6M-c8 (J-05, J-13): malformed job ids get 404 with zero store operations", async () => {
+    const s = await stub();
+    const { store, ops } = recordingStore();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const n0 = ops.length;
+    for (const id of ["x", "0".repeat(31), "0".repeat(33), "G".repeat(32), "%2e%2e", "A".repeat(32)]) {
+      expect((await call(`${base}/api/live/jobs/${id}`)).status, id).toBe(404);
+    }
+    expect(ops.slice(n0).map((o) => o.op), "store operations for malformed ids").toEqual([]);
+  });
+});
