@@ -1,6 +1,6 @@
 # Obligation register — Stage 6 (live reading on the deployed site)
 
-Run: certgate-001 · Stage: 6 · Register version: **R6.1** (analyst-xwz3, 2026-10-14; R6.0 = commit 47a951b; R6.1 accepts adversary challenge msg 41f6ca68, CH6-01…CH6-19, with rulings H-02 and H-11).
+Run: certgate-001 · Stage: 6 · Register version: **R6.2** (analyst-xwz3, 2026-10-14; R6.1 = commit 295c59e; R6.2 adopts auditor T6-01…T6-10, msg c3f96035; R6.0 = commit 47a951b; R6.1 accepts adversary challenge msg 41f6ca68, CH6-01…CH6-19, with rulings H-02 and H-11).
 Dispatch 4: room msg `980db228-2297-4439-984a-8370e4a940cd` from hugo.valer, received ~12:36Z. Verbatim copy: `evidence/runs/certgate-001/DISPATCH-4.txt`.
 Dispatches 1–3 remain in force except where dispatch 4 changes them.
 
@@ -53,6 +53,21 @@ Dispatches 1–3 remain in force except where dispatch 4 changes them.
 | H-02 | **CH6-02 ruling.** The code-failure limit is enforced **per client and globally**. The per-client key is a SHA-256 of the client address Vercel provides (`x-forwarded-for`, first hop, or `x-real-ip`), never stored raw, and it is limited by `LIVE_CODE_FAILURES_PER_HOUR`. The global ceiling is 10 × that value per hour, so one anonymous visitor cannot lock the judge out. DEPLOY.md states both limits, the lockout, and how the human clears it: the store key names, or wait for the window to end |
 | H-11 | **CH6-11 ruling.** On the deployed site, F1 is **cached server-side** for at least 60 s, with its honest `checked_at` shown. GET /models and GET /usage are made at most once per cache period across instances. A live receipt takes a fresh F1 snapshot at reading time |
 | H-19 | CH6-19 is accepted. The poll interval is at least 2 s, with the cheap rejection paths as written. DEPLOY.md cites the store's quota, and live reading is refused when the quota is exhausted |
+
+## R6.2: auditor pass/fail rules (msg c3f96035, confirmed with R6.1 in 744a0e0a). Adopted as written; T6-04 is aligned with H-02
+
+| ID | Rule |
+|---|---|
+| T6-01 | **S6-09.** `git diff 409fb69a <cand>` is empty on the listed reading-path files, `data/`, `config/`, `evaluation/`, `public/figures.json` and `public/stories/`. The METRICS evaluation sections are byte-identical. The prompt SHA is unchanged. The stub-captured Qwen **and** Gemma request bodies for cg-004 and cg-021 are byte-identical to the 409fb69a ones. Any `live-reader.ts` hunk sits outside the request builder and is listed |
+| T6-02 | **S6-01 secrecy.** The auditor reads the code only from the user-level `LIVE_ACCESS_CODE`, inside its scanner, and never prints it. It scans for the value and its SHA-256 hex in: the tree and full history, `dist/`, the Docker image, every served file, and every live response body and header. Any hit means **REJECT**. A code accepted from the query string means **REJECT** |
+| T6-03 | **S6-01 unset.** With `VERCEL=1` and no code, a committed golden test over status, body and relevant headers shows every existing route answering as at 409fb69a. The live endpoints give one identical refusal whether the code is missing, empty or unset |
+| T6-04 | **Lockout (with H-02).** Live, the auditor spends at most 2 wrong codes, recording both the per-client and the global failure counts before and after. DEPLOY.md states the per-client limit, the global ceiling and how the human clears them |
+| T6-05 | **Global limits observable.** `/api/live/status` reports the store-backed counts (used this hour, in flight, failures this hour). `scope_note` says "global", no longer "per server instance in this build". Live: over at least 10 GETs before and after the reading, the hourly count is consistent and rises by exactly the readings made. Locally: the two-instance fake-store tests pass, and the per-instance-counter, no-TTL and non-atomic mutants are killed |
+| T6-06 | **Time budget.** The committed constants show that worst-case queue wait, render, reading and retry fit under `maxDuration` with a **margin of at least 30 s**, pinned by a test. A job that cannot start in time fails honestly ("timed out in queue") and never runs past the limit |
+| T6-07 | **I7.** Any failed, timed-out or refused job that shows or returns a stored reading or stored figures means **REJECT**. So does any stored result labelled live. The auditor's failure-path-returns-story mutant must be killed |
+| T6-08 | **The live reading.** Under its own lease, with headroom checked, the auditor makes **one** reading of a downloaded, hash-matched sample with the code, polling queued → reading → done. Pass requires: `reading_source` live; the reported model matches `/gemma-4-31b/i`; the F1 snapshot shows on, the same model and a latency; and the page labels it live with its model. The proposal is recorded against the expectation; a mismatch is reported, not a rejection in itself. At most 3 readings in total |
+| T6-09 | **Container.** Docker `--no-cache` with `--network none`, 0 MODEL_*, no code and no store variables. The suite passes, and the in-process queue shows the same states against the stub |
+| T6-10 | **Model naming.** The landing and stories name Qwen3.8-27B and their runs. The live screen and receipt name the reported model. A METRICS.md pointer covers the Gemma comparison. No `Gemma-4-31B-IT` literal is used as a default in `src/` or `public/`. Checked live and by test |
 
 ### Appendix: adversary challenge msg 41f6ca68, verbatim
 
