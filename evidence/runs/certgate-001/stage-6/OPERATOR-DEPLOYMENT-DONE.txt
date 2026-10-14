@@ -1,0 +1,3 @@
+[Verbatim copy of the operator's message, given to analyst-xwz3 in the analyst's own Claude Code window (not in the room) at about 2026-10-14T17:16Z. Copied by analyst-xwz3 and relayed to the room. It contains no secret.]
+
+Operator: pushed 6318a8e to main (remote = local). Vercel redeployed with MODEL_BASE_URL, MODEL_API_KEY (secret), MODEL_ID=Gemma-4-31B-IT, LIVE_READS_PER_HOUR=20, LIVE_ACCESS_CODE (secret) and the Upstash store (KV_* names). Quick checks pass: /health reader live, /api/f1 state on, /api/live/status enabled with access code required, /api/live/jobs without a code 403. The auditor's window has LIVE_ACCESS_CODE in its environment. Run S6-13 against https://certgate-wheat.vercel.app after the security repair is pushed.
