@@ -12,12 +12,12 @@ import { SAMPLE_IDS } from "../src/web/app.js";
 import { clearF1Cache } from "../src/web/f1.js";
 import { KEYS, REASONS } from "../src/web/live-jobs.js";
 import { CONTAINER_LIVE_BUDGET, DEPLOYED_LIVE_BUDGET, DEPLOYED_LIVE_UNAVAILABLE } from "../src/web/limits.js";
-import { MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
+import { COUNT_ATTEMPT_SCRIPT, DEL_IF_EQUALS_SCRIPT, MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
 import { DATA, ROOT } from "./helpers.js";
 // @ts-expect-error plain JS test double
 import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 // @ts-expect-error plain JS test double
-import { startFakeUpstash } from "./support/fake-upstash.mjs";
+import { startFakeUpstash, VERIFIED_COUNT_ATTEMPT_SCRIPT, VERIFIED_DEL_IF_EQUALS_SCRIPT } from "./support/fake-upstash.mjs";
 // @ts-expect-error plain JS helper
 import { record } from "./support/disabled-golden.mjs";
 
@@ -141,20 +141,27 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
     const ids = started.map((x) => String(x.body.job_id));
     let maxReading = 0;
     let sawQueuedPosition = false;
-    for (let i = 0; i < 400; i++) {
+    // F6-02: bounded by time (45 s), not by an iteration count, so a loaded full suite cannot end the watch early.
+    const trace: string[] = [];
+    const deadline = Date.now() + 45_000;
+    let settled = false;
+    while (Date.now() < deadline) {
       const views = await Promise.all(ids.map((id, k) => call(`${k % 2 ? b : a}/api/live/jobs/${id}`)));
-      const states = views.map((v) => v.body.state);
+      const states = views.map((v) => (v.body.state === "queued" ? `queued@${v.body.position}` : String(v.body.state)));
+      if (trace[trace.length - 1] !== states.join(",")) trace.push(states.join(","));
       maxReading = Math.max(maxReading, states.filter((x) => x === "reading").length);
       if (views.some((v) => v.body.state === "queued" && Number(v.body.position) >= 1)) sawQueuedPosition = true;
-      if (states.every((x) => x === "done" || x === "failed")) break;
+      if (states.every((x) => x === "done" || x === "failed")) { settled = true; break; }
       await new Promise((x) => setTimeout(x, 10));
     }
-    expect(maxReading).toBeLessThanOrEqual(2);
-    expect(maxReading).toBe(2);
-    expect(sawQueuedPosition).toBe(true);
-    expect(s.state.maxInFlight).toBeLessThanOrEqual(2);
+    const seen = `state changes seen: ${trace.join(" | ")}`;
+    expect(settled, `all 4 jobs settled within 45 s; ${seen}`).toBe(true);
+    expect(maxReading, `at most 2 reading at once; ${seen}`).toBeLessThanOrEqual(2);
+    expect(maxReading, `both slots used at once; ${seen}`).toBe(2);
+    expect(sawQueuedPosition, `a job was seen queued with a position >= 1; ${seen}`).toBe(true);
+    expect(s.state.maxInFlight, `endpoint calls in flight at most 2; ${seen}`).toBeLessThanOrEqual(2);
     const views = await Promise.all(ids.map((id) => call(`${a}/api/live/jobs/${id}`)));
-    expect(views.map((v) => v.body.state)).toEqual(["done", "done", "done", "done"]);
+    expect(views.map((v) => v.body.state), seen).toEqual(["done", "done", "done", "done"]);
   });
   it("the hourly limit is counted once per job, across instances: the 4th job of a limit of 3 is refused on the other instance", async () => {
     const s = await stub();
@@ -231,6 +238,27 @@ describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", (
 });
 
 describe("code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06)", () => {
+  // F6-01: the deployed site runs these two Lua scripts on Upstash. The fake store emulates only its own verbatim copies,
+  // which are the texts the auditor ran on real Redis 7.4.10 (stage-6/auditor/candidate-1/lua-real-redis.log, whose
+  // SHA-1 prefixes 5f010c665661 and e9f69f2beb75 are the SHA-1 of these texts). A changed script fails here, and every
+  // test that goes through the fake fails too, because the fake refuses any other text.
+  it("the two Lua scripts in src/ are exactly the texts verified on real Redis (pinned SHA-256)", () => {
+    const sha256 = (x: string) => createHash("sha256").update(x).digest("hex");
+    const sha1 = (x: string) => createHash("sha1").update(x).digest("hex");
+    expect(sha256(COUNT_ATTEMPT_SCRIPT), "COUNT_ATTEMPT_SCRIPT changed: re-verify on real Redis before re-pinning").toBe("210382f3def5e863033e2f2023dd8148017f41b17cd6e0c9cd933dd05a239abc");
+    expect(sha256(DEL_IF_EQUALS_SCRIPT), "DEL_IF_EQUALS_SCRIPT changed: re-verify on real Redis before re-pinning").toBe("58c1e79c3e95626750ef05e2e74a7f650a45d44acbee56a3fa9df61b30d58631");
+    expect(COUNT_ATTEMPT_SCRIPT).toBe(VERIFIED_COUNT_ATTEMPT_SCRIPT);
+    expect(DEL_IF_EQUALS_SCRIPT).toBe(VERIFIED_DEL_IF_EQUALS_SCRIPT);
+    expect(sha1(VERIFIED_COUNT_ATTEMPT_SCRIPT).slice(0, 12)).toBe("5f010c665661");
+    expect(sha1(VERIFIED_DEL_IF_EQUALS_SCRIPT).slice(0, 12)).toBe("e9f69f2beb75");
+  });
+  it("the fake store refuses a script that is not one of the verified texts", async () => {
+    const f = await startFakeUpstash({ token: STORE_TOKEN });
+    open.push(f);
+    const r = await fetch(f.url, { method: "POST", headers: { authorization: `Bearer ${STORE_TOKEN}` }, body: JSON.stringify(["EVAL", VERIFIED_DEL_IF_EQUALS_SCRIPT.replace("== ARGV[1]", "~= nil"), 1, "k", "v"]) });
+    expect(r.status).toBe(400);
+    expect(String((await r.json()).error)).toMatch(/unknown script/);
+  });
   it("the compare is constant-time over equal-length digests", () => {
     const src = readFileSync(path.join(ROOT, "src", "web", "app.ts"), "utf8");
     expect(src).toMatch(/return typeof given === "string" && timingSafeEqual\(digest\(given\), digest\(expected\)\);/);
@@ -302,13 +330,15 @@ describe("code and lease guards that only show across instances or over time (S6
     const hang = () => new Promise<never>(() => undefined);
     void jobs.run(a, hang);
     void jobs.run(b, hang);
-    for (let i = 0; i < 200; i++) {
+    // F6-02: bounded by time (30 s), not by an iteration count.
+    const deadline = Date.now() + 30_000;
+    while (Date.now() < deadline) {
       const [s0, s1] = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
       if (s0 && s1) break;
       await new Promise((r) => setTimeout(r, 10));
     }
     const holders = [await store.get(KEYS.slot(0)), await store.get(KEYS.slot(1))];
-    expect(holders.sort()).toEqual([a.job_id, b.job_id].sort());
+    expect(holders.sort(), `slot holders within 30 s: ${JSON.stringify(holders)}`).toEqual([a.job_id, b.job_id].sort());
   });
   it("the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy", async () => {
     // Two queued jobs take both slots exactly between two concurrent admissions' read of the holders and their rank.
