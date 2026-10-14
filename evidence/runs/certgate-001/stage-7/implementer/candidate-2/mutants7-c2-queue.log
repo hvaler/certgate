@@ -1,0 +1,11 @@
+base dc228d10636cc3cf7b12f3b1226e88027cce12b2 2026-10-14T19:37:26Z
+adv_c6_no_self_zrem applied
+    diff:  1 file changed, 1 deletion(-)
+adv_c6_no_self_zrem: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-c6 (J-04): a job that times out in the queue removes its own queue entry at once, not only at the 70 s prune
+queue_rank_by_arrival applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_rank_by_arrival: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+q_timeout_never applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)

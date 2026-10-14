@@ -1,0 +1,28 @@
+clean clone 6478105cfa634604edc5f398fa709b9e9c141f5a tree ab886561683d4ad8478d3fd88417b729672474da 2026-10-14T19:33:47Z
+added 67 packages in 4s
+dirty files after npm ci: 0
+build ok
+
+suite run 1 (19:34:10Z):
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+suite run 2 (19:34:28Z):
+ Test Files  1 failed | 23 passed (24)
+      Tests  1 failed | 484 passed (485)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+    AssertionError: expected 202 to be 429 // Object.is equality
+         × 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy 3098ms
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+suite run 3 (19:34:45Z):
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+suite run 4 (19:35:02Z):
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+suite run 5 (19:35:20Z):
+ Test Files  24 passed (24)
+      Tests  485 passed (485)
+METRICS.md matches a fresh generation
+METRICS.md matches a fresh generation
+unmapped 0 stale 0
+done 2026-10-14T19:35:20Z
