@@ -1,0 +1,12 @@
+docker image of bec225675bf653d092b7aa2a304ee347e602a134 2026-10-14T14:40:51Z
+sha256:be6c69ea9cf4947d803e55154ece9d273e54767f1aacd87cebb619ceacba46ba
+--- image suite x2, --network none; first line = count of MODEL_*, LIVE_ACCESS_CODE and store variables in the container ---
+0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  354 passed | 28 skipped (382)
+0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  354 passed | 28 skipped (382)
+--- service offline, in-process queue: status ---
+{"enabled":true,"scope_note":"global for this server process: counted in the in-process store","job_api":"/api/live/jobs","used_this_hour":"0"}
+2026-10-14T14:41:49Z

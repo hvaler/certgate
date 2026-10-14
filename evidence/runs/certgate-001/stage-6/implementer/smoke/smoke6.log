@@ -1,0 +1,7 @@
+{"t_s":"0.0","step":"status","enabled":true,"scope_note":"global for this server process: counted in the in-process store","model_requested":"Gemma-4-31B-IT","used_this_hour":"0"}
+{"t_s":"0.1","step":"sample","id":"cg-004","bytes":3181,"sha256_listed":"7c55fcfb3ad39d85c25e8349993d8bf4bde7d6a721551161cd9e0c053e6984c5"}
+{"t_s":"1.5","step":"post","http":202,"state":"queued","position":1,"job_id":"1e786977cc6ed1d6a94fbe5e387d2a9e"}
+{"t_s":"1.5","step":"poll","state":"reading","position":1,"elapsed_s":0}
+{"t_s":"46.4","step":"poll","state":"done","position":1}
+{"t_s":"46.4","step":"done","reading_source":"live","model_reported":"self-dploy/Gemma-4-31B-IT","model_requested":"Gemma-4-31B-IT","response_id":"36683445ada14cd39b7b8bd8608d9f7d","proposal":"release","status":"processed","f1_state":"on","f1_latency_ms":null,"cost_reported":"0.0001025185","job_id":"1e786977cc6ed1d6a94fbe5e387d2a9e","started_at":"2026-10-14T13:23:17.799Z","finished_at":"2026-10-14T13:24:01.672Z"}
+{"t_s":"46.4","step":"status_after","used_this_hour":"1","in_flight":"0","remaining_this_hour":"2"}

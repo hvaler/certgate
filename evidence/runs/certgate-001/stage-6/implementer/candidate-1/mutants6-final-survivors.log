@@ -1,0 +1,14 @@
+base bec225675bf653d092b7aa2a304ee347e602a134 2026-10-14T14:50:04Z
+slot_read_then_write applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_read_then_write: Tests  1 failed | 381 passed (382)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > two workers that look for a slot at the same moment on a slow store take two different slots: admission is atomic SET NX, never read-then-write (CH6-06)
+attempt_after_deadline applied
+    diff:  1 file changed, 2 insertions(+), 2 deletions(-)
+attempt_after_deadline: Tests  1 failed | 381 passed (382)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > past the job's deadline the reader starts no attempt: it refuses before any request (W-03)
+internal_as_endpoint applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+internal_as_endpoint: Tests  1 failed | 381 passed (382)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an internal error during a job is reported as internal, never as an endpoint failure (W-06)
+done 2026-10-14T14:51:03Z

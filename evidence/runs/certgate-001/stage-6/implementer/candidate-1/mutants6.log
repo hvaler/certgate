@@ -1,0 +1,200 @@
+base 33d9a8553d3abdc1e0a14189056c5345923e6e8d 2026-10-14T14:18:48Z
+code_bypass applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_bypass: Tests  7 failed | 372 passed (379)
+     FAIL  test/stage6-live.test.ts > DEPLOY.md section 5 checks, in the deployed shape with live reading enabled (S6-10) > health ok and reader live, f1 on, status enabled with the code required and the counts, stories and figures 200, story evaluate block, the sample PDF, and 403 without the code
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > per client and global: 10 clients each fail once at a limit of 1; the 11th client is refused by the global ceiling
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a client's wrong codes are counted across instances: limit 2, alternating instances, the 3rd attempt is refused
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+code_not_constant_time applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_not_constant_time: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the compare is constant-time over equal-length digests
+code_count_after_compare applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+code_count_after_compare: Tests  3 failed | 376 passed (379)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > per client and global: 10 clients each fail once at a limit of 1; the 11th client is refused by the global ceiling
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+code_no_forgive applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_no_forgive: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+code_fail_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+code_fail_per_instance: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a client's wrong codes are counted across instances: limit 2, alternating instances, the 3rd attempt is refused
+code_from_query applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_from_query: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the compare is constant-time over equal-length digests
+slots_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+slots_per_instance: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+slot_no_ttl applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_no_ttl: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a crashed holder's slot comes back through its lease TTL (fake clock): a job whose holder hangs forever cannot block the slot past the TTL
+slot_read_then_write applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_read_then_write: Tests  379 passed (379)
+slot_release_without_token applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_release_without_token: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a late finisher never frees another job's slot: release is compare-and-delete on the job's own token
+lease_ttl_short applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+lease_ttl_short: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > time budget and constants (S6-03, CH6-05, J-03, J-14, T6-06) > queue wait + reading + margin fit vercel.json maxDuration with at least 30 s to spare; leases outlive the budget
+hourly_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+hourly_per_instance: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > the hourly limit is counted once per job, across instances: the 4th job of a limit of 3 is refused on the other instance
+timeout_ge_limit applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+timeout_ge_limit: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > time budget and constants (S6-03, CH6-05, J-03, J-14, T6-06) > queue wait + reading + margin fit vercel.json maxDuration with at least 30 s to spare; leases outlive the budget
+queue_unbounded applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_unbounded: Tests  3 failed | 376 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+queue_rank_by_arrival applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_rank_by_arrival: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+queue_busy_counts_free_slots applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_busy_counts_free_slots: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy
+queue_bound_ignores_held applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_bound_ignores_held: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+queue_no_prune applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_no_prune: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > dead queue entries are pruned at admission: two ghosts ahead do not block a new job (J-04)
+poll_writes applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+poll_writes: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > orphaned jobs: a poll derives failed (timed out) without writing, for reading, queued and too-old jobs (fake clock)
+no_orphan applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+no_orphan: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > orphaned jobs: a poll derives failed (timed out) without writing, for reading, queued and too-old jobs (fake clock)
+failed_falls_back applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+failed_falls_back: Tests  3 failed | 376 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > http_429 -> failed endpoint_429 with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > http_5xx -> failed endpoint_5xx with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > invalid_json -> failed invalid_model_output with its fixed text; the provider's error text (with sentinels) never reaches a response
+model_mismatch_ignored applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+model_mismatch_ignored: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a reported model other than the requested one fails as model_mismatch, and the reading is not shown
+model_hardcoded applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+model_hardcoded: Tests  9 failed | 370 passed (379)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > memory: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > the container runs the same states with its in-process store, no store variables (S6-05, T6-09)
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a done job carries no provider text: a 429 whose body has a marker and a path, then a good reply (W-02)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > dead queue entries are pruned at admission: two ghosts ahead do not block a new job (J-04)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > the requested model may be reported with a provider prefix (self-dploy/<id>)
+     FAIL  test/stage6-live.test.ts > what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T6-10, J-11, J-19) > no Gemma model id is a default anywhere in src/ or public/; the live model comes from MODEL_ID only
+f1_hardcoded applied
+    diff:  1 file changed, 1 insertion(+)
+f1_hardcoded: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > F1 on the deployed site is one probe per period across instances (S6-07, H-11, J-09) > 10 concurrent /api/f1 calls on two instances sharing one store make one GET /models
+f1_per_instance applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f1_per_instance: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > F1 on the deployed site is one probe per period across instances (S6-07, H-11, J-09) > 10 concurrent /api/f1 calls on two instances sharing one store make one GET /models
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+key_in_status applied
+    diff:  1 file changed, 1 insertion(+)
+key_in_status: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > no sentinel value (key, code, store token, base URL) appears in any response body or header seen in this file (CH6-14)
+code_in_status applied
+    diff:  1 file changed, 1 insertion(+)
+code_in_status: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > no sentinel value (key, code, store token, base URL) appears in any response body or header seen in this file (CH6-14)
+     FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > access code: wrong code rejected without consuming; throttled after repeated failures; never echoed
+raw_store_error applied
+    diff:  2 files changed, 2 insertions(+), 2 deletions(-)
+raw_store_error: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a store that fails at admission refuses with store_unavailable: no job, no endpoint call, nothing of the store's reply leaked (J-15)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > no sentinel value (key, code, store token, base URL) appears in any response body or header seen in this file (CH6-14)
+disabled_reason_leak applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+disabled_reason_leak: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > the new live routes give one identical refusal with no code header, an empty one or a wrong one; nothing is called
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > with the store, the limit and the endpoint all configured but no access code, live reading stays off on the deployed site (S6-01)
+vercel_memory_fallback applied
+    diff:  1 file changed, 2 insertions(+), 2 deletions(-)
+vercel_memory_fallback: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > the new live routes give one identical refusal with no code header, an empty one or a wrong one; nothing is called
+ids_uuid applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+ids_uuid: Tests  17 failed | 362 passed (379)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > the hourly limit is counted once per job, across instances: the 4th job of a limit of 3 is refused on the other instance
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > memory: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > the container runs the same states with its in-process store, no store variables (S6-05, T6-09)
+     FAIL  test/stage6-live.test.ts > job state machine on both store implementations (S6-02, CH6-17, J-11) > upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a done job carries no provider text: a 429 whose body has a marker and a path, then a good reply (W-02)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a reading that outlives the deadline fails as timed out; the attempt ends at the deadline, no attempt starts after it, and the slot comes back (W-03)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a reported model other than the requested one fails as model_mismatch, and the reading is not shown
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > dead queue entries are pruned at admission: two ghosts ahead do not block a new job (J-04)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > http_429 -> failed endpoint_429 with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > http_4xx -> failed endpoint_4xx with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > http_5xx -> failed endpoint_5xx with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > invalid_json -> failed invalid_model_output with its fixed text; the provider's error text (with sentinels) never reaches a response
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > the requested model may be reported with a provider prefix (self-dploy/<id>)
+samples_any_id applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+samples_any_id: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > sample certificates (S6-06, CH6-16, J-17) > three allow-listed dataset certificates and their delivery notes, byte for byte as in the dataset checksums
+deployed_without_code applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+deployed_without_code: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > with the store, the limit and the endpoint all configured but no access code, live reading stays off on the deployed site (S6-01)
+story_labelled_live applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+story_labelled_live: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > every existing route answers byte for byte as the 409fb69a build did, in three disabled configurations
+global_counts_over_limit applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+global_counts_over_limit: Tests  2 failed | 377 passed (379)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > per client and global: 10 clients each fail once at a limit of 1; the 11th client is refused by the global ceiling
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+attempt_not_capped applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+attempt_not_capped: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a reading that outlives the deadline fails as timed out; the attempt ends at the deadline, no attempt starts after it, and the slot comes back (W-03)
+attempt_after_deadline applied
+    diff:  1 file changed, 2 insertions(+), 2 deletions(-)
+attempt_after_deadline: Tests  379 passed (379)
+provider_text_in_done applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+provider_text_in_done: Tests  1 failed | 378 passed (379)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > a done job carries no provider text: a 429 whose body has a marker and a path, then a good reply (W-02)
+internal_as_endpoint applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+internal_as_endpoint: Tests  379 passed (379)
+done 2026-10-14T14:37:53Z
