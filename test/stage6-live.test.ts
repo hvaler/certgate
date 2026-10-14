@@ -272,6 +272,11 @@ describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", (
     expect(fn).toMatch(/req\.headers\["x-vercel-forwarded-for"\]/);
     expect(fn).toMatch(/req\.socket\.remoteAddress/);
     expect(fn).not.toMatch(/x-forwarded-for"|x-real-ip/);
+    // Fail closed on Vercel: without the platform header the key is one fixed shared value, never the socket address
+    // (an internal proxy hop on Vercel) and never anything per request.
+    const vercelBranch = fn.slice(fn.indexOf("cfg.deployedSite"), fn.indexOf(":", fn.indexOf("no-platform-client-address"))).trimEnd();
+    expect(vercelBranch).toMatch(/\.trim\(\) \|\| "no-platform-client-address"$/);
+    expect(vercelBranch).not.toMatch(/socket|random|Date/);
     expect(existsSync(path.join(ROOT, "docs", "sources", "vercel-request-headers.md"))).toBe(true);
   });
 });
