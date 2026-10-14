@@ -1,0 +1,11 @@
+docker image of 4ef04b272e0766caaf34b934e28230bf60a52f8c 2026-10-14T19:09:31Z
+sha256:b768aeb48e0e7018fdb2edcf66f83f2d47d6f81eb5081f80fd968082f4d70f26
+--- image suite x2, --network none; first line = count of MODEL_*, LIVE_ACCESS_CODE and store variables in the container ---
+0
+ FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+ Test Files  1 failed | 21 passed | 2 skipped (24)
+      Tests  1 failed | 401 passed | 83 skipped (485)
+0
+ Test Files  22 passed | 2 skipped (24)
+      Tests  402 passed | 83 skipped (485)
+2026-10-14T19:10:17Z

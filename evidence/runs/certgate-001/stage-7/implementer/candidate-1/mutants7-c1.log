@@ -1,0 +1,72 @@
+base 431316ec77378f58ef1c36b73ba060060cca6fc9 2026-10-14T18:59:22Z
+g1_path_from_request applied
+    diff:  1 file changed, 1 insertion(+), 2 deletions(-)
+g1_path_from_request: Tests  5 failed | 480 passed (485)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > a live result's original is chosen by the certificate bytes (SHA-256): each sample maps to its own preview; a story's or another case's hash is 404 (CH7-04)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404
+     FAIL  test/web.test.ts > live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) > check-and-consume is atomic: with k = 3 remaining, 8 parallel requests give exactly 3 readings
+g2_case_insensitive applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+g2_case_insensitive: Tests  2 failed | 483 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404
+g3_every_dataset_id applied
+    diff:  1 file changed, 2 insertions(+), 2 deletions(-)
+g3_every_dataset_id: Tests  4 failed | 481 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > a live result's original is chosen by the certificate bytes (SHA-256): each sample maps to its own preview; a story's or another case's hash is 404 (CH7-04)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the three stories and the three samples answer 200 with image/png, nosniff, and exactly the committed preview bytes
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404
+g4_suffix_stripped applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+g4_suffix_stripped: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404
+g5_no_nosniff applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+g5_no_nosniff: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the three stories and the three samples answer 200 with image/png, nosniff, and exactly the committed preview bytes
+g6_wrong_type applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+g6_wrong_type: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the three stories and the three samples answer 200 with image/png, nosniff, and exactly the committed preview bytes
+b1_by_client_id applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b1_by_client_id: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > traversal, unknown ids, case variants, suffixes, other dataset files and a real dataset id outside the allow-list all answer 404
+b2_story_hashes_too applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b2_story_hashes_too: Tests  3 failed | 482 passed (485)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > a live result's original is chosen by the certificate bytes (SHA-256): each sample maps to its own preview; a story's or another case's hash is 404 (CH7-04)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the route reads the filesystem only through the fixed map built from the allow-list; the request id is only a key
+b3_ui_every_upload_a_sample applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b3_ui_every_upload_a_sample: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > View the original certificate: an allow-list of case ids, nothing else (S7-04, T7-02, CH7-05) > the page offers the original beside the values for every story, by bytes for a sample live result, and says plainly that a non-sample upload is the user's own file
+b4_ui_own_file_shows_image applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b4_ui_own_file_shows_image: Tests  485 passed (485)
+f1_flag_dropped applied
+    diff:  1 file changed, 1 deletion(-)
+f1_flag_dropped: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > a recorded story says it is recorded, next to reading_source; a live result never does (S7-05, T7-04, CH7-07) > the evaluate route carries the same flag and date
+f2_flag_appended_on_evaluate applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f2_flag_appended_on_evaluate: Tests  2 failed | 483 passed (485)
+     FAIL  test/stage6-live.test.ts > deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03) > every existing route answers byte for byte as the 409fb69a build did, in three disabled configurations
+     FAIL  test/stage7.test.ts > a recorded story says it is recorded, next to reading_source; a live result never does (S7-05, T7-04, CH7-07) > the evaluate route carries the same flag and date
+f3_flag_on_live applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f3_flag_on_live: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > a recorded story says it is recorded, next to reading_source; a live result never does (S7-05, T7-04, CH7-07) > a live job result never carries the flag
+f4_wrong_date applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f4_wrong_date: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > a recorded story says it is recorded, next to reading_source; a live result never does (S7-05, T7-04, CH7-07) > the evaluate route carries the same flag and date
+p1_scan_rendered applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+p1_scan_rendered: Tests  1 failed | 484 passed (485)
+     FAIL  test/stage7.test.ts > previews regenerate byte-identical from the committed PDFs (S7-03, T7-03, CH7-06) > a fresh run of tools/previews.mjs equals every committed PNG; the README lists each hash next to its PDF
+done 2026-10-14T19:05:26Z
