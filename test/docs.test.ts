@@ -5,6 +5,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
+// @ts-expect-error plain JS helper
+import { prizeFindings } from "./support/prize-check.mjs";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
 const DOCS = ["README.md", "DEPLOY.md", "METRICS.md", "CLAIMS.md", "EVIDENCE-INDEX.md", ".env.example"];
@@ -52,7 +54,7 @@ repoOnly("README figures (F-08 b, S4-01)", () => {
       auditor: JSON.parse(read("evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/metrics.json")),
     };
     const readme = read("README.md");
-    const table = readme.slice(readme.indexOf("## Evaluation (real model)"), readme.indexOf("## Demo procedure"));
+    const table = readme.slice(readme.indexOf("## Evaluation (real model)"), readme.indexOf("## Comparison with Gemma-4-31B-IT"));
     const of = (x: { numerator: string; denominator: string }) => `${x.numerator} of ${x.denominator}`;
     for (const m of Object.values(runs)) {
       const h = m.headline;
@@ -133,6 +135,8 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
       for (const line of read(f).split("\n")) {
         for (const m of line.matchAll(/[^.#;]*\bpublic (?:site|url)\b[^.#;]*/gi)) expect(m[0], `${f}: public-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
       }
+      // Stage 5 (S5-11, G-09): no prize, award, win, eligibility, qualification, entry or submission claim.
+      expect(prizeFindings(read(f)), `${f}: prize claim`).toEqual([]);
     }
   });
   it("no secret-looking value in the docs", () => {
