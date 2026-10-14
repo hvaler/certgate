@@ -277,6 +277,36 @@ describe("code and lease guards that only show across instances or over time (S6
     expect(rs.map((r) => r.status), JSON.stringify(rs.map((r) => r.body.error))).toEqual([202, 202, 202, 202]);
     for (const r of rs) expect((await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed")).body.state).toBe("done");
   });
+  it("the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy", async () => {
+    // Two queued jobs take both slots exactly between two concurrent admissions' read of the holders and their rank.
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const seed = ["j1", "j2", "w1", "w2"].map((x) => x.padEnd(32, "0"));
+    let arrivals: (() => void)[] = [];
+    let injected = false;
+    class Interleaving extends MemoryStore {
+      override async zrank(key: string, member: string) {
+        if (key === KEYS.queue && !seed.includes(member) && !injected) {
+          // Barrier: wait until two new admissions have both read the slot holders.
+          await new Promise<void>((r) => { arrivals.push(r); if (arrivals.length === 2) { injected = true; for (const a of arrivals) a(); } });
+          if (arrivals.length === 2 && !(await super.get(KEYS.slot(0)))) {
+            for (const [i, id] of seed.slice(0, 2).entries()) { await super.setNx(KEYS.slot(i), id, 300_000); await super.zrem(KEYS.queue, id); }
+          }
+        }
+        return super.zrank(key, member);
+      }
+    }
+    const store = new Interleaving(() => t);
+    for (const [i, id] of seed.entries()) await store.zadd(KEYS.queue, t - 1_000 + i, id);
+    const jobs = new LiveJobs(store, () => new Date((t += 1)), DEPLOYED_LIVE_BUDGET);
+    const both = await Promise.allSettled([jobs.admit(10, STUB_MODEL_ID, new Date(t)), jobs.admit(10, STUB_MODEL_ID, new Date(t))]);
+    expect(both.map((x) => x.status)).toEqual(["fulfilled", "fulfilled"]);
+    const waiting = await store.zcard(KEYS.queue);
+    expect(waiting).toBe(DEPLOYED_LIVE_BUDGET.maxWaiting + DEPLOYED_LIVE_BUDGET.slots);
+    arrivals = [];
+    await expect(jobs.admit(10, STUB_MODEL_ID, new Date(t))).rejects.toMatchObject({ status: 429, extra: { reason_class: "busy" } });
+    expect(await store.zcard(KEYS.queue)).toBe(waiting);
+  });
   it("an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)", async () => {
     let t = Date.parse("2026-10-14T13:00:00.000Z");
     const clock = () => new Date((t += 5));
