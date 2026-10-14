@@ -96,8 +96,9 @@ describe("View the original certificate: an allow-list of case ids, nothing else
     expect(js).toMatch(/ctx\.original = \{ src: `\/api\/originals\/\$\{encodeURIComponent\(s\.id\)\}`/);
     expect(js).toMatch(/sampleHashes\.includes\(sha\) \? \{ by_certificate: sha \} : \{ own: true \}/);
     expect(js).toMatch(/The original is your own file/);
-    // A non-sample upload requests nothing: the own-file branch renders text only.
-    const own = js.slice(js.indexOf("if (!original || original.own)"), js.indexOf("return h(\"section\", { class: \"card stack\", \"aria-labelledby\": \"original-title\", id: \"original\" }, head,\n    h(\"details\""));
+    // A non-sample upload requests nothing: the own-file branch renders text only, and every own case takes it.
+    expect(js).toContain("if (!original || original.own) {");
+    const own =js.slice(js.indexOf("if (!original || original.own)"), js.indexOf("return h(\"section\", { class: \"card stack\", \"aria-labelledby\": \"original-title\", id: \"original\" }, head,\n    h(\"details\""));
     expect(own).not.toMatch(/api\(|fetch\(|img|src/);
   });
 });
