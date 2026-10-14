@@ -91,6 +91,7 @@ describe("job state machine on both store implementations (S6-02, CH6-17, J-11)"
       expect(String(r.body.job_id)).toMatch(/^[0-9a-f]{32}$/);
       const done = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
       expect(done.body.state).toBe("done");
+      expect(done.body.position).toBeUndefined(); // the position belongs to a queued job's poll only
       const result = done.body.result as { job_id: string; started_at: string; finished_at: string; view: { receipt: Record<string, any> } };
       expect(result.job_id).toBe(r.body.job_id);
       expect(result.started_at).toBeTruthy();

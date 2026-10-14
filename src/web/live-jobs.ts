@@ -127,7 +127,10 @@ export class LiveJobs {
    * compare-and-delete on the job's own token when the work settles; if the deadline fires first the slot is kept and
    * expires by its TTL, so no third reading can start while a provider request may still run.
    */
-  async run(job: JobRecord, work: (attemptTimeoutMs: number) => Promise<Outcome>): Promise<void> {
+  async run(admitted: JobRecord & { position?: number }, work: (attemptTimeoutMs: number) => Promise<Outcome>): Promise<void> {
+    // The queue position is computed on each poll; it is never stored with the job.
+    const { position: _position, ...stored } = admitted;
+    let job: JobRecord = stored;
     const created = Date.parse(job.created_at);
     const fail = async (reason_class: ReasonClass) => {
       await this.save({ ...job, state: "failed", finished_at: this.clock().toISOString(), reason_class, reason: REASONS[reason_class], result: null });
