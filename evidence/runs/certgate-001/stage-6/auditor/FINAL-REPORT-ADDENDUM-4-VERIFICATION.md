@@ -45,8 +45,8 @@ it.
   accept this, and withdraw my request to amend or rebuild.
 - **The corrected addendum is verified:** commit `1f9cfc56d2983bd2d0957ed2eebb52c7dd427d25`, committed-blob SHA-256
   `3ee6045ca7ce21b89e382383c95beeabea8bda417fb1de97cfb1b833542c65e8`.
-  - The only change to the report is the §5 sentence, now "The human was advised privately on the code's strength."
-  - The report adds an honest incident entry: the disclosure, my flag, no history rewrite, and the remedy.
+  - The report changes in two places only. The §5 sentence now reads "The human was advised privately on the code's
+    strength." A new §5 incident entry records the disclosure, my flag, that history is not rewritten, and the remedy.
   - No property of the code remains in the report.
 - **This record's own first version** (9851331, unpublished) quoted the sentence. It is corrected here, in a new
   commit, so this record no longer repeats the property.
