@@ -1,0 +1,92 @@
+base a848dfae8674bb5bba34d5f83cf5e967acb7bce7 2026-10-14T11:35:23Z
+S5M_e2 applied
+    diff:  2 files changed, 6 insertions(+)
+S5M_e2: Tests  1 failed | 331 passed (332)
+     FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+S5M_e3 applied
+    diff:  2 files changed, 6 insertions(+)
+S5M_e3: Tests  1 failed | 331 passed (332)
+     FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+a_metrics applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+a_metrics: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+a_readme applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+a_readme: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+     FAIL  test/stage5-gemma.test.ts > README Gemma section (S5-10, G-05, G-08, S5-15 a) > README Gemma figures equal the generated metrics of the Gemma run
+a_readme_fc applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+a_readme_fc: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+     FAIL  test/stage5-gemma.test.ts > README Gemma section (S5-10, G-05, G-08, S5-15 a) > README Gemma figures equal the generated metrics of the Gemma run
+b_gemma_as_qwen applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b_gemma_as_qwen: Tests  4 failed | 328 passed (332)
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > the landing figures are generated from the Qwen implementer run, never from a Gemma run
+     FAIL  test/stage5-gemma.test.ts > README Gemma section (S5-10, G-05, G-08, S5-15 a) > README Gemma figures equal the generated metrics of the Gemma run
+     FAIL  test/stage5-gemma.test.ts > model identity of every run (G-01, S5-04, S5-15 b) > every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B
+b_qwen_as_gemma applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b_qwen_as_gemma: Tests  3 failed | 329 passed (332)
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+     FAIL  test/stage5-gemma.test.ts > METRICS.md comparison section (G-05, G-06, S5-07, S5-08, S5-15 f) > the comparison section follows the Qwen sections, which are unchanged from b0ec67a6
+     FAIL  test/stage5-gemma.test.ts > model identity of every run (G-01, S5-04, S5-15 b) > every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B
+b_run_json applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+b_run_json: Tests  2 failed | 330 passed (332)
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+     FAIL  test/stage5-gemma.test.ts > model identity of every run (G-01, S5-04, S5-15 b) > every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B
+c_request applied
+    diff:  1 file changed, 1 insertion(+)
+c_request: Tests  3 failed | 329 passed (332)
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6
+     FAIL  test/stage5-gemma.test.ts > request body (G-03, S5-02, S5-15 c) > the Gemma request body equals the Qwen request body except the model id, with no thinking control
+     FAIL  test/stage5-gemma.test.ts > request body (G-03, S5-02, S5-15 c) > the Qwen request body for cg-004 hashes to its value at b0ec67a6
+c_max_tokens applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+c_max_tokens: Tests  2 failed | 330 passed (332)
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6
+     FAIL  test/stage5-gemma.test.ts > request body (G-03, S5-02, S5-15 c) > the Qwen request body for cg-004 hashes to its value at b0ec67a6
+d_landing applied (public/figures.json regenerated from the Gemma run)
+    diff:  1 file changed, 10 insertions(+), 10 deletions(-)
+d_landing: Tests  4 failed | 328 passed (332)
+     FAIL  test/docs.test.ts > README figures (F-08 b, S4-01) > README evaluation figures equal the generated metrics of both runs
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > names the landing run and the auditor's independent run, with the landing figures' run equal to public/figures.json
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > the landing figures are generated from the Qwen implementer run, never from a Gemma run
+e_eligible applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+e_eligible: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+e_qualifies applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+e_qualifies: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12) > no forbidden claim in README, DEPLOY.md, METRICS.md or public
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+f_generator applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f_generator: Tests  2 failed | 330 passed (332)
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+     FAIL  test/stage5-gemma.test.ts > METRICS.md comparison section (G-05, G-06, S5-07, S5-08, S5-15 f) > the per-case difference list equals the set of cases whose Gemma proposal differs from a Qwen run, and METRICS.md lists every one
+f_metrics_hand applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+f_metrics_hand: Tests  2 failed | 330 passed (332)
+     FAIL  test/docs.test.ts > sentence map (F-02 completeness, ADV-S4-F02) > every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason
+     FAIL  test/metrics-md.test.ts > METRICS.md (S4-03, S4-16) > equals a fresh generation from the committed artifacts, byte for byte
+e15_drop_pdfjs applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+e15_drop_pdfjs: Tests  2 failed | 330 passed (332)
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > vercel.json differs from b0ec67a6 only in the includeFiles value that E-15 authorises
+     FAIL  test/vercel-config.test.ts > vercel.json function bundle (E-15, F-10) > the function includes node_modules/pdfjs-dist with data, config and public/stories; maxDuration and the rewrites are unchanged
+g04_expected applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+g04_expected: Tests  3 failed | 329 passed (332)
+     FAIL  test/dataset.test.ts > dataset composition > matches CHECKSUMS.sha256 for every dataset file
+     FAIL  test/dataset.test.ts > every dataset case yields its expected outcome through the mock path > cg-021
+     FAIL  test/stage5-gemma.test.ts > Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d) > public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6
+done 2026-10-14T11:40:26Z
