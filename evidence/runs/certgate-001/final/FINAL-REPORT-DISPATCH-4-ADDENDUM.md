@@ -94,10 +94,11 @@ The **pre-repair observation** at ~17:01Z on 6318a8e2 (auditor msg 2ede23b5, evi
   - heavy work across seats was serialized.
 
 **Analyst errors:**
+- **Secret metadata disclosure (analyst):** the analyst wrote a property of the live access code (its length) into its Stage 6 log at 17:22Z. That line was published in main 2566050f, and the first version of this addendum (2f8dd68, unpublished) repeated it. The auditor flagged it (C1, record 9851331). Published history is not rewritten. The remedy is that **the human rotates `LIVE_ACCESS_CODE`** to a new random value of at least 20 characters, in Vercel and on the host, so the disclosed property describes a retired code. The addendum text was corrected in a later commit.
 - A suggested W-07 formula would have over-admitted; the implementer corrected it.
 - The GO was given on observed rather than reported human steps; it was then withdrawn.
 
-**Residual risk (K-02):** with no global refusal, distributed guessing is bounded by the per-client limit times the number of addresses. The barrier is the code's entropy, and DEPLOY.md asks for at least 20 random characters. The host code's length is 18 (length only was checked).
+**Residual risk (K-02):** with no global refusal, distributed guessing is bounded by the per-client limit times the number of addresses. The barrier is the code's entropy, and DEPLOY.md asks for at least 20 random characters. The human was advised privately on the code's strength.
 
 **Observations:**
 - O6-05: F1 fields in a receipt can be up to 60 s old.
