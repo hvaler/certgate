@@ -809,6 +809,20 @@ describe("killers for the guards the adversary found unguarded (ADV-S6-F01: J-16
     expect(st.body.used_this_hour).toBe("0");
     expect(ops.filter((o) => (o.op === "incr" && String(o.args[0]).includes(":reads:")) || o.op === "zadd" || (o.op === "set" && String(o.args[0]).includes(":job:"))), "admission writes").toEqual([]);
   });
+  it("K-01 in the container: no header is trusted; rotating X-Forwarded-For and X-Real-IP from one socket still hits the per-client limit", async () => {
+    const s = await stub();
+    const base = await serve({ env: { MODEL_BASE_URL: s.url, MODEL_ID: STUB_MODEL_ID, MODEL_API_KEY: KEY, LIVE_READS_PER_HOUR: "3", LIVE_ACCESS_CODE: CODE, LIVE_CODE_FAILURES_PER_HOUR: "2" }, liveBudget: FAST });
+    const statuses: number[] = [];
+    for (let i = 1; i <= 4; i++) statuses.push((await startJob(base, { code: "wrong", spoof: `10.7.${i}.${i}`, client: `198.51.100.${i}` })).status);
+    expect(statuses).toEqual([403, 403, 429, 429]);
+  });
+  it("the store variables: the Upstash names first, else the KV_* names the deployed integration set (operator report 5c1ce2c6); the read-only token is never used", async () => {
+    const { storeEnv } = await import("../src/web/live-store.js");
+    expect(storeEnv({ KV_REST_API_URL: "https://kv.example/", KV_REST_API_TOKEN: "t-kv" })).toEqual({ url: "https://kv.example", token: "t-kv" });
+    expect(storeEnv({ UPSTASH_REDIS_REST_URL: "https://up.example", UPSTASH_REDIS_REST_TOKEN: "t-up", KV_REST_API_URL: "https://kv.example", KV_REST_API_TOKEN: "t-kv" })).toEqual({ url: "https://up.example", token: "t-up" });
+    expect(storeEnv({ KV_REST_API_URL: "https://kv.example", KV_REST_API_READ_ONLY_TOKEN: "t-ro" })).toBeNull();
+    expect(storeEnv({})).toBeNull();
+  });
   it("S6M-c8 (J-05, J-13): malformed job ids get 404 with zero store operations", async () => {
     const s = await stub();
     const { store, ops } = recordingStore();
