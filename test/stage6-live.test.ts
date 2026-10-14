@@ -20,6 +20,8 @@ import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 import { startFakeUpstash, VERIFIED_DEL_IF_EQUALS_SCRIPT } from "./support/fake-upstash.mjs";
 // @ts-expect-error plain JS helper
 import { record } from "./support/disabled-golden.mjs";
+// @ts-expect-error plain JS helper
+import { beforeStage7, evaluateBeforeStage7, isStage7New } from "./support/stage7.mjs";
 
 const CODE = "sentinel-access-code-7f3a19";
 const KEY = "sentinel-model-key-91bd44";
@@ -559,6 +561,8 @@ describe("deployed site with live reading disabled answers as at 409fb69a (S6-01
   it("every existing route answers byte for byte as the 409fb69a build did, in three disabled configurations", async () => {
     const golden = JSON.parse(readFileSync(path.join(ROOT, "test", "fixtures", "stage6-disabled-golden.json"), "utf8"));
     const now = await record(createApp);
+    // Stage 7 (T7-04): the evaluate answer gains only the recorded flag; that one change is removed before comparing.
+    for (const k of Object.keys(now)) for (const a of now[k]) if (a.path === "/api/stories/cg-003/evaluate") a.body = evaluateBeforeStage7(a.body);
     expect(Object.keys(now)).toEqual(Object.keys(golden));
     for (const k of Object.keys(golden)) expect(now[k], k).toEqual(golden[k]);
   });
@@ -667,13 +671,14 @@ describe("what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T
     const base = JSON.parse(readFileSync(path.join(ROOT, "test", "fixtures", "stage6-baseline.json"), "utf8")) as { roots: string[]; blobs: Record<string, string> };
     const sha = (b: Buffer) => createHash("sha1").update(`blob ${b.length}\0`).update(b).digest("hex");
     const blob = (p: string, id: string) => {
-      const b = readFileSync(path.join(ROOT, p));
+      const b = beforeStage7(p, readFileSync(path.join(ROOT, p))) as Buffer;
       if (sha(b) === id || /\.(png|jpe?g|gif|ico|pdf|zip|gz)$/i.test(p)) return sha(b);
       return sha(Buffer.from(b.toString("latin1").replace(/\r\n/g, "\n"), "latin1"));
     };
     for (const [p, id] of Object.entries(base.blobs)) expect(blob(p, id), p).toBe(id);
     const present: string[] = [];
-    const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) for (const e of readdirSync(abs)) walk(`${p}/${e}`); else present.push(p); };
+    // Stage 7 (T7-01): only the new previews under data/previews/ are added (test/support/stage7.mjs).
+    const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) { for (const e of readdirSync(abs)) if (e !== ".sonar") walk(`${p}/${e}`); } else if (!isStage7New(p)) present.push(p); };
     for (const r of base.roots) if (existsSync(path.join(ROOT, r))) walk(r);
     expect(present.sort()).toEqual(Object.keys(base.blobs).sort());
   });

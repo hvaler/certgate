@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1308" height="656" viewBox="0 0 1308 656" font-family="Arial, sans-serif">
+  <title>CertGate architecture</title>
+  <defs><marker id="arrow-architecture" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333333"/></marker></defs>
+  <rect x="0" y="0" width="1308" height="656" fill="#ffffff"/>
+  <text x="24" y="30" font-size="16" font-weight="bold" fill="#111111">CertGate architecture</text>
+  <line x1="324" y1="114" x2="206.5" y2="161" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="221.3" y="128.5" width="88" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="265.3" y="141.5" font-size="11" text-anchor="middle" fill="#333333">page, stories</text>
+  <line x1="394" y1="114" x2="394" y2="161" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="371" y="128.5" width="46" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="394" y="141.5" font-size="11" text-anchor="middle" fill="#333333">/api/*</text>
+  <line x1="914" y1="114" x2="914" y2="161" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="855" y="128.5" width="118" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="914" y="141.5" font-size="11" text-anchor="middle" fill="#333333">dist/src/server.js</text>
+  <line x1="464" y1="218" x2="581.5" y2="265" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <line x1="844" y1="218" x2="726.5" y2="265" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <line x1="584" y1="322" x2="466.5" y2="369" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="487.3" y="336.5" width="76" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="525.3" y="349.5" font-size="11" text-anchor="middle" fill="#333333">queue a job</text>
+  <line x1="724" y1="322" x2="841.5" y2="369" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="741.8" y="336.5" width="82" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="782.8" y="349.5" font-size="11" text-anchor="middle" fill="#333333">live reading</text>
+  <line x1="324" y1="426" x2="206.5" y2="473" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="221.3" y="440.5" width="88" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="265.3" y="453.5" font-size="11" text-anchor="middle" fill="#333333">deployed site</text>
+  <line x1="464" y1="426" x2="581.5" y2="473" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="490.8" y="440.5" width="64" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="522.8" y="453.5" font-size="11" text-anchor="middle" fill="#333333">container</text>
+  <line x1="914" y1="426" x2="914" y2="473" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="858" y="440.5" width="112" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="914" y="453.5" font-size="11" text-anchor="middle" fill="#333333">/chat/completions</text>
+  <line x1="914" y1="530" x2="914" y2="577" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="885" y="544.5" width="58" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="914" y="557.5" font-size="11" text-anchor="middle" fill="#333333">MODEL_ID</text>
+  <line x1="984" y1="530" x2="1101.5" y2="577" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
+  <rect x="992.8" y="544.5" width="100" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="1042.8" y="557.5" font-size="11" text-anchor="middle" fill="#333333">evaluation runs</text>
+  <rect x="284" y="60" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="394" y="82.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Browser</text>
+  <text x="394" y="97.5" font-size="12" text-anchor="middle" fill="#111111">public/app.js</text>
+  <rect x="804" y="60" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="914" y="82.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Container (other way to run)</text>
+  <text x="914" y="97.5" font-size="12" text-anchor="middle" fill="#111111">Dockerfile</text>
+  <rect x="24" y="164" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="134" y="186.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Vercel static site</text>
+  <text x="134" y="201.5" font-size="12" text-anchor="middle" fill="#111111">public/ (outputDirectory)</text>
+  <rect x="284" y="164" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="394" y="186.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Vercel function api</text>
+  <text x="394" y="201.5" font-size="12" text-anchor="middle" fill="#111111">api/index.ts</text>
+  <rect x="804" y="164" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="914" y="186.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Node server</text>
+  <text x="914" y="201.5" font-size="12" text-anchor="middle" fill="#111111">createApp (src/server.ts)</text>
+  <rect x="544" y="268" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="654" y="290.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Request handler</text>
+  <text x="654" y="305.5" font-size="12" text-anchor="middle" fill="#111111">createHandler (src/web/app.ts)</text>
+  <rect x="284" y="372" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="394" y="394.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Live-reading queue and limits</text>
+  <text x="394" y="409.5" font-size="12" text-anchor="middle" fill="#111111">LiveJobs</text>
+  <rect x="804" y="372" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="914" y="394.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Live reader</text>
+  <text x="914" y="409.5" font-size="12" text-anchor="middle" fill="#111111">DeadlineReader / LiveReader</text>
+  <rect x="24" y="476" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="134" y="498.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Upstash Redis store</text>
+  <text x="134" y="513.5" font-size="12" text-anchor="middle" fill="#111111">UpstashRestStore</text>
+  <rect x="544" y="476" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="654" y="498.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">In-process store</text>
+  <text x="654" y="513.5" font-size="12" text-anchor="middle" fill="#111111">MemoryStore</text>
+  <rect x="804" y="476" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="914" y="498.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">AMD Token Factory</text>
+  <text x="914" y="513.5" font-size="12" text-anchor="middle" fill="#111111">OpenAI-compatible endpoint</text>
+  <rect x="804" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="914" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Deployed live model</text>
+  <text x="914" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Gemma-4-31B-IT (MODEL_ID)</text>
+  <rect x="1064" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
+  <text x="1174" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Evaluated product model</text>
+  <text x="1174" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Qwen3.8-27B</text>
+</svg>

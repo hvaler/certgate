@@ -776,41 +776,6 @@
  },
  {
   "doc": "README.md",
-  "text": "CertGate was built by a band of four Claude Code seats: analyst, implementer, adversary and auditor.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "The implementer alone wrote the product.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "The adversary attacked it, including mutation checks.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "The auditor accepted or rejected each stage independently.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "In Stage 3 it made its own real evaluation run.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "The UI was designed with Claude Design and implemented by the band: the design defines the look, and the behaviour follows the written specification.",
-  "row": "none: design credit (process statement in the dispatch)"
- },
- {
-  "doc": "README.md",
-  "text": "The model that reads the certificates in this build runs on AMD Token Factory.",
-  "row": "C-11"
- },
- {
-  "doc": "README.md",
   "text": "[MIT](LICENSE).",
   "row": "C-65"
  },
@@ -1588,11 +1553,6 @@
   "doc": "README.md",
   "text": "evidence/ stage records of the band (registers, handoffs, verdicts, logs)",
   "row": "none: repository layout (directory description)"
- },
- {
-  "doc": "README.md",
-  "text": "How it was built",
-  "row": "none: heading"
  },
  {
   "doc": "README.md",
@@ -2653,5 +2613,565 @@
   "doc": "DEPLOY.md",
   "text": "Then report in the room that the deployment is done, so that the auditor can run its checks.",
   "row": "none: instruction to the human"
+ },
+ {
+  "doc": "README.md",
+  "text": "Try it",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Site:** https://certgate-wheat.vercel.app",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Judge mode** (`#/judge`): three recorded real readings by the model, with their receipts.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "Each run is labelled \"recorded real reading … not live\".",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live reading:** a new reading of a certificate on AMD Token Factory.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "It needs the access code given to the judges; the code is never written in this repository.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Sample certificates:** the live screen offers three fictitious certificates (cg-004, cg-005, cg-010) and their delivery notes, to download and upload back.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "**The original certificate:** every case shows \"View the original certificate\", the page image of the document the reading came from, beside the values.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "For an upload that is not one of the samples, the page says that the original is your own file.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "The certificates and their previews",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "GitHub cannot show the scanned PDFs, so each certificate the site shows has a PNG preview next to it.",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "Running the script again gives the same bytes.",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Case | PDF | Preview | Preview SHA-256 |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-001 · story, conforming (digital) | [certificate.pdf](data/cases/cg-001/certificate.pdf) | [cg-001.png](data/previews/cg-001.png) | `686b0e2f4687d9557220cc8bef65f84423ee656a1d3cc2687efd5f515edd116f` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-002 · story, out of spec (scan) | [certificate.pdf](data/cases/cg-002/certificate.pdf) | [cg-002.png](data/previews/cg-002.png) | `b4eaf0d17d76a5f764b9cdebbb5f7f4166cc1e06d4b854f9bb297a6c9300b5fe` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-003 · story, the ambiguous scan (scan) | [certificate.pdf](data/cases/cg-003/certificate.pdf) | [cg-003.png](data/previews/cg-003.png) | `9fb6e411349eb8c1b57833b19d09b361e40de299544244ac92a9b7d4cf05b174` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-004 · sample (digital) | [certificate.pdf](data/cases/cg-004/certificate.pdf) | [cg-004.png](data/previews/cg-004.png) | `b850c1e334d440e6f619a76bb0e5e5af48e19480c92ab37858b0b7992ca8c413` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-005 · sample (digital) | [certificate.pdf](data/cases/cg-005/certificate.pdf) | [cg-005.png](data/previews/cg-005.png) | `fc1c257336227937d7a4bd5c3908954aa1d424fdbb4dbbd360d6354fb699d51a` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "| cg-010 · sample (digital) | [certificate.pdf](data/cases/cg-010/certificate.pdf) | [cg-010.png](data/previews/cg-010.png) | `74d3335d9b32fbfc6c30031dde67f681bef1e99bc9982db4802f7e49224cbb8c` |",
+  "row": "C-88"
+ },
+ {
+  "doc": "README.md",
+  "text": "Architecture and certificate flow",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Both diagrams are generated by [tools/diagrams.mjs](tools/diagrams.mjs) from one definition, in which every box and arrow names the file and symbol it stands for; a test checks each one against the code.",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "The SVG files are the band's own render of the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "Architecture",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "diagram:architecture",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "flowchart TB",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "browser[\"Browser<br/>public/app.js\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "container[\"Container (other way to run)<br/>Dockerfile\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "static[\"Vercel static site<br/>public/ (outputDirectory)\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "api[\"Vercel function api<br/>api/index.ts\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "server[\"Node server<br/>createApp (src/server.ts)\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "handler[\"Request handler<br/>createHandler (src/web/app.ts)\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "jobs[\"Live-reading queue and limits<br/>LiveJobs\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "reader[\"Live reader<br/>DeadlineReader / LiveReader\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "store[\"Upstash Redis store<br/>UpstashRestStore\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "memory[\"In-process store<br/>MemoryStore\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "amd[\"AMD Token Factory<br/>OpenAI-compatible endpoint\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "gemma[\"Deployed live model<br/>Gemma-4-31B-IT (MODEL_ID)\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "qwen[\"Evaluated product model<br/>Qwen3.8-27B\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "browser -->|\"page, stories\"| static",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "browser -->|\"/api/*\"| api",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "container -->|\"dist/src/server.js\"| server",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "api --> handler",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "server --> handler",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "handler -->|\"queue a job\"| jobs",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "handler -->|\"live reading\"| reader",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "jobs -->|\"deployed site\"| store",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "jobs -->|\"container\"| memory",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "reader -->|\"/chat/completions\"| amd",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "amd -->|\"MODEL_ID\"| gemma",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "amd -->|\"evaluation runs\"| qwen",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "/diagram",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "Certificate flow",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "diagram:flow",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "flowchart TB",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "upload[\"Upload<br/>certificate PDF + delivery CSV\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "story[\"Story<br/>replayStory\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "open[\"Certificate opened<br/>openPdf\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "textlayer[\"Text-layer channel<br/>extractTextLayer\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "model[\"Model reading on AMD<br/>processCase / readCase\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "channels[\"Channels compared<br/>resolveChannels\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "config[\"Versioned config<br/>config/plausibility.v1.json\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "rules[\"Coherence and rules<br/>RULES_VERSION\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "decimals[\"Exact decimals<br/>decimal.js\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "proposal[\"Proposal<br/>release / block / review\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "human[\"A person confirms and decides<br/>recordHumanDecision\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "receipt[\"Run receipt<br/>exportReceipt\"]",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "upload -->|\"live job\"| open",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "story -->|\"recorded reply\"| open",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "open -->|\"when present\"| textlayer",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "open -->|\"model channel\"| model",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "textlayer --> channels",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "model --> channels",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "channels --> rules",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "config --> rules",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "decimals --> rules",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "rules --> proposal",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "proposal -->|\"confirmations\"| human",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "human --> receipt",
+  "row": "C-90"
+ },
+ {
+  "doc": "README.md",
+  "text": "/diagram",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "Screenshots",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Real captures of the deployed site at 1280 px and 375 px, made by [tools/capture-screenshots.mjs](tools/capture-screenshots.mjs) (Playwright).",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "Each image is captioned with the site commit and the capture time, and `docs/screenshots/manifest.json` will record the SHA-256 of the files the site served at capture time.",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "Not captured yet: they are taken from the deployed site after this version is deployed, never from a local build.",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "The planned screens are the landing with its figures, judge mode, story cg-003 with the ReH row and the Block proposal, the confirmation and decision section, the \"Runs on AMD\" panel, and the live-reading screen.",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "How it was built and verified",
+  "row": "none: heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "CertGate was built with Claude Code by a band of four seats.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "AMD Token Factory runs the product's reading of the certificates.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Every figure below comes from the stage register, [evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md), and the records it names.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Analyst:** wrote each stage's obligation register from the human's dispatch and coordinated the stage.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Implementer:** the only seat that wrote the product.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Adversary:** challenged each register and attacked each candidate, including mutation checks.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Auditor:** accepted or rejected each stage independently, with its own clean clones, its own mutants and, in Stage 3, its own real evaluation run.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Stage | Accepted candidate | Repair cycles used | Rejections before acceptance |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1: F-01, F-02, F-05; mutants M13 and M14 survived |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1: F2-01 |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3: F3-01, ADV-S3-F01, ADV-S3-F02 |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4: F4-01, F4-02, F4-03 |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2: F5-01, F5-02 |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1: F6-01, F6-02; then the operator's security repair (R6.4) |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Mutation checks**, from the same register:",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 1: 14 of 14 killed.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 2: the auditor's 29 of 29 killed.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 3: 12 of 12 killed.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 4: the adversary's 38 of 38 killed.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 6: the auditor's 13 of 13 on the security delta, and the adversary's 9 of 9.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Independent auditor runs:**",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 3: the auditor's own real evaluation, 26 of 27 proposals as expected (see \"Evaluation\").",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 6: the live checks on the deployed site.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Design:** the UI was designed with Claude Design.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "The design defines the look, and the behaviour follows the written specification.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "It works at any time, makes no model call and has no limit.",
+  "row": "C-87"
+ },
+ {
+  "doc": "README.md",
+  "text": "The previews are made by [tools/previews.mjs](tools/previews.mjs) from the committed PDFs: for a scan, the PDF's own page image; for a digital certificate, page 1 rendered by the pinned pdf.js.",
+  "row": "C-88"
  }
 ]

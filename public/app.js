@@ -187,9 +187,12 @@ async function liveSection(st) {
 }
 
 /** Sample certificates of the synthetic dataset, to download and upload back (S6-06). */
+/** The sample certificates' SHA-256 as the server lists them; a live result is matched to a sample by these bytes only (CH7-04). */
+let sampleHashes = [];
 async function samplesBlock(url) {
   const r = await api(url);
   if (!r.ok || !r.body || !Array.isArray(r.body.samples)) return null;
+  sampleHashes = r.body.samples.map((s) => String(s.certificate_sha256));
   return h("div", { class: "stack", id: "live-samples" },
     h("p", { class: "small" }, r.body.note),
     h("ul", { class: "small" }, r.body.samples.map((s) => h("li", {},
@@ -243,7 +246,10 @@ async function doLiveRead(st, inputs, msg, btn) {
       else if (v.state === "done") {
         const view = v.result.view;
         const key = `${view.case_id}-${view.receipt.run_id}`;
-        saveLocal(key, view);
+        // S7-04: a sample certificate (matched by the SHA-256 the server put in the receipt) gets its original;
+        // any other upload is the user's own file, and nothing is requested for it.
+        const sha = String(view.receipt.hashes && view.receipt.hashes.certificate_sha256);
+        saveLocal(key, view, sampleHashes.includes(sha) ? { by_certificate: sha } : { own: true });
         location.hash = `#/local/${key}`;
         return;
       } else {
@@ -261,8 +267,8 @@ async function doLiveRead(st, inputs, msg, btn) {
 }
 
 // ---------------------------------------------------------------- browser-held cases (F4, B-09, B-21)
-function saveLocal(key, view) {
-  try { localStorage.setItem(STORE_PREFIX + key, JSON.stringify({ kept_at_receipt_time: view.receipt.created_at, view, decision: null })); } catch { /* storage full or blocked */ }
+function saveLocal(key, view, original) {
+  try { localStorage.setItem(STORE_PREFIX + key, JSON.stringify({ kept_at_receipt_time: view.receipt.created_at, view, decision: null, original: original || { own: true } })); } catch { /* storage full or blocked */ }
 }
 function loadLocal(key) {
   try { return JSON.parse(localStorage.getItem(STORE_PREFIX + key) || "null"); } catch { return null; }
@@ -316,7 +322,21 @@ function caseFile(view, ctx) {
     h("h2", { id: "expl-title" }, "Explanation"),
     view.explanation.available ? h("p", {}, view.explanation.text) : null,
     h("p", { class: "muted small" }, view.explanation.note));
-  return [top, prop, steps, h("div", { class: "row" }, table, f1Panel(rc.f1, "Runs on AMD", "Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand.")), expl];
+  return [top, prop, steps, h("div", { class: "row" }, table, h("div", { class: "stack" }, originalPanel(ctx.original), f1Panel(rc.f1, "Runs on AMD", "Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand."))), expl];
+}
+
+/** S7-04: the image of the document the reading came from, beside the values, so a person can confirm against it. */
+function originalPanel(original) {
+  const head = h("h2", { id: "original-title" }, "View the original certificate");
+  if (!original || original.own) {
+    return h("section", { class: "card stack", "aria-labelledby": "original-title", id: "original" }, head,
+      h("p", { class: "small" }, "The original is your own file: this certificate is not one of the dataset samples, and the server keeps no copy of an upload. Compare the values with the PDF you uploaded."));
+  }
+  return h("section", { class: "card stack", "aria-labelledby": "original-title", id: "original" }, head,
+    h("details", {}, h("summary", {}, "Show the page image"),
+      h("a", { href: original.src, target: "_blank", rel: "noopener" },
+        h("img", { src: original.src, alt: `Page image of the original certificate ${original.label}`, loading: "lazy", style: "max-width: 100%; border: 1px solid #C9CEC9" }))),
+    h("p", { class: "muted small" }, original.note));
 }
 
 function channelText(r) {
@@ -390,6 +410,7 @@ function drawStory() {
   const s = session.story;
   const view = s.view;
   const ctx = { storedTitle: "Recorded reading", storedDetail: storyLabelDetail(s) };
+  ctx.original = { src: `/api/originals/${encodeURIComponent(s.id)}`, label: s.id, note: `The certificate of ${s.id} that this recorded reading read, as a page image made from the committed PDF (data/previews/${s.id}.png).` };
   const evaluate = async (extra) => {
     const r = await post(`/api/stories/${s.id}/evaluate`, { confirmations: s.confirmations, confirmed_by: s.by, ...extra });
     if (!r.ok) return r.body && r.body.error ? r.body.error : `Rejected (${r.status})`;
@@ -416,7 +437,9 @@ function localScreen(key) {
   const held = loadLocal(key);
   if (!held) return render(h("p", { class: "error" }, "This case is not in this browser's storage."));
   const view = held.view;
+  const o = held.original || { own: true };
   const ctx = { storedTitle: "Stored in this browser", storedDetail: localLabelDetail(view) };
+  ctx.original = o.by_certificate ? { src: `/api/originals/by-certificate/${encodeURIComponent(o.by_certificate)}`, label: "(dataset sample)", note: "The dataset sample certificate this live reading read, matched by the SHA-256 of the uploaded bytes in the receipt." } : { own: true };
   const nodes = [...caseFile(view, ctx)];
   if (held.decision) {
     nodes.push(h("section", { class: "card stack" }, h("h2", {}, "Decision recorded in this browser"),

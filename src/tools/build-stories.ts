@@ -50,7 +50,14 @@ export function storyView(r: CaseResult, rec: StoryRecording) {
   const steps = view.steps.map((s) => s.name.startsWith("Model reading")
     ? { ...s, name: "Model reading · recorded real reading", note: `read by the endpoint at ${rec.recorded_at}; stored, not live` }
     : s);
-  return { ...view, steps, reading_label: storyLabel(rec), receipt: JSON.parse(exportReceipt(r.receipt, {})) };
+  // S7-05 / T7-04: a recorded story says so in its JSON, next to reading_source, so that nobody reading the API can
+  // take it for a live call. A live job result is built by app.ts and never passes through here.
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries({ ...view, steps, reading_label: storyLabel(rec), receipt: JSON.parse(exportReceipt(r.receipt, {})) })) {
+    out[k] = v;
+    if (k === "reading_source") { out.recorded = true; out.recorded_at = rec.recorded_at; }
+  }
+  return out as unknown as ReturnType<typeof toView> & { recorded: true; recorded_at: string };
 }
 
 function storyFile(id: string, r: CaseResult, rec: StoryRecording) {

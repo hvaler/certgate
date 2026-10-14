@@ -26,6 +26,8 @@
     "reasons": [],
     "human_confirmation_required": [],
     "reading_source": "live",
+    "recorded": true,
+    "recorded_at": "2026-10-13T17:49:52.325Z",
     "reading_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T17:49:52.325Z · not live",
     "certificate": {
       "kind": "digital PDF with a text layer",

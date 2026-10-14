@@ -12,38 +12,33 @@ Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY
 human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) ·
 [EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).
 
-## Problem and user
+## Try it
 
-When a batch of steel arrives at a plant, it comes with a mill certificate (an inspection certificate of the
-EN 10204 3.1 kind): heat or lot, grade, chemical composition and measured mechanical properties. Someone in
-goods-in or Quality must check that the certificate belongs to that batch and that the values meet the purchase
-specification. Today this is done by hand, with certificates in different layouts and sometimes scanned. Material
-out of spec that reaches production means scrap, claims or a recall.
+- **Site:** https://certgate-wheat.vercel.app
+- **Judge mode** (`#/judge`): three recorded real readings by the model, with their receipts. It works at any time,
+  makes no model call and has no limit. Each run is labelled "recorded real reading … not live".
+- **Live reading:** a new reading of a certificate on AMD Token Factory. It needs the access code given to the
+  judges; the code is never written in this repository.
+- **Sample certificates:** the live screen offers three fictitious certificates (cg-004, cg-005, cg-010) and their
+  delivery notes, to download and upload back.
+- **The original certificate:** every case shows "View the original certificate", the page image of the document
+  the reading came from, beside the values. For an upload that is not one of the samples, the page says that the
+  original is your own file.
 
-- **Primary user:** goods-in or Quality technician at a mid-size plant that buys certified material.
-- **Who decides:** the Quality manager who signs the release or the block.
+### The certificates and their previews
 
-## What it does
+GitHub cannot show the scanned PDFs, so each certificate the site shows has a PNG preview next to it. The previews
+are made by [tools/previews.mjs](tools/previews.mjs) from the committed PDFs: for a scan, the PDF's own page image;
+for a digital certificate, page 1 rendered by the pinned pdf.js. Running the script again gives the same bytes.
 
-For each case (certificate PDF plus its delivery-note line), CertGate:
-
-1. Validates the files (PDF by magic bytes, size limits, not encrypted, has pages) and records their SHA-256.
-2. Reads the certificate through two channels:
-   - the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page
-     images** of every certificate, digital or scanned, and returns the values as one JSON object;
-   - the **text layer** of a digital PDF, extracted without any model. A scan has no text layer, so its critical
-     fields need human confirmation, and CertGate says so.
-3. Compares the channels. A disagreement makes the field unknown and the case goes to review.
-4. Checks internal coherence: heat or lot against the delivery note, expected units and scale jumps, and the
-   printed carbon equivalent against one recomputed from the composition. The formula's source is cited in
-   [docs/sources/cev-formula.md](docs/sources/cev-formula.md).
-5. Applies deterministic, versioned rules against the spec, with exact decimals (never binary floating point).
-6. Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run
-   receipt without secrets.
-
-Proposal precedence: a heat mismatch means review; otherwise block > review > release. Release is proposed only
-when no review or block condition holds. A scan is never proposed for release until a person has confirmed every
-critical field.
+| Case | PDF | Preview | Preview SHA-256 |
+|---|---|---|---|
+| cg-001 · story, conforming (digital) | [certificate.pdf](data/cases/cg-001/certificate.pdf) | [cg-001.png](data/previews/cg-001.png) | `686b0e2f4687d9557220cc8bef65f84423ee656a1d3cc2687efd5f515edd116f` |
+| cg-002 · story, out of spec (scan) | [certificate.pdf](data/cases/cg-002/certificate.pdf) | [cg-002.png](data/previews/cg-002.png) | `b4eaf0d17d76a5f764b9cdebbb5f7f4166cc1e06d4b854f9bb297a6c9300b5fe` |
+| cg-003 · story, the ambiguous scan (scan) | [certificate.pdf](data/cases/cg-003/certificate.pdf) | [cg-003.png](data/previews/cg-003.png) | `9fb6e411349eb8c1b57833b19d09b361e40de299544244ac92a9b7d4cf05b174` |
+| cg-004 · sample (digital) | [certificate.pdf](data/cases/cg-004/certificate.pdf) | [cg-004.png](data/previews/cg-004.png) | `b850c1e334d440e6f619a76bb0e5e5af48e19480c92ab37858b0b7992ca8c413` |
+| cg-005 · sample (digital) | [certificate.pdf](data/cases/cg-005/certificate.pdf) | [cg-005.png](data/previews/cg-005.png) | `fc1c257336227937d7a4bd5c3908954aa1d424fdbb4dbbd360d6354fb699d51a` |
+| cg-010 · sample (digital) | [certificate.pdf](data/cases/cg-010/certificate.pdf) | [cg-010.png](data/previews/cg-010.png) | `74d3335d9b32fbfc6c30031dde67f681bef1e99bc9982db4802f7e49224cbb8c` |
 
 ## What runs on AMD, and how it is shown
 
@@ -152,6 +147,114 @@ node tools/evaluate/metrics.mjs evaluation/runs/<name>                          
 
 `public/figures.json` and the stories are never generated from a Gemma run.
 This comparison makes no claim about any prize or award.
+
+## Architecture and certificate flow
+
+Both diagrams are generated by [tools/diagrams.mjs](tools/diagrams.mjs) from one definition, in which every box and arrow names the file and symbol it stands for; a test checks each one against the code. The SVG files are the band's own render of the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).
+
+### Architecture
+
+<!-- diagram:architecture -->
+```mermaid
+flowchart TB
+  browser["Browser<br/>public/app.js"]
+  container["Container (other way to run)<br/>Dockerfile"]
+  static["Vercel static site<br/>public/ (outputDirectory)"]
+  api["Vercel function api<br/>api/index.ts"]
+  server["Node server<br/>createApp (src/server.ts)"]
+  handler["Request handler<br/>createHandler (src/web/app.ts)"]
+  jobs["Live-reading queue and limits<br/>LiveJobs"]
+  reader["Live reader<br/>DeadlineReader / LiveReader"]
+  store["Upstash Redis store<br/>UpstashRestStore"]
+  memory["In-process store<br/>MemoryStore"]
+  amd["AMD Token Factory<br/>OpenAI-compatible endpoint"]
+  gemma["Deployed live model<br/>Gemma-4-31B-IT (MODEL_ID)"]
+  qwen["Evaluated product model<br/>Qwen3.8-27B"]
+  browser -->|"page, stories"| static
+  browser -->|"/api/*"| api
+  container -->|"dist/src/server.js"| server
+  api --> handler
+  server --> handler
+  handler -->|"queue a job"| jobs
+  handler -->|"live reading"| reader
+  jobs -->|"deployed site"| store
+  jobs -->|"container"| memory
+  reader -->|"/chat/completions"| amd
+  amd -->|"MODEL_ID"| gemma
+  amd -->|"evaluation runs"| qwen
+```
+<!-- /diagram -->
+
+### Certificate flow
+
+<!-- diagram:flow -->
+```mermaid
+flowchart TB
+  upload["Upload<br/>certificate PDF + delivery CSV"]
+  story["Story<br/>replayStory"]
+  open["Certificate opened<br/>openPdf"]
+  textlayer["Text-layer channel<br/>extractTextLayer"]
+  model["Model reading on AMD<br/>processCase / readCase"]
+  channels["Channels compared<br/>resolveChannels"]
+  config["Versioned config<br/>config/plausibility.v1.json"]
+  rules["Coherence and rules<br/>RULES_VERSION"]
+  decimals["Exact decimals<br/>decimal.js"]
+  proposal["Proposal<br/>release / block / review"]
+  human["A person confirms and decides<br/>recordHumanDecision"]
+  receipt["Run receipt<br/>exportReceipt"]
+  upload -->|"live job"| open
+  story -->|"recorded reply"| open
+  open -->|"when present"| textlayer
+  open -->|"model channel"| model
+  textlayer --> channels
+  model --> channels
+  channels --> rules
+  config --> rules
+  decimals --> rules
+  rules --> proposal
+  proposal -->|"confirmations"| human
+  human --> receipt
+```
+<!-- /diagram -->
+
+## Screenshots
+
+Real captures of the deployed site at 1280 px and 375 px, made by [tools/capture-screenshots.mjs](tools/capture-screenshots.mjs) (Playwright). Each image is captioned with the site commit and the capture time, and `docs/screenshots/manifest.json` will record the SHA-256 of the files the site served at capture time.
+
+Not captured yet: they are taken from the deployed site after this version is deployed, never from a local build. The planned screens are the landing with its figures, judge mode, story cg-003 with the ReH row and the Block proposal, the confirmation and decision section, the "Runs on AMD" panel, and the live-reading screen.
+
+## Problem and user
+
+When a batch of steel arrives at a plant, it comes with a mill certificate (an inspection certificate of the
+EN 10204 3.1 kind): heat or lot, grade, chemical composition and measured mechanical properties. Someone in
+goods-in or Quality must check that the certificate belongs to that batch and that the values meet the purchase
+specification. Today this is done by hand, with certificates in different layouts and sometimes scanned. Material
+out of spec that reaches production means scrap, claims or a recall.
+
+- **Primary user:** goods-in or Quality technician at a mid-size plant that buys certified material.
+- **Who decides:** the Quality manager who signs the release or the block.
+
+## What it does
+
+For each case (certificate PDF plus its delivery-note line), CertGate:
+
+1. Validates the files (PDF by magic bytes, size limits, not encrypted, has pages) and records their SHA-256.
+2. Reads the certificate through two channels:
+   - the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page
+     images** of every certificate, digital or scanned, and returns the values as one JSON object;
+   - the **text layer** of a digital PDF, extracted without any model. A scan has no text layer, so its critical
+     fields need human confirmation, and CertGate says so.
+3. Compares the channels. A disagreement makes the field unknown and the case goes to review.
+4. Checks internal coherence: heat or lot against the delivery note, expected units and scale jumps, and the
+   printed carbon equivalent against one recomputed from the composition. The formula's source is cited in
+   [docs/sources/cev-formula.md](docs/sources/cev-formula.md).
+5. Applies deterministic, versioned rules against the spec, with exact decimals (never binary floating point).
+6. Proposes `release`, `block` or `review`, records the person's decision (who, when, why) and exports a run
+   receipt without secrets.
+
+Proposal precedence: a heat mismatch means review; otherwise block > review > release. Release is proposed only
+when no review or block condition holds. A scan is never proposed for release until a person has confirmed every
+critical field.
 
 ## Demo procedure
 
@@ -425,16 +528,41 @@ tools/       dataset generator (Python, dev-time), evaluation, metrics and devel
 evidence/    stage records of the band (registers, handoffs, verdicts, logs)
 ```
 
-## How it was built
+## How it was built and verified
 
-CertGate was built by a band of four Claude Code seats: analyst, implementer, adversary and auditor.
-- The implementer alone wrote the product.
-- The adversary attacked it, including mutation checks.
-- The auditor accepted or rejected each stage independently. In Stage 3 it made its own real evaluation run.
+CertGate was built with Claude Code by a band of four seats. AMD Token Factory runs the product's reading of the
+certificates. Every figure below comes from the stage register,
+[evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md), and the records it
+names.
 
-The UI was designed with Claude Design and implemented by the band: the design defines the look, and the
-behaviour follows the written specification. The model that reads the certificates in this build runs on AMD
-Token Factory.
+- **Analyst:** wrote each stage's obligation register from the human's dispatch and coordinated the stage.
+- **Implementer:** the only seat that wrote the product.
+- **Adversary:** challenged each register and attacked each candidate, including mutation checks.
+- **Auditor:** accepted or rejected each stage independently, with its own clean clones, its own mutants and, in
+  Stage 3, its own real evaluation run.
+
+| Stage | Accepted candidate | Repair cycles used | Rejections before acceptance |
+|---|---|---|---|
+| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1: F-01, F-02, F-05; mutants M13 and M14 survived |
+| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1: F2-01 |
+| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3: F3-01, ADV-S3-F01, ADV-S3-F02 |
+| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4: F4-01, F4-02, F4-03 |
+| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2: F5-01, F5-02 |
+| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1: F6-01, F6-02; then the operator's security repair (R6.4) |
+
+**Mutation checks**, from the same register:
+- Stage 1: 14 of 14 killed.
+- Stage 2: the auditor's 29 of 29 killed.
+- Stage 3: 12 of 12 killed.
+- Stage 4: the adversary's 38 of 38 killed.
+- Stage 6: the auditor's 13 of 13 on the security delta, and the adversary's 9 of 9.
+
+**Independent auditor runs:**
+- Stage 3: the auditor's own real evaluation, 26 of 27 proposals as expected (see "Evaluation").
+- Stage 6: the live checks on the deployed site.
+
+**Design:** the UI was designed with Claude Design. The design defines the look, and the behaviour follows the
+written specification.
 
 ## License
 

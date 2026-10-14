@@ -446,6 +446,25 @@ export function createHandler(deps: AppDeps = {}) {
     res.end(readFileSync(abs));
   }
 
+  /**
+   * S7-04: "View the original certificate". The committed previews of the three stories and the sample certificates
+   * (data/previews, made by tools/previews.mjs), by case id. The id from the request is only a key into this fixed
+   * map, built from the allow-list; no part of the request path reaches the filesystem.
+   */
+  const ORIGINALS = new Map<string, string>([...STORY_IDS, ...SAMPLE_IDS].map((id) => [id, path.join(getDataDir(), "previews", `${id}.png`)]));
+  /**
+   * CH7-04: a live result's original is chosen by the bytes that were read, never by a case id from the client: the
+   * SHA-256 of a sample certificate (the receipt's certificate_sha256) maps to that sample. Any other hash is 404.
+   */
+  const ORIGINAL_BY_SHA256 = new Map<string, string>(SAMPLE_IDS.map((id) => [createHash("sha256").update(readFileSync(path.join(getDataDir(), "cases", id, "certificate.pdf"))).digest("hex"), id]));
+  function originalFile(id: string, res: ServerResponse) {
+    const file = ORIGINALS.get(id);
+    if (file === undefined) return send(res, 404, { error: "not found" });
+    const png = readFileSync(file);
+    res.writeHead(200, { "content-type": "image/png", "cache-control": "public, max-age=300", "x-content-sha256": createHash("sha256").update(png).digest("hex"), ...SECURITY_HEADERS });
+    res.end(png);
+  }
+
   async function storyEvaluate(id: string, body: Record<string, unknown>) {
     if (!(STORY_IDS as readonly string[]).includes(id)) throw new HttpError(404, "unknown story");
     const now = clock().toISOString();
@@ -464,7 +483,9 @@ export function createHandler(deps: AppDeps = {}) {
       });
     }
     const out = viewJson(r);
-    return { ...out, view: { ...out.view, ...storyView(r, rec) }, note: `recorded real reading of ${id} (${rec.recorded_at}), re-evaluated by the server at ${now} with the confirmations and decision given; not live` };
+    // T7-04: the story view's key order first, so that recorded and recorded_at sit next to reading_source.
+    const sv = storyView(r, rec);
+    return { ...out, view: { ...sv, ...out.view, ...sv }, note: `recorded real reading of ${id} (${rec.recorded_at}), re-evaluated by the server at ${now} with the confirmations and decision given; not live` };
   }
 
   function serveStatic(urlPath: string, res: ServerResponse) {
@@ -499,6 +520,10 @@ export function createHandler(deps: AppDeps = {}) {
       if (m === "GET" && p === "/api/samples") return send(res, 200, samples(), NO_STORE);
       const sample = /^\/api\/samples\/([A-Za-z0-9_-]+)\/(certificate\.pdf|delivery\.csv)$/.exec(p);
       if (m === "GET" && sample) return sampleFile(sample[1]!, sample[2]!, res);
+      const original = /^\/api\/originals\/([^/]+)$/.exec(p);
+      if (m === "GET" && original) return originalFile(original[1]!, res);
+      const bySha = /^\/api\/originals\/by-certificate\/([^/]+)$/.exec(p);
+      if (m === "GET" && bySha) return originalFile(ORIGINAL_BY_SHA256.get(bySha[1]!) ?? "", res);
       if (m === "POST" && p === "/api/live/read") {
         return send(res, 200, await liveRead((await readBody(req)) as Record<string, unknown>), NO_STORE);
       }

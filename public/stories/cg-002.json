@@ -92,6 +92,8 @@
       "mechanical.KV_3"
     ],
     "reading_source": "live",
+    "recorded": true,
+    "recorded_at": "2026-10-13T17:50:57.586Z",
     "reading_label": "recorded real reading · self-dploy/Qwen3.8-27B via AMD Token Factory · 2026-10-13T17:50:57.586Z · not live",
     "certificate": {
       "kind": "scanned PDF, no text layer",

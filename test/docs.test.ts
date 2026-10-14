@@ -1,6 +1,7 @@
 // Stage 4 delivery checks over the documents (R4.0 S4-01…S4-05, S4-11, S4-12; R4.3 F-02, F-06…F-10). Offline:
 // they read only committed files.
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -127,7 +128,13 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     const forbidden = [/MI3\d\d/, /ROCm \d/, /vLLM \d/, /deployed at/i, /\blive at\b/i, /submitted/i, /winner/i, /qualif/i, /own vLLM endpoint/i, /AMD Instinct/i,
       // R4.7 (F-06 extension): no hosted-demo claim or deployment URL. The cited Vercel documentation URL is allowed.
       /vercel\.app/i, /hosted demo/i, /https?:\/\/(?!localhost|127\.|vercel\.com\/docs\/)[^\s)"'`]*(vercel|netlify)/i];
-    for (const f of files) for (const re of forbidden) expect(read(f), `${f}: ${re}`).not.toMatch(re);
+    // Stage 7 (dispatch 5, S7-06): README's "Try it" names the deployed site. Exactly that one URL is allowed, in
+    // README only, once, inside "Try it"; any other deployment URL or hosted-demo wording is still forbidden.
+    const SITE = "https://certgate-wheat.vercel.app";
+    const readme = read("README.md");
+    expect(readme.split(SITE).length - 1, "the site URL appears once in README").toBe(1);
+    expect(readme.indexOf(SITE) > readme.indexOf("## Try it") && readme.indexOf(SITE) < readme.indexOf("## What runs on AMD"), "the site URL is in Try it").toBe(true);
+    for (const f of files) for (const re of forbidden) expect(f === "README.md" ? read(f).replace(`- **Site:** ${SITE}\n`, "") : read(f), `${f}: ${re}`).not.toMatch(re);
     // ADV-S4-F06: no positive claim that live reading works on the deployed site, in prose, headings or code
     // comments. The documented negative sentences ("unavailable on the deployed site", "runs from the container,
     // not from the deployed site") are allowed: a match is a finding only if it carries no negation.
@@ -167,7 +174,9 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     ];
     // High-entropy token: 24 or more of [A-Za-z0-9_-] with at least 4 letter/digit alternations (as in generated
     // keys), so that file names such as BLOCKER-host-memory-1906Z are not flagged.
-    const highEntropy = (t: string) => (t.match(/[A-Za-z0-9_-]{24,}/g) ?? []).filter((w) => (w.match(/[A-Za-z](?=\d)|\d(?=[A-Za-z])/g) ?? []).length >= 4);
+    // Stage 7 (S7-03): the README lists the SHA-256 of each committed preview; exactly those digests are allowed.
+    const previewDigests = new Set(readdirSync(path.join(ROOT, "data", "previews")).filter((f) => f.endsWith(".png")).map((f) => createHash("sha256").update(readFileSync(path.join(ROOT, "data", "previews", f))).digest("hex")));
+    const highEntropy = (t: string) => (t.match(/[A-Za-z0-9_-]{24,}/g) ?? []).filter((w) => !previewDigests.has(w) && (w.match(/[A-Za-z](?=\d)|\d(?=[A-Za-z])/g) ?? []).length >= 4);
     for (const f of DOCS) {
       const t = read(f);
       for (const re of patterns) expect(t, `${f}: ${re}`).not.toMatch(re);
