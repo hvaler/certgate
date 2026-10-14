@@ -115,13 +115,18 @@ export class LiveJobs {
     };
     // W-04: take a place in the queue first, then look at it, so a burst cannot overfill the queue; a busy refusal
     // gives the place back and consumes nothing (it comes before the hourly count).
+    // A-01: the queue is scored by admission time (FIFO by admission), and the bound counts the jobs waiting, so
+    // a request that arrived earlier but reaches admission later cannot jump the queue or overfill it. The
+    // deadline is still measured from arrival (J-14, created_at).
     await this.store.zremBelow(KEYS.queue, this.pruneBefore());
-    await this.store.zadd(KEYS.queue, arrivedAt.getTime(), job.job_id);
-    const rank = (await this.store.zrank(KEYS.queue, job.job_id)) ?? 0;
-    if (rank >= this.budget.maxWaiting) {
+    await this.store.zadd(KEYS.queue, this.now(), job.job_id);
+    const waiting = await this.store.zcard(KEYS.queue);
+    const rankOrNull = await this.store.zrank(KEYS.queue, job.job_id);
+    if (waiting > this.budget.maxWaiting || rankOrNull === null) {
       await this.store.zrem(KEYS.queue, job.job_id);
       throw new Refusal(429, REASONS.busy, { reason_class: "busy" });
     }
+    const rank = rankOrNull;
     const n = await this.store.incr(KEYS.reads(hourKey(d)), WINDOW_TTL_S);
     if (readsPerHour <= 0 || n > readsPerHour) {
       await this.store.zrem(KEYS.queue, job.job_id);

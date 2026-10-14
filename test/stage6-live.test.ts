@@ -267,6 +267,19 @@ describe("code and lease guards that only show across instances or over time (S6
     expect(st.body.code_failures_this_hour_global).toBe("2");
     expect((await startJob(base, { client: "203.0.113.5" })).status).toBe(202);
   });
+  it("an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)", async () => {
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const clock = () => new Date((t += 5));
+    const store = new MemoryStore(() => t);
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    const jobs = new LiveJobs(store, clock, DEPLOYED_LIVE_BUDGET);
+    const a = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
+    const b = await jobs.admit(10, STUB_MODEL_ID, new Date(t));
+    await expect(jobs.admit(10, STUB_MODEL_ID, new Date(t - 5_000))).rejects.toMatchObject({ status: 429, extra: { reason_class: "busy" } });
+    expect([await store.zrank(KEYS.queue, a.job_id), await store.zrank(KEYS.queue, b.job_id)]).toEqual([0, 1]);
+    expect(await store.zcard(KEYS.queue)).toBe(2);
+    expect(await store.get(KEYS.reads("2026-10-14T13"))).toBe("2");
+  });
   it("a late finisher never frees another job's slot: release is compare-and-delete on the job's own token", async () => {
     const store = new MemoryStore();
     const { LiveJobs } = await import("../src/web/live-jobs.js");
