@@ -1,6 +1,6 @@
 # Obligation register — Stage 7 (documentation, visuals and the original certificate)
 
-Run: certgate-001 · Stage: 7 · Register version: **R7.0** (analyst-xwz3, 2026-10-14).
+Run: certgate-001 · Stage: 7 · Register version: **R7.1** (analyst-xwz3, 2026-10-14; R7.0 = commit 21b4b02; R7.1 accepts adversary challenge msg 10d6e7f5, CH7-01…CH7-12, supported by the auditor in f2cebca9, and rules on the implementer's questions in 11df15bb).
 
 - **Dispatch 5:** room msg `6f50b629-4b40-43c8-9d03-6e008b7b1f6b` from hugo.valer, received ~18:30Z. Verbatim copy: `evidence/runs/certgate-001/DISPATCH-5.txt`.
 - Dispatches 1–4 remain in force except where dispatch 5 changes them.
@@ -51,3 +51,77 @@ Run: certgate-001 · Stage: 7 · Register version: **R7.0** (analyst-xwz3, 2026-
 | T7-06 | **Diagrams.** Every Mermaid node and edge maps to a CLAIMS row and to existing code (file and symbol). The SVG or PNG exports match the Mermaid source, through a committed script or a test. Claims show 0 unmapped and 0 stale |
 | T7-07 | **README.** Every figure equals METRICS.md. Every linked asset answers 200, locally and live. "How it was built and verified" contains only facts found in the registers and reports. The prize check E-17…E-19 still passes |
 | T7-08 | **Local acceptance.** 5 cold clean-clone runs. Docker `--network none`, if memory allows. The auditor's mutants on the guard and the flag, plus the Stage 6 carry-forward for unmoved code. The live checks follow the human's deployment report |
+
+## R7.1 amendments
+
+| ID | Ruling |
+|---|---|
+| L-ALL | **CH7-01…CH7-12 are accepted as written** (verbatim appendix below) and bind candidate 1 and phase B. In particular:<br>- the code input is **empty** (`value === ""`) in every capture, and the code is set by route interception or cleared before capture;<br>- no trace, HAR or video is recorded;<br>- a manifest of the served files' SHA-256 proves which commit was captured;<br>- the live-result original is chosen by the **upload's SHA-256**, never by a client id;<br>- the route serves only the preview and the PDF for allow-listed ids;<br>- previews regenerate deterministically, with no `tIME`, `tEXt` or `iTXt` chunks;<br>- the recorded flag appears everywhere a recording is served and never on a live result;<br>- the README names the event only through exact, auditor-reviewed allow-list sentences, or without prize-family words;<br>- diagram nodes are claims units, with a killer for an invented node;<br>- every count in "How it was built and verified" cites its record;<br>- every page text scan is done inside the script, never printing secrets |
+| L-13 | **Playwright is not a dependency (implementer question, 11df15bb). Approved.** The capture script runs as `npx -y -p playwright@<exact pinned version> node tools/capture-screenshots.mjs`. The pinned version and the Chromium build are named in the script and in the handoff. `package.json`, the lockfile and the Docker image are unchanged. The capture needs network, which is outside the offline suite; that is recorded as a limitation. A test still greps the script for forbidden tracing, HAR and video options (CH7-02) |
+| L-14 | **Diagrams from one committed JS definition (`tools/diagrams.mjs`), approved.** It generates both the README Mermaid block and `docs/diagrams/*.svg`, with no new dependency. A test checks that both equal the generator's output. The SVG is the band's own rendering of the same graph, not Mermaid's renderer, and the README says so |
+| L-15 | **Operator: access code rotated** (relayed by the implementer in 11df15bb, said in the implementer's window at ~18:42Z). LIVE_ACCESS_CODE was rotated in Vercel and in the host's user-level environment, and the site was redeployed. This closes the Stage 6 C1 remedy. It is read from the user-level registry at run time and never printed, nor any property of it (D7-03) |
+
+### Appendix: adversary challenge msg 10d6e7f5, verbatim
+
+@hugo.valer/analyst-xwz3 @hugo.valer/implementer-xwz4 @hugo.valer/auditor-xwz6 ADVERSARY CHALLENGE to Stage 7 register R7.0 (commit 21b4b02), checked against dispatch 5. These are gaps where every row could pass while the product or evidence is wrong. I issue no verdict.
+
+**CH7-01 [S7-02, T7-05, D7-03]: a masked field leaks the code's length.** A password input shows one dot per character. Any screenshot taken while the code field is filled writes the code's length into an image, which is the C1 class D7-03 forbids.
+- Rule: capture the live screen only after the field is cleared, or never type into the visible field at all. For example, the capture script can set the header through Playwright route interception rather than the form.
+- Killer: the visible-field check asserts that the code input is **empty** (`value === ""`) in every capture, not merely "masked".
+- The same applies to the 375 px captures.
+
+**CH7-02 [S7-02, T7-05]: no Playwright side artefacts.** No trace, HAR, video or console capture of request headers may be kept. The code travels in `x-live-access-code`, and a HAR or trace stores it verbatim.
+- The script disables all of them explicitly, and a test greps the script for `tracing.start`, `recordHar` and `recordVideo`.
+- The evidence scan covers the Playwright output directory too.
+
+**CH7-03 [S7-02, T7-05]: proving "captured from the named commit".** The site does not expose its commit, and `/health` must stay as accepted.
+- Proof: at capture time the script fetches the served `public/*` files and records their SHA-256 in a manifest next to the images. They must equal the committed files at the named commit.
+- A caption alone is not evidence.
+
+**CH7-04 [S7-04]: the live-result original is chosen by bytes, not by a client id.**
+- "View the original certificate" on a live result for a sample must map from the **SHA-256 of the uploaded bytes** to the sample's id, through the existing `datasetCertificateHashes`. It must never take a case id from the client, or a client could pair any reading with any dataset image.
+- A non-sample upload shows the "your own file" text and requests nothing from the server.
+- Killer: a live job on an upload that is byte-different from every sample never offers a dataset preview.
+
+**CH7-05 [S7-04, T7-02]: what the route may serve.**
+- Only the preview PNG and the PDF for allow-listed ids. Never `case.json`, `data/expected/*`, `evaluation/*` or a dataset case outside the allow-list.
+- Killers: `cg-020`, a real dataset id that is not allow-listed, gives 404; `case.json` under an allowed id gives 404.
+- Headers: `Content-Type` exact, `X-Content-Type-Options: nosniff`.
+- Bundle reachability: if the files go through `includeFiles`, `node_modules/pdfjs-dist` must stay in it (E-15/G-1 mutant). My `bundle-sim.mjs` shows a story preview and a sample preview answering 200 from a Vercel-shaped bundle.
+
+**CH7-06 [S7-03, T7-03]: byte-identical previews need a pinned platform.**
+- Scans: embedded page image bytes, re-encoded deterministically or copied.
+- Digital renders depend on fonts, canvas and zlib. Name the renderer version and the environment that regenerates them (the Docker image is best), and run the T7-03 check there.
+- PNGs must carry no time, text or software chunks (`tIME`, `tEXt`, `iTXt`), so that the hash is stable.
+
+**CH7-07 [S7-05, T7-04]: the recorded flag everywhere a recording is served.**
+- It belongs on the story list, the story view and evaluate, and the story JSON files.
+- It must **not** be on a live job result.
+- Mutants: the flag dropped from evaluate; the flag added to a live result.
+- The J-08 disabled-site golden changes only by the new field and the new route, and that change is listed.
+
+**CH7-08 [S7-06, T7-07]: the prize check vs a judge-facing README.**
+- `PRIZE_WORDS` includes `hackathon`, `track`, `challenge` and `compet\w*`. A README that names the event ("AMD Developer Hackathon: ACT III, track Intelligent Industry") will fail the fail-closed check.
+- Rule: phrase without those words, or add **exact** allow-list sentences reviewed by the auditor, as E-17 does. Never a blanket exemption, and never a weakened check.
+- Killer: the existing allow-list stale test still passes.
+
+**CH7-09 [S7-01, T7-06]: diagram nodes as claims.**
+- Each Mermaid node and edge label is a text unit for the claims map.
+- Killer: a mutant that adds a node naming a component that does not exist (for example "vLLM on MI300X" or "Evolus") must fail a test, not only a review.
+- The export check (Mermaid source to SVG or PNG) is a committed script whose output hash is pinned.
+
+**CH7-10 [S7-06]: "How it was built and verified" counts.**
+- Each number (stages, repair cycles, rejections, mutation counts, auditor runs) cites its record: a commit or a file path.
+- A test checks at least the counts that are in committed evidence. The prose must not round or aggregate them into claims the records do not state.
+- No adjectives about quality.
+
+**CH7-11 [S7-02, D7-02]: screenshot content.**
+- The "Runs on AMD" and receipt captures may show the endpoint **host**. They must not show the base-URL path, the key or any header value.
+- If tesseract is not on this host, apply the visible-field rule to every text element in the page DOM at capture time: scan `document.body.innerText` for the secret values, inside the script, never printing them.
+
+**CH7-12 [S7-07, T7-01]: unchanged code.**
+- `app.ts` hunks only for the route and the flag.
+- The Stage 6 mutants on unmoved code carry forward.
+- My P1–P15 re-run on candidate 1 shows Stage 6 behaviour intact.
+
+I will build the Stage 7 mutants (route guard, flag, sample mapping, previews, diagram node) on candidate 1 and re-run P1–P15. No endpoint calls unless granted.
