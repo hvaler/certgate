@@ -138,7 +138,9 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 its two runs are the figures of record. In the Gemma run there was no false conforming (0 of 18), but it proposed
 review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field
 (1 of 594, cg-017) that both Qwen runs reported as unknown. The landing figures, the stories and the product
-default stay Qwen3.8-27B. The deployed site makes no model call: judge mode replays recorded Qwen readings.
+default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading on the
+deployed site uses the model set in Vercel's `MODEL_ID` (Gemma-4-31B-IT, from dispatch 4; see DEPLOY.md), and each
+live receipt names the model as the endpoint reports it.
 
 To run the comparison, set `MODEL_ID` only in the environment of the evaluation command (the other two `MODEL_*`
 variables as for any real run):
@@ -167,9 +169,11 @@ Start the container in mock mode (no endpoint and no network needed); see "Run i
 4. **Open the receipt:** it shows the values, both channels, the rules, the endpoint data at reading time, and a
    JSON download.
 5. **Runs on AMD (`#/amd`):** without an endpoint it says "endpoint off" with the time of the check.
-6. **Live reading (container in real mode only):** start the container with the three `MODEL_*` variables (see
-   "Run it"), choose a dataset certificate, confirm the third-party notice, and press "Read live". A reading takes
-   about 1 to 4 minutes.
+6. **Live reading:** on the deployed site, when it is configured (DEPLOY.md), or from the container in real mode
+   with the three `MODEL_*` variables (see "Run it"). Download a sample certificate from the live screen, choose
+   it, confirm the third-party notice (and type the access code where one is set), and press "Read live". The page
+   shows the job as queued with its position, then reading with the seconds so far, then opens the case file; a
+   failed reading says why and offers a retry, and never shows a stored result instead.
 
 ## Run it
 
@@ -209,7 +213,8 @@ node dist/src/cli.js process --case cg-001
 
 ### Real mode: live reading against AMD Token Factory (container or local)
 
-Live reading runs from the container, not from the deployed site.
+In the container, live readings run as jobs with an in-process queue and limits; no store is needed. On the
+deployed site they need the access code and the shared store (DEPLOY.md).
 
 ```sh
 # MODEL_BASE_URL, MODEL_API_KEY and MODEL_ID come from your environment; never write their values anywhere.
@@ -258,7 +263,10 @@ Every page carries the fictitious-data notice. Pages make no third-party request
 | `GET /health` | status and mode |
 | `GET /api/f1` | "Runs on AMD" data from the configured endpoint, probed at most once per 60 s (`no-store`) |
 | `GET /api/live/status` | live reading: enabled, limit, remaining this hour, reopening time, windows, upload policy, notice (`no-store`) |
-| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading, or C11 `endpoint_off` with no endpoint (`no-store`) |
+| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading in one request, container only, or C11 `endpoint_off` with no endpoint; 503 on the deployed site (`no-store`) |
+| `POST /api/live/jobs` | `{certificate_base64, delivery_csv?, delivery_line?, synthetic_confirmed: true}`, the access code in the `x-live-access-code` header: starts a live reading job and answers 202 with its id and queue position (`no-store`) |
+| `GET /api/live/jobs/<id>` | the job: queued with position, reading with elapsed seconds, done with the view and receipt of its own reading, or failed with a reason class (`no-store`) |
+| `GET /api/samples`, `GET /api/samples/<cg-004\|cg-005\|cg-010>/<certificate.pdf\|delivery.csv>` | three dataset certificates and their delivery notes, to download and upload back |
 | `POST /api/stories/<cg-001\|cg-002\|cg-003>/evaluate` | `{confirmations?: [{field, value}], confirmed_by?, decision?: {action, reason, decided_by}}`: the recorded reading re-evaluated (no model call) with a person's confirmations and decision; times are stamped by the server |
 | `GET /stories/<id>.json`, `GET /stories/<id>.recording.json` | recorded run and its stored endpoint reply (versioned static files) |
 | `GET /figures.json` | landing figures, generated from the evaluation artifacts |
@@ -267,8 +275,8 @@ Every page carries the fictitious-data notice. Pages make no third-party request
 Release is rejected (HTTP 409, and in the core) while the proposal is not release.
 
 `GET /health` reports two separate fields. `mode` is the mode of the CLI and the dataset API (`CERTGATE_MODE`,
-`mock` by default). `reader` is `live` when an endpoint and a model are configured outside the deployed site, and
-`off` otherwise. A container in real mode therefore answers `"mode": "mock", "reader": "live"`: the dataset API
+`mock` by default). `reader` is `live` when an endpoint and a model are configured outside the deployed site, or on
+the deployed site when live reading is enabled there, and `off` otherwise. A container in real mode therefore answers `"mode": "mock", "reader": "live"`: the dataset API
 still uses the mock, and live reading uses the endpoint.
 
 ### Live reading against the local test stub (tests and review only)
@@ -310,18 +318,24 @@ Secrets (`MODEL_API_KEY`, `LIVE_ACCESS_CODE`) stay on the server and are never s
 | `MODEL_BASE_URL` | none | OpenAI-compatible endpoint (AMD Token Factory), including `/v1`; unset = endpoint off |
 | `MODEL_API_KEY` | none | secret, sent only to that endpoint |
 | `MODEL_ID` | none | model id requested from the endpoint |
-| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, server-side, per instance; unset, invalid or 0 = disabled; documented deployment value 20 |
-| `LIVE_ACCESS_CODE` | none (no default) | needed for live reading of a visitor-uploaded file; without it only dataset certificates are read live |
-| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per UTC hour before rejection |
+| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, counted on the server (in the shared store on the deployed site, in process in the container); unset, invalid or 0 = disabled; documented deployment value 20 |
+| `LIVE_ACCESS_CODE` | none (no default) | mandatory for live reading on the deployed site; in the container, needed for a visitor-uploaded file (without it only dataset certificates are read live) |
+| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; all clients together get 10 times as many |
 | `LIVE_WINDOWS` | none | announced live windows, shown as text |
-| `VERCEL` | set by Vercel | on the deployed site live reading is unavailable (time budget, see Limitations) |
+| `UPSTASH_REDIS_REST_URL` | none | the shared store's REST URL, set by the Vercel Marketplace integration (deployed site only) |
+| `UPSTASH_REDIS_REST_TOKEN` | none | secret: the shared store's token, set by the integration |
+| `KV_REST_API_URL` | none | fallback name of the store URL, read when the Upstash name is absent |
+| `KV_REST_API_TOKEN` | none | secret: fallback name of the store token |
+| `VERCEL` | set by Vercel | the deployed-site rules: live reading needs the access code, the shared store, an hourly limit and the endpoint |
 
 Input limits:
 - CLI and container: certificate PDF up to 10 MiB; delivery note up to 1 MiB.
 - Web upload: **up to 3 MiB** of PDF, sent as base64 so the request stays below Vercel's 4.5 MB body limit;
   delivery note up to 256 KiB.
 
-Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).
+Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
+[docs/sources/vercel-functions.md](docs/sources/vercel-functions.md),
+[docs/sources/upstash-redis.md](docs/sources/upstash-redis.md).
 
 ## Limitations
 
@@ -337,17 +351,16 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).
   - The provider keeps prompts and outputs for about 2 days, so only synthetic data may be sent. Before any live
     reading the page shows that notice, and the server requires the visitor to confirm it.
 - **Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).
-- **Deployed site has no live reading (OI-S2-02).**
-  - The worst case of one live reading is 3 × 300 s + 2 × 120 s = 1140 s, above the 300 s Vercel function
-    duration.
-  - With `VERCEL` set, `/api/live/read` answers 503 "live reading unavailable on the deployed site; live
-    demonstration from the container", and the page says so.
-  - Judge mode works on the deployed site; live reading is demonstrated from the container.
-- **Live-read limit per instance (OI-S2-01).** The limit is counted on the server, per server instance, in
-  memory. Measured consequence: two instances with a limit of 2 let 4 readings through (test "the live limit is per
-  instance" in `test/web.test.ts`). With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour, all
-  drawn on the same endpoint key. A shared store behind the same interface (`src/web/limiter.ts`) would make it
-  global.
+- **Live reading on the deployed site is bounded by the function duration (OI-S2-02).**
+  - A job waits at most 60 s for one of the two reading slots and then has at most 210 s to read, inside the
+    300 s function duration; a reading that does not finish in time fails as "timed out" and offers a retry.
+  - The one-request route `/api/live/read` stays unavailable there (503 "live reading unavailable on the deployed
+    site; live demonstration from the container"); the deployed site reads through the job API.
+  - Without the access code and the shared store configured, the deployed site has no live reading at all.
+- **Live-read limits (OI-S2-01).** On the deployed site the hourly limit, the two in-flight slots and the
+  wrong-code counts are kept in the shared store, so they hold across all instances. In the container they are
+  kept in process: two separate container processes with a limit of 2 let 4 readings through (test "the live
+  limit is per instance" in `test/web.test.ts`).
 - **Uploads.** Without `LIVE_ACCESS_CODE`, live reading is limited to the 30 dataset certificates, matched by
   SHA-256; with it, a visitor's synthetic file can also be read. The access-code path is tested against a local
   stub with a test-only code, and no real access code is configured on the band's host.

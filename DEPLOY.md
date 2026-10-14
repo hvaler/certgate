@@ -1,9 +1,10 @@
 # Deploying CertGate on Vercel (for the human)
 
-The band does not deploy and holds no Vercel or GitHub credentials; the human does this. Deploy the accepted
-commit named in the room. The deployed site is **judge mode only**: three recorded real readings, the case files,
-human confirmation and decision, the receipts, and the landing figures. It makes **no model call**. Live reading
-runs from the container (README, "Real mode"), never from the deployed site.
+The band does not deploy and holds no Vercel, GitHub or store credentials; the human does this. Deploy the accepted
+commit named in the room. Judge mode works with no configuration: three recorded real readings, the case files,
+human confirmation and decision, the receipts, and the landing figures. Live reading on the deployed site is the
+extra: it is enabled only when the access code, the shared store, the hourly limit and the model endpoint are all
+configured (sections 3 and 4). Without them the site behaves exactly as the Stage 5 site, and makes no model call.
 
 ## 1. Project settings
 
@@ -25,57 +26,87 @@ runs from the container (README, "Real mode"), never from the deployed site.
   [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md):
   - "Hobby 300s (5 minutes) 300s (5 minutes)";
   - source https://vercel.com/docs/functions/limitations, retrieved 2026-10-12.
-- Any plan works.
-- Even 300 s cannot hold one live reading. Its worst case is 3 × 300 s + 2 × 120 s = 1140 s
-  (`LIVE_WORST_CASE_MS` in `src/web/limits.ts`). That is why the deployed site has no live reading: with `VERCEL`
-  set, `/api/live/read` answers 503.
+- A live reading runs as a job inside that limit (`DEPLOYED_LIVE_BUDGET` in `src/web/limits.ts`): at most 60 s
+  waiting for a reading slot, at most 210 s reading (rendering, attempts and retries included), and 30 s kept
+  free. The job keeps running after the first answer through Vercel's `waitUntil`
+  ([docs/sources/vercel-functions.md](docs/sources/vercel-functions.md)).
 
-## 3. Environment variables (names only; never write a value anywhere)
+## 3. The shared store (done by the human on 2026-10-14, about 12:55Z)
 
-| Variable | On Vercel | Why |
-|---|---|---|
-| `MODEL_BASE_URL` | **do not set** | Live reading is unavailable on Vercel by design. Without it, the "Runs on AMD" panel honestly shows "endpoint off", and the shared endpoint key is never exposed to anonymous traffic |
-| `MODEL_API_KEY` | **do not set** | same |
-| `MODEL_ID` | **do not set** | same |
-| `LIVE_READS_PER_HOUR` | leave unset | live reading is off on Vercel anyway; unset also means "disabled" |
-| `LIVE_ACCESS_CODE` | leave unset | only meaningful with live reading |
-| `LIVE_CODE_FAILURES_PER_HOUR` | leave unset | same |
-| `LIVE_WINDOWS` | optional | free text shown on the landing, for example the time of a live demo from the container |
-| `CERTGATE_MODE` | leave unset (`mock`) | dataset API only |
-| `CERTGATE_DATA_DIR` | leave unset | the function bundles `data/` (`includeFiles` in `vercel.json`) |
-| `PORT` | leave unset | not used by the Vercel function |
-| `VERCEL` | **set by Vercel itself**; never set or remove it | it switches live reading off on the deployed site |
+Live reading needs one store shared by all function instances, for the queue and the limits. Connect **Upstash for
+Redis** from the Vercel Marketplace to the project ([docs/sources/upstash-redis.md](docs/sources/upstash-redis.md)).
+In the Vercel project's Environment Variables page, check that **one** of these pairs is present:
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`, or `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
+CertGate reads the first pair, else the second. It never reads `KV_REST_API_READ_ONLY_TOKEN`.
 
-## 4. Checks after deploying
+The Upstash Free plan allows 500K commands per month ([docs/sources/upstash-redis.md](docs/sources/upstash-redis.md)).
+One live reading costs about 40 to 60 store commands: about 15 for admission and the code check, one slot attempt
+every 2 s while it waits, and one poll every 2 s from the browser while it reads. A judge's reading of 35 s is
+about 40 commands. If the store refuses or cannot be reached, live reading is refused with
+"the shared store is unavailable; live reading refused"; it never falls back to anything else.
 
-Replace `<site>` with the deployment URL. Each check states its expected result.
+## 4. Environment variables (names only; never write a value anywhere)
+
+Mark every variable marked "secret" below as **Secret** when you add it ("Choose **Config** or **Secret** under
+**Type**", [docs/sources/vercel-functions.md](docs/sources/vercel-functions.md)). The store variables were created
+by the integration and cannot be changed to Secret from the list: to make them Secret, reconnect the store with
+Development deselected and Sensitive enabled, as that page describes, then redeploy.
+
+| Variable | On Vercel | Secret | Why |
+|---|---|---|---|
+| `MODEL_BASE_URL` | set: the AMD Token Factory base URL, including `/v1` | yes | the endpoint of live reading, read only on the server |
+| `MODEL_API_KEY` | set: the team's Token Factory key | yes | sent only from the server to the endpoint; never to the browser |
+| `MODEL_ID` | set: `Gemma-4-31B-IT` | no | the live model of the deployed site (dispatch 4). To switch back to Qwen, set it to `Qwen3.8-27B` and redeploy; no code changes. Do that if Gemma returns unusable readings again, as on 2026-10-13 |
+| `LIVE_ACCESS_CODE` | set: a code you choose and give to the judges | yes | mandatory: without it live reading stays off on the deployed site |
+| `LIVE_READS_PER_HOUR` | set: `20` | no | the global hourly limit of live readings, counted in the shared store across all instances |
+| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; all clients together are allowed 10 times as many (section 6) |
+| `UPSTASH_REDIS_REST_URL` | set by the store integration | no | the store's REST URL (or `KV_REST_API_URL`) |
+| `UPSTASH_REDIS_REST_TOKEN` | set by the store integration | yes | the store's token (or `KV_REST_API_TOKEN`) |
+| `KV_REST_API_URL` | set by the store integration, if it uses these names | no | the fallback name of the REST URL |
+| `KV_REST_API_TOKEN` | set by the store integration, if it uses these names | yes | the fallback name of the token |
+| `LIVE_WINDOWS` | optional | no | free text shown on the landing |
+| `CERTGATE_MODE` | leave unset (`mock`) | no | dataset API only |
+| `CERTGATE_DATA_DIR` | leave unset | no | the function bundles `data/` (`includeFiles` in `vercel.json`) |
+| `PORT` | leave unset | no | not used by the Vercel function |
+| `VERCEL` | **set by Vercel itself**; never set or remove it | no | it selects the deployed-site rules: the access code and the shared store are required |
+
+The landing figures and the three recorded readings stay Qwen3.8-27B, whatever `MODEL_ID` says: they come from
+the committed evaluation runs. A live reading names the model the endpoint reports, in its receipt.
+
+## 5. Checks after deploying
+
+Replace `<site>` with the deployment URL. Each check states its expected result. The checks marked "code" need
+the access code; type it in place of `<code>` in your own terminal and do not paste it anywhere else.
 
 ```sh
-curl -s https://<site>/health                     # 200, JSON with "status": "ok"
-curl -s https://<site>/api/f1                     # 200, "state": "off", "detail": "no endpoint configured"
-curl -s https://<site>/api/live/status            # 200, "enabled": false, "deployed_site": true,
-                                                  #      "reason": "live reading unavailable on the deployed site; live demonstration from the container"
+curl -s https://<site>/health                     # 200, "status": "ok", "reader": "live"
+curl -s https://<site>/api/f1                     # 200, "state": "on", the model list of the endpoint
+curl -s https://<site>/api/live/status            # 200, "enabled": true, "access_code_required": true, "used_this_hour" and "in_flight" counts
 curl -s -o /dev/null -w "%{http_code}\n" https://<site>/stories/cg-003.json            # 200
-curl -s -o /dev/null -w "%{http_code}\n" https://<site>/stories/cg-003.recording.json  # 200
 curl -s -o /dev/null -w "%{http_code}\n" https://<site>/figures.json                   # 200
 curl -s -X POST -H "content-type: application/json" -d '{}' https://<site>/api/stories/cg-003/evaluate   # 200, "proposal": "block"
-curl -s -X POST -H "content-type: application/json" -d '{"certificate_base64":"","synthetic_confirmed":true}' -o /dev/null -w "%{http_code}\n" https://<site>/api/live/read   # 503
+curl -s -o cg-004.pdf https://<site>/api/samples/cg-004/certificate.pdf               # the sample certificate
+curl -s -X POST -H "content-type: application/json" -d "{\"certificate_base64\":\"$(base64 -w0 cg-004.pdf)\",\"synthetic_confirmed\":true}" https://<site>/api/live/jobs   # 403, no code
 ```
 
-In a browser, at phone width (375 px) and desktop width (1280 px):
+Then one real live reading, in a browser: open the site, go to "Read a certificate live", download the sample
+cg-004 certificate and its delivery note, choose them, give line 1 and the access code, tick the notice and press
+"Read live". The page shows "Queued", then "Reading at AMD Token Factory" with the seconds so far, then opens the
+case file. Its receipt names the model as reported by the endpoint, with the endpoint snapshot taken at reading
+time.
 
-1. The landing shows the fictitious-data notice and four figures with denominators, and names the evaluation
-   run they come from.
-2. The endpoint pill says "Model endpoint: off".
-3. Judge mode lists cg-001, cg-002 and cg-003, each labelled "recorded real reading … not live".
-4. On cg-003, release is disabled. After confirming every critical field with ReH 358 and re-running the
-   rules, release becomes possible.
-5. The receipt opens and downloads as JSON.
-6. "Read a certificate live" says "live reading unavailable on the deployed site; live demonstration from the
-   container", and "Read live" is disabled.
-7. The page makes no request outside the site. Check the browser network tab.
+If live reading is not configured completely, the site answers exactly as before Stage 6: `/api/live/status` shows
+"enabled": false with "live reading unavailable on the deployed site; live demonstration from the container",
+`/api/live/read` and `/api/live/jobs` answer 503, and the server log names what is missing (no values).
+
+## 6. Wrong codes, and clearing a lockout
+
+Every attempt with a code counts first, and a correct code is given back at once. A client (identified by a hash
+of its address) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).
+All clients together are refused after 10 times that number (default 50). To clear a lockout before the hour ends,
+delete the keys `certgate:live:codefail:g:<hour>` (all clients) or `certgate:live:codefail:c:<hash>:<hour>` (one
+client) in the Upstash console, where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.
+
+Then report in the room that the deployment is done, so that the auditor can run its checks.
 
 Known cosmetic issue: `/favicon.ico` answers 404.
-
-Then report the URL in the room so that the auditor can check it: every asset answers 200, and the served files
-match the committed ones.

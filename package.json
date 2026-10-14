@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "1.0.11",
+    "@vercel/functions": "3.10.1",
     "decimal.js": "10.6.0",
     "pdfjs-dist": "6.4.299"
   },

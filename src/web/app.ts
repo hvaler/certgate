@@ -21,7 +21,10 @@ import { probeF1 } from "./f1.js";
 import { datasetCertificateHashes } from "./dataset-hashes.js";
 import { InMemoryHourlyCounter, type HourlyCounter } from "./limiter.js";
 import { LiveReader, type LiveCallInfo } from "./live-reader.js";
-import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES, DEPLOYED_LIVE_UNAVAILABLE, LIVE_FITS_DEPLOYED_FUNCTION } from "./limits.js";
+import { WEB_MAX_CERTIFICATE_BYTES, WEB_MAX_DELIVERY_BYTES, WEB_MAX_REQUEST_BYTES, DEPLOYED_LIVE_UNAVAILABLE, LIVE_FITS_DEPLOYED_FUNCTION, DEPLOYED_LIVE_BUDGET, CONTAINER_LIVE_BUDGET, type LiveBudget } from "./limits.js";
+import { MemoryStore, StoreUnavailable, UpstashRestStore, storeEnv, type LiveStore } from "./live-store.js";
+import { JOB_ID, KEYS, LiveJobs, REASONS, Refusal, WINDOW_TTL_S, hourKey, type Outcome, type ReasonClass } from "./live-jobs.js";
+import { getDataDir } from "../config.js";
 import { toView } from "./view.js";
 import type { PlantedEntry } from "../model-output.js";
 
@@ -59,7 +62,23 @@ export interface AppDeps {
   adapterTimeoutMs?: number;
   /** Test-only override of retry backoff; never reachable over HTTP. */
   backoffBaseMs?: number;
+  /**
+   * Shared store for live jobs and their limits (Stage 6). Default: Upstash REST from the integration's variables on
+   * the deployed site (none: live reading refused), an in-process MemoryStore in the container. Tests inject one
+   * MemoryStore into two handlers to simulate two instances.
+   */
+  liveStore?: LiveStore;
+  /** Keeps the job's work alive after the response: Vercel's waitUntil in api/index.ts; in process otherwise. */
+  defer?: (work: Promise<unknown>) => void;
+  /** Test-only budget and polling override; never reachable over HTTP. */
+  liveBudget?: Partial<LiveBudget>;
 }
+
+/** Dataset certificates offered for download on the live screen (S6-06, CH6-16): a fixed allow-list by id. */
+export const SAMPLE_IDS = ["cg-004", "cg-005", "cg-010"] as const;
+/** The live job API's request header for the access code; never a query parameter (CH6-01). */
+export const ACCESS_CODE_HEADER = "x-live-access-code";
+const JOB_POLL_INTERVAL_S = 2;
 
 const NO_STORE = { "cache-control": "no-store" };
 const TYPES: Record<string, string> = {
@@ -129,12 +148,35 @@ function parseConfirmations(raw: unknown, by: string, at: string): FieldConfirma
 export function createHandler(deps: AppDeps = {}) {
   const env = deps.env ?? process.env;
   const clock = deps.clock ?? (() => new Date());
-  const cfg: WebConfig = loadWebConfig(env);
+  const loaded: WebConfig = loadWebConfig(env);
+  // Stage 6 (S6-01, S6-04, CH6-04): on the deployed site, live reading is enabled only with an access code, the
+  // shared store, an hourly limit and a configured endpoint. Otherwise the site behaves as at 409fb69a and the new
+  // live routes answer the deployed-site refusal.
+  const sEnv = storeEnv(env);
+  const deployedMissing = !loaded.deployedSite ? null
+    : loaded.liveAccessCode === null ? "code"
+    : sEnv === null && !deps.liveStore ? "store"
+    : loaded.liveReadsPerHour <= 0 ? "limit"
+    : loaded.modelBaseUrl === null || loaded.modelId === null ? "endpoint"
+    : null;
+  const deployedLive = loaded.deployedSite && deployedMissing === null;
+  // J-08: with live reading disabled on the deployed site every existing route answers as at 409fb69a, so the
+  // loaded configuration is used unchanged there; only the new job routes look at deployedLive.
+  const cfg: WebConfig = loaded;
   const liveCounter = deps.liveCounter ?? new InMemoryHourlyCounter(cfg.liveReadsPerHour, clock);
   const codeFailures = deps.codeFailureCounter ?? new InMemoryHourlyCounter(cfg.liveCodeFailuresPerHour, clock);
   let shared: Shared | null = null;
   const getShared = () => (shared ??= loadShared("mock"));
   let lastLive: LiveCallInfo | null = null;
+  const store: LiveStore | null = deps.liveStore
+    ?? (loaded.deployedSite ? (sEnv && deployedLive ? new UpstashRestStore(sEnv.url, sEnv.token) : null) : new MemoryStore(() => clock().getTime()));
+  const budget: LiveBudget = { ...(loaded.deployedSite ? DEPLOYED_LIVE_BUDGET : CONTAINER_LIVE_BUDGET), ...deps.liveBudget };
+  const jobs = store ? new LiveJobs(store, clock, budget) : null;
+  const defer = deps.defer ?? ((w: Promise<unknown>) => void w.catch(() => undefined));
+  // J-08: what is missing on the deployed site goes to the server log only (names, never values).
+  if (loaded.deployedSite && deployedMissing !== null && deployedMissing !== "code") {
+    console.warn(`[certgate] live reading disabled on the deployed site: ${deployedMissing === "store" ? "no shared store variables" : deployedMissing === "limit" ? "LIVE_READS_PER_HOUR not set or 0" : "MODEL_BASE_URL or MODEL_ID not set"}`);
+  }
 
   function liveStatus() {
     const p = liveCounter.peek();
@@ -204,6 +246,10 @@ export function createHandler(deps: AppDeps = {}) {
     // 5. Limit, checked and consumed atomically, on the server (S2-16, B-02).
     await validateCertificate(inputBase.certificate);
     if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
+    // The container's synchronous route shares the job API's hourly count in the in-process store (CH6-17).
+    if (jobs && (await jobs.store.incr(KEYS.reads(hourKey(clock())), WINDOW_TTL_S)) > cfg.liveReadsPerHour) {
+      throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: liveCounter.peek().reopens_at });
+    }
     const slot = liveCounter.tryConsume();
     if (!slot.ok) {
       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: slot.reopens_at });
@@ -215,6 +261,174 @@ export function createHandler(deps: AppDeps = {}) {
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);
     }
     return { counted: true, remaining_this_hour: String(slot.remaining), ...viewJson(r) };
+  }
+
+  // ---- Stage 6: live jobs (S6-01…S6-08) ----
+
+  /** The live state for the job API: enabled, and the refusal when it is not (CH6-03, CH6-04). */
+  function jobGate(): { enabled: true } | { enabled: false; status: number; reason: string } {
+    if (cfg.deployedSite) {
+      // J-08: one identical refusal whatever is missing; the detail goes to the server log only.
+      if (!deployedLive) return { enabled: false, status: 503, reason: DEPLOYED_LIVE_UNAVAILABLE };
+      return { enabled: true };
+    }
+    if (cfg.liveReadsPerHour <= 0) return { enabled: false, status: 429, reason: "live reading disabled: LIVE_READS_PER_HOUR not set or 0" };
+    return { enabled: true };
+  }
+
+  async function liveStatusNow(req: IncomingMessage) {
+    const base = liveStatus();
+    // J-08: disabled on the deployed site, for any reason, answers exactly as at 409fb69a.
+    if (cfg.deployedSite && !deployedLive) return base;
+    const gate = jobGate();
+    const c = await jobs!.counts(cfg.liveCodeFailuresPerHour, clientKey(req));
+    const remaining = Math.max(0, cfg.liveReadsPerHour - c.used_this_hour);
+    return {
+      ...base,
+      enabled: gate.enabled,
+      reason: gate.enabled ? (remaining > 0 ? "open within the limit" : "limit reached this hour") : gate.reason,
+      remaining_this_hour: String(gate.enabled ? remaining : 0),
+      reopens_at: c.reopens_at,
+      scope_note: cfg.deployedSite ? "global: counted in the shared store across all instances" : "global for this server process: counted in the in-process store",
+      used_this_hour: String(c.used_this_hour),
+      in_flight: String(c.in_flight),
+      waiting: String(c.waiting),
+      code_failures_this_hour_global: String(c.code_failures_this_hour_global),
+      code_failures_this_hour_this_client: String(c.code_failures_this_hour_this_client),
+      code_failure_limit_per_client: String(c.code_failure_limit_per_client),
+      code_failure_ceiling_global: String(c.code_failure_ceiling_global),
+      job_api: "/api/live/jobs",
+      access_code_header: ACCESS_CODE_HEADER,
+      poll_interval_s: String(JOB_POLL_INTERVAL_S),
+      model_requested: cfg.modelId,
+      samples: "/api/samples",
+    };
+  }
+
+  /** F1 on the deployed site with live enabled: one probe per 60 s across instances (H-11, CH6-11). */
+  async function f1Now() {
+    if (!deployedLive || !store) return probeF1(cfg, clock, lastLive);
+    const hit = await store.get(KEYS.f1);
+    if (hit) return JSON.parse(hit);
+    if (await store.setNx(KEYS.f1Lock, "1", 60_000)) {
+      const snap = await probeF1(cfg, clock, lastLive);
+      await store.set(KEYS.f1, JSON.stringify(snap), 60);
+      await store.set(KEYS.f1Last, JSON.stringify(snap), 3600);
+      return snap;
+    }
+    // Another instance holds the probe (J-09): wait briefly for its snapshot instead of probing again.
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 100));
+      const fresh = await store.get(KEYS.f1);
+      if (fresh) return JSON.parse(fresh);
+    }
+    const last = await store.get(KEYS.f1Last);
+    return last ? JSON.parse(last) : { ...(await probeF1({ ...cfg, modelBaseUrl: null }, clock, null)), detail: "the endpoint check is in progress on another instance" };
+  }
+
+  const clientKey = (req: IncomingMessage) => {
+    const fwd = String(req.headers["x-forwarded-for"] ?? "").split(",")[0]!.trim();
+    const ip = fwd || String(req.headers["x-real-ip"] ?? "").trim() || req.socket.remoteAddress || "unknown";
+    return createHash("sha256").update(ip, "utf8").digest("hex").slice(0, 32);
+  };
+
+  const READER_CLASS: Record<string, ReasonClass> = { timeout: "timeout", http_429: "endpoint_429", http_5xx: "endpoint_5xx", endpoint_off: "endpoint_5xx" };
+
+  async function startJob(req: IncomingMessage, body: Record<string, unknown>) {
+    const arrivedAt = clock(); // J-14: the deadline is measured from the request's arrival
+    const gate = jobGate();
+    if (!gate.enabled) throw new HttpError(gate.status, gate.reason);
+    // 1. Input shape, size and consent, before anything is counted (CH6-09, CH6-16).
+    if (typeof body.certificate_base64 !== "string") throw new HttpError(400, "certificate_base64 is required");
+    const cert = Buffer.from(body.certificate_base64, "base64");
+    if (cert.length > WEB_MAX_CERTIFICATE_BYTES) throw new HttpError(413, `certificate exceeds the web limit of ${WEB_MAX_CERTIFICATE_BYTES} bytes`);
+    if (body.synthetic_confirmed !== true) throw new HttpError(400, `confirm the notice first: ${LIVE_NOTICE}`);
+    const csv = typeof body.delivery_csv === "string" ? Buffer.from(body.delivery_csv, "utf8") : null;
+    if (csv && csv.length > WEB_MAX_DELIVERY_BYTES) throw new HttpError(413, `delivery note exceeds ${WEB_MAX_DELIVERY_BYTES} bytes`);
+    const line = typeof body.delivery_line === "string" ? body.delivery_line : null;
+    // 2. Access code: request header only, never the query string or the body (CH6-01, J-12). J-02 count first:
+    //    both failure counters are incremented atomically before the compare; over a limit, no compare at all; a
+    //    correct code gives both units back.
+    if (cfg.liveAccessCode !== null) {
+      const client = clientKey(req);
+      const attempt = await jobs!.countCodeAttempt(client, cfg.liveCodeFailuresPerHour);
+      if (attempt.over) throw new HttpError(429, "too many wrong access codes this hour", { reopens_at: attempt.reopens_at });
+      if (!codeMatches(req.headers[ACCESS_CODE_HEADER], cfg.liveAccessCode)) throw new HttpError(403, "wrong or missing access code; no live reading was used");
+      await jobs!.forgiveCode(client);
+    } else if (!datasetCertificateHashes().has(createHash("sha256").update(cert).digest("hex"))) {
+      throw new HttpError(403, "live reading of an uploaded file needs the access code, which is not configured on this server; only the dataset certificates can be read live here");
+    }
+    // 3. Documents valid and endpoint on, still before counting.
+    const inputBase = {
+      case_id: `upload-${createHash("sha256").update(cert).digest("hex").slice(0, 12)}`,
+      certificate: new Uint8Array(cert),
+      delivery_note: csv ? { name: "delivery.csv", bytes: new Uint8Array(csv) } : null,
+      delivery_line: line,
+      spec: getShared().spec,
+      plausibility: getShared().plausibility,
+      mode: "real",
+      now: clock,
+    };
+    await validateCertificate(inputBase.certificate);
+    if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
+    const f1 = await f1Now();
+    if (f1.state !== "on") throw new HttpError(503, `no live endpoint: ${f1.detail}`);
+    // 4. Admission: busy check, then one atomic count in the UTC hour (CH6-05, CH6-08).
+    const job = await jobs!.admit(cfg.liveReadsPerHour, cfg.modelId!, arrivedAt);
+    const requested = cfg.modelId!;
+    const work = async (attemptTimeoutMs: number): Promise<Outcome> => {
+      const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: requested, apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs ?? attemptTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
+      const r = await processCase({ ...inputBase, reader, f1 });
+      if (r.receipt.status === "error" || !reader.lastCall) {
+        if (reader.attempts.at(-1)?.outcome === "http_4xx") return { kind: "failed", reason_class: "endpoint_4xx" };
+        const cls = [...r.receipt.errors].reverse().find((e) => !e.recovered)?.class ?? "endpoint_off";
+        return { kind: "failed", reason_class: READER_CLASS[cls] ?? "invalid_model_output" };
+      }
+      // CH6-12: the reading counts only if the endpoint reports the requested model.
+      const reported = reader.lastCall.model_reported ?? "";
+      if (!reported.toLowerCase().includes(requested.toLowerCase())) return { kind: "failed", reason_class: "model_mismatch" };
+      lastLive = reader.lastCall;
+      r.receipt.f1 = await probeF1(cfg, clock, lastLive);
+      return { kind: "done", result: { counted: true, ...viewJson(r) } };
+    };
+    defer(jobs!.run(job, work));
+    return {
+      job_id: job.job_id, state: job.state, position: job.position, created_at: job.created_at,
+      model_requested: requested, poll: `/api/live/jobs/${job.job_id}`, poll_interval_s: JOB_POLL_INTERVAL_S,
+    };
+  }
+
+  async function jobView(id: string) {
+    const gate = jobGate();
+    if (!gate.enabled && cfg.deployedSite) throw new HttpError(gate.status, gate.reason);
+    if (!JOB_ID.test(id) || !jobs) throw new HttpError(404, "unknown job");
+    const v = await jobs.view(id);
+    if (!v) throw new HttpError(404, "unknown job");
+    return v;
+  }
+
+  function samples() {
+    return {
+      note: "Fictitious certificates of the synthetic dataset (data/cases), offered for download and upload back. They are sent to AMD Token Factory only when you start a live reading.",
+      samples: SAMPLE_IDS.map((id) => {
+        const c = JSON.parse(readFileSync(path.join(getDataDir(), "cases", id, "case.json"), "utf8")) as { delivery_note: string; delivery_line: string; certificate_kind: string };
+        const pdf = readFileSync(path.join(getDataDir(), "cases", id, "certificate.pdf"));
+        return {
+          id, kind: c.certificate_kind, delivery_line: c.delivery_line,
+          certificate: `/api/samples/${id}/certificate.pdf`, certificate_sha256: createHash("sha256").update(pdf).digest("hex"),
+          delivery_note: `/api/samples/${id}/delivery.csv`,
+        };
+      }),
+    };
+  }
+
+  function sampleFile(id: string, file: string, res: ServerResponse) {
+    if (!(SAMPLE_IDS as readonly string[]).includes(id)) return send(res, 404, { error: "not found" });
+    const c = JSON.parse(readFileSync(path.join(getDataDir(), "cases", id, "case.json"), "utf8")) as { delivery_note: string };
+    const abs = file === "certificate.pdf" ? path.join(getDataDir(), "cases", id, "certificate.pdf") : path.join(getDataDir(), c.delivery_note);
+    const type = file === "certificate.pdf" ? "application/pdf" : "text/csv; charset=utf-8";
+    res.writeHead(200, { "content-type": type, "content-disposition": `attachment; filename="${id}-${file}"`, "cache-control": "public, max-age=300", ...SECURITY_HEADERS });
+    res.end(readFileSync(abs));
   }
 
   async function storyEvaluate(id: string, body: Record<string, unknown>) {
@@ -259,11 +473,17 @@ export function createHandler(deps: AppDeps = {}) {
       if (m === "GET" && (p === "/health" || p === "/api/health")) {
         // The reader state from the loaded configuration only (R4.5 E-08): "live" when an endpoint and model are
         // configured outside the deployed site, otherwise "off". No claim beyond that.
-        const reader = cfg.modelBaseUrl !== null && cfg.modelId !== null && !cfg.deployedSite ? "live" : "off";
+        const reader = cfg.modelBaseUrl !== null && cfg.modelId !== null && (!cfg.deployedSite || deployedLive) ? "live" : "off";
         return send(res, 200, { status: "ok", mode: getMode(env), reader, notice: "All data is fictitious." }, NO_STORE);
       }
-      if (m === "GET" && p === "/api/f1") return send(res, 200, await probeF1(cfg, clock, lastLive), NO_STORE);
-      if (m === "GET" && p === "/api/live/status") return send(res, 200, liveStatus(), NO_STORE);
+      if (m === "GET" && p === "/api/f1") return send(res, 200, await f1Now(), NO_STORE);
+      if (m === "GET" && p === "/api/live/status") return send(res, 200, await liveStatusNow(req), NO_STORE);
+      if (m === "POST" && p === "/api/live/jobs") return send(res, 202, await startJob(req, (await readBody(req)) as Record<string, unknown>), NO_STORE);
+      const job = /^\/api\/live\/jobs\/([^/]+)$/.exec(p);
+      if (m === "GET" && job) return send(res, 200, await jobView(job[1]!), NO_STORE);
+      if (m === "GET" && p === "/api/samples") return send(res, 200, samples(), NO_STORE);
+      const sample = /^\/api\/samples\/([A-Za-z0-9_-]+)\/(certificate\.pdf|delivery\.csv)$/.exec(p);
+      if (m === "GET" && sample) return sampleFile(sample[1]!, sample[2]!, res);
       if (m === "POST" && p === "/api/live/read") {
         return send(res, 200, await liveRead((await readBody(req)) as Record<string, unknown>), NO_STORE);
       }
@@ -282,6 +502,9 @@ export function createHandler(deps: AppDeps = {}) {
       return send(res, 404, { error: "not found" });
     } catch (e) {
       if (e instanceof HttpError) return send(res, e.status, { status: "rejected", error: e.message, ...e.extra }, NO_STORE);
+      if (e instanceof Refusal) return send(res, e.status, { status: "rejected", error: e.message, ...e.extra }, NO_STORE);
+      // A store failure refuses live reading; it never falls back to another queue or to a stored result (CH6-04).
+      if (e instanceof StoreUnavailable) return send(res, 503, { status: "rejected", reason_class: "store_unavailable", error: REASONS.store_unavailable }, NO_STORE);
       if (e instanceof CaseInputError || e instanceof InputRejected || e instanceof DeliveryNoteError || e instanceof ConfirmationError) {
         return send(res, 400, { status: "rejected", code: (e as InputRejected).code ?? e.name, error: e.message }, NO_STORE);
       }

@@ -16,13 +16,15 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const STUB_MODEL_ID = "certgate-test-stub";
 
-export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null } = {}) {
+export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null, delayMs = 0, errorText = null } = {}) {
   // reportedModel: the "model" field of the chat reply (null => STUB_MODEL_ID; "" => omitted is not supported here).
-  const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null };
+  // delayMs: the chat reply waits this long (concurrency tests); inFlight/maxInFlight count open chat requests.
+  // errorText: the body text of the http_429/http_5xx replies (leak tests put sentinel values there).
+  const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null, delayMs, errorText, inFlight: 0, maxInFlight: 0, modelsCalls: 0 };
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://stub");
     const json = (status, body, headers = {}) => { res.writeHead(status, { "content-type": "application/json", ...headers }); res.end(JSON.stringify(body)); };
-    if (url.pathname === "/v1/models") return json(200, { object: "list", data: [{ id: STUB_MODEL_ID, object: "model" }] });
+    if (url.pathname === "/v1/models") { state.modelsCalls++; return json(200, { object: "list", data: [{ id: STUB_MODEL_ID, object: "model" }] }); }
     if (url.pathname === "/v1/usage") {
       state.usageCalls = (state.usageCalls ?? 0) + 1;
       return json(200, { rpm_limit: 20, daily_cost_limit_usd: 1, daily_cost_used_usd: 0.001 * state.chatCalls, daily_cost_remaining_usd: 1 - 0.001 * state.chatCalls });
@@ -30,14 +32,19 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
     if (url.pathname === "/v1/chat/completions" && req.method === "POST") {
       let body = "";
       req.on("data", (c) => { body += c; });
-      req.on("end", () => {
+      req.on("end", async () => {
         state.chatCalls++;
+        state.inFlight++;
+        state.maxInFlight = Math.max(state.maxInFlight, state.inFlight);
+        res.on("close", () => { state.inFlight--; });
+        if (state.delayMs > 0) await new Promise((r) => setTimeout(r, state.delayMs));
         state.lastAuthorization = req.headers.authorization ?? null;
         try { state.lastModel = JSON.parse(body).model ?? null; } catch { state.lastModel = null; }
         switch (state.mode) {
           case "timeout": return; // never answers
-          case "http_429": return json(429, { error: "rate limited (stub)" });
-          case "http_5xx": return json(503, { error: "unavailable (stub)" });
+          case "http_429": return json(429, { error: state.errorText ?? "rate limited (stub)" });
+          case "http_5xx": return json(503, { error: state.errorText ?? "unavailable (stub)" });
+          case "http_4xx": return json(404, { detail: { error: state.errorText ?? "not found (stub)" } });
           case "invalid_json": res.writeHead(200, { "content-type": "application/json" }); return res.end("{ not json");
           case "huge": res.writeHead(200, { "content-type": "application/json" }); return res.end("x".repeat(2 * 1024 * 1024));
           default: {

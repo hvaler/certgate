@@ -148,36 +148,54 @@ function explainSection() {
 async function liveSection(st) {
   await refreshF1();
   const on = lastF1 && lastF1.state === "on";
-  const msg = h("p", { class: "small", id: "live-msg", role: "status" });
+  const msg = h("p", { class: "small", id: "live-msg", role: "status", "aria-live": "polite" });
   const pdf = h("input", { id: "live-pdf", type: "file", accept: "application/pdf" });
   const csv = h("input", { id: "live-csv", type: "file", accept: ".csv,text/csv" });
   const line = h("input", { id: "live-line", type: "text", inputmode: "numeric", placeholder: "e.g. 1" });
   const code = st && st.access_code_required ? h("input", { id: "live-code", type: "password", autocomplete: "off" }) : null;
   const exhausted = st && st.enabled && st.remaining_this_hour === "0";
-  const canRead = !!(st && st.enabled && !exhausted);
+  const canRead = !!(st && st.enabled && !exhausted && st.job_api);
   const confirm = h("input", { id: "live-confirm", type: "checkbox" });
-  const btn = h("button", { class: "btn primary", type: "button", disabled: !canRead, onclick: () => doLiveRead(pdf, csv, line, code, confirm, msg, btn) }, "Read live");
+  const inputs = { pdf, csv, line, code, confirm };
+  const btn = h("button", { class: "btn primary", type: "button", disabled: !canRead, onclick: () => doLiveRead(st, inputs, msg, btn) }, "Read live");
   const why = !st ? "Live status unavailable."
     : st.deployed_site && !st.enabled ? `${st.reason}.`
     : !st.enabled ? "Live reading is disabled on this server (no hourly limit configured)."
     : exhausted ? `Live readings for this hour are used up. Read live reopens at ${st.reopens_at}.`
     : on ? "The model endpoint is up." : "The model endpoint is off right now: a reading would not happen, and nothing is counted.";
+  const samples = st && st.samples ? await samplesBlock(st.samples) : null;
   return h("section", { class: "card stack", id: "live", "aria-labelledby": "live-title" },
     h("div", { class: "btns between" }, h("h2", { id: "live-title" }, "Read a certificate live"), badge("LIVE · needs the model endpoint")),
     h("p", { class: "muted" }, on ? "" : "When the endpoint is off, live reading opens during the announced windows: ",
       on ? "" : h("strong", {}, st && st.windows ? st.windows : "no live window is announced"), on ? "" : ". The three recorded runs work at any time."),
+    st && st.job_api ? h("p", { class: "small", id: "live-model" }, "A live reading is made by the model this server requests (",
+      h("strong", { class: "mono" }, st.model_requested || "not configured"),
+      "); its receipt shows the model as reported by the endpoint. The landing figures and the three recorded runs come from the evaluation runs named with them; the comparison with Gemma is in METRICS.md.") : null,
+    samples,
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "live-pdf" }, "Mill certificate (PDF)"), pdf),
       h("div", { class: "field" }, h("label", { for: "live-csv" }, "Delivery note (CSV)"), csv),
       h("div", { class: "field" }, h("label", { for: "live-line" }, "Delivery note line (partida)"), line),
       code ? h("div", { class: "field" }, h("label", { for: "live-code" }, "Access code for live reading"), code) : null),
-    h("p", { class: "small" }, "Live readings are limited to ", h("strong", {}, st ? st.limit_per_hour : "?"), " per hour for everyone, counted on the server, per server instance in this build. Remaining this hour: ",
+    h("p", { class: "small" }, "Live readings are limited to ", h("strong", {}, st ? st.limit_per_hour : "?"), " per hour for everyone (", st ? st.scope_note : "?", "). Remaining this hour: ",
       h("strong", { id: "live-remaining" }, st ? st.remaining_this_hour : "?"), ". Judge mode has no limit."),
     h("p", { class: "small" }, "What can be read live here: ", h("strong", {}, st ? st.upload_policy : "?"), "."),
     h("p", { class: "note", id: "live-notice" }, st ? st.notice : ""),
     h("label", { class: "check", for: "live-confirm" }, confirm, h("span", {}, "I have read the notice: the file is synthetic and may be sent to AMD Token Factory.")),
     h("p", { class: "small" }, why),
     h("div", { class: "btns" }, btn), msg);
+}
+
+/** Sample certificates of the synthetic dataset, to download and upload back (S6-06). */
+async function samplesBlock(url) {
+  const r = await api(url);
+  if (!r.ok || !r.body || !Array.isArray(r.body.samples)) return null;
+  return h("div", { class: "stack", id: "live-samples" },
+    h("p", { class: "small" }, r.body.note),
+    h("ul", { class: "small" }, r.body.samples.map((s) => h("li", {},
+      h("a", { href: s.certificate, download: `${s.id}-certificate.pdf` }, `${s.id} certificate (PDF, ${s.kind})`), " · ",
+      h("a", { href: s.delivery_note, download: `${s.id}-delivery.csv` }, "delivery note (CSV)"), ` · line ${s.delivery_line}`,
+      h("span", { class: "mono muted" }, ` · SHA-256 ${String(s.certificate_sha256).slice(0, 12)}…`)))));
 }
 
 function readFileAs(file, kind) {
@@ -189,34 +207,57 @@ function readFileAs(file, kind) {
   });
 }
 
-async function doLiveRead(pdf, csv, line, code, confirm, msg, btn) {
-  msg.textContent = "";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** Starts a live reading job and polls it (S6-02): queued with position, reading at AMD Token Factory with elapsed time, done, failed. */
+async function doLiveRead(st, inputs, msg, btn) {
+  const { pdf, csv, line, code, confirm } = inputs;
+  msg.replaceChildren();
   if (!pdf.files[0]) { msg.textContent = "Choose a certificate PDF first."; return; }
   if (!confirm.checked) { msg.textContent = "Confirm the notice first: the file goes to a third-party service and must be synthetic."; return; }
   btn.disabled = true;
-  msg.textContent = "Sending… the server checks the file, the endpoint and the limit. A real reading takes about one to four minutes.";
+  msg.textContent = "Sending… the server checks the file, the code, the endpoint and the limit.";
   try {
     const dataUrl = await readFileAs(pdf.files[0], "base64");
     const body = {
       certificate_base64: String(dataUrl).split(",")[1] || "",
       delivery_csv: csv.files[0] ? await readFileAs(csv.files[0], "text") : null,
       delivery_line: line.value.trim() || null,
-      access_code: code ? code.value : undefined,
       synthetic_confirmed: confirm.checked,
     };
-    const r = await post("/api/live/read", body);
+    const headers = { "content-type": "application/json" };
+    if (code && code.value) headers[st.access_code_header] = code.value;
+    const r = await api(st.job_api, { method: "POST", headers, body: JSON.stringify(body) });
     if (!r.ok) {
-      msg.textContent = `${r.body && r.body.error ? r.body.error : `Rejected (${r.status})`}${r.body && r.body.reopens_at ? `. Reopens at ${r.body.reopens_at}.` : ""}`;
+      msg.textContent = `${r.body && r.body.error ? r.body.error : `Refused (${r.status})`}${r.body && r.body.reopens_at ? `. Reopens at ${r.body.reopens_at}` : ""}. No reading was made.`;
       btn.disabled = false;
       return;
     }
-    const key = `${r.body.view.case_id}-${r.body.view.receipt.run_id}`;
-    saveLocal(key, r.body.view);
-    location.hash = `#/local/${key}`;
+    const every = Math.max(2, Number(r.body.poll_interval_s) || 2) * 1000;
+    for (;;) {
+      const j = await api(r.body.poll);
+      if (!j.ok || !j.body) { msg.textContent = "The job could not be read; no result is shown."; break; }
+      const v = j.body;
+      if (v.state === "queued") msg.textContent = `Queued: position ${v.position}. Readings run two at a time.`;
+      else if (v.state === "reading") msg.textContent = `Reading at AMD Token Factory (model requested ${v.model_requested}): ${v.elapsed_s} s so far.`;
+      else if (v.state === "done") {
+        const view = v.result.view;
+        const key = `${view.case_id}-${view.receipt.run_id}`;
+        saveLocal(key, view);
+        location.hash = `#/local/${key}`;
+        return;
+      } else {
+        msg.replaceChildren(h("span", {}, `Live reading failed: ${v.reason}. Nothing stored is shown instead. `),
+          h("button", { class: "btn", type: "button", onclick: () => doLiveRead(st, inputs, msg, btn) }, "Retry"));
+        btn.disabled = false;
+        return;
+      }
+      await sleep(every);
+    }
   } catch (e) {
-    msg.textContent = "The request failed.";
-    btn.disabled = false;
+    msg.textContent = "The request failed; no result is shown.";
   }
+  btn.disabled = false;
 }
 
 // ---------------------------------------------------------------- browser-held cases (F4, B-09, B-21)

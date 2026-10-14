@@ -93,9 +93,17 @@ repoOnly("environment variables (F-09)", () => {
     expect(code).toContain("VERCEL");
     expect(read("README.md")).toMatch(/\| `VERCEL` \| set by Vercel \|/);
   });
-  it("DEPLOY.md tells the human not to set MODEL_* on Vercel (F-05)", () => {
+  it("DEPLOY.md names every live-reading variable and marks the secrets (S6-10; F-05 superseded by dispatch 4)", () => {
     const deploy = read("DEPLOY.md");
-    for (const v of ["MODEL_BASE_URL", "MODEL_API_KEY", "MODEL_ID"]) expect(deploy).toMatch(new RegExp(`\\| \`${v}\` \\| \\*\\*do not set\\*\\*`));
+    const row = (v: string) => deploy.split("\n").find((l) => l.startsWith(`| \`${v}\` |`)) ?? "";
+    for (const v of ["MODEL_BASE_URL", "MODEL_API_KEY", "MODEL_ID", "LIVE_ACCESS_CODE", "LIVE_READS_PER_HOUR"]) expect(row(v), v).toMatch(/\| set/);
+    for (const v of ["MODEL_BASE_URL", "MODEL_API_KEY", "LIVE_ACCESS_CODE", "UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN"]) expect(row(v).split(" | ")[2], v).toBe("yes");
+    expect(row("MODEL_ID")).toContain("`Gemma-4-31B-IT`");
+    expect(row("MODEL_ID")).toContain("`Qwen3.8-27B`");
+    expect(deploy).toContain("KV_REST_API_READ_ONLY_TOKEN");
+    expect(deploy).toContain("500K commands per month");
+    expect(deploy).toContain("certgate:live:codefail:g:<hour>");
+    expect(deploy).not.toMatch(/\*\*do not set\*\*/);
   });
 });
 
@@ -127,9 +135,12 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
       /live reading(?: (?:also|works|is|available|runs))* (?:on|from) the deployed site/gi,
       /live reading[^.\n]*\b(?:works?|available|runs?|possible)\b[^.\n]*deployed/gi,
     ];
+    // Stage 6 (dispatch 4): live reading on the deployed site exists when it is configured, so README and DEPLOY.md
+    // describe it, and each such sentence is a claims unit with a row and a test (E-11). The static UI files still
+    // carry no such claim of their own: what the page says about the deployed site comes from the server.
     for (const f of files) {
       const t = read(f).replace(/\s+/g, " ");
-      for (const re of positive) for (const m of t.matchAll(re)) expect(m[0], `${f}: positive deployed-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
+      if (f.startsWith("public/")) for (const re of positive) for (const m of t.matchAll(re)) expect(m[0], `${f}: positive deployed-site claim`).toMatch(/\b(not|unavailable|never|no)\b/i);
       // E-11: any clause naming a "public site" or "public URL" must be a negative one. Checked line by line and
       // clause by clause (". ; #" end a clause), so that a negation elsewhere cannot excuse a claim.
       for (const line of read(f).split("\n")) {

@@ -131,7 +131,7 @@ describe("live reading without an endpoint (S2-15, S2-20, S2-31, B-13)", () => {
       expect(st.enabled, String(v)).toBe(false);
       expect(st.remaining_this_hour).toBe("0");
       expect(st.windows_note).toBe("no live window is announced");
-      expect(st.scope_note).toMatch(/per server instance/);
+      expect(st.scope_note).toMatch(/^global for this server process/); // T6-05
     }
   });
   it("an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted", async () => {
@@ -218,8 +218,9 @@ describe("live upload policy and deployed site (R3.1 C-02, C-07, S3-24)", () => 
     expect(statuses).toEqual([200, 200, 200, 200, 429, 429]);
     expect(s.state.chatCalls).toBe(4);
     const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
-    expect(readme).toMatch(/two instances with a limit of 2 let 4 readings through/);
-    expect(readme).toMatch(/With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour/);
+    // Stage 6: this holds for separate container processes; on the deployed site the limits are in the shared store.
+    expect(readme).toMatch(/two separate container processes with a limit of 2 let 4 readings through/);
+    expect(readme.replace(/\s+/g, " ")).toMatch(/On the deployed site the hourly limit, the two in-flight slots and the wrong-code counts are kept in the shared store/);
   });
   it("time budget: the worst-case live reading does not fit the deployed function, so the deployed site has no live reading (C-07)", async () => {
     const L = await import("../src/web/limits.js");
@@ -522,13 +523,15 @@ describe("static UI files (S2-01, S2-08, S2-14, S2-26, S2-30, B-08, B-11, B-16, 
     expect(committed.evaluated_cases).toBe("27");
     expect(committed.excluded_cases).toEqual(["cg-001", "cg-002", "cg-003"]);
   });
-  it("states where AMD fits (the model served by AMD Token Factory) and that the model only reads; limit is per instance (S2-30, S3-21, C-04, B-08)", () => {
+  it("states where AMD fits (the model served by AMD Token Factory) and that the model only reads; the limit's scope comes from the server (S2-30, S3-21, C-04, B-08 as superseded by T6-05)", () => {
     const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
     expect(js).toMatch(/served by AMD Token Factory/);
     expect(js).toMatch(/The model only reads; it never explains or decides/);
     expect(js).not.toMatch(/In this build no AMD hardware is used/);
     expect(js).not.toMatch(/mock reader stands in/);
-    expect(js).toMatch(/per server instance in this build/);
+    // Stage 6 (T6-05): the scope of the limit is the server's scope_note, shown as given, never a fixed claim.
+    expect(js).toMatch(/st \? st\.scope_note : "\?"/);
+    expect(js).not.toMatch(/per server instance in this build/);
     expect(js).not.toMatch(/guarantee/i);
   });
   it("every screen carries the fictitious-data notice (S2-07)", () => {

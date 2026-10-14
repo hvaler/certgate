@@ -1,0 +1,443 @@
+// Stage 6: live reading on the deployed site as an asynchronous job API over a shared store (R6.0 S6-01…S6-11;
+// R6.1 CH6-01…CH6-19; R6.2 T6-01…T6-10; R6.3 J-01…J-20). Offline: the endpoint is the local test stub, the shared
+// store is a MemoryStore (also shared by two handler instances) or a fake Upstash REST server on 127.0.0.1.
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import type { AddressInfo } from "node:net";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { createApp } from "../src/server.js";
+import type { AppDeps } from "../src/web/app.js";
+import { SAMPLE_IDS } from "../src/web/app.js";
+import { clearF1Cache } from "../src/web/f1.js";
+import { KEYS, REASONS } from "../src/web/live-jobs.js";
+import { CONTAINER_LIVE_BUDGET, DEPLOYED_LIVE_BUDGET, DEPLOYED_LIVE_UNAVAILABLE } from "../src/web/limits.js";
+import { MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
+import { DATA, ROOT } from "./helpers.js";
+// @ts-expect-error plain JS test double
+import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+// @ts-expect-error plain JS test double
+import { startFakeUpstash } from "./support/fake-upstash.mjs";
+// @ts-expect-error plain JS helper
+import { record } from "./support/disabled-golden.mjs";
+
+const CODE = "sentinel-access-code-7f3a19";
+const KEY = "sentinel-model-key-91bd44";
+const STORE_TOKEN = "sentinel-store-token-c0de55";
+const FAST = { pollMs: 20, queueMaxWaitMs: 4_000, readBudgetMs: 6_000, deadlineMs: 8_000, staleGraceMs: 10_000, leaseTtlMs: 9_000, marginMs: 0 };
+
+type Closable = { close: () => Promise<void> };
+const open: Closable[] = [];
+beforeEach(() => clearF1Cache());
+afterEach(async () => { while (open.length) await open.pop()!.close(); });
+
+async function serve(deps: AppDeps) {
+  const server = createApp(deps).listen(0, "127.0.0.1");
+  await new Promise((r) => server.once("listening", r));
+  open.push({ close: () => new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); }) });
+  return `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+}
+async function stub(opts: Record<string, unknown> = {}) {
+  const s = await startStub(opts);
+  open.push(s);
+  return s;
+}
+const cert = (id: string) => readFileSync(path.join(DATA, "cases", id, "certificate.pdf"));
+function deployedEnv(stubUrl: string, extra: Record<string, string> = {}) {
+  return { VERCEL: "1", MODEL_BASE_URL: stubUrl, MODEL_API_KEY: KEY, MODEL_ID: STUB_MODEL_ID, LIVE_READS_PER_HOUR: "10", LIVE_ACCESS_CODE: CODE, ...extra };
+}
+/** Every response body and header is kept for the leak scan (CH6-14). */
+const seen: string[] = [];
+async function call(url: string, init: RequestInit = {}) {
+  const res = await fetch(url, init);
+  const text = await res.text();
+  seen.push(text, JSON.stringify([...res.headers.entries()]));
+  let body: Record<string, unknown> = {};
+  try { body = JSON.parse(text); } catch { /* not JSON */ }
+  return { status: res.status, body, text, headers: res.headers };
+}
+function startJob(base: string, opts: { code?: string | null; id?: string; client?: string; query?: string } = {}) {
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  if (opts.code !== null) headers["x-live-access-code"] = opts.code ?? CODE;
+  if (opts.client) headers["x-forwarded-for"] = opts.client;
+  return call(`${base}/api/live/jobs${opts.query ?? ""}`, { method: "POST", headers, body: JSON.stringify({ certificate_base64: cert(opts.id ?? "cg-004").toString("base64"), synthetic_confirmed: true }) });
+}
+async function poll(base: string, id: string, until: (s: string) => boolean, ms = 15_000) {
+  const t0 = Date.now();
+  for (;;) {
+    const r = await call(`${base}/api/live/jobs/${id}`);
+    if (until(String(r.body.state)) || Date.now() - t0 > ms) return r;
+    await new Promise((x) => setTimeout(x, 15));
+  }
+}
+
+describe("job state machine on both store implementations (S6-02, CH6-17, J-11)", () => {
+  for (const kind of ["memory", "upstash-rest"] as const) {
+    it(`${kind}: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported`, async () => {
+      const s = await stub();
+      let store: LiveStore = new MemoryStore();
+      if (kind === "upstash-rest") {
+        const f = await startFakeUpstash({ token: STORE_TOKEN });
+        open.push(f);
+        store = new UpstashRestStore(f.url, STORE_TOKEN);
+      }
+      const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+      const st = await call(`${base}/api/live/status`);
+      expect(st.body).toMatchObject({ enabled: true, deployed_site: true, job_api: "/api/live/jobs", access_code_header: "x-live-access-code", model_requested: STUB_MODEL_ID });
+      expect(st.body.scope_note).toBe("global: counted in the shared store across all instances");
+      const r = await startJob(base);
+      expect(r.status).toBe(202);
+      expect(r.body.state).toBe("queued");
+      expect(String(r.body.job_id)).toMatch(/^[0-9a-f]{32}$/);
+      const done = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
+      expect(done.body.state).toBe("done");
+      const result = done.body.result as { job_id: string; started_at: string; finished_at: string; view: { receipt: Record<string, any> } };
+      expect(result.job_id).toBe(r.body.job_id);
+      expect(result.started_at).toBeTruthy();
+      expect(result.finished_at).toBeTruthy();
+      const rc = result.view.receipt;
+      expect(rc.reading_source).toBe("live");
+      expect(rc.reader.model_id).toBe(STUB_MODEL_ID);
+      expect(rc.reader.requested_model_id).toBe(STUB_MODEL_ID);
+      expect(rc.endpoint_response.response_id).toMatch(/^stub-\d+$/);
+      expect(rc.f1.state).toBe("on");
+      expect(s.state.chatCalls).toBe(1);
+      const after = await call(`${base}/api/live/status`);
+      expect(after.body.used_this_hour).toBe("1");
+      expect(after.body.in_flight).toBe("0");
+    });
+  }
+  it("the container runs the same states with its in-process store, no store variables (S6-05, T6-09)", async () => {
+    const s = await stub();
+    const base = await serve({ env: { MODEL_BASE_URL: s.url, MODEL_ID: STUB_MODEL_ID, MODEL_API_KEY: KEY, LIVE_READS_PER_HOUR: "3" }, liveBudget: FAST });
+    const st = await call(`${base}/api/live/status`);
+    expect(st.body.scope_note).toBe("global for this server process: counted in the in-process store");
+    const r = await startJob(base, { code: null });
+    expect(r.status).toBe(202);
+    const done = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
+    expect(done.body.state).toBe("done");
+    expect((await call(`${base}/api/live/status`)).body.remaining_this_hour).toBe("2");
+  });
+});
+
+describe("global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05)", () => {
+  it("4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy", async () => {
+    const s = await stub({ delayMs: 400 });
+    const store = new MemoryStore();
+    store.delayMs = 2;
+    const a = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const b = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const started = await Promise.all([startJob(a), startJob(b), startJob(a), startJob(b)]);
+    expect(started.map((x) => x.status)).toEqual([202, 202, 202, 202]);
+    const busy = await startJob(a);
+    expect(busy.status).toBe(429);
+    expect(busy.body).toMatchObject({ reason_class: "busy", error: REASONS.busy });
+    const ids = started.map((x) => String(x.body.job_id));
+    let maxReading = 0;
+    let sawQueuedPosition = false;
+    for (let i = 0; i < 400; i++) {
+      const views = await Promise.all(ids.map((id, k) => call(`${k % 2 ? b : a}/api/live/jobs/${id}`)));
+      const states = views.map((v) => v.body.state);
+      maxReading = Math.max(maxReading, states.filter((x) => x === "reading").length);
+      if (views.some((v) => v.body.state === "queued" && Number(v.body.position) >= 1)) sawQueuedPosition = true;
+      if (states.every((x) => x === "done" || x === "failed")) break;
+      await new Promise((x) => setTimeout(x, 10));
+    }
+    expect(maxReading).toBeLessThanOrEqual(2);
+    expect(maxReading).toBe(2);
+    expect(sawQueuedPosition).toBe(true);
+    expect(s.state.maxInFlight).toBeLessThanOrEqual(2);
+    const views = await Promise.all(ids.map((id) => call(`${a}/api/live/jobs/${id}`)));
+    expect(views.map((v) => v.body.state)).toEqual(["done", "done", "done", "done"]);
+  });
+  it("the hourly limit is counted once per job, across instances: the 4th job of a limit of 3 is refused on the other instance", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const a = await serve({ env: deployedEnv(s.url, { LIVE_READS_PER_HOUR: "3" }), liveStore: store, liveBudget: FAST });
+    const b = await serve({ env: deployedEnv(s.url, { LIVE_READS_PER_HOUR: "3" }), liveStore: store, liveBudget: FAST });
+    for (const base of [a, b]) {
+      const r = await startJob(base);
+      expect(r.status).toBe(202);
+      await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
+    }
+    expect((await startJob(a)).status).toBe(202);
+    const refused = await startJob(b);
+    expect(refused.status).toBe(429);
+    expect(refused.body.error).toBe("live readings exhausted this hour");
+    const st = await call(`${b}/api/live/status`);
+    expect(st.body).toMatchObject({ used_this_hour: "4", remaining_this_hour: "0" });
+  });
+  it("a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token", async () => {
+    const s = await stub({ mode: "timeout" });
+    const store = new MemoryStore();
+    // The queue wait is measured from the request's arrival (J-14), which includes the PDF check at admission.
+    const budget = { ...FAST, queueMaxWaitMs: 1_500, deadlineMs: 6_000, readBudgetMs: 4_500, leaseTtlMs: 9_000 };
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: budget, adapterTimeoutMs: 5_000 });
+    const jobs = await Promise.all([startJob(base), startJob(base), startJob(base)]);
+    const third = await poll(base, String(jobs[2]!.body.job_id), (x) => x === "failed" || x === "done", 5_000);
+    expect(third.body).toMatchObject({ state: "failed", reason_class: "queue_timeout", reason: REASONS.queue_timeout, result: null });
+    expect((await call(`${base}/api/live/status`)).body.used_this_hour).toBe("3");
+    const firstTwo = await Promise.all(jobs.slice(0, 2).map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)));
+    expect(firstTwo.map((v) => v.body.state)).toEqual(["reading", "reading"]);
+    const holders = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
+    expect(holders.sort()).toEqual([jobs[0]!.body.job_id, jobs[1]!.body.job_id].sort());
+  });
+});
+
+describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", () => {
+  it("count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    store.delayMs = 5;
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "5" }), liveStore: store, liveBudget: FAST });
+    const rs = await Promise.all(Array.from({ length: 12 }, () => startJob(base, { code: "wrong" })));
+    expect(rs.filter((r) => r.status === 403).length).toBe(5);
+    expect(rs.filter((r) => r.status === 429).length).toBe(7);
+    expect((await startJob(base)).status).toBe(429);
+    expect(s.state.chatCalls).toBe(0);
+  });
+  it("a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "1" }), liveStore: store, liveBudget: FAST });
+    for (let i = 0; i < 3; i++) {
+      const r = await startJob(base);
+      expect(r.status, `correct code ${i}`).toBe(202);
+      await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
+    }
+    const st = await call(`${base}/api/live/status`);
+    expect(st.body).toMatchObject({ code_failures_this_hour_global: "0", code_failures_this_hour_this_client: "0" });
+    const calls = s.state.chatCalls;
+    const q = await startJob(base, { code: null, query: `?access_code=${CODE}` });
+    expect(q.status).toBe(403);
+    expect(q.body.error).toBe("wrong or missing access code; no live reading was used");
+    expect(s.state.chatCalls).toBe(calls);
+  });
+  it("per client and global: 10 clients each fail once at a limit of 1; the 11th client is refused by the global ceiling", async () => {
+    const s = await stub();
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "1" }), liveStore: new MemoryStore(), liveBudget: FAST });
+    for (let i = 1; i <= 10; i++) expect((await startJob(base, { code: "wrong", client: `198.51.100.${i}` })).status, `client ${i}`).toBe(403);
+    expect((await startJob(base, { code: "wrong", client: "198.51.100.1" })).status).toBe(429);
+    expect((await startJob(base, { code: CODE, client: "203.0.113.9" })).status).toBe(429);
+    const st = await call(`${base}/api/live/status`, { headers: { "x-forwarded-for": "198.51.100.3" } });
+    expect(st.body).toMatchObject({ code_failures_this_hour_global: "12", code_failures_this_hour_this_client: "1", code_failure_limit_per_client: "1", code_failure_ceiling_global: "10" });
+  });
+});
+
+describe("timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10)", () => {
+  it("a reading that outlives the deadline fails as timed out; its slot stays leased until the TTL", async () => {
+    const s = await stub({ mode: "timeout" });
+    const store = new MemoryStore();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: { ...FAST, deadlineMs: 400, readBudgetMs: 400, leaseTtlMs: 5_000 }, adapterTimeoutMs: 5_000 });
+    const r = await startJob(base);
+    const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done", 5_000);
+    expect(f.body).toMatchObject({ state: "failed", reason_class: "timeout", reason: REASONS.timeout, result: null });
+    expect(await store.get(KEYS.slot(0))).toBe(r.body.job_id);
+    expect((await call(`${base}/api/live/status`)).body.in_flight).toBe("1");
+  });
+  for (const [mode, cls] of [["http_5xx", "endpoint_5xx"], ["http_429", "endpoint_429"], ["http_4xx", "endpoint_4xx"], ["invalid_json", "invalid_model_output"]] as const) {
+    it(`${mode} -> failed ${cls} with its fixed text; the provider's error text (with sentinels) never reaches a response`, async () => {
+      const s = await stub({ mode, errorText: `upstream said ${KEY} at /private-path-z` });
+      const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST, backoffBaseMs: 1 });
+      const r = await startJob(base);
+      const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done");
+      expect(f.body).toMatchObject({ state: "failed", reason_class: cls, reason: REASONS[cls], result: null });
+      expect(f.text).not.toContain(KEY);
+      expect(f.text).not.toContain("private-path-z");
+    });
+  }
+  it("a reported model other than the requested one fails as model_mismatch, and the reading is not shown", async () => {
+    const s = await stub({ reportedModel: "someone/another-model" });
+    const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST });
+    const r = await startJob(base);
+    const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done");
+    expect(f.body).toMatchObject({ state: "failed", reason_class: "model_mismatch", result: null });
+  });
+  it("the requested model may be reported with a provider prefix (self-dploy/<id>)", async () => {
+    const s = await stub({ reportedModel: `self-dploy/${STUB_MODEL_ID}` });
+    const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST });
+    const r = await startJob(base);
+    expect((await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done")).body.state).toBe("done");
+  });
+  it("orphaned jobs: a poll derives failed (timed out) without writing, for reading, queued and too-old jobs (fake clock)", async () => {
+    let now = Date.parse("2026-10-14T13:00:00.000Z");
+    const store = new MemoryStore(() => now);
+    const s = await stub();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: DEPLOYED_LIVE_BUDGET, clock: () => new Date(now) });
+    const t0 = new Date(now).toISOString();
+    const rec = (id: string, state: string) => JSON.stringify({ job_id: id, state, created_at: t0, started_at: state === "reading" ? t0 : null, finished_at: null, model_requested: STUB_MODEL_ID, reason_class: null, reason: null, result: null });
+    const R = "a".repeat(32), Q = "b".repeat(32);
+    await store.set(KEYS.job(R), rec(R, "reading"), 3600);
+    await store.set(KEYS.job(Q), rec(Q, "queued"), 3600);
+    now += DEPLOYED_LIVE_BUDGET.queueMaxWaitMs + 10_001;
+    expect((await call(`${base}/api/live/jobs/${Q}`)).body).toMatchObject({ state: "failed", reason_class: "queue_timeout" });
+    expect((await call(`${base}/api/live/jobs/${R}`)).body.state).toBe("reading");
+    now += DEPLOYED_LIVE_BUDGET.deadlineMs;
+    expect((await call(`${base}/api/live/jobs/${R}`)).body).toMatchObject({ state: "failed", reason_class: "timeout", result: null });
+    expect(JSON.parse((await store.get(KEYS.job(R)))!).state).toBe("reading");
+    expect(JSON.parse((await store.get(KEYS.job(Q)))!).state).toBe("queued");
+  });
+  it("dead queue entries are pruned at admission: two ghosts ahead do not block a new job (J-04)", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const old = Date.now() - (FAST.queueMaxWaitMs + 11_000);
+    await store.zadd(KEYS.queue, old, "c".repeat(32));
+    await store.zadd(KEYS.queue, old + 1, "d".repeat(32));
+    const r = await startJob(base);
+    expect(r.status).toBe(202);
+    expect((await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed")).body.state).toBe("done");
+  });
+  it("polls reject malformed and unknown ids with 404 before the store is read for a job (J-05)", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    for (const id of ["..%2F..%2Fetc", "abc", "Z".repeat(32), "e".repeat(32)]) expect((await call(`${base}/api/live/jobs/${id}`)).status, id).toBe(404);
+  });
+  it("a store that fails at admission refuses with store_unavailable: no job, no endpoint call, nothing of the store's reply leaked (J-15)", async () => {
+    const s = await stub();
+    const f = await startFakeUpstash({ token: STORE_TOKEN });
+    open.push(f);
+    f.state.downBody = `store said ${STORE_TOKEN}`;
+    f.state.down = true;
+    const base = await serve({ env: deployedEnv(s.url), liveStore: new UpstashRestStore(f.url, STORE_TOKEN), liveBudget: FAST });
+    const r = await startJob(base);
+    expect(r.status).toBe(503);
+    expect(r.body).toMatchObject({ reason_class: "store_unavailable", error: REASONS.store_unavailable });
+    expect(r.text).not.toContain(STORE_TOKEN);
+    expect(s.state.chatCalls).toBe(0);
+  });
+  it("no sentinel value (key, code, store token, base URL) appears in any response body or header seen in this file (CH6-14)", () => {
+    expect(seen.length).toBeGreaterThan(50);
+    for (const t of seen) for (const v of [KEY, CODE, STORE_TOKEN]) expect(t.includes(v), v).toBe(false);
+    expect(seen.some((t) => /127\.0\.0\.1:\d+\/v1/.test(t)), "a response carries the endpoint base URL").toBe(false);
+  });
+});
+
+describe("deployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03)", () => {
+  it("every existing route answers byte for byte as the 409fb69a build did, in three disabled configurations", async () => {
+    const golden = JSON.parse(readFileSync(path.join(ROOT, "test", "fixtures", "stage6-disabled-golden.json"), "utf8"));
+    const now = await record(createApp);
+    expect(Object.keys(now)).toEqual(Object.keys(golden));
+    for (const k of Object.keys(golden)) expect(now[k], k).toEqual(golden[k]);
+  });
+  it("the new live routes give one identical refusal with no code header, an empty one or a wrong one; nothing is called", async () => {
+    const s = await stub();
+    for (const env of [{ VERCEL: "1" }, deployedEnv(s.url, { LIVE_ACCESS_CODE: "" }), { ...deployedEnv(s.url) }]) {
+      const base = await serve({ env, liveBudget: FAST });
+      const answers = [];
+      for (const code of [null, "", "wrong", CODE]) answers.push(await startJob(base, { code }));
+      answers.push(await call(`${base}/api/live/jobs/${"f".repeat(32)}`));
+      for (const a of answers) expect({ status: a.status, body: a.body }).toEqual({ status: 503, body: { status: "rejected", error: DEPLOYED_LIVE_UNAVAILABLE } });
+    }
+    expect(s.state.chatCalls).toBe(0);
+  });
+});
+
+describe("DEPLOY.md section 5 checks, in the deployed shape with live reading enabled (S6-10)", () => {
+  it("health ok and reader live, f1 on, status enabled with the code required and the counts, stories and figures 200, story evaluate block, the sample PDF, and 403 without the code", async () => {
+    const s = await stub();
+    const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST });
+    expect((await call(`${base}/health`)).body).toMatchObject({ status: "ok", reader: "live" });
+    expect((await call(`${base}/api/f1`)).body.state).toBe("on");
+    const st = (await call(`${base}/api/live/status`)).body;
+    expect(st).toMatchObject({ enabled: true, access_code_required: true, used_this_hour: "0", in_flight: "0" });
+    for (const p of ["/stories/cg-003.json", "/figures.json"]) expect((await fetch(base + p)).status, p).toBe(200);
+    const ev = await call(`${base}/api/stories/cg-003/evaluate`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+    expect((ev.body.view as { proposal: string }).proposal).toBe("block");
+    const pdf = await fetch(`${base}/api/samples/cg-004/certificate.pdf`);
+    expect([pdf.status, pdf.headers.get("content-type")]).toEqual([200, "application/pdf"]);
+    expect((await startJob(base, { code: null })).status).toBe(403);
+    expect(s.state.chatCalls).toBe(0);
+  });
+});
+
+describe("F1 on the deployed site is one probe per period across instances (S6-07, H-11, J-09)", () => {
+  it("10 concurrent /api/f1 calls on two instances sharing one store make one GET /models", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const a = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const b = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
+    const rs = await Promise.all(Array.from({ length: 10 }, (_, i) => call(`${i % 2 ? a : b}/api/f1`)));
+    for (const r of rs) expect(r.body.state).toBe("on");
+    expect(s.state.modelsCalls).toBe(1);
+    // A separate instance has its own process memory: drop this process's F1 cache, so that only the shared store
+    // can keep the second instance from probing again.
+    clearF1Cache();
+    const again = await Promise.all(Array.from({ length: 5 }, () => call(`${b}/api/f1`)));
+    for (const r of again) expect(r.body.state).toBe("on");
+    expect(s.state.modelsCalls).toBe(1);
+  });
+});
+
+describe("sample certificates (S6-06, CH6-16, J-17)", () => {
+  it("three allow-listed dataset certificates and their delivery notes, byte for byte as in the dataset checksums", async () => {
+    const base = await serve({ env: {} });
+    const list = await call(`${base}/api/samples`);
+    const samples = list.body.samples as { id: string; certificate: string; certificate_sha256: string; delivery_note: string }[];
+    expect(samples.map((x) => x.id)).toEqual([...SAMPLE_IDS]);
+    const sums = readFileSync(path.join(DATA, "CHECKSUMS.sha256"), "utf8");
+    for (const x of samples) {
+      const pdf = Buffer.from(await (await fetch(base + x.certificate)).arrayBuffer());
+      const sha = createHash("sha256").update(pdf).digest("hex");
+      expect(sha).toBe(x.certificate_sha256);
+      expect(sums).toContain(`${sha}  cases/${x.id}/certificate.pdf`);
+      const res = await fetch(base + x.delivery_note);
+      expect(res.headers.get("content-type")).toBe("text/csv; charset=utf-8");
+      const c = JSON.parse(readFileSync(path.join(DATA, "cases", x.id, "case.json"), "utf8"));
+      expect(Buffer.from(await res.arrayBuffer()).equals(readFileSync(path.join(DATA, c.delivery_note)))).toBe(true);
+    }
+    for (const p of ["/api/samples/cg-001/certificate.pdf", "/api/samples/..%2F..%2Fpackage.json/certificate.pdf", "/api/samples/cg-004/reading.json"]) {
+      expect((await fetch(base + p)).status, p).toBe(404);
+    }
+  });
+});
+
+describe("time budget and constants (S6-03, CH6-05, J-03, J-14, T6-06)", () => {
+  it("queue wait + reading + margin fit vercel.json maxDuration with at least 30 s to spare; leases outlive the budget", () => {
+    const v = JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8"));
+    const max = v.functions["api/index.ts"].maxDuration * 1000;
+    expect(max).toBe(300_000);
+    const d = DEPLOYED_LIVE_BUDGET;
+    expect(d.marginMs).toBeGreaterThanOrEqual(30_000);
+    expect(d.deadlineMs).toBe(d.queueMaxWaitMs + d.readBudgetMs);
+    expect(d.deadlineMs + d.marginMs).toBeLessThanOrEqual(max);
+    expect(d.leaseTtlMs).toBe(310_000);
+    expect(d.leaseTtlMs).toBeGreaterThan(max);
+    expect(d.pollMs).toBeGreaterThanOrEqual(2_000);
+    expect([d.slots, d.maxWaiting]).toEqual([2, 2]);
+    expect(CONTAINER_LIVE_BUDGET.leaseTtlMs).toBeGreaterThanOrEqual(Math.max(1_200_000, CONTAINER_LIVE_BUDGET.deadlineMs));
+  });
+});
+
+describe("what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T6-10, J-11, J-19)", () => {
+  it("the reading path, data/, config/, evaluation/, figures.json and the stories are byte-identical to 409fb69a", () => {
+    const base = JSON.parse(readFileSync(path.join(ROOT, "test", "fixtures", "stage6-baseline.json"), "utf8")) as { roots: string[]; blobs: Record<string, string> };
+    const sha = (b: Buffer) => createHash("sha1").update(`blob ${b.length}\0`).update(b).digest("hex");
+    const blob = (p: string, id: string) => {
+      const b = readFileSync(path.join(ROOT, p));
+      if (sha(b) === id || /\.(png|jpe?g|gif|ico|pdf|zip|gz)$/i.test(p)) return sha(b);
+      return sha(Buffer.from(b.toString("latin1").replace(/\r\n/g, "\n"), "latin1"));
+    };
+    for (const [p, id] of Object.entries(base.blobs)) expect(blob(p, id), p).toBe(id);
+    const present: string[] = [];
+    const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) for (const e of readdirSync(abs)) walk(`${p}/${e}`); else present.push(p); };
+    for (const r of base.roots) if (existsSync(path.join(ROOT, r))) walk(r);
+    expect(present.sort()).toEqual(Object.keys(base.blobs).sort());
+  });
+  it("no Gemma model id is a default anywhere in src/ or public/; the live model comes from MODEL_ID only", () => {
+    const files: string[] = [];
+    const walk = (d: string) => { for (const e of readdirSync(d)) { const p = path.join(d, e); if (statSync(p).isDirectory()) { if (e !== "stories") walk(p); } else if (/\.(ts|js|html|json|css)$/.test(e)) files.push(p); } };
+    walk(path.join(ROOT, "src"));
+    walk(path.join(ROOT, "public"));
+    for (const f of files) expect(readFileSync(f, "utf8"), f).not.toMatch(/gemma-4-31b/i);
+  });
+  it("the job module imports no recorded reader and no story; the browser sends the code in a header, never in a URL", () => {
+    const jobs = readFileSync(path.join(ROOT, "src", "web", "live-jobs.ts"), "utf8");
+    expect(jobs).not.toMatch(/recorded-reader|RecordedReader|stories|build-stories/);
+    const js = readFileSync(path.join(ROOT, "public", "app.js"), "utf8");
+    expect(js).toMatch(/headers\[st\.access_code_header\] = code\.value/);
+    expect(js).not.toMatch(/access_code=/);
+    expect(js).toMatch(/Math\.max\(2, Number\(r\.body\.poll_interval_s\) \|\| 2\) \* 1000/);
+  });
+});

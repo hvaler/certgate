@@ -8,8 +8,8 @@ root. Run `certgate-001` was built by the band: analyst, implementer, adversary 
 
 | What | Where |
 |---|---|
-| Human dispatches (verbatim) | [evidence/runs/certgate-001/DISPATCH-1.txt](evidence/runs/certgate-001/DISPATCH-1.txt), [DISPATCH-2.txt](evidence/runs/certgate-001/DISPATCH-2.txt), [DISPATCH-3.txt](evidence/runs/certgate-001/DISPATCH-3.txt) |
-| Obligation registers, one per stage | [stage-1](evidence/runs/certgate-001/stage-1/OBLIGATIONS.md), [stage-2](evidence/runs/certgate-001/stage-2/OBLIGATIONS.md), [stage-3](evidence/runs/certgate-001/stage-3/OBLIGATIONS.md) (R3.3), [stage-4](evidence/runs/certgate-001/stage-4/OBLIGATIONS.md), [stage-5](evidence/runs/certgate-001/stage-5/OBLIGATIONS.md) |
+| Human dispatches (verbatim) | [evidence/runs/certgate-001/DISPATCH-1.txt](evidence/runs/certgate-001/DISPATCH-1.txt), [DISPATCH-2.txt](evidence/runs/certgate-001/DISPATCH-2.txt), [DISPATCH-3.txt](evidence/runs/certgate-001/DISPATCH-3.txt), [DISPATCH-4.txt](evidence/runs/certgate-001/DISPATCH-4.txt) |
+| Obligation registers, one per stage | [stage-1](evidence/runs/certgate-001/stage-1/OBLIGATIONS.md), [stage-2](evidence/runs/certgate-001/stage-2/OBLIGATIONS.md), [stage-3](evidence/runs/certgate-001/stage-3/OBLIGATIONS.md) (R3.3), [stage-4](evidence/runs/certgate-001/stage-4/OBLIGATIONS.md), [stage-5](evidence/runs/certgate-001/stage-5/OBLIGATIONS.md), [stage-6](evidence/runs/certgate-001/stage-6/OBLIGATIONS.md) |
 | Hashes of the planning sources at each stage start | `evidence/runs/certgate-001/stage-N/SOURCES.sha256` |
 | Stage register (verdicts and checkpoints) | [evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md) |
 
@@ -67,6 +67,16 @@ root. Run `certgate-001` was built by the band: analyst, implementer, adversary 
 | Gemma publisher and licence, as published | [docs/sources/gemma.md](docs/sources/gemma.md) |
 | cg-003 Gemma reading (evidence only), the run log and GET /usage before and after the lease | [evidence/runs/certgate-001/stage-5/implementer/endpoint/](evidence/runs/certgate-001/stage-5/implementer/endpoint/) |
 | Checks: model identity, request golden hash, byte-identical Qwen product, generated differences, README Gemma figures, prize check; Vercel bundle (E-15) | [test/stage5-gemma.test.ts](test/stage5-gemma.test.ts), [test/vercel-config.test.ts](test/vercel-config.test.ts) |
+
+## Stage 6 (live reading on the deployed site)
+
+| What | Where |
+|---|---|
+| Job API, shared store, limits | [src/web/live-jobs.ts](src/web/live-jobs.ts), [src/web/live-store.ts](src/web/live-store.ts), `DEPLOYED_LIVE_BUDGET` in [src/web/limits.ts](src/web/limits.ts) |
+| Deployment set-up and checks | [DEPLOY.md](DEPLOY.md) |
+| Sources: Upstash Redis REST API and quota; Vercel waitUntil and Secret variables | [docs/sources/upstash-redis.md](docs/sources/upstash-redis.md), [docs/sources/vercel-functions.md](docs/sources/vercel-functions.md) |
+| Checks: job states on both stores, two instances on one store, code limits, timeouts and failures, leak scan, disabled-site golden (recorded from 409fb69a), samples, time budget, byte-identity | [test/stage6-live.test.ts](test/stage6-live.test.ts), [test/fixtures/stage6-disabled-golden.json](test/fixtures/stage6-disabled-golden.json), [test/fixtures/stage6-baseline.json](test/fixtures/stage6-baseline.json) |
+| Implementer handoff records and logs | [evidence/runs/certgate-001/stage-6/implementer/](evidence/runs/certgate-001/stage-6/implementer/) |
 
 The adversary's Stage 3 bundles and mutation reports were posted in the room (msgs 7d0d6556, 540fb415). Their
 evidence lives in the adversary's clean checkouts, at the test revisions named in those messages.

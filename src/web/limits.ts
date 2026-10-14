@@ -32,3 +32,42 @@ export const ADAPTER_BACKOFF_CAP_MS = 120_000;
 export const LIVE_WORST_CASE_MS = ADAPTER_ATTEMPT_TIMEOUT_MS * ADAPTER_MAX_ATTEMPTS + ADAPTER_BACKOFF_CAP_MS * (ADAPTER_MAX_ATTEMPTS - 1);
 export const LIVE_FITS_DEPLOYED_FUNCTION = LIVE_WORST_CASE_MS < VERCEL_MAX_DURATION_MS;
 export const DEPLOYED_LIVE_UNAVAILABLE = "live reading unavailable on the deployed site; live demonstration from the container";
+
+/**
+ * Stage 6 live-reading budget on the deployed site (S6-03, CH6-05, T6-06). The reading runs in the POST invocation
+ * after the response (waitUntil), so queue wait + reading (render, attempts and any retry of the D2 discipline)
+ * + the final store writes must fit the function duration with a margin of at least 30 s.
+ */
+export const DEPLOYED_LIVE_BUDGET = {
+  /** A job still queued after this fails as "timed out in queue". */
+  queueMaxWaitMs: 60_000,
+  /** Time left for the reading once a slot is taken; the LiveReader's attempt timeout never exceeds it. */
+  readBudgetMs: 210_000,
+  /** Kept free for the final store writes. */
+  marginMs: 30_000,
+  /** From admission: queue wait + reading budget. A poll after deadline + staleGraceMs reports the job as timed out. */
+  deadlineMs: 270_000,
+  staleGraceMs: 10_000,
+  /** In-flight slot lease: at least the deadline, and it outlives the function (J-03: 310 s), so a crashed holder frees it. */
+  leaseTtlMs: 310_000,
+  /** At most 2 readings in flight (D2 calling discipline) and at most 2 jobs waiting behind them. */
+  slots: 2,
+  maxWaiting: 2,
+  /** How often a waiting job looks for a free slot (J-05: at most once per 2 s). */
+  pollMs: 2_000,
+} as const;
+
+/** The container has no function limit: the D2 worst case of one reading, after a longer queue wait. */
+export const CONTAINER_LIVE_BUDGET = {
+  queueMaxWaitMs: 120_000,
+  readBudgetMs: LIVE_WORST_CASE_MS,
+  marginMs: 0,
+  deadlineMs: 120_000 + LIVE_WORST_CASE_MS,
+  staleGraceMs: 10_000,
+  leaseTtlMs: 120_000 + LIVE_WORST_CASE_MS + 30_000,
+  slots: 2,
+  maxWaiting: 2,
+  pollMs: 2_000,
+} as const;
+
+export type LiveBudget = { [K in keyof typeof DEPLOYED_LIVE_BUDGET]: number };

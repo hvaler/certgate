@@ -346,23 +346,8 @@
  },
  {
   "doc": "README.md",
-  "text": "**Live reading (container in real mode only):** start the container with the three `MODEL_*` variables (see \"Run it\"), choose a dataset certificate, confirm the third-party notice, and press \"Read live\".",
-  "row": "C-26"
- },
- {
-  "doc": "README.md",
-  "text": "A reading takes about 1 to 4 minutes.",
-  "row": "C-57"
- },
- {
-  "doc": "README.md",
   "text": "Requirements: Node.js 24 (local run) or Docker.",
   "row": "none: requirement of the reader's machine"
- },
- {
-  "doc": "README.md",
-  "text": "Live reading runs from the container, not from the deployed site.",
-  "row": "C-36"
  },
  {
   "doc": "README.md",
@@ -456,11 +441,6 @@
  },
  {
   "doc": "README.md",
-  "text": "| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading, or C11 `endpoint_off` with no endpoint (`no-store`) |",
-  "row": "C-59"
- },
- {
-  "doc": "README.md",
   "text": "| `POST /api/stories/<cg-001\\|cg-002\\|cg-003>/evaluate` | `{confirmations?: [{field, value}], confirmed_by?, decision?: {action, reason, decided_by}}`: the recorded reading re-evaluated (no model call) with a person's confirmations and decision; times are stamped by the server |",
   "row": "C-31"
  },
@@ -492,11 +472,6 @@
  {
   "doc": "README.md",
   "text": "`mode` is the mode of the CLI and the dataset API (`CERTGATE_MODE`, `mock` by default).",
-  "row": "C-44"
- },
- {
-  "doc": "README.md",
-  "text": "`reader` is `live` when an endpoint and a model are configured outside the deployed site, and `off` otherwise.",
   "row": "C-44"
  },
  {
@@ -571,28 +546,8 @@
  },
  {
   "doc": "README.md",
-  "text": "| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, server-side, per instance; unset, invalid or 0 = disabled; documented deployment value 20 |",
-  "row": "C-51"
- },
- {
-  "doc": "README.md",
-  "text": "| `LIVE_ACCESS_CODE` | none (no default) | needed for live reading of a visitor-uploaded file; without it only dataset certificates are read live |",
-  "row": "C-26"
- },
- {
-  "doc": "README.md",
-  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per UTC hour before rejection |",
-  "row": "C-52"
- },
- {
-  "doc": "README.md",
   "text": "| `LIVE_WINDOWS` | none | announced live windows, shown as text |",
   "row": "C-55"
- },
- {
-  "doc": "README.md",
-  "text": "| `VERCEL` | set by Vercel | on the deployed site live reading is unavailable (time budget, see Limitations) |",
-  "row": "C-36"
  },
  {
   "doc": "README.md",
@@ -608,11 +563,6 @@
   "doc": "README.md",
   "text": "Web upload: **up to 3 MiB** of PDF, sent as base64 so the request stays below Vercel's 4.5 MB body limit; delivery note up to 256 KiB.",
   "row": "C-50"
- },
- {
-  "doc": "README.md",
-  "text": "Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md).",
-  "row": "none: pointer to a cited source"
  },
  {
   "doc": "README.md",
@@ -653,46 +603,6 @@
   "doc": "README.md",
   "text": "**Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).",
   "row": "C-57"
- },
- {
-  "doc": "README.md",
-  "text": "**Deployed site has no live reading (OI-S2-02).**",
-  "row": "C-36"
- },
- {
-  "doc": "README.md",
-  "text": "The worst case of one live reading is 3 × 300 s + 2 × 120 s = 1140 s, above the 300 s Vercel function duration.",
-  "row": "C-36"
- },
- {
-  "doc": "README.md",
-  "text": "With `VERCEL` set, `/api/live/read` answers 503 \"live reading unavailable on the deployed site; live demonstration from the container\", and the page says so.",
-  "row": "C-36"
- },
- {
-  "doc": "README.md",
-  "text": "Judge mode works on the deployed site; live reading is demonstrated from the container.",
-  "row": "C-36"
- },
- {
-  "doc": "README.md",
-  "text": "**Live-read limit per instance (OI-S2-01).** The limit is counted on the server, per server instance, in memory.",
-  "row": "C-37"
- },
- {
-  "doc": "README.md",
-  "text": "Measured consequence: two instances with a limit of 2 let 4 readings through (test \"the live limit is per instance\" in `test/web.test.ts`).",
-  "row": "C-37"
- },
- {
-  "doc": "README.md",
-  "text": "With N instances, the real ceiling is N × `LIVE_READS_PER_HOUR` per hour, all drawn on the same endpoint key.",
-  "row": "C-37"
- },
- {
-  "doc": "README.md",
-  "text": "A shared store behind the same interface (`src/web/limiter.ts`) would make it global.",
-  "row": "none: design note on a possible change, not a capability"
  },
  {
   "doc": "README.md",
@@ -906,28 +816,8 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "The band does not deploy and holds no Vercel or GitHub credentials; the human does this.",
-  "row": "none: division of work between the band and the human"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "Deploy the accepted commit named in the room.",
   "row": "none: instruction to the human"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "The deployed site is **judge mode only**: three recorded real readings, the case files, human confirmation and decision, the receipts, and the landing figures.",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "It makes **no model call**.",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Live reading runs from the container (README, \"Real mode\"), never from the deployed site.",
-  "row": "C-36"
  },
  {
   "doc": "DEPLOY.md",
@@ -1001,148 +891,13 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "Any plan works.",
-  "row": "C-45"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Even 300 s cannot hold one live reading.",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Its worst case is 3 × 300 s + 2 × 120 s = 1140 s (`LIVE_WORST_CASE_MS` in `src/web/limits.ts`).",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "That is why the deployed site has no live reading: with `VERCEL` set, `/api/live/read` answers 503.",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| Variable | On Vercel | Why |",
-  "row": "none: table header"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `MODEL_BASE_URL` | **do not set** | Live reading is unavailable on Vercel by design. Without it, the \"Runs on AMD\" panel honestly shows \"endpoint off\", and the shared endpoint key is never exposed to anonymous traffic |",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `MODEL_API_KEY` | **do not set** | same |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `MODEL_ID` | **do not set** | same |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `LIVE_READS_PER_HOUR` | leave unset | live reading is off on Vercel anyway; unset also means \"disabled\" |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `LIVE_ACCESS_CODE` | leave unset | only meaningful with live reading |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | leave unset | same |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `LIVE_WINDOWS` | optional | free text shown on the landing, for example the time of a live demo from the container |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `CERTGATE_MODE` | leave unset (`mock`) | dataset API only |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `CERTGATE_DATA_DIR` | leave unset | the function bundles `data/` (`includeFiles` in `vercel.json`) |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `PORT` | leave unset | not used by the Vercel function |",
-  "row": "C-33"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "| `VERCEL` | **set by Vercel itself**; never set or remove it | it switches live reading off on the deployed site |",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "Replace `<site>` with the deployment URL. Each check states its expected result.",
-  "row": "none: instruction to the human"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "In a browser, at phone width (375 px) and desktop width (1280 px):",
-  "row": "none: instruction to the human"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "The landing shows the fictitious-data notice and four figures with denominators, and names the evaluation run they come from.",
-  "row": "C-21"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "The endpoint pill says \"Model endpoint: off\".",
-  "row": "C-25"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Judge mode lists cg-001, cg-002 and cg-003, each labelled \"recorded real reading … not live\".",
-  "row": "C-22"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "On cg-003, release is disabled.",
-  "row": "C-23"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "After confirming every critical field with ReH 358 and re-running the rules, release becomes possible.",
-  "row": "C-23"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "The receipt opens and downloads as JSON.",
-  "row": "C-24"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "\"Read a certificate live\" says \"live reading unavailable on the deployed site; live demonstration from the container\", and \"Read live\" is disabled.",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "The page makes no request outside the site.",
-  "row": "C-29"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Check the browser network tab.",
   "row": "none: instruction to the human"
  },
  {
   "doc": "DEPLOY.md",
   "text": "Known cosmetic issue: `/favicon.ico` answers 404.",
   "row": "none: states a missing static file (cosmetic limitation)"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Then report the URL in the room so that the auditor can check it: every asset answers 200, and the served files match the committed ones.",
-  "row": "none: instruction to the human"
  },
  {
   "doc": "METRICS.md",
@@ -1860,21 +1615,6 @@
   "row": "none: heading"
  },
  {
-  "doc": "DEPLOY.md",
-  "text": "3. Environment variables (names only; never write a value anywhere)",
-  "row": "none: heading"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "4. Checks after deploying",
-  "row": "none: heading"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "\"reason\": \"live reading unavailable on the deployed site; live demonstration from the container\"",
-  "row": "C-36"
- },
- {
   "doc": "METRICS.md",
   "text": "CertGate evaluation metrics",
   "row": "none: heading"
@@ -1956,21 +1696,6 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "200, JSON with \"status\": \"ok\"",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "200, \"state\": \"off\", \"detail\": \"no endpoint configured\"",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "200, \"enabled\": false, \"deployed_site\": true,",
-  "row": "C-36"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "200",
   "row": "C-46"
  },
@@ -1987,11 +1712,6 @@
  {
   "doc": "DEPLOY.md",
   "text": "200, \"proposal\": \"block\"",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "503",
   "row": "C-46"
  },
  {
@@ -2133,11 +1853,6 @@
   "doc": "README.md",
   "text": "In the Gemma run there was no false conforming (0 of 18), but it proposed review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field (1 of 594, cg-017) that both Qwen runs reported as unknown.",
   "row": "C-70"
- },
- {
-  "doc": "README.md",
-  "text": "The landing figures, the stories and the product default stay Qwen3.8-27B. The deployed site makes no model call: judge mode replays recorded Qwen readings.",
-  "row": "C-72"
  },
  {
   "doc": "README.md",
@@ -2533,5 +2248,405 @@
   "doc": "METRICS.md",
   "text": "gemma: daily_cost_used 0.017769629135727882 → 0.01987258717417717; delta 0.00210296, sum of per-reply cost 0.00210296, difference -0.",
   "row": "C-76"
+ },
+ {
+  "doc": "README.md",
+  "text": "The landing figures, the stories and the product default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings.",
+  "row": "C-72"
+ },
+ {
+  "doc": "README.md",
+  "text": "Live reading on the deployed site uses the model set in Vercel's `MODEL_ID` (Gemma-4-31B-IT, from dispatch 4; see DEPLOY.md), and each live receipt names the model as the endpoint reports it.",
+  "row": "C-85"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live reading:** on the deployed site, when it is configured (DEPLOY.md), or from the container in real mode with the three `MODEL_*` variables (see \"Run it\").",
+  "row": "C-83"
+ },
+ {
+  "doc": "README.md",
+  "text": "Download a sample certificate from the live screen, choose it, confirm the third-party notice (and type the access code where one is set), and press \"Read live\".",
+  "row": "C-83"
+ },
+ {
+  "doc": "README.md",
+  "text": "The page shows the job as queued with its position, then reading with the seconds so far, then opens the case file; a failed reading says why and offers a retry, and never shows a stored result instead.",
+  "row": "C-77"
+ },
+ {
+  "doc": "README.md",
+  "text": "In the container, live readings run as jobs with an in-process queue and limits; no store is needed.",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "On the deployed site they need the access code and the shared store (DEPLOY.md).",
+  "row": "C-78"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `POST /api/live/read` | `{certificate_base64, delivery_csv?, delivery_line?, access_code?, synthetic_confirmed: true}`: a live reading in one request, container only, or C11 `endpoint_off` with no endpoint; 503 on the deployed site (`no-store`) |",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `POST /api/live/jobs` | `{certificate_base64, delivery_csv?, delivery_line?, synthetic_confirmed: true}`, the access code in the `x-live-access-code` header: starts a live reading job and answers 202 with its id and queue position (`no-store`) |",
+  "row": "C-77"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /api/live/jobs/<id>` | the job: queued with position, reading with elapsed seconds, done with the view and receipt of its own reading, or failed with a reason class (`no-store`) |",
+  "row": "C-77"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `GET /api/samples`, `GET /api/samples/<cg-004\\|cg-005\\|cg-010>/<certificate.pdf\\|delivery.csv>` | three dataset certificates and their delivery notes, to download and upload back |",
+  "row": "C-83"
+ },
+ {
+  "doc": "README.md",
+  "text": "`reader` is `live` when an endpoint and a model are configured outside the deployed site, or on the deployed site when live reading is enabled there, and `off` otherwise.",
+  "row": "C-44"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, counted on the server (in the shared store on the deployed site, in process in the container); unset, invalid or 0 = disabled; documented deployment value 20 |",
+  "row": "C-79"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_ACCESS_CODE` | none (no default) | mandatory for live reading on the deployed site; in the container, needed for a visitor-uploaded file (without it only dataset certificates are read live) |",
+  "row": "C-80"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; all clients together get 10 times as many |",
+  "row": "C-80"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `UPSTASH_REDIS_REST_URL` | none | the shared store's REST URL, set by the Vercel Marketplace integration (deployed site only) |",
+  "row": "C-81"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `UPSTASH_REDIS_REST_TOKEN` | none | secret: the shared store's token, set by the integration |",
+  "row": "C-81"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `KV_REST_API_URL` | none | fallback name of the store URL, read when the Upstash name is absent |",
+  "row": "C-81"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `KV_REST_API_TOKEN` | none | secret: fallback name of the store token |",
+  "row": "C-81"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `VERCEL` | set by Vercel | the deployed-site rules: live reading needs the access code, the shared store, an hourly limit and the endpoint |",
+  "row": "C-78"
+ },
+ {
+  "doc": "README.md",
+  "text": "Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md), [docs/sources/vercel-functions.md](docs/sources/vercel-functions.md), [docs/sources/upstash-redis.md](docs/sources/upstash-redis.md).",
+  "row": "none: pointer to cited sources"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live reading on the deployed site is bounded by the function duration (OI-S2-02).**",
+  "row": "C-82"
+ },
+ {
+  "doc": "README.md",
+  "text": "A job waits at most 60 s for one of the two reading slots and then has at most 210 s to read, inside the 300 s function duration; a reading that does not finish in time fails as \"timed out\" and offers a retry.",
+  "row": "C-82"
+ },
+ {
+  "doc": "README.md",
+  "text": "The one-request route `/api/live/read` stays unavailable there (503 \"live reading unavailable on the deployed site; live demonstration from the container\"); the deployed site reads through the job API.",
+  "row": "C-36"
+ },
+ {
+  "doc": "README.md",
+  "text": "Without the access code and the shared store configured, the deployed site has no live reading at all.",
+  "row": "C-78"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live-read limits (OI-S2-01).** On the deployed site the hourly limit, the two in-flight slots and the wrong-code counts are kept in the shared store, so they hold across all instances.",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "In the container they are kept in process: two separate container processes with a limit of 2 let 4 readings through (test \"the live limit is per instance\" in `test/web.test.ts`).",
+  "row": "C-37"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The band does not deploy and holds no Vercel, GitHub or store credentials; the human does this.",
+  "row": "none: division of work between the band and the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Judge mode works with no configuration: three recorded real readings, the case files, human confirmation and decision, the receipts, and the landing figures.",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Live reading on the deployed site is the extra: it is enabled only when the access code, the shared store, the hourly limit and the model endpoint are all configured (sections 3 and 4).",
+  "row": "C-78"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Without them the site behaves exactly as the Stage 5 site, and makes no model call.",
+  "row": "C-78"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A live reading runs as a job inside that limit (`DEPLOYED_LIVE_BUDGET` in `src/web/limits.ts`): at most 60 s waiting for a reading slot, at most 210 s reading (rendering, attempts and retries included), and 30 s kept free.",
+  "row": "C-82"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The job keeps running after the first answer through Vercel's `waitUntil` ([docs/sources/vercel-functions.md](docs/sources/vercel-functions.md)).",
+  "row": "C-82"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "3. The shared store (done by the human on 2026-10-14, about 12:55Z)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Live reading needs one store shared by all function instances, for the queue and the limits.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Connect **Upstash for Redis** from the Vercel Marketplace to the project ([docs/sources/upstash-redis.md](docs/sources/upstash-redis.md)).",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "In the Vercel project's Environment Variables page, check that **one** of these pairs is present: `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`, or `KV_REST_API_URL` and `KV_REST_API_TOKEN`. CertGate reads the first pair, else the second.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "It never reads `KV_REST_API_READ_ONLY_TOKEN`.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The Upstash Free plan allows 500K commands per month ([docs/sources/upstash-redis.md](docs/sources/upstash-redis.md)).",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "One live reading costs about 40 to 60 store commands: about 15 for admission and the code check, one slot attempt every 2 s while it waits, and one poll every 2 s from the browser while it reads.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A judge's reading of 35 s is about 40 commands.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "If the store refuses or cannot be reached, live reading is refused with \"the shared store is unavailable; live reading refused\"; it never falls back to anything else.",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "4. Environment variables (names only; never write a value anywhere)",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Mark every variable marked \"secret\" below as **Secret** when you add it (\"Choose **Config** or **Secret** under **Type**\", [docs/sources/vercel-functions.md](docs/sources/vercel-functions.md)).",
+  "row": "C-86"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The store variables were created by the integration and cannot be changed to Secret from the list: to make them Secret, reconnect the store with Development deselected and Sensitive enabled, as that page describes, then redeploy.",
+  "row": "C-86"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| Variable | On Vercel | Secret | Why |",
+  "row": "none: table header"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_BASE_URL` | set: the AMD Token Factory base URL, including `/v1` | yes | the endpoint of live reading, read only on the server |",
+  "row": "C-86"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_API_KEY` | set: the team's Token Factory key | yes | sent only from the server to the endpoint; never to the browser |",
+  "row": "C-86"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_ID` | set: `Gemma-4-31B-IT` | no | the live model of the deployed site (dispatch 4). To switch back to Qwen, set it to `Qwen3.8-27B` and redeploy; no code changes. Do that if Gemma returns unusable readings again, as on 2026-10-13 |",
+  "row": "C-85"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_ACCESS_CODE` | set: a code you choose and give to the judges | yes | mandatory: without it live reading stays off on the deployed site |",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_READS_PER_HOUR` | set: `20` | no | the global hourly limit of live readings, counted in the shared store across all instances |",
+  "row": "C-79"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; all clients together are allowed 10 times as many (section 6) |",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `UPSTASH_REDIS_REST_URL` | set by the store integration | no | the store's REST URL (or `KV_REST_API_URL`) |",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `UPSTASH_REDIS_REST_TOKEN` | set by the store integration | yes | the store's token (or `KV_REST_API_TOKEN`) |",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `KV_REST_API_URL` | set by the store integration, if it uses these names | no | the fallback name of the REST URL |",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `KV_REST_API_TOKEN` | set by the store integration, if it uses these names | yes | the fallback name of the token |",
+  "row": "C-81"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_WINDOWS` | optional | no | free text shown on the landing |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `CERTGATE_MODE` | leave unset (`mock`) | no | dataset API only |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `CERTGATE_DATA_DIR` | leave unset | no | the function bundles `data/` (`includeFiles` in `vercel.json`) |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `PORT` | leave unset | no | not used by the Vercel function |",
+  "row": "C-33"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `VERCEL` | **set by Vercel itself**; never set or remove it | no | it selects the deployed-site rules: the access code and the shared store are required |",
+  "row": "C-78"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The landing figures and the three recorded readings stay Qwen3.8-27B, whatever `MODEL_ID` says: they come from the committed evaluation runs.",
+  "row": "C-72"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A live reading names the model the endpoint reports, in its receipt.",
+  "row": "C-85"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "5. Checks after deploying",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The checks marked \"code\" need the access code; type it in place of `<code>` in your own terminal and do not paste it anywhere else.",
+  "row": "none: instruction to the human"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "200, \"status\": \"ok\", \"reader\": \"live\"",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "200, \"state\": \"on\", the model list of the endpoint",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "200, \"enabled\": true, \"access_code_required\": true, \"used_this_hour\" and \"in_flight\" counts",
+  "row": "C-46"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "the sample certificate",
+  "row": "C-83"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "403, no code",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Then one real live reading, in a browser: open the site, go to \"Read a certificate live\", download the sample cg-004 certificate and its delivery note, choose them, give line 1 and the access code, tick the notice and press \"Read live\".",
+  "row": "C-77"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The page shows \"Queued\", then \"Reading at AMD Token Factory\" with the seconds so far, then opens the case file.",
+  "row": "C-77"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Its receipt names the model as reported by the endpoint, with the endpoint snapshot taken at reading time.",
+  "row": "C-85"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "If live reading is not configured completely, the site answers exactly as before Stage 6: `/api/live/status` shows \"enabled\": false with \"live reading unavailable on the deployed site; live demonstration from the container\", `/api/live/read` and `/api/live/jobs` answer 503, and the server log names what is missing (no values).",
+  "row": "C-78"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "6. Wrong codes, and clearing a lockout",
+  "row": "none: heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Every attempt with a code counts first, and a correct code is given back at once.",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A client (identified by a hash of its address) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "All clients together are refused after 10 times that number (default 50).",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "To clear a lockout before the hour ends, delete the keys `certgate:live:codefail:g:<hour>` (all clients) or `certgate:live:codefail:c:<hash>:<hour>` (one client) in the Upstash console, where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Then report in the room that the deployment is done, so that the auditor can run its checks.",
+  "row": "none: instruction to the human"
  }
 ]

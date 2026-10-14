@@ -22,6 +22,11 @@ const json = (f: string) => JSON.parse(read(f));
 // checkout of the repository and are reported as skipped inside the image.
 const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "METRICS.md"));
 const repoOnly = describe.skipIf(!REPO);
+/** Product files Stage 6 changes or adds (its handoff lists each with the reason); nothing else may differ. */
+export const STAGE6_MAY_CHANGE = new Set([
+  "src/web/app.ts", "src/web/limits.ts", "src/web/live-store.ts", "src/web/live-jobs.ts", "api/index.ts",
+  "package.json", "package-lock.json", "public/app.js",
+]);
 type Run = { key: string; dir: string; results: string; model?: RegExp };
 type Result = { case_id: string; proposal: string; expected_proposal: string; status: string; endpoint_response?: { model?: string } | null };
 const load = (x: Run) => ({ ...x, m: json(`${x.dir}/metrics.json`), r: json(`${x.dir}/run.json`), res: json(`${x.dir}/${x.results}`) as Result[] });
@@ -102,11 +107,13 @@ repoOnly("Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d)", () => {
       if (sha(b) === id || /\.(png|jpe?g|gif|ico|pdf|zip|gz)$/i.test(p)) return sha(b);
       return sha(Buffer.from(b.toString("latin1").replace(/\r\n/g, "\n"), "latin1"));
     };
-    for (const [p, id] of Object.entries(base.blobs)) expect(blob(p, id), p).toBe(id);
+    // Stage 6 (dispatch 4) may change exactly these product files (live jobs on the deployed site); the reading path,
+    // data, config, evaluation, figures and stories stay pinned here and in test/stage6-live.test.ts (S6-09).
+    for (const [p, id] of Object.entries(base.blobs)) if (!STAGE6_MAY_CHANGE.has(p)) expect(blob(p, id), p).toBe(id);
     const present: string[] = [];
     const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) for (const e of readdirSync(abs)) walk(`${p}/${e}`); else present.push(p); };
     for (const r of base.roots) walk(r);
-    expect(present.sort()).toEqual(Object.keys(base.blobs).sort());
+    expect(present.filter((p) => !STAGE6_MAY_CHANGE.has(p)).sort()).toEqual(Object.keys(base.blobs).filter((p) => !STAGE6_MAY_CHANGE.has(p)).sort());
   });
   it("vercel.json differs from b0ec67a6 only in the includeFiles value that E-15 authorises", () => {
     const before = json("test/fixtures/stage5-baseline.json").vercel_json_at_b0ec67a6;
