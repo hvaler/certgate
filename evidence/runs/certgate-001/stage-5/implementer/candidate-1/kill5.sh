@@ -1,6 +1,6 @@
 #!/bin/bash
 # Runs each Stage 5 mutant on a throwaway branch impl-mut5/<id>-on-<base> of the scratch clone (never merged).
-S=/c/Users/hugo_/AppData/Local/Temp/claude/C--nexus-dev-certgate/574a9734-076b-4541-8550-dd6b1241a749/scratchpad
+S=${SCRATCH:?set SCRATCH to the scratch directory that holds the s4c1 clone and mutate5.mjs}
 C=$S/s4c1; BASE=$1; LOG=$2; shift 2
 cd $C
 echo "base $(git rev-parse $BASE) $(date -u +%FT%TZ)" > $LOG
