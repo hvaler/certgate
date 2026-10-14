@@ -1,0 +1,152 @@
+base cc5d470b6e8d9a1a299636649dcc80985e518f8d 2026-10-14T17:26:20Z
+k01_xff_first_hop applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+k01_xff_first_hop: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read
+k01_xreal_ip applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+k01_xreal_ip: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read
+k01_no_header_fresh_key applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+k01_no_header_fresh_key: Tests  397 passed (397)
+k01_container_trusts_xff applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+k01_container_trusts_xff: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > K-01 in the container: no header is trusted; rotating X-Forwarded-For and X-Real-IP from one socket still hits the per-client limit
+k02_global_blocks_correct applied
+    diff:  1 file changed, 2 insertions(+), 1 deletion(-)
+k02_global_blocks_correct: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202
+k02_global_before_compare applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+k02_global_before_compare: Tests  4 failed | 393 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+k02_global_on_correct applied
+    diff:  1 file changed, 1 insertion(+)
+k02_global_on_correct: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+k02_wrong_counted_twice applied
+    diff:  1 file changed, 1 insertion(+)
+k02_wrong_counted_twice: Tests  3 failed | 394 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+k02_client_incr_after_compare applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+k02_client_incr_after_compare: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > count first: 12 parallel wrong codes from one client against a slow store give exactly the limit of 403s, the rest 429; then even the right code is 429
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-a6 (H-02): the per-client code-failure key holds a 32-hex hash of the address, never the address itself
+k02_global_not_counted applied
+    diff:  1 file changed, 1 deletion(-)
+k02_global_not_counted: Tests  3 failed | 394 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > one client over its limit cannot lock the others out: 10 x the limit of wrong codes from A, then B's right code is accepted (W-01)
+forgive_split_requests applied
+    diff:  1 file changed, 2 insertions(+), 1 deletion(-)
+forgive_split_requests: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-g6 (J-16): on Upstash, incr and forgive are each ONE REST request (multi-exec), never INCR then a separate EXPIRE
+kv_fallback_dropped applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+kv_fallback_dropped: Tests  3 failed | 394 passed (397)
+     FAIL  test/docs.test.ts > environment variables (F-09) > env var names documented in README and DEPLOY.md equal the names read by src (both directions)
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > the store variables: the Upstash names first, else the KV_* names the deployed integration set (operator report 5c1ce2c6); the read-only token is never used
+     FAIL  test/static.test.ts > configuration by environment only; .env.example lists every variable without values (I6, S1-03) > env reads in src equal the .env.example keys
+code_bypass: pattern not found in src/web/app.ts
+code_bypass: Tests  397 passed (397)
+code_not_constant_time applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_not_constant_time: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the compare is constant-time over equal-length digests
+code_no_forgive applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_no_forgive: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+code_fail_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+code_fail_per_instance: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a client's wrong codes are counted across instances: limit 2, alternating instances, the 3rd attempt is refused
+code_from_query applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+code_from_query: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12) > a correct code never counts as a failure; a missing code and a code in the query string are refused without a reading
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the compare is constant-time over equal-length digests
+slots_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+slots_per_instance: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token
+slot_no_ttl applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_no_ttl: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a crashed holder's slot comes back through its lease TTL (fake clock): a job whose holder hangs forever cannot block the slot past the TTL
+slot_read_then_write applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_read_then_write: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > two workers that look for a slot at the same moment on a slow store take two different slots: admission is atomic SET NX, never read-then-write (CH6-06)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+slot_release_without_token applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+slot_release_without_token: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > a late finisher never frees another job's slot: release is compare-and-delete on the job's own token
+lease_ttl_short applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+lease_ttl_short: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > time budget and constants (S6-03, CH6-05, J-03, J-14, T6-06) > queue wait + reading + margin fit vercel.json maxDuration with at least 30 s to spare; leases outlive the budget
+hourly_per_instance applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+hourly_per_instance: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > the hourly limit is counted once per job, across instances: the 4th job of a limit of 3 is refused on the other instance
+timeout_ge_limit applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+timeout_ge_limit: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > time budget and constants (S6-03, CH6-05, J-03, J-14, T6-06) > queue wait + reading + margin fit vercel.json maxDuration with at least 30 s to spare; leases outlive the budget
+queue_unbounded applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_unbounded: Tests  4 failed | 393 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-c12 (A-01): a missing rank at admission (fault-injected store) is refused as busy and consumes no hourly unit
+queue_rank_by_arrival applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_rank_by_arrival: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+queue_busy_counts_free_slots applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_busy_counts_free_slots: Tests  3 failed | 394 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > the worst interleaving over-admits by at most the number of slots: 4 waiting at most (maxWaiting + slots), then busy
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-c7 (J-05): a poll makes zero store writes, in every state (queued, reading, done, failed, orphan), and so does the status count
+queue_bound_ignores_held applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_bound_ignores_held: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) > an earlier arrival that reaches admission later cannot overfill or jump the queue: 2 waiting, a 3rd with an older arrival is busy, FIFO by admission (A-01)
+     FAIL  test/stage6-live.test.ts > global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) > 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy
+queue_no_prune applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+queue_no_prune: Tests  1 failed | 396 passed (397)
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > dead queue entries are pruned at admission: two ghosts ahead do not block a new job (J-04)
+poll_writes applied
+    diff:  1 file changed, 3 insertions(+), 1 deletion(-)
+poll_writes: Tests  2 failed | 395 passed (397)
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-c7 (J-05): a poll makes zero store writes, in every state (queued, reading, done, failed, orphan), and so does the status count
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > orphaned jobs: a poll derives failed (timed out) without writing, for reading, queued and too-old jobs (fake clock)
+no_orphan applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
+no_orphan: Tests  3 failed | 394 passed (397)
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-c7 (J-05): a poll makes zero store writes, in every state (queued, reading, done, failed, orphan), and so does the status count
+     FAIL  test/stage6-live.test.ts > killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13) > S6M-e1 (J-06): a reading orphan fails at started_at + deadline + 10 s (281 s), before the 300 s backstop
+     FAIL  test/stage6-live.test.ts > timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) > orphaned jobs: a poll derives failed (timed out) without writing, for reading, queued and too-old jobs (fake clock)
+failed_falls_back applied
+    diff:  1 file changed, 1 insertion(+), 1 deletion(-)
