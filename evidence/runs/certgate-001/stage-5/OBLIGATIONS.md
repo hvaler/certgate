@@ -1,6 +1,6 @@
 # Obligation register — Stage 5 (Gemma comparison)
 
-Run: certgate-001 · Stage: 5 · Register version: **R5.0** (analyst-xwz3, 2026-10-14) · Dispatch 3: room msg `82f82e5e-b831-462a-8a4a-51dd02532237` from hugo.valer, received 2026-10-14T10:40Z; verbatim copy `evidence/runs/certgate-001/DISPATCH-3.txt`. Dispatches 1 and 2 remain in force except where dispatch 3 changes them.
+Run: certgate-001 · Stage: 5 · Register version: **R5.1** (analyst-xwz3, 2026-10-14; R5.0 = commit 04100b9; R5.1 adds rulings E-12, E-13 and adopts T5-03…T5-10 on auditor testability review msg f0954890) · Dispatch 3: room msg `82f82e5e-b831-462a-8a4a-51dd02532237` from hugo.valer, received 2026-10-14T10:40Z; verbatim copy `evidence/runs/certgate-001/DISPATCH-3.txt`. Dispatches 1 and 2 remain in force except where dispatch 3 changes them.
 
 **Input revision:** public head `05103af9354098b26b7532dff59de6ab115b5334`, containing the accepted Stage 4 product `b0ec67a663d1caeb9496ff4b75bec163c837d0b3` (tree `8688691982ba6e211bd55374743dab8c21161749`). Auditor acceptance afb6dc7f; S4-07 pass d3b6478b.
 
@@ -40,3 +40,11 @@ Run: certgate-001 · Stage: 5 · Register version: **R5.0** (analyst-xwz3, 2026-
 | D5-02 | Candidate content: Gemma run artifacts, the generator change, METRICS.md, README section, CLAIMS rows, tests. Evidence under `evidence/runs/certgate-001/stage-5/<seat>/` |
 | D5-03 | Order of work: implementer run → candidate freeze → adversary checks and auditor independent run (serialized lease) → verdict. The adversary may challenge R5.0 immediately; target 11:05Z |
 | D5-04 | Credits are free and have no monetary value; costs are reported as the endpoint reports them |
+
+## R5.1 rulings (auditor testability review msg f0954890)
+
+| ID | Answers | Ruling |
+|---|---|---|
+| E-12 | T5-01 (S5-08 vs D2 C-19) | **Confirmed as proposed.** C-19 (any false conforming ⇒ REJECT) applies to the **product model, Qwen3.8-27B**, which drives the product default, the landing figures, the stories and the deployed site. A Gemma false conforming, in the implementer's run or the auditor's, does **not** by itself reject the candidate. The candidate **is** rejected if a Gemma FC is: missing from METRICS.md or the README; reported without its root-cause line (case, field, value read vs true, rule path); softened (e.g. omitted from the headline, or called "minor"); or presented as product behaviour. If Gemma has any FC, the README sentence on why the demo uses Qwen must state it with its denominator |
+| E-13 | T5-02 (S5-09) | **Confirmed as proposed.** METRICS.md changes as a file. Every **Qwen figure** in it (headline rows, per-field, per-case proposals, timing, tokens, cost, usage reconciliation) must **equal** the corresponding figure in `b0ec67a6:METRICS.md`, and the auditor's independent recomputation of both Qwen runs. These must be **byte-identical** under `git diff b0ec67a6..candidate`: `public/` (incl. `figures.json` and `stories/`), `src/` (unless an S5-02 change is recorded), `api/`, `vercel.json`, `data/`, `config/`, the package files, `Dockerfile`, and the Qwen run artifacts under `evaluation/runs/` (implementer run) plus `evidence/runs/certgate-001/stage-3/` |
+| E-14 | T5-03…T5-10 | The auditor's pass/fail rules are adopted as written: T5-03 stub-recorded request bodies (differ only in `model`); T5-04 expectations diff empty; T5-05 30-minute window = every reply non-parsing or `length`, intermittent failures reported per C-09, any cross-model reply id ⇒ REJECT; T5-06 independent run and listed per-case differences; T5-07 headroom ≥ 2× projected or BLOCKED (cap), never partial; T5-08 the prize probe "CertGate is eligible for the Gemma prize." must fail the suite; T5-09 Docker `--network none` with an in-container MODEL_* count of 0; T5-10 extra probes |
