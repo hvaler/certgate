@@ -187,14 +187,30 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
   it("a job that waits too long fails as timed out in queue and keeps its hourly unit; the 2 slots are leases with a token", async () => {
     const s = await stub({ mode: "timeout" });
     const store = new MemoryStore();
-    // The queue wait is measured from the request's arrival (J-14), which includes the PDF check at admission.
-    const budget = { ...FAST, queueMaxWaitMs: 1_500, deadlineMs: 6_000, readBudgetMs: 4_500, leaseTtlMs: 9_000 };
-    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: budget, adapterTimeoutMs: 5_000 });
+    // F7-01: deterministic. The queue wait is measured on the app's clock (J-14: from the request's arrival), which
+    // this test moves by hand. Nothing waits on real time except bounded polls (30 s), and the real-time budgets
+    // (deadline, reading, adapter) are far beyond any runner, so the two readers stay "reading" for the whole test.
+    let t = Date.parse("2026-10-14T13:00:00.000Z");
+    const clock = () => new Date(t);
+    const budget = { ...FAST, queueMaxWaitMs: 60_000, deadlineMs: 120_000, readBudgetMs: 100_000, leaseTtlMs: 130_000 };
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: budget, adapterTimeoutMs: 110_000, clock });
     const jobs = await Promise.all([startJob(base), startJob(base), startJob(base)]);
-    const third = await poll(base, String(jobs[2]!.body.job_id), (x) => x === "failed" || x === "done", 5_000);
-    expect(third.body).toMatchObject({ state: "failed", reason_class: "queue_timeout", reason: REASONS.queue_timeout, result: null });
+    expect(jobs.map((j) => j.status), JSON.stringify(jobs.map((j) => j.body))).toEqual([202, 202, 202]);
+    const states = async () => (await Promise.all(jobs.map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)))).map((v) => String(v.body.state));
+    // Wait (bounded) until two jobs read and the third waits; until then the clock has not moved.
+    let seen: string[] = [];
+    for (const until = Date.now() + 30_000; Date.now() < until; await new Promise((x) => setTimeout(x, 20))) {
+      seen = await states();
+      if (seen.filter((x) => x === "reading").length === 2 && seen.filter((x) => x === "queued").length === 1) break;
+    }
+    expect(seen.slice().sort(), `states before the queue wait elapses: ${seen.join(",")}`).toEqual(["queued", "reading", "reading"]);
+    const waiting = jobs[seen.indexOf("queued")]!;
+    t += budget.queueMaxWaitMs + 1;
+    const third = await poll(base, String(waiting.body.job_id), (x) => x === "failed" || x === "done", 30_000);
+    expect(third.body, `the waiting job after ${budget.queueMaxWaitMs + 1} ms on the app clock`).toMatchObject({ state: "failed", reason_class: "queue_timeout", reason: REASONS.queue_timeout, result: null });
     expect((await call(`${base}/api/live/status`)).body.used_this_hour).toBe("3");
-    const firstTwo = await Promise.all(jobs.slice(0, 2).map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)));
+    const readers = jobs.filter((j) => j !== waiting);
+    const firstTwo = await Promise.all(readers.map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)));
     expect(firstTwo.map((v) => v.body.state)).toEqual(["reading", "reading"]);
     const holders = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
     expect(holders.sort()).toEqual([jobs[0]!.body.job_id, jobs[1]!.body.job_id].sort());
@@ -456,9 +472,11 @@ describe("timeout, failure and model paths: no stored result, fixed reasons, not
     const store = new MemoryStore();
     const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: { ...FAST, deadlineMs: 1_500, readBudgetMs: 1_500, leaseTtlMs: 5_000 }, adapterTimeoutMs: 60_000, backoffBaseMs: 1 });
     const r = await startJob(base);
-    const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done", 5_000);
-    expect(f.body).toMatchObject({ state: "failed", reason_class: "timeout", reason: REASONS.timeout, result: null });
-    for (let i = 0; i < 100 && (await store.get(KEYS.slot(0))) !== null; i++) await new Promise((x) => setTimeout(x, 20));
+    // F7-01 sweep: the waits are bounded by time (30 s), not by a 5 s poll or an iteration count; the 1.5 s deadline
+    // is the behaviour under test and only has to elapse, so a loaded runner can only make it later, never miss it.
+    const f = await poll(base, String(r.body.job_id), (x) => x === "failed" || x === "done", 30_000);
+    expect(f.body, `job state ${String(f.body.state)} after the deadline`).toMatchObject({ state: "failed", reason_class: "timeout", reason: REASONS.timeout, result: null });
+    for (const until = Date.now() + 30_000; Date.now() < until && (await store.get(KEYS.slot(0))) !== null; ) await new Promise((x) => setTimeout(x, 20));
     await new Promise((x) => setTimeout(x, 300));
     expect(s.state.inFlight, "no provider request is left open after the deadline").toBe(0);
     expect(s.state.chatCalls, "no attempt starts after the deadline").toBe(1);
