@@ -123,14 +123,14 @@ describe("job state machine on both store implementations (S6-02, CH6-17, J-11)"
 
 describe("global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05)", () => {
   it("4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy", async () => {
-    const s = await stub({ delayMs: 400 });
+    const s = await stub({ delayMs: 1_500 });
     const store = new MemoryStore();
     store.delayMs = 2;
     const a = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
     const b = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
     // Two jobs take the two slots; two more wait behind them; a fifth would be a third waiting job: busy.
     const first = await Promise.all([startJob(a), startJob(b)]);
-    for (const [k, r] of first.entries()) await poll(k ? b : a, String(r.body.job_id), (x) => x === "reading");
+    for (const [k, r] of first.entries()) expect((await poll(k ? b : a, String(r.body.job_id), (x) => x !== "queued")).body.state).toBe("reading");
     const second = await Promise.all([startJob(a), startJob(b)]);
     const started = [...first, ...second];
     expect(started.map((x) => x.status)).toEqual([202, 202, 202, 202]);
@@ -300,9 +300,8 @@ describe("timeout, failure and model paths: no stored result, fixed reasons, not
     expect((await call(`${base}/api/live/status`)).body.in_flight).toBe("0");
   });
   it("a done job carries no provider text: a 429 whose body has a marker and a path, then a good reply (W-02)", async () => {
-    const s = await stub({ mode: "http_429", errorText: "marker-q7 /private-base-path-x" });
+    const s = await stub({ failFirst: 1, failMode: "http_429", errorText: "marker-q7 /private-base-path-x" });
     const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST, backoffBaseMs: 1 });
-    setTimeout(() => { s.state.mode = "ok"; }, 150);
     const r = await startJob(base);
     const d = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
     expect(d.body.state).toBe("done");
