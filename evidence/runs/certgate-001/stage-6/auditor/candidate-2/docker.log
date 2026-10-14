@@ -1,0 +1,11 @@
+start 2026-10-14T16:35:45Z commit 730bd43976932b39653544438375d017bee7b608
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/tin9ouihfanda76kuek53sb71
+image sha256:a92524889ee4e2dce1f7ead6e7680c8d1442d891bc83ddf7f8a316ef84861aa2
+MODEL_*/LIVE_ACCESS_CODE/store vars in container: 0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  364 passed | 28 skipped (392)
+MODEL_*/LIVE_ACCESS_CODE/store vars in container: 0
+ Test Files  19 passed | 2 skipped (21)
+      Tests  364 passed | 28 skipped (392)
+end 2026-10-14T16:36:30Z

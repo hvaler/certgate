@@ -1,0 +1,7 @@
+real Redis, --network none, scripts from dist of 730bd439 at 2026-10-14T16:36:45Z; sha1 5f010c665661 / e9f69f2beb75
+A#1 -> 1 1 1 
+A#2 -> 2 2 1 
+A#3 -> 3 2 0 
+A#4 -> 4 2 0 
+B#1 -> 1 3 1 
+del wrong -> 0, del right -> 1, exists 0
