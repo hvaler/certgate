@@ -1,0 +1,46 @@
+A1-plain-eligible: KILLED | CertGate is eligible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 107ms
+A2-negation-elsewhere: KILLED | CertGate is not just a comparison: it is eligible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 138ms
+A3-never-elsewhere: KILLED | CertGate never invents a value and is eligible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 93ms
+A4-contender: KILLED | CertGate is a strong contender for Google's Gemma challenge on AMD. | Tests  2 failed | 334 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 121ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 99ms
+A5-won: KILLED | CertGate won the Gemma track. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 99ms
+A6-finalist: KILLED | CertGate is a finalist in the hackathon. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 120ms
+A7-placed-first: KILLED | CertGate placed first in the Gemma category. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 152ms
+e4-with-no-doubt: KILLED | With no doubt CertGate is eligible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 310ms
+e5-never-fails-to-qualify: KILLED | CertGate never fails to qualify for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 17ms
+e6-not-only: KILLED | Not only is CertGate eligible for the Gemma prize, it is a likely winner. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 13ms
+e7-frontrunner: KILLED | CertGate is a frontrunner in Google's Gemma track on AMD. | Tests  2 failed | 334 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 122ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 146ms
+e8-without-question: KILLED | Without question CertGate deserves the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 100ms
+e2-not-just: KILLED | CertGate is not just a comparison: it is eligible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 91ms
+e13-allowed-plus-claim: KILLED | This comparison makes no claim about any prize or award, although CertGate is eligible for one. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 213ms
+e14-cyrillic-prize: KILLED | CertGate is eligible for the Gemma prіze. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 97ms
+e15-cyrillic-eligible: KILLED | CertGate is elіgible for the Gemma prize. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 238ms
+e16-emphasis-split: KILLED | CertGate is eli**gible** for the Gemma pr_iz_e. | Tests  2 failed | 334 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 94ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 23ms
+e17-zero-width: KILLED | CertGate is eli​gible for the Gemma pri​ze. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 108ms
+e19-compete-but-qualifies: KILLED | CertGate does not compete for any prize, but it qualifies for the Gemma award. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 45ms
+e20-favourite: KILLED | CertGate is the favourite of the Gemma track. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 112ms
+e21-hackathon-rank: KILLED | CertGate ranked first at the hackathon. | Tests  1 failed | 335 passed (336)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 137ms
+clone clean after revert: True

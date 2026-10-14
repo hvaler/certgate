@@ -1,0 +1,10 @@
+PASSES   CertGate is the obvious pick for the Gemma judges on AMD.
+PASSES   CertGate is a prizewinning tool.
+PASSES   CertGate took first place on AMD.
+PASSES   CertGate earned a trophy for Gemma on AMD.
+PASSES   CertGate is eli-gible for the Gemma pri-ze.
+PASSES   CertGate is e l i g i b l e for the Gemma p r i z e.
+FLAGGED  CertGate is award-winning.
+FLAGGED  CertGate is eligible-ish for the Gemma prize.
+PASSES   Enter at least one value.
+PASSES   This comparison makes no claim about any prize or award.

@@ -1,0 +1,12 @@
+b2-gemma-receipt-model_id-qwen: KILLED | evaluation/runs/real-gemma-04100b9/results.json | Tests  1 failed | 335 passed (336)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B, in the reply and in the receipt 36ms
+b4-gemma-receipt-requested-qwen: KILLED | evaluation/runs/real-gemma-04100b9/results.json | Tests  1 failed | 335 passed (336)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B, in the reply and in the receipt 41ms
+b5-qwen-impl-receipt-model_id-gemma: KILLED | evaluation/runs/real-candidate-dd557fd/results.json | Tests  3 failed | 333 passed (336)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B, in the reply and in the receipt 25ms
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 298ms
+    × the committed regenerated evaluation receipts: all 27 live, none off, equal to an offline regeneration from the preserved results.json 297ms
+b6-qwen-auditor-receipt-requested-gemma: KILLED | evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/results.json | Tests  2 failed | 334 passed (336)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B, in the reply and in the receipt 25ms
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 277ms
+clone clean after revert: True
