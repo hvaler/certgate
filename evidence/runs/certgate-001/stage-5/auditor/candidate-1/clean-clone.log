@@ -1,0 +1,20 @@
+auditor clean clone ddb75eca79c1e66b06456ebce45992ccd140eafa tree 2fdd51a2abe738755672b41098d1f371569de67a at 2026-10-14T11:23:31Z
+3
+MODEL_* in env: 0
+
+added 42 packages in 6s
+dirty after npm ci: 0
+> certgate@0.1.0 build
+> tsc -p tsconfig.json
+
+
+ RUN  v5.0.4 C:/nexus/dev/certgate-audit-s5c1
+
+
+ Test Files  20 passed (20)
+      Tests  332 passed (332)
+   Start at  13:23:44
+   Duration  13.14s (tests 92%, transform 5%, import 3%)
+
+METRICS.md matches a fresh generation
+end 2026-10-14T11:23:57Z

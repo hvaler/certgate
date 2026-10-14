@@ -1,0 +1,10 @@
+A1-plain-eligible: KILLED | CertGate is eligible for the Gemma prize. | Tests  1 failed | 331 passed (332)
+    × no forbidden claim in README, DEPLOY.md, METRICS.md or public 103ms
+A2-negation-elsewhere: SURVIVED | CertGate is not just a comparison: it is eligible for the Gemma prize. | Tests  332 passed (332)
+A3-never-elsewhere: SURVIVED | CertGate never invents a value and is eligible for the Gemma prize. | Tests  332 passed (332)
+A4-contender: KILLED | CertGate is a strong contender for Google's Gemma challenge on AMD. | Tests  1 failed | 331 passed (332)
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 34ms
+A5-won: SURVIVED | CertGate won the Gemma track. | Tests  332 passed (332)
+A6-finalist: SURVIVED | CertGate is a finalist in the hackathon. | Tests  332 passed (332)
+A7-placed-first: SURVIVED | CertGate placed first in the Gemma category. | Tests  332 passed (332)
+clone clean after revert: True

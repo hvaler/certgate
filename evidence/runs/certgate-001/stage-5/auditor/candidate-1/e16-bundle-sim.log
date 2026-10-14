@@ -1,0 +1,86 @@
+2026-10-14T11:27:11Z
+bundle <scratch>/e16b/A pdfjs-dist=0 @napi-rs/canvas=0 pdfjs present=false
+{"import_error":"Cannot find module 'pdfjs-dist/package.json'\nRequire stack:\n- <scratch>\\e16b\\A\\src\\pdf.js"}
+
+bundle <scratch>/e16b/A2 pdfjs-dist=0 @napi-rs/canvas=1 pdfjs present=false
+{"import_error":"Cannot find module 'pdfjs-dist/package.json'\nRequire stack:\n- <scratch>\\e16b\\A2\\src\\pdf.js"}
+
+bundle <scratch>/e16b/B pdfjs-dist=1 @napi-rs/canvas=0 pdfjs present=true
+{
+ "GET /health": {
+  "status": 200,
+  "summary": {
+   "status": "ok",
+   "mode": "mock",
+   "reader": "off"
+  }
+ },
+ "GET /api/f1": {
+  "status": 200,
+  "summary": {
+   "state": "off",
+   "detail": "no endpoint configured"
+  }
+ },
+ "GET /api/live/status": {
+  "status": 200,
+  "summary": {
+   "enabled": false,
+   "deployed_site": true
+  }
+ },
+ "POST /api/stories/cg-003/evaluate": {
+  "status": 200,
+  "summary": {
+   "proposal": "block"
+  }
+ },
+ "POST /api/live/read": {
+  "status": 503,
+  "summary": {
+   "status": "rejected",
+   "error": "live reading unavailable on the deployed site; live demonstration from the container"
+  }
+ }
+}
+
+stderr: Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find module '@napi-rs/canvas'
+bundle <scratch>/e16b/B2 pdfjs-dist=1 @napi-rs/canvas=1 pdfjs present=true
+{
+ "GET /health": {
+  "status": 200,
+  "summary": {
+   "status": "ok",
+   "mode": "mock",
+   "reader": "off"
+  }
+ },
+ "GET /api/f1": {
+  "status": 200,
+  "summary": {
+   "state": "off",
+   "detail": "no endpoint configured"
+  }
+ },
+ "GET /api/live/status": {
+  "status": 200,
+  "summary": {
+   "enabled": false,
+   "deployed_site": true
+  }
+ },
+ "POST /api/stories/cg-003/evaluate": {
+  "status": 200,
+  "summary": {
+   "proposal": "block"
+  }
+ },
+ "POST /api/live/read": {
+  "status": 503,
+  "summary": {
+   "status": "rejected",
+   "error": "live reading unavailable on the deployed site; live demonstration from the container"
+  }
+ }
+}
+

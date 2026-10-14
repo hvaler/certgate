@@ -1,0 +1,4 @@
+unmapped: 0
+stale: 0
+CLAIMS rows: 76
+map entries: 507

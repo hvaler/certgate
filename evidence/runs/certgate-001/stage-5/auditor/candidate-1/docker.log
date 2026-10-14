@@ -1,0 +1,20 @@
+start 2026-10-14T11:28:25Z commit ddb75eca79c1e66b06456ebce45992ccd140eafa
+#27 exporting attestation manifest sha256:8dec6bba05f8733604cb8f1a2202009fbbcbd2cc0b8da61d0debd9a7a3634e5b done
+#27 exporting manifest list sha256:b059fb970162bf4d3c6a5e5aaed7fb1529bed98b16dceaf9166075ff912be1dd done
+#27 naming to docker.io/library/certgate-audit-s5c1:ddb75eca done
+#27 unpacking to docker.io/library/certgate-audit-s5c1:ddb75eca
+#27 unpacking to docker.io/library/certgate-audit-s5c1:ddb75eca 1.2s done
+#27 DONE 5.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/n1s2by37s0m1wtd1r0q2cvr7v
+image sha256:b059fb970162bf4d3c6a5e5aaed7fb1529bed98b16dceaf9166075ff912be1dd
+MODEL_* in container: 0
+[2m Test Files [22m [1m[32m18 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (20)[39m
+[2m      Tests [22m [1m[32m305 passed[39m[22m[2m | [22m[33m27 skipped[39m[90m (332)[39m
+[2m   Start at [22m 11:28:50
+[2m   Duration [22m 7.37s[2m (tests 80%, transform 11%, import 8%, worker 1%)[22m
+
+[2m    Isolate [22m [33m20 workers spawned[39m[2m · ~231ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~693ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+end 2026-10-14T11:28:58Z

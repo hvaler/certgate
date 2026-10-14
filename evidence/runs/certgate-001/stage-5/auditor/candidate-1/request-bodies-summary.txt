@@ -1,0 +1,6 @@
+04100b93-cg-004-qwen.json 188804 bce915c35acd5370cd8adc51d77c6684ff06d48f634c4fa2617da44a67cfd3e7 model,temperature,max_tokens,response_format,messages Qwen3.8-27B
+04100b93-cg-021-qwen.json 233352 87bf11ea790f4d6796320c5e9db61ba61df324962b080d91894be7291be0e8df model,temperature,max_tokens,response_format,messages Qwen3.8-27B
+ddb75eca-cg-004-gemma.json 188807 7bddbf119835091a57eafee188235c6ce38067bc1c482ce54bd660461d880fb2 model,temperature,max_tokens,response_format,messages Gemma-4-31B-IT
+ddb75eca-cg-004-qwen.json 188804 bce915c35acd5370cd8adc51d77c6684ff06d48f634c4fa2617da44a67cfd3e7 model,temperature,max_tokens,response_format,messages Qwen3.8-27B
+ddb75eca-cg-021-gemma.json 233355 85d8c5fb6bcd8a67700e57f6694cadfa7a73ee7a895d44eea3915911a1507c7f model,temperature,max_tokens,response_format,messages Gemma-4-31B-IT
+ddb75eca-cg-021-qwen.json 233352 87bf11ea790f4d6796320c5e9db61ba61df324962b080d91894be7291be0e8df model,temperature,max_tokens,response_format,messages Qwen3.8-27B

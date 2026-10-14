@@ -1,0 +1,93 @@
+{
+ "run": "evaluation/runs/real-gemma-04100b9",
+ "cases": 27,
+ "FC_broad": "0 / 18",
+ "FC_broad_cases": [],
+ "FC_strict": "0 / 6",
+ "caught": "6 / 6",
+ "caught_block": 5,
+ "as_expected": "26 / 27",
+ "mismatches": [
+  [
+   "cg-021",
+   "review",
+   "block"
+  ]
+ ],
+ "proposals": {
+  "cg-004": "release",
+  "cg-005": "block",
+  "cg-006": "block",
+  "cg-007": "block",
+  "cg-008": "release",
+  "cg-009": "release",
+  "cg-010": "review",
+  "cg-011": "review",
+  "cg-012": "block",
+  "cg-013": "review",
+  "cg-014": "release",
+  "cg-015": "review",
+  "cg-016": "review",
+  "cg-017": "review",
+  "cg-018": "release",
+  "cg-019": "review",
+  "cg-020": "block",
+  "cg-021": "review",
+  "cg-022": "review",
+  "cg-023": "release",
+  "cg-024": "release",
+  "cg-025": "review",
+  "cg-026": "release",
+  "cg-027": "release",
+  "cg-028": "review",
+  "cg-029": "review",
+  "cg-030": "review"
+ },
+ "field_categories": {
+  "correct": 591,
+  "confident_on_illegible": 1,
+  "unknown": 1,
+  "correct_absent": 1
+ },
+ "fields_total": 594,
+ "not_correct": [
+  [
+   "cg-017",
+   "heat_or_lot",
+   "confident_on_illegible",
+   "24-73269",
+   null
+  ],
+  [
+   "cg-021",
+   "chemistry.Si",
+   "unknown",
+   null,
+   "0.62"
+  ],
+  [
+   "cg-028",
+   "inspection_stamp",
+   "correct_absent",
+   null,
+   null
+  ]
+ ],
+ "failures": 0,
+ "retries": 0,
+ "models": [
+  "self-dploy/Gemma-4-31B-IT"
+ ],
+ "reading_sources": [
+  "live"
+ ],
+ "finish": [
+  "stop"
+ ],
+ "sec_mean": 34.1,
+ "sec_median": 29.9,
+ "tokens_mean": 2003,
+ "cost_mean": "0.00007789",
+ "cost_sum": "0.0021029624",
+ "usage_error": "InvalidOperation([<class 'decimal.ConversionSyntax'>])"
+}

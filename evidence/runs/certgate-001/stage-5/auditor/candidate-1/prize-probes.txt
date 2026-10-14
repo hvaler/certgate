@@ -1,0 +1,14 @@
+FLAGGED  CertGate is eligible for the Gemma prize.
+FLAGGED  CertGate qualifies for the Gemma prize.
+PASSES   CertGate is not just a comparison: it is eligible for the Gemma prize.
+PASSES   CertGate, with no extra setup, qualifies for the Gemma award.
+PASSES   CertGate never invents a value and is eligible for the Gemma prize.
+PASSES   CertGate is a strong contender for Google's Gemma challenge on AMD.
+PASSES   CertGate won the Gemma track.
+PASSES   CertGate is a finalist in the hackathon.
+PASSES   CertGate placed first in the Gemma category.
+FLAGGED  We submitted CertGate to the Gemma category.
+FLAGGED  CertGate is the Gemma prize winner.
+FLAGGED  <!-- CertGate is eligible for the Gemma prize -->
+FLAGGED  | Gemma prize | eligible |
+PASSES   This comparison makes no claim about any prize or award.

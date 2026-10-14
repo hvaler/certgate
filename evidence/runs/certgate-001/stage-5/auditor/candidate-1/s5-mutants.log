@@ -1,0 +1,40 @@
+a1-metrics-gemma-seconds: KILLED | METRICS.md | build rc 0 | Tests  2 failed | 330 passed (332)
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 27ms
+    × equals a fresh generation from the committed artifacts, byte for byte 33ms
+a2-readme-gemma-seconds: KILLED | README.md | build rc 0 | Tests  2 failed | 330 passed (332)
+    × README Gemma figures equal the generated metrics of the Gemma run 24ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 25ms
+a3-readme-gemma-cost: KILLED | README.md | build rc 0 | Tests  2 failed | 330 passed (332)
+    × README Gemma figures equal the generated metrics of the Gemma run 18ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 28ms
+b1-gemma-reply-qwen-id: KILLED | evaluation/runs/real-gemma-04100b9/results.json | build rc 0 | Tests  2 failed | 330 passed (332)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B 33ms
+    × equals a fresh generation from the committed artifacts, byte for byte 38ms
+b2-gemma-receipt-qwen-id: SURVIVED | evaluation/runs/real-gemma-04100b9/results.json | build rc 0 | Tests  332 passed (332)
+b3-qwen-reply-gemma-id: KILLED | evaluation/runs/real-candidate-dd557fd/results.json | build rc 0 | Tests  8 failed | 324 passed (332)
+    × every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B 20ms
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 88ms
+    × the landing figures are generated from the Qwen implementer run, never from a Gemma run 11ms
+    × the comparison section follows the Qwen sections, which are unchanged from b0ec67a6 29ms
+    × README provenance facts equal the run artifacts and the publisher record 15ms
+    × the committed regenerated evaluation receipts: all 27 live, none off, equal to an offline regeneration from the preserved results.json 312ms
+c1-request-top_p: KILLED | src/web/live-reader.ts | build rc 0 | Tests  3 failed | 329 passed (332)
+    × the Qwen request body for cg-004 hashes to its value at b0ec67a6 1493ms
+    × the Gemma request body equals the Qwen request body except the model id, with no thinking control 195ms
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 501ms
+c2-max-tokens: KILLED | src/web/limits.ts | build rc 0 | Tests  2 failed | 330 passed (332)
+    × the Qwen request body for cg-004 hashes to its value at b0ec67a6 1250ms
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 472ms
+d1-landing-from-gemma: KILLED | public/figures.json | build rc 0 | Tests  5 failed | 327 passed (332)
+    × public/, src/, api/, data/, config/, the package and container files (vercel.json apart), the expectations, the Qwen run artifacts and the stage-3 evidence are byte-identical to b0ec67a6 627ms
+    × the landing figures are generated from the Qwen implementer run, never from a Gemma run 12ms
+    × README evaluation figures equal the generated metrics of both runs 15ms
+    × names the landing run and the auditor's independent run, with the landing figures' run equal to public/figures.json 30ms
+    × landing figures come only from public/figures.json, which regenerates byte-for-byte from the committed evaluation artifacts (S3-19, C-08, C-11) 24ms
+f1-metrics-drop-cg004-diff: KILLED | METRICS.md | build rc 0 | Tests  2 failed | 330 passed (332)
+    × equals a fresh generation from the committed artifacts, byte for byte 37ms
+    × every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason 67ms
+e15-drop-pdfjs: KILLED | vercel.json | build rc 0 | Tests  2 failed | 330 passed (332)
+    × vercel.json differs from b0ec67a6 only in the includeFiles value that E-15 authorises 16ms
+    × the function includes node_modules/pdfjs-dist with data, config and public/stories; maxDuration and the rewrites are unchanged 8ms
+clone clean after revert: True
