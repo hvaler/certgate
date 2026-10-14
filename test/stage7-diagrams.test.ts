@@ -14,7 +14,10 @@ const diagrams = DIAGRAMS as Record<string, Diagram>;
 const names = Object.keys(diagrams);
 const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
 
-describe("diagrams map to existing code (S7-01, CH7-09)", () => {
+// The diagram elements name repository files (Dockerfile, DEPLOY.md, METRICS.md) that the container image does not
+// carry, so this check runs in the repository, as the docs tests do.
+const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "METRICS.md"));
+describe.skipIf(!REPO)("diagrams map to existing code (S7-01, CH7-09)", () => {
   it("defines the architecture and flow diagrams", () => {
     expect(names).toEqual(["architecture", "flow"]);
   });

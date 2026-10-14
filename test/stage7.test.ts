@@ -1,7 +1,7 @@
 // Stage 7 (dispatch 5): "View the original certificate" (S7-04, T7-02, CH7-04, CH7-05), the recorded flag (S7-05,
 // T7-04, CH7-07) and the previews (S7-03, T7-03, CH7-06).
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { request } from "node:http";
 import type { AddressInfo } from "node:net";
 import path from "node:path";
@@ -166,9 +166,11 @@ describe("previews regenerate byte-identical from the committed PDFs (S7-03, T7-
   });
 });
 
-describe("the README for a judge (S7-06, T7-07, CH7-08, CH7-10)", () => {
-  const readme = readFileSync(path.join(ROOT, "README.md"), "utf8");
-  const register = readFileSync(path.join(ROOT, "evidence", "runs", "certgate-001", "STAGE-REGISTER.md"), "utf8");
+// The stage register is evidence: these run in the repository, not in the container image (as the docs tests do).
+const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "CLAIMS.md"));
+describe.skipIf(!REPO)("the README for a judge (S7-06, T7-07, CH7-08, CH7-10)", () => {
+  const readme = REPO ? readFileSync(path.join(ROOT, "README.md"), "utf8") : "";
+  const register = REPO ? readFileSync(path.join(ROOT, "evidence", "runs", "certgate-001", "STAGE-REGISTER.md"), "utf8") : "";
   it("the sections come in the dispatch order", () => {
     const order = ["## Try it", "## What runs on AMD", "## Evaluation (real model)", "## Comparison with Gemma-4-31B-IT", "## Architecture and certificate flow", "## Screenshots", "## Run it", "## Limitations", "## How it was built and verified"];
     const at = order.map((h) => readme.indexOf(`\n${h}`));
