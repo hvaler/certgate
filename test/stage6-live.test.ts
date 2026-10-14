@@ -24,7 +24,8 @@ import { record } from "./support/disabled-golden.mjs";
 const CODE = "sentinel-access-code-7f3a19";
 const KEY = "sentinel-model-key-91bd44";
 const STORE_TOKEN = "sentinel-store-token-c0de55";
-const FAST = { pollMs: 20, queueMaxWaitMs: 4_000, readBudgetMs: 6_000, deadlineMs: 8_000, staleGraceMs: 10_000, leaseTtlMs: 9_000, marginMs: 0 };
+// Generous for a cold start (the first PDF check loads pdf.js); tests of timeouts set their own budgets.
+const FAST = { pollMs: 20, queueMaxWaitMs: 20_000, readBudgetMs: 20_000, deadlineMs: 40_000, staleGraceMs: 10_000, leaseTtlMs: 45_000, marginMs: 0 };
 
 type Closable = { close: () => Promise<void> };
 const open: Closable[] = [];
@@ -62,7 +63,7 @@ function startJob(base: string, opts: { code?: string | null; id?: string; clien
   if (opts.client) headers["x-forwarded-for"] = opts.client;
   return call(`${base}/api/live/jobs${opts.query ?? ""}`, { method: "POST", headers, body: JSON.stringify({ certificate_base64: cert(opts.id ?? "cg-004").toString("base64"), synthetic_confirmed: true }) });
 }
-async function poll(base: string, id: string, until: (s: string) => boolean, ms = 15_000) {
+async function poll(base: string, id: string, until: (s: string) => boolean, ms = 30_000) {
   const t0 = Date.now();
   for (;;) {
     const r = await call(`${base}/api/live/jobs/${id}`);
@@ -90,7 +91,7 @@ describe("job state machine on both store implementations (S6-02, CH6-17, J-11)"
       expect(r.body.state).toBe("queued");
       expect(String(r.body.job_id)).toMatch(/^[0-9a-f]{32}$/);
       const done = await poll(base, String(r.body.job_id), (x) => x === "done" || x === "failed");
-      expect(done.body.state).toBe("done");
+      expect(done.body.state, `job ended as ${String(done.body.state)} (${String(done.body.reason_class)})`).toBe("done");
       expect(done.body.position).toBeUndefined(); // the position belongs to a queued job's poll only
       const result = done.body.result as { job_id: string; started_at: string; finished_at: string; view: { receipt: Record<string, any> } };
       expect(result.job_id).toBe(r.body.job_id);
