@@ -4,11 +4,11 @@
 // 500 with a body that carries a sentinel, to check that store errors never leak.
 import { createServer } from "node:http";
 
-// F6-01: the two Lua scripts the fake accepts, copied verbatim here and NOT imported from src/. These are the texts
-// the auditor ran on real Redis 7.4.10 (evidence/runs/certgate-001/stage-6/auditor/candidate-1/lua-real-redis.log).
-// The fake emulates exactly these texts; any other script is refused, so a change to a script in src/ fails the tests.
+// F6-01: the only Lua script the fake accepts, copied verbatim here and NOT imported from src/. It is the text the
+// auditor ran on real Redis 7.4.10 (evidence/runs/certgate-001/stage-6/auditor/candidate-1/lua-real-redis.log).
+// The fake emulates exactly this text; any other script is refused, so a change to a script in src/ fails the tests.
+// K-02 removed the code-attempt script: the code counters are plain INCR+EXPIRE transactions.
 export const VERIFIED_DEL_IF_EQUALS_SCRIPT = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-export const VERIFIED_COUNT_ATTEMPT_SCRIPT = "local c = redis.call('incr', KEYS[1]); redis.call('expire', KEYS[1], ARGV[1]); local g = tonumber(redis.call('get', KEYS[2]) or '0'); local counted = 0; if c <= tonumber(ARGV[2]) then g = redis.call('incr', KEYS[2]); redis.call('expire', KEYS[2], ARGV[1]); counted = 1 end; return {c, g, counted}";
 
 export async function startFakeUpstash({ token = "fake-store-token", now = () => Date.now() } = {}) {
   const kv = new Map();
@@ -39,13 +39,6 @@ export async function startFakeUpstash({ token = "fake-store-token", now = () =>
       }
       case "EXPIRE": { const e = live(a[0]); if (!e) return 0; e.exp = now() + Number(a[1]) * 1000; return 1; }
       case "EVAL": {
-        if (a[0] === VERIFIED_COUNT_ATTEMPT_SCRIPT) {
-          const [, , kc, kg, ttl, limit] = a;
-          const c = run(["INCR", kc]); run(["EXPIRE", kc, ttl]);
-          let g = Number(live(kg)?.v ?? 0); let counted = 0;
-          if (c <= Number(limit)) { g = run(["INCR", kg]); run(["EXPIRE", kg, ttl]); counted = 1; }
-          return [c, g, counted];
-        }
         if (a[0] !== VERIFIED_DEL_IF_EQUALS_SCRIPT) throw new Error("NOSCRIPT unknown script (not one of the verified texts)");
         const e = live(a[2]);
         if (e && e.v === a[3]) { kv.delete(a[2]); return 1; }

@@ -12,12 +12,12 @@ import { SAMPLE_IDS } from "../src/web/app.js";
 import { clearF1Cache } from "../src/web/f1.js";
 import { KEYS, REASONS } from "../src/web/live-jobs.js";
 import { CONTAINER_LIVE_BUDGET, DEPLOYED_LIVE_BUDGET, DEPLOYED_LIVE_UNAVAILABLE } from "../src/web/limits.js";
-import { COUNT_ATTEMPT_SCRIPT, DEL_IF_EQUALS_SCRIPT, MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
+import { DEL_IF_EQUALS_SCRIPT, MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
 import { DATA, ROOT } from "./helpers.js";
 // @ts-expect-error plain JS test double
 import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 // @ts-expect-error plain JS test double
-import { startFakeUpstash, VERIFIED_COUNT_ATTEMPT_SCRIPT, VERIFIED_DEL_IF_EQUALS_SCRIPT } from "./support/fake-upstash.mjs";
+import { startFakeUpstash, VERIFIED_DEL_IF_EQUALS_SCRIPT } from "./support/fake-upstash.mjs";
 // @ts-expect-error plain JS helper
 import { record } from "./support/disabled-golden.mjs";
 
@@ -57,10 +57,12 @@ async function call(url: string, init: RequestInit = {}) {
   try { body = JSON.parse(text); } catch { /* not JSON */ }
   return { status: res.status, body, text, headers: res.headers };
 }
-function startJob(base: string, opts: { code?: string | null; id?: string; client?: string; query?: string } = {}) {
+function startJob(base: string, opts: { code?: string | null; id?: string; client?: string; spoof?: string; query?: string } = {}) {
   const headers: Record<string, string> = { "content-type": "application/json" };
   if (opts.code !== null) headers["x-live-access-code"] = opts.code ?? CODE;
-  if (opts.client) headers["x-forwarded-for"] = opts.client;
+  // K-01: on the deployed site the client address arrives in the platform header only.
+  if (opts.client) headers["x-vercel-forwarded-for"] = opts.client;
+  if (opts.spoof) { headers["x-forwarded-for"] = opts.spoof; headers["x-real-ip"] = opts.spoof; }
   return call(`${base}/api/live/jobs${opts.query ?? ""}`, { method: "POST", headers, body: JSON.stringify({ certificate_base64: cert(opts.id ?? "cg-004").toString("base64"), synthetic_confirmed: true }) });
 }
 async function poll(base: string, id: string, until: (s: string) => boolean, ms = 30_000) {
@@ -226,31 +228,69 @@ describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", (
     expect(q.body.error).toBe("wrong or missing access code; no live reading was used");
     expect(s.state.chatCalls).toBe(calls);
   });
-  it("per client and global: 10 clients each fail once at a limit of 1; the 11th client is refused by the global ceiling", async () => {
+  it("K-02 (a): with the global failure count far over the old ceiling (10 x the limit), a client within its own limit and the correct code gets 202", async () => {
     const s = await stub();
     const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "1" }), liveStore: new MemoryStore(), liveBudget: FAST });
-    for (let i = 1; i <= 10; i++) expect((await startJob(base, { code: "wrong", client: `198.51.100.${i}` })).status, `client ${i}`).toBe(403);
-    expect((await startJob(base, { code: "wrong", client: "198.51.100.1" })).status).toBe(429);
-    expect((await startJob(base, { code: CODE, client: "203.0.113.9" })).status).toBe(429);
-    const st = await call(`${base}/api/live/status`, { headers: { "x-forwarded-for": "198.51.100.3" } });
-    expect(st.body).toMatchObject({ code_failures_this_hour_global: "11", code_failures_this_hour_this_client: "1", code_failure_limit_per_client: "1", code_failure_ceiling_global: "10" });
+    for (let i = 1; i <= 15; i++) expect((await startJob(base, { code: "wrong", client: `198.51.100.${i}` })).status, `client ${i}`).toBe(403);
+    expect((await startJob(base, { code: "wrong", client: "198.51.100.1" })).status, "client 1 is over its own limit").toBe(429);
+    const st = await call(`${base}/api/live/status`, { headers: { "x-vercel-forwarded-for": "198.51.100.3" } });
+    expect(st.body).toMatchObject({ code_failures_this_hour_global: "15", code_failures_this_hour_this_client: "1", code_failure_limit_per_client: "1" });
+    expect(st.body).not.toHaveProperty("code_failure_ceiling_global");
+    expect((await startJob(base, { code: CODE, client: "203.0.113.9" })).status, "a correct code is never refused because others failed").toBe(202);
+    expect((await startJob(base, { code: "wrong", client: "203.0.113.10" })).status, "a fresh client's wrong code is compared, not refused by a ceiling").toBe(403);
+  });
+  it("K-02 (c): a correct code after other clients' failures leaves the global failure count unchanged, and its own unit is given back", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "3" }), liveStore: store, liveBudget: FAST });
+    for (let i = 1; i <= 4; i++) expect((await startJob(base, { code: "wrong", client: `198.51.100.${i}` })).status).toBe(403);
+    const hour = new Date().toISOString().slice(0, 13);
+    const globalKey = KEYS.codeFailGlobal(hour);
+    expect(await store.get(globalKey)).toBe("4");
+    const ok = await startJob(base, { code: CODE, client: "203.0.113.20" });
+    expect(ok.status).toBe(202);
+    expect(await store.get(globalKey), "global count after a correct code").toBe("4");
+    const st = await call(`${base}/api/live/status`, { headers: { "x-vercel-forwarded-for": "203.0.113.20" } });
+    expect(st.body).toMatchObject({ code_failures_this_hour_global: "4", code_failures_this_hour_this_client: "0" });
+  });
+  it("K-01: rotating a client-set X-Forwarded-For and X-Real-IP while the platform header stays fixed still hits the per-client limit", async () => {
+    const s = await stub();
+    const base = await serve({ env: deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "3" }), liveStore: new MemoryStore(), liveBudget: FAST });
+    const statuses: number[] = [];
+    for (let i = 1; i <= 6; i++) statuses.push((await startJob(base, { code: "wrong", client: "198.51.100.200", spoof: `10.9.${i}.${i}` })).status);
+    expect(statuses).toEqual([403, 403, 403, 429, 429, 429]);
+    // The correct code from the same platform address is refused too: it is the same client, over its own limit.
+    expect((await startJob(base, { client: "198.51.100.200", spoof: "10.9.99.99" })).status).toBe(429);
+    // Without the platform header every request shares one key (fail closed), whatever the spoofable headers say.
+    const shared: number[] = [];
+    for (let i = 1; i <= 4; i++) shared.push((await startJob(base, { code: "wrong", spoof: `10.8.${i}.${i}` })).status);
+    expect(shared).toEqual([403, 403, 403, 429]);
+  });
+  it("K-01: the client key is read from x-vercel-forwarded-for on Vercel and from the socket in the container; x-forwarded-for and x-real-ip are never read", () => {
+    const src = readFileSync(path.join(ROOT, "src", "web", "app.ts"), "utf8");
+    const fn = src.slice(src.indexOf("const clientKey = "), src.indexOf("const READER_CLASS"));
+    expect(fn).toMatch(/req\.headers\["x-vercel-forwarded-for"\]/);
+    expect(fn).toMatch(/req\.socket\.remoteAddress/);
+    expect(fn).not.toMatch(/x-forwarded-for"|x-real-ip/);
+    expect(existsSync(path.join(ROOT, "docs", "sources", "vercel-request-headers.md"))).toBe(true);
   });
 });
 
 describe("code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06)", () => {
-  // F6-01: the deployed site runs these two Lua scripts on Upstash. The fake store emulates only its own verbatim copies,
-  // which are the texts the auditor ran on real Redis 7.4.10 (stage-6/auditor/candidate-1/lua-real-redis.log, whose
-  // SHA-1 prefixes 5f010c665661 and e9f69f2beb75 are the SHA-1 of these texts). A changed script fails here, and every
-  // test that goes through the fake fails too, because the fake refuses any other text.
-  it("the two Lua scripts in src/ are exactly the texts verified on real Redis (pinned SHA-256)", () => {
+  // F6-01: the deployed site runs one Lua script on Upstash, the slot compare-and-delete. The fake store emulates only
+  // its own verbatim copy, the text the auditor ran on real Redis 7.4.10 (stage-6/auditor/candidate-1/lua-real-redis.log,
+  // SHA-1 prefix e9f69f2beb75). K-02 removed the code-attempt script: the per-client count is a plain INCR+EXPIRE
+  // transaction and the global failure count another, so no other script exists. A changed or added script fails here,
+  // and every test that goes through the fake fails too, because the fake refuses any other text.
+  it("the only Lua script in src/ is exactly the text verified on real Redis (pinned SHA-256), and no other EVAL exists", () => {
     const sha256 = (x: string) => createHash("sha256").update(x).digest("hex");
     const sha1 = (x: string) => createHash("sha1").update(x).digest("hex");
-    expect(sha256(COUNT_ATTEMPT_SCRIPT), "COUNT_ATTEMPT_SCRIPT changed: re-verify on real Redis before re-pinning").toBe("210382f3def5e863033e2f2023dd8148017f41b17cd6e0c9cd933dd05a239abc");
     expect(sha256(DEL_IF_EQUALS_SCRIPT), "DEL_IF_EQUALS_SCRIPT changed: re-verify on real Redis before re-pinning").toBe("58c1e79c3e95626750ef05e2e74a7f650a45d44acbee56a3fa9df61b30d58631");
-    expect(COUNT_ATTEMPT_SCRIPT).toBe(VERIFIED_COUNT_ATTEMPT_SCRIPT);
     expect(DEL_IF_EQUALS_SCRIPT).toBe(VERIFIED_DEL_IF_EQUALS_SCRIPT);
-    expect(sha1(VERIFIED_COUNT_ATTEMPT_SCRIPT).slice(0, 12)).toBe("5f010c665661");
     expect(sha1(VERIFIED_DEL_IF_EQUALS_SCRIPT).slice(0, 12)).toBe("e9f69f2beb75");
+    const src = readFileSync(path.join(ROOT, "src", "web", "live-store.ts"), "utf8");
+    expect(src.match(/"EVAL"/g) ?? [], "EVAL call sites").toHaveLength(1);
+    expect(src.match(/redis\.call/g) ?? [], "Lua texts").toHaveLength(2);
   });
   it("the fake store refuses a script that is not one of the verified texts", async () => {
     const f = await startFakeUpstash({ token: STORE_TOKEN });
@@ -650,7 +690,7 @@ describe("what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T
 });
 
 // ADV-S6-F01 items 2-8 (auditor 48a9ad70, analyst addendum 46e4579e): one killer per surviving mutant.
-const WRITE_OPS = new Set(["incr", "countAttempt", "forgiveAttempt", "set", "setNx", "delIfEquals", "zadd", "zrem", "zremBelow"]);
+const WRITE_OPS = new Set(["incr", "forgive", "set", "setNx", "delIfEquals", "zadd", "zrem", "zremBelow"]);
 /** A MemoryStore that records every operation (name and arguments), so a test can count store calls and writes. */
 function recordingStore(now?: () => number) {
   const inner = new MemoryStore(now);
@@ -667,7 +707,7 @@ function recordingStore(now?: () => number) {
 }
 
 describe("killers for the guards the adversary found unguarded (ADV-S6-F01: J-16, J-05, H-02, J-06, J-04, A-01, J-13)", () => {
-  it("S6M-g6 (J-16): on Upstash, incr and countAttempt are each ONE REST request (multi-exec or EVAL), never INCR then a separate EXPIRE", async () => {
+  it("S6M-g6 (J-16): on Upstash, incr and forgive are each ONE REST request (multi-exec), never INCR then a separate EXPIRE", async () => {
     const f = await startFakeUpstash({ token: STORE_TOKEN });
     open.push(f);
     const store = new UpstashRestStore(f.url, STORE_TOKEN);
@@ -676,8 +716,9 @@ describe("killers for the guards the adversary found unguarded (ADV-S6-F01: J-16
     expect(f.state.requests - r0, "incr is one request").toBe(1);
     expect(f.state.multis, "incr goes through /multi-exec").toBe(1);
     r0 = f.state.requests;
-    await store.countAttempt("certgate:live:codefail:c:x:test", "certgate:live:codefail:g:test", 5, 7200);
-    expect(f.state.requests - r0, "countAttempt is one request (EVAL)").toBe(1);
+    await store.forgive("certgate:live:reads:test");
+    expect(f.state.requests - r0, "forgive is one request").toBe(1);
+    expect(f.kv.get("certgate:live:reads:test")?.v, "forgive gave the unit back").toBe("0");
     expect(f.kv.get("certgate:live:reads:test")?.exp, "the counted key has its TTL from the same request").not.toBeNull();
   });
   it("S6M-c7 (J-05): a poll makes zero store writes, in every state (queued, reading, done, failed, orphan), and so does the status count", async () => {
@@ -707,7 +748,7 @@ describe("killers for the guards the adversary found unguarded (ADV-S6-F01: J-16
     const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: FAST });
     const addr = "198.51.100.42";
     expect((await startJob(base, { code: "wrong", client: addr })).status).toBe(403);
-    const attempts = ops.filter((o) => o.op === "countAttempt");
+    const attempts = ops.filter((o) => o.op === "incr" && String(o.args[0]).includes(":codefail:c:"));
     expect(attempts.length).toBe(1);
     const clientKey = String(attempts[0]!.args[0]);
     const m = clientKey.match(/^certgate:live:codefail:c:([^:]+):/);

@@ -75,6 +75,7 @@ root. Run `certgate-001` was built by the band: analyst, implementer, adversary 
 | Job API, shared store, limits | [src/web/live-jobs.ts](src/web/live-jobs.ts), [src/web/live-store.ts](src/web/live-store.ts), `DEPLOYED_LIVE_BUDGET` in [src/web/limits.ts](src/web/limits.ts) |
 | Deployment set-up and checks | [DEPLOY.md](DEPLOY.md) |
 | Sources: Upstash Redis REST API and quota; Vercel waitUntil and Secret variables | [docs/sources/upstash-redis.md](docs/sources/upstash-redis.md), [docs/sources/vercel-functions.md](docs/sources/vercel-functions.md) |
+| Source: Vercel request headers, which header is platform-set (per-client key, R6.4 K-01) | [docs/sources/vercel-request-headers.md](docs/sources/vercel-request-headers.md) |
 | Checks: job states on both stores, two instances on one store, code limits, timeouts and failures, leak scan, disabled-site golden (recorded from 409fb69a), samples, time budget, byte-identity | [test/stage6-live.test.ts](test/stage6-live.test.ts), [test/fixtures/stage6-disabled-golden.json](test/fixtures/stage6-disabled-golden.json), [test/fixtures/stage6-baseline.json](test/fixtures/stage6-baseline.json) |
 | Implementer handoff records and logs | [evidence/runs/certgate-001/stage-6/implementer/](evidence/runs/certgate-001/stage-6/implementer/) |
 

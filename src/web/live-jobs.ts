@@ -25,8 +25,6 @@ export const JOB_TTL_S = 3600;
 export const WINDOW_TTL_S = 7200;
 /** J-13: 16 random bytes in hex. */
 export const JOB_ID = /^[0-9a-f]{32}$/;
-/** J-01: the global ceiling of failed codes is 10 x the per-client limit. */
-export const GLOBAL_CODE_FAILURE_FACTOR = 10;
 
 /** Reason classes with a fixed text each (J-07): no raw provider, store or fetch error text reaches a response. */
 export const REASONS = {
@@ -58,7 +56,7 @@ export interface JobRecord {
 }
 export type Outcome = { kind: "done"; result: Record<string, unknown> } | { kind: "failed"; reason_class: ReasonClass };
 
-export interface CodeAttempt { over: boolean; reopens_at: string; keys: { client: string; global: string }; countedGlobal: boolean }
+export interface CodeAttempt { over: boolean; reopens_at: string; keys: { client: string; global: string } }
 
 export class Refusal extends Error {
   constructor(readonly status: number, message: string, readonly extra: Record<string, unknown> = {}) {
@@ -87,19 +85,26 @@ export class LiveJobs {
   private pruneBefore() { return this.now() - (this.budget.queueMaxWaitMs + 10_000); }
 
   /**
-   * J-02, count first: every code attempt INCRs the per-client and the global counter in one atomic request before
-   * any comparison. Over either limit: refused, no comparison. The caller DECRs both (`forgiveCode`) on a correct code.
+   * J-02, count first, per client: every code attempt INCRs this client's counter in one atomic request before any
+   * comparison. Over the per-client limit: refused, no comparison. The caller gives the unit back (`forgiveCode`) on
+   * a correct code. K-02: nothing global is counted here, so other clients' failures can never refuse this client.
    */
   async countCodeAttempt(client: string, perClient: number): Promise<CodeAttempt> {
     const d = this.clock();
     const keys = { client: KEYS.codeFailClient(client, hourKey(d)), global: KEYS.codeFailGlobal(hourKey(d)) };
-    // W-01: the global unit is counted only while this client is within its own limit.
-    const n = await this.store.countAttempt(keys.client, keys.global, perClient, WINDOW_TTL_S);
-    return { over: perClient <= 0 || n.client > perClient || n.global > perClient * GLOBAL_CODE_FAILURE_FACTOR, reopens_at: nextHour(d), keys, countedGlobal: n.countedGlobal };
+    const n = await this.store.incr(keys.client, WINDOW_TTL_S);
+    return { over: perClient <= 0 || n > perClient, reopens_at: nextHour(d), keys };
   }
-  /** W-05: gives back exactly the units this attempt counted, in the hour it counted them. */
+  /** W-05: gives back this attempt's per-client unit, in the hour it was counted. */
   async forgiveCode(attempt: CodeAttempt): Promise<void> {
-    await this.store.forgiveAttempt(attempt.keys.client, attempt.keys.global, attempt.countedGlobal);
+    await this.store.forgive(attempt.keys.client);
+  }
+  /**
+   * K-02: the global counter counts wrong codes only, after the compare. It is a monitoring count for
+   * /api/live/status and never refuses a request, so a correct code is never refused because others failed.
+   */
+  async recordCodeFailure(attempt: CodeAttempt): Promise<void> {
+    await this.store.incr(attempt.keys.global, WINDOW_TTL_S);
   }
 
   /**
@@ -251,7 +256,6 @@ export class LiveJobs {
       code_failures_this_hour_global: Number(global ?? 0),
       code_failures_this_hour_this_client: Number(mine ?? 0),
       code_failure_limit_per_client: perClient,
-      code_failure_ceiling_global: perClient * GLOBAL_CODE_FAILURE_FACTOR,
       reopens_at: nextHour(d),
     };
   }

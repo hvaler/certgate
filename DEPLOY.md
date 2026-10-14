@@ -59,7 +59,7 @@ Development deselected and Sensitive enabled, as that page describes, then redep
 | `MODEL_ID` | set: `Gemma-4-31B-IT` | no | the live model of the deployed site (dispatch 4). To switch back to Qwen, set it to `Qwen3.8-27B` and redeploy; no code changes. Do that if Gemma returns unusable readings again, as on 2026-10-13 |
 | `LIVE_ACCESS_CODE` | set: a code you choose and give to the judges | yes | mandatory: without it live reading stays off on the deployed site |
 | `LIVE_READS_PER_HOUR` | set: `20` | no | the global hourly limit of live readings, counted in the shared store across all instances |
-| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; all clients together are allowed 10 times as many (section 6) |
+| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code (section 6) |
 | `UPSTASH_REDIS_REST_URL` | set by the store integration | no | the store's REST URL (or `KV_REST_API_URL`) |
 | `UPSTASH_REDIS_REST_TOKEN` | set by the store integration | yes | the store's token (or `KV_REST_API_TOKEN`) |
 | `KV_REST_API_URL` | set by the store integration, if it uses these names | no | the fallback name of the REST URL |
@@ -102,10 +102,10 @@ If live reading is not configured completely, the site answers exactly as before
 ## 6. Wrong codes, and clearing a lockout
 
 Every attempt with a code counts first, and a correct code is given back at once. A client (identified by a hash
-of its address) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).
-All clients together are refused after 10 times that number (default 50). To clear a lockout before the hour ends,
-delete the keys `certgate:live:codefail:g:<hour>` (all clients) or `certgate:live:codefail:c:<hash>:<hour>` (one
-client) in the Upstash console, where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.
+of the address Vercel sets in `x-vercel-forwarded-for`) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).
+Wrong codes from all clients are also counted together, for monitoring only (`code_failures_this_hour_global` in `/api/live/status`); that count never refuses anyone, so a correct code is never refused because other clients failed.
+The residual risk is that guessing spread over many client addresses is bounded only by `LIVE_CODE_FAILURES_PER_HOUR` per address and per hour, so the real barrier is the code itself: set `LIVE_ACCESS_CODE` to a long random value, at least 20 random characters from a password generator.
+To clear one client's lockout before the hour ends, delete the key `certgate:live:codefail:c:<hash>:<hour>` in the Upstash console (`certgate:live:codefail:g:<hour>` is the monitoring count), where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.
 
 Then report in the room that the deployment is done, so that the auditor can run its checks.
 

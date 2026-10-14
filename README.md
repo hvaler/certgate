@@ -320,7 +320,7 @@ Secrets (`MODEL_API_KEY`, `LIVE_ACCESS_CODE`) stay on the server and are never s
 | `MODEL_ID` | none | model id requested from the endpoint |
 | `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, counted on the server (in the shared store on the deployed site, in process in the container); unset, invalid or 0 = disabled; documented deployment value 20 |
 | `LIVE_ACCESS_CODE` | none (no default) | mandatory for live reading on the deployed site; in the container, needed for a visitor-uploaded file (without it only dataset certificates are read live) |
-| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; all clients together get 10 times as many |
+| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code |
 | `LIVE_WINDOWS` | none | announced live windows, shown as text |
 | `UPSTASH_REDIS_REST_URL` | none | the shared store's REST URL, set by the Vercel Marketplace integration (deployed site only) |
 | `UPSTASH_REDIS_REST_TOKEN` | none | secret: the shared store's token, set by the integration |

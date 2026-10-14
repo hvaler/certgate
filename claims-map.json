@@ -2321,7 +2321,32 @@
  },
  {
   "doc": "README.md",
-  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; all clients together get 10 times as many |",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code |",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code (section 6) |",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A client (identified by a hash of the address Vercel sets in `x-vercel-forwarded-for`) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Wrong codes from all clients are also counted together, for monitoring only (`code_failures_this_hour_global` in `/api/live/status`); that count never refuses anyone, so a correct code is never refused because other clients failed.",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The residual risk is that guessing spread over many client addresses is bounded only by `LIVE_CODE_FAILURES_PER_HOUR` per address and per hour, so the real barrier is the code itself: set `LIVE_ACCESS_CODE` to a long random value, at least 20 random characters from a password generator.",
+  "row": "C-80"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "To clear one client's lockout before the hour ends, delete the key `certgate:live:codefail:c:<hash>:<hour>` in the Upstash console (`certgate:live:codefail:g:<hour>` is the monitoring count), where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.",
   "row": "C-80"
  },
  {
@@ -2506,11 +2531,6 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "| `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; all clients together are allowed 10 times as many (section 6) |",
-  "row": "C-80"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "| `UPSTASH_REDIS_REST_URL` | set by the store integration | no | the store's REST URL (or `KV_REST_API_URL`) |",
   "row": "C-81"
  },
@@ -2627,21 +2647,6 @@
  {
   "doc": "DEPLOY.md",
   "text": "Every attempt with a code counts first, and a correct code is given back at once.",
-  "row": "C-80"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "A client (identified by a hash of its address) is refused for the rest of the UTC hour after `LIVE_CODE_FAILURES_PER_HOUR` wrong codes (default 5).",
-  "row": "C-80"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "All clients together are refused after 10 times that number (default 50).",
-  "row": "C-80"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "To clear a lockout before the hour ends, delete the keys `certgate:live:codefail:g:<hour>` (all clients) or `certgate:live:codefail:c:<hash>:<hour>` (one client) in the Upstash console, where `<hour>` is the UTC hour as `YYYY-MM-DDTHH`; or wait for the next UTC hour.",
   "row": "C-80"
  },
  {

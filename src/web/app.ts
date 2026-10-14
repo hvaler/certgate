@@ -297,7 +297,6 @@ export function createHandler(deps: AppDeps = {}) {
       code_failures_this_hour_global: String(c.code_failures_this_hour_global),
       code_failures_this_hour_this_client: String(c.code_failures_this_hour_this_client),
       code_failure_limit_per_client: String(c.code_failure_limit_per_client),
-      code_failure_ceiling_global: String(c.code_failure_ceiling_global),
       job_api: "/api/live/jobs",
       access_code_header: ACCESS_CODE_HEADER,
       poll_interval_s: String(JOB_POLL_INTERVAL_S),
@@ -327,9 +326,15 @@ export function createHandler(deps: AppDeps = {}) {
     return last ? JSON.parse(last) : { ...(await probeF1({ ...cfg, modelBaseUrl: null }, clock, null)), detail: "the endpoint check is in progress on another instance" };
   }
 
+  // K-01: the per-client key comes only from a value the platform guarantees (docs/sources/vercel-request-headers.md).
+  // On Vercel that is x-vercel-forwarded-for. x-forwarded-for and x-real-ip are never read: Vercel documents that
+  // x-forwarded-for "could be overwritten if you're using a proxy on top of Vercel", and x-real-ip only as identical
+  // to it. Without the platform header every request shares one key (fail closed). In the container no header is
+  // trusted: the socket address is the client.
   const clientKey = (req: IncomingMessage) => {
-    const fwd = String(req.headers["x-forwarded-for"] ?? "").split(",")[0]!.trim();
-    const ip = fwd || String(req.headers["x-real-ip"] ?? "").trim() || req.socket.remoteAddress || "unknown";
+    const ip = cfg.deployedSite
+      ? String(req.headers["x-vercel-forwarded-for"] ?? "").trim() || "no-platform-client-address"
+      : req.socket.remoteAddress || "unknown";
     return createHash("sha256").update(ip, "utf8").digest("hex").slice(0, 32);
   };
 
@@ -348,13 +353,17 @@ export function createHandler(deps: AppDeps = {}) {
     if (csv && csv.length > WEB_MAX_DELIVERY_BYTES) throw new HttpError(413, `delivery note exceeds ${WEB_MAX_DELIVERY_BYTES} bytes`);
     const line = typeof body.delivery_line === "string" ? body.delivery_line : null;
     // 2. Access code: request header only, never the query string or the body (CH6-01, J-12). J-02 count first:
-    //    both failure counters are incremented atomically before the compare; over a limit, no compare at all; a
-    //    correct code gives both units back.
+    //    this client's counter is incremented atomically before the compare; over its limit, no compare at all; a
+    //    correct code gives the unit back. K-02: only a wrong code adds to the global count, which never refuses.
     if (cfg.liveAccessCode !== null) {
       const client = clientKey(req);
       const attempt = await jobs!.countCodeAttempt(client, cfg.liveCodeFailuresPerHour);
       if (attempt.over) throw new HttpError(429, "too many wrong access codes this hour", { reopens_at: attempt.reopens_at });
-      if (!codeMatches(req.headers[ACCESS_CODE_HEADER], cfg.liveAccessCode)) throw new HttpError(403, "wrong or missing access code; no live reading was used");
+      if (!codeMatches(req.headers[ACCESS_CODE_HEADER], cfg.liveAccessCode)) {
+        // K-02: a wrong code is counted globally after the compare, for monitoring only; it never refuses anyone.
+        await jobs!.recordCodeFailure(attempt);
+        throw new HttpError(403, "wrong or missing access code; no live reading was used");
+      }
       await jobs!.forgiveCode(attempt);
     } else if (!datasetCertificateHashes().has(createHash("sha256").update(cert).digest("hex"))) {
       throw new HttpError(403, "live reading of an uploaded file needs the access code, which is not configured on this server; only the dataset certificates can be read live here");
