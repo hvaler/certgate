@@ -14,7 +14,7 @@ import { buildMetricsMd, fcRootCauses, GEMMA_RUNS, proposalDifferences, QWEN_MOD
 // @ts-expect-error plain JS tool
 import { buildFigures } from "../tools/evaluate/figures.mjs";
 // @ts-expect-error plain JS helper
-import { prizeFindings } from "./support/prize-check.mjs";
+import { ALLOWED, prizeFindings } from "./support/prize-check.mjs";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
 const json = (f: string) => JSON.parse(read(f));
@@ -27,17 +27,26 @@ type Result = { case_id: string; proposal: string; expected_proposal: string; st
 const load = (x: Run) => ({ ...x, m: json(`${x.dir}/metrics.json`), r: json(`${x.dir}/run.json`), res: json(`${x.dir}/${x.results}`) as Result[] });
 
 repoOnly("model identity of every run (G-01, S5-04, S5-15 b)", () => {
-  it("every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B", () => {
+  it("every reply of the Gemma run reports a Gemma model id and every reply of both Qwen runs reports Qwen3.8-27B, in the reply and in the receipt", () => {
     for (const x of (RUNS as Run[]).map(load)) {
       expect(x.r.model_requested, x.dir).toBe("Qwen3.8-27B");
       expect(x.res.length, x.dir).toBe(27);
       for (const c of x.res) expect(c.endpoint_response?.model ?? "", `${x.dir} ${c.case_id}`).toMatch(QWEN_MODEL);
+      // F5-02: the receipt's reader identity agrees with the reply's (reported and requested model ids).
+      for (const c of x.res as (Result & { receipt?: { reader?: { model_id?: string; requested_model_id?: string } } })[]) {
+        expect(c.receipt?.reader?.model_id ?? "", `${x.dir} ${c.case_id} receipt.reader.model_id`).toMatch(QWEN_MODEL);
+        expect(c.receipt?.reader?.requested_model_id, `${x.dir} ${c.case_id} receipt.reader.requested_model_id`).toBe("Qwen3.8-27B");
+      }
     }
     expect(GEMMA_RUNS.length).toBeGreaterThan(0);
     for (const x of (GEMMA_RUNS as Run[]).map(load)) {
       expect(x.r.model_requested, x.dir).toBe("Gemma-4-31B-IT");
       expect(x.res.length, x.dir).toBe(27);
       for (const c of x.res) expect(c.endpoint_response?.model ?? "", `${x.dir} ${c.case_id}`).toMatch(/gemma-4-31b/i);
+      for (const c of x.res as (Result & { receipt?: { reader?: { model_id?: string; requested_model_id?: string } } })[]) {
+        expect(c.receipt?.reader?.model_id ?? "", `${x.dir} ${c.case_id} receipt.reader.model_id`).toMatch(/gemma-4-31b/i);
+        expect(c.receipt?.reader?.requested_model_id, `${x.dir} ${c.case_id} receipt.reader.requested_model_id`).toBe("Gemma-4-31B-IT");
+      }
       expect(x.r.prompt_sha256).toBe("32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567");
     }
   });
@@ -192,18 +201,34 @@ repoOnly("README Gemma section (S5-10, G-05, G-08, S5-15 a)", () => {
   });
 });
 
-describe("prize check (S5-11, E-14, G-09, S5-15 e)", () => {
-  it("flags a prize, award, eligibility, entry or challenge claim and accepts a negated clause", () => {
-    expect(prizeFindings("CertGate is eligible for the Gemma prize.")).not.toEqual([]);
-    expect(prizeFindings("CertGate qualifies for the Gemma prize.")).not.toEqual([]);
-    expect(prizeFindings("We entered the Google prize; it is the best use of Gemma.")).not.toEqual([]);
-    expect(prizeFindings("This comparison makes no claim about any prize or award.")).toEqual([]);
-    // ADV-S5-F01: a negation of something else does not excuse a claim; challenge and contender words count.
-    expect(prizeFindings("CertGate is not just a comparison: it is eligible for the Gemma prize.")).not.toEqual([]);
-    expect(prizeFindings("CertGate is not a toy, it is eligible for the Gemma prize.")).not.toEqual([]);
-    expect(prizeFindings("not a toy, it is eligible for the prize")).not.toEqual([]);
-    expect(prizeFindings("CertGate is a strong contender for Google's Gemma challenge on AMD.")).not.toEqual([]);
-    expect(prizeFindings("CertGate does not compete for any prize.")).toEqual([]);
+describe("prize check, fail closed (S5-11, G-09, R5.5 E-17, S5-15 e)", () => {
+  it("flags every sentence with a prize word that is not on the allow-list, negated or not", () => {
+    const flagged = [
+      // F5-01 (auditor verdict e0b691a0) A1-A7, S5M-e2/e3 (adversary 31240af4), e4-e8 (adversary 18a5af25).
+      "CertGate is eligible for the Gemma prize.",
+      "CertGate is not just a comparison: it is eligible for the Gemma prize.",
+      "CertGate never invents a value and is eligible for the Gemma prize.",
+      "CertGate is a strong contender for Google's Gemma challenge on AMD.",
+      "CertGate won the Gemma track.",
+      "CertGate is a finalist in the hackathon.",
+      "CertGate placed first in the Gemma category.",
+      "With no doubt CertGate is eligible for the Gemma prize.",
+      "CertGate never fails to qualify for the Gemma prize.",
+      "Not only is CertGate eligible for the Gemma prize, it is a likely winner.",
+      "CertGate is a frontrunner in Google's Gemma track on AMD.",
+      "Without question CertGate deserves the Gemma prize.",
+      "not a toy, it is eligible for the prize",
+      "CertGate does not compete for any prize.",
+      "CertGate qualifies for the Gemma prize.",
+      "We entered the Google prize; it is the best use of Gemma.",
+    ];
+    for (const s of flagged) expect(prizeFindings(s), s).not.toEqual([]);
+  });
+  it("accepts exactly the allow-listed sentences, and nothing about windows", () => {
+    expect([...ALLOWED.keys()]).toEqual(["This comparison makes no claim about any prize or award."]);
+    for (const s of ALLOWED.keys()) expect(prizeFindings(s), s).toEqual([]);
+    expect(prizeFindings("This comparison makes no claim about any prize or award, and it is eligible.")).not.toEqual([]);
+    expect(prizeFindings("Announced live windows are shown as text; the window is configured.")).toEqual([]);
   });
   it("accepts the kickoff quote only inside quotation marks with its source", () => {
     const q = 'The kickoff said "the best use of Gemma models challenge" (01-REGLAS, "Kickoff en directo").';
