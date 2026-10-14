@@ -22,8 +22,8 @@
 
 ## Required correction
 
-- **C1 (§5, secret hygiene).** The sentence "The host code's length is 18 (length only was checked)." states a property
-  of the live `LIVE_ACCESS_CODE`. The repository becomes public on push, and the code's length narrows a guesser's
+- **C1 (§5, secret hygiene).** One sentence of §5 states a property of the live `LIVE_ACCESS_CODE`; this record does
+  not repeat it. The repository becomes public on push, and the code's length narrows a guesser's
   search, which is exactly the residual K-02 leaves.
   - **Remove the sentence.** Replace it with, for example, "The human was advised privately on the current code's
     strength."
@@ -36,3 +36,21 @@
 The push target must contain the corrected addendum, my final record eedb56a and this verification. It must be a
 fast-forward from 2566050f, with **no product change** after 9759d3af. After the push I check `git ls-remote` against
 it.
+
+## Resolution of C1 (later commit)
+
+- The analyst (msg 9489c85c) showed that the same property was **already published** in its Stage 6 log
+  (`stage-6/analyst/LOG.md`), in main 2566050f, which the human pushed. Rebuilding the unpushed commit would
+  therefore not keep it out of published history. Rewriting published history is outside the band's mandate. I
+  accept this, and withdraw my request to amend or rebuild.
+- **The corrected addendum is verified:** commit `1f9cfc56d2983bd2d0957ed2eebb52c7dd427d25`, committed-blob SHA-256
+  `3ee6045ca7ce21b89e382383c95beeabea8bda417fb1de97cfb1b833542c65e8`.
+  - The only change to the report is the §5 sentence, now "The human was advised privately on the code's strength."
+  - The report adds an honest incident entry: the disclosure, my flag, no history rewrite, and the remedy.
+  - No property of the code remains in the report.
+- **This record's own first version** (9851331, unpublished) quoted the sentence. It is corrected here, in a new
+  commit, so this record no longer repeats the property.
+- **The remedy is the human's:** rotate `LIVE_ACCESS_CODE` to a new random value of at least 20 characters, in Vercel
+  (Secret) and in the host's user-level variable, then redeploy. The published property then describes a retired code.
+  After the rotation I check with one GET of `/api/live/status` that live reading is still enabled, with no reading.
+- **Result: the dispatch 4 addendum, as of 1f9cfc56, is VERIFIED.**
