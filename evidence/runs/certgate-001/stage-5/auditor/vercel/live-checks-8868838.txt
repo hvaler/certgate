@@ -1,0 +1,74 @@
+S4-10 live DEPLOY.md checks (as at 409fb69a) against https://certgate-wheat.vercel.app at 2026-10-14T12:44:55Z; GitHub main = 8868838f90abd9593c6d5be17124ff5d5272e5e5
+== GET /health
+{
+  "status": "ok",
+  "mode": "mock",
+  "reader": "off",
+  "notice": "All data is fictitious."
+}
+
+HTTP 200
+== GET /api/f1
+{
+  "state": "off",
+  "checked_at": "2026-10-14T12:44:56.535Z",
+  "detail": "no endpoint configured",
+  "endpoint_name": null,
+  "endpoint_source": null,
+  "endpoint_host": null,
+  "model_ids": [],
+  "model_reported": null,
+  "gpu": null,
+  "rocm_version": null,
+  "vllm_version": null,
+  "latency_ms": null,
+  "last_reading_ms": null,
+  "completion_tokens": null,
+  "total_tokens": null,
+  "tokens_per_second": null,
+  "cost_reported": null,
+  "cost_label": "cost reported by the endpoint; Token Factory credits are free and have no monetary value",
+  "rate_limit_rpm": null,
+  "rate_limit_rpm_remaining": null,
+  "daily_spend_limit": null,
+  "daily_spend_used": null,
+  "daily_spend_remaining": null,
+  "usage_source": null,
+  "probe_cached": false
+}
+
+HTTP 200
+== GET /api/live/status
+{
+  "enabled": false,
+  "reason": "live reading unavailable on the deployed site; live demonstration from the container",
+  "deployed_site": true,
+  "upload_policy": "dataset certificates only (matched by SHA-256); uploaded files need the access code, which is not configured here",
+  "notice": "The file is sent to AMD Token Factory, a third-party service that keeps prompts and outputs for about 2 days. Send only synthetic, fictitious certificates, never real data.",
+  "limit_per_hour": "0",
+  "remaining_this_hour": "0",
+  "reopens_at": "2026-10-14T13:00:00.000Z",
+  "access_code_required": false,
+  "endpoint_configured": false,
+  "windows": null,
+  "windows_note": "no live window is announced",
+  "scope_note": "The limit is counted on the server, per server instance in this build.",
+  "checked_at": "2026-10-14T12:44:56.874Z"
+}
+
+HTTP 200
+== / 200
+== /index.html 200
+== /app.js 200
+== /labels.js 200
+== /styles.css 200
+== /figures.json 200
+== /stories/cg-001.json 200
+== /stories/cg-002.json 200
+== /stories/cg-003.json 200
+== /stories/cg-003.recording.json 200
+== /favicon.ico 404
+== POST /api/stories/cg-003/evaluate
+proposal block
+note recorded real reading of cg-003 (2026-10-13T17:52:09.471Z), re-evaluated by the server at 2026-10-14T12:45:05.896Z with the confirmations and decision given; no
+== POST /api/live/read 503

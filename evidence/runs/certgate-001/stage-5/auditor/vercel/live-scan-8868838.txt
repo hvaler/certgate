@@ -1,0 +1,8 @@
+MODEL_API_KEY value: 0 hit(s)
+MODEL_BASE_URL host+path value: 0 hit(s)
+generic Bearer token-like: 0 file(s)
+generic sk- key-like: 0 file(s)
+generic KEY/TOKEN/SECRET = long value: 0 file(s)
+local user name / operator e-mail: 0 file(s)
+user-profile paths: 0 file(s)
+jury-code-77 fixture: 0 file(s)
