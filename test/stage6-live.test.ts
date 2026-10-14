@@ -224,6 +224,49 @@ describe("access code on the deployed site (S6-01, CH6-01, J-01, J-02, J-12)", (
   });
 });
 
+describe("code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06)", () => {
+  it("the compare is constant-time over equal-length digests", () => {
+    const src = readFileSync(path.join(ROOT, "src", "web", "app.ts"), "utf8");
+    expect(src).toMatch(/return typeof given === "string" && timingSafeEqual\(digest\(given\), digest\(expected\)\);/);
+    expect(src).toMatch(/codeMatches\(req\.headers\[ACCESS_CODE_HEADER\], cfg\.liveAccessCode\)/);
+  });
+  it("a client's wrong codes are counted across instances: limit 2, alternating instances, the 3rd attempt is refused", async () => {
+    const s = await stub();
+    const store = new MemoryStore();
+    const env = deployedEnv(s.url, { LIVE_CODE_FAILURES_PER_HOUR: "2" });
+    const a = await serve({ env, liveStore: store, liveBudget: FAST });
+    const b = await serve({ env, liveStore: store, liveBudget: FAST });
+    expect([(await startJob(a, { code: "x" })).status, (await startJob(b, { code: "x" })).status, (await startJob(a, { code: "x" })).status]).toEqual([403, 403, 429]);
+  });
+  it("a crashed holder's slot comes back through its lease TTL: after two readings time out, a third job reads once the leases expire", async () => {
+    const s = await stub({ mode: "timeout" });
+    const store = new MemoryStore();
+    const budget = { ...FAST, queueMaxWaitMs: 4_000, deadlineMs: 5_000, readBudgetMs: 300, leaseTtlMs: 1_200 };
+    const base = await serve({ env: deployedEnv(s.url), liveStore: store, liveBudget: budget, adapterTimeoutMs: 10_000 });
+    const [j1, j2] = await Promise.all([startJob(base), startJob(base)]);
+    await poll(base, String(j1.body.job_id), (x) => x === "failed");
+    await poll(base, String(j2.body.job_id), (x) => x === "failed");
+    const j3 = await startJob(base);
+    const r = await poll(base, String(j3.body.job_id), (x) => x === "reading" || x === "failed", 4_000);
+    expect(r.body.state).toBe("reading");
+  });
+  it("a late finisher never frees another job's slot: release is compare-and-delete on the job's own token", async () => {
+    const store = new MemoryStore();
+    const { LiveJobs } = await import("../src/web/live-jobs.js");
+    const jobs = new LiveJobs(store, () => new Date(), { ...DEPLOYED_LIVE_BUDGET, pollMs: 5 });
+    const job = await jobs.admit(5, STUB_MODEL_ID, new Date());
+    let finish!: () => void;
+    const work = () => new Promise<{ kind: "failed"; reason_class: "timeout" }>((r) => { finish = () => r({ kind: "failed", reason_class: "timeout" }); });
+    const running = jobs.run(job, work);
+    while ((await store.get(KEYS.slot(0))) !== job.job_id) await new Promise((r) => setTimeout(r, 5));
+    // The lease expired and another job took the slot while this reading still ran.
+    await store.set(KEYS.slot(0), "other-job-token", 300);
+    finish();
+    await running;
+    expect(await store.get(KEYS.slot(0))).toBe("other-job-token");
+  });
+});
+
 describe("timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10)", () => {
   it("a reading that outlives the deadline fails as timed out; its slot stays leased until the TTL", async () => {
     const s = await stub({ mode: "timeout" });
