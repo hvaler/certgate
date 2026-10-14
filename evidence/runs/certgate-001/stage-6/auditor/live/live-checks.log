@@ -1,0 +1,31 @@
+S6-13 live checks on https://certgate-wheat.vercel.app at 2026-10-14T17:00:38Z; GitHub main = 6318a8e2834556c0a571aac021e3d21f0fb9416b; expected pushed commit 6318a8e2834556c0a571aac021e3d21f0fb9416b
+GET /health 200: {'status': 'ok', 'mode': 'mock', 'reader': 'live', 'notice': 'All data is fictitious.'}
+GET /api/f1 200: state=on model_reported=None latency_ms=817 checked_at=2026-10-14T17:00:40.044Z
+GET /api/live/status 200: enabled=True access_code_required=True scope_note='global: counted in the shared store across all instances' model_requested=Gemma-4-31B-IT used=0 in_flight=0 waiting=0 codefail client/global=0/0 limit/ceiling=5/50
+/index.html 200 MATCH fadc9504228454f0
+/app.js 200 MATCH b7b9e8c3bb69b91e
+/labels.js 200 MATCH 3e424eff17b9b94a
+/styles.css 200 MATCH 2b91ea73d2db128c
+/figures.json 200 MATCH c0c8b6c404fab434
+/stories/cg-001.json 200 MATCH 2b6c9d6e2833eac6
+/stories/cg-002.json 200 MATCH d0c3a28d3ddad893
+/stories/cg-003.json 200 MATCH d0bd4e89f0a84402
+/stories/cg-003.recording.json 200 MATCH 75977f5e13460c52
+POST cg-003 evaluate 200: proposal=block note=recorded real reading of cg-003 (2026-10-13T17:52:09.471Z), re-evaluated by the server at 
+GET /api/samples 200: ['cg-004', 'cg-005', 'cg-010']
+cg-004 certificate 200: sha256 7c55fcfb3ad39d85 == listed 7c55fcfb3ad39d85 == data/ 7c55fcfb3ad39d85
+cg-004 delivery note 200: 3593 bytes
+POST /api/live/jobs without code: 403 wrong or missing access code; no live reading was used
+POST /api/live/jobs with a wrong code: 403 wrong or missing access code; no live reading was used
+after refusals: codefail client/global 0->2 / 0->2; used 0->0
+GET /usage before 200: used 0 remaining 1
+10 status GETs before the reading: used_this_hour = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+POST /api/live/jobs with the code: 202 {'job_id': '5c8eee645d00648c2fdf3700e3583477', 'state': 'queued', 'position': 1, 'created_at': '2026-10-14T17:00:48.586Z', 'model_requested': 'Gemma-4-31B-IT', 'poll': '/api/live/jobs/5c8eee645d00648c2fdf3700e3583477', 'poll_interval_s': 2}
+job states: 3s reading pos=None elapsed_s=2 | 55s done pos=None elapsed_s=None
+final: state=done reason_class=None reason=None
+receipt: reading_source=live mode=real reader.model_id=self-dploy/Gemma-4-31B-IT requested=Gemma-4-31B-IT status=processed proposal=release job_id_in_result=True
+F1 snapshot in receipt: state=on model_reported=self-dploy/Gemma-4-31B-IT latency_ms=331 checked_at=2026-10-14T17:01:40.403Z
+case expected proposal (dataset): None
+10 status GETs after the reading: used_this_hour = ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1']
+GET /usage after 200: used 0.00010251849744236097 delta 0.0001025185
+secret scan over 68 exchanges (bodies and headers; code value, code SHA-256, key, base URL host+path): 0 hit(s) []
