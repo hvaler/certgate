@@ -1,0 +1,29 @@
+{
+ "note": "Fictitious certificates of the synthetic dataset (data/cases), offered for download and upload back. They are sent to AMD Token Factory only when you start a live reading.",
+ "samples": [
+  {
+   "id": "cg-004",
+   "kind": "digital",
+   "delivery_line": "1",
+   "certificate": "/api/samples/cg-004/certificate.pdf",
+   "certificate_sha256": "7c55fcfb3ad39d85c25e8349993d8bf4bde7d6a721551161cd9e0c053e6984c5",
+   "delivery_note": "/api/samples/cg-004/delivery.csv"
+  },
+  {
+   "id": "cg-005",
+   "kind": "digital",
+   "delivery_line": "2",
+   "certificate": "/api/samples/cg-005/certificate.pdf",
+   "certificate_sha256": "3dc54088de6c4cfe4dd549a8f6f78e59460d493bdf2b9e86e63721b8b183efbe",
+   "delivery_note": "/api/samples/cg-005/delivery.csv"
+  },
+  {
+   "id": "cg-010",
+   "kind": "digital",
+   "delivery_line": "7",
+   "certificate": "/api/samples/cg-010/certificate.pdf",
+   "certificate_sha256": "b8067b9c4067ea12b8231f2e5f0266c73b6a74875e05a58de71551a7cf37b50b",
+   "delivery_note": "/api/samples/cg-010/delivery.csv"
+  }
+ ]
+}

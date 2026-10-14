@@ -1,0 +1,9 @@
+{
+ "job_id": "8f173f3ef8a78020baed80790734d567",
+ "state": "queued",
+ "position": 1,
+ "created_at": "2026-10-14T18:00:47.110Z",
+ "model_requested": "Gemma-4-31B-IT",
+ "poll": "/api/live/jobs/8f173f3ef8a78020baed80790734d567",
+ "poll_interval_s": 2
+}

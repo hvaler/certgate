@@ -1,0 +1,5 @@
+{
+ "status": 200,
+ "forged_header": "x-vercel-forwarded-for: 203.0.113.99",
+ "code_failures_this_hour_this_client": "2"
+}
