@@ -106,7 +106,7 @@ The design is **approved with these mandatory changes**. Each one is binding on 
 
 | ID | Obligation |
 |---|---|
-| K-04 | **Live proof that the K-01 header is platform-set** (adversary 361f2afd). The cited Vercel page does not say outright that a client-sent `x-vercel-forwarded-for` is overwritten. In S6-13, after its 2 planned wrong codes and with no extra codes or readings, the auditor calls `GET /api/live/status` twice: once plain, and once with a forged `x-vercel-forwarded-for: 203.0.113.99`. **Pass:** both show `code_failures_this_hour_this_client` = 2, so the header is platform-set. **REJECT:** the forged call shows 0, meaning the client's header is passed through and K-01 can be bypassed live |
+| K-04 | **Live proof that the K-01 header is platform-set** (adversary 361f2afd). The cited Vercel page does not say outright that a client-sent `x-vercel-forwarded-for` is overwritten. In S6-13, after its 2 planned wrong codes and with no extra codes or readings, the auditor calls `GET /api/live/status` twice: once plain, and once with a forged `x-vercel-forwarded-for: 203.0.113.99`. **Pass (amended by the auditor in 233482e2, analyst accepted):** the plain and forged calls give **equal** per-client counts, and the plain count rose by exactly the auditor's 2 wrong codes. This holds independent of the UTC hour and of earlier failures on the same key. **REJECT:** any difference, which means the client header is passed through and K-01 can be bypassed live |
 
 ### Appendix: adversary challenge msg 41f6ca68, verbatim
 
