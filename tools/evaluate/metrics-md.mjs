@@ -136,7 +136,141 @@ export function buildMetricsMd() {
   L.push("");
   L.push(`All costs are the ${COST_LABEL}.`);
   L.push("");
+  L.push(...gemmaSection(runs, GEMMA_RUNS.map(load)));
   return L.join("\n") + "\n";
+}
+
+// Stage 5 (dispatch 3): the comparison run of Gemma-4-31B-IT, appended after the Qwen sections above, which stay
+// byte-identical (R5.1 E-13). The product model, the landing figures and the stories stay Qwen3.8-27B.
+export const GEMMA_RUNS = [
+  { key: "gemma", label: "Gemma-4-31B-IT, implementer run (comparison only)", dir: "evaluation/runs/real-gemma-04100b9", results: "results.json", model: /gemma-4-31b/i },
+];
+export const QWEN_MODEL = /^(self-dploy\/)?Qwen3\.8-27B$/;
+const NUMERIC = (k) => k.startsWith("chemistry.") || k.startsWith("mechanical.") || k === "cev_printed" || k === "kv_temperature";
+const NOT_CORRECT = (c) => !["correct", "correct_absent", "correct_unknown"].includes(c);
+
+/** Numeric fields read with a value but no unit, over the critical fields of processed cases. */
+export function unitMissing(res) {
+  const cases = [];
+  let den = 0;
+  for (const r of res) {
+    if (r.status === "error") continue;
+    for (const [k, f] of Object.entries(r.fields)) {
+      den++;
+      if (NUMERIC(k) && f.model !== null && f.model !== "" && (f.model_unit === null || f.model_unit === "")) cases.push(`${r.case_id} ${k}`);
+    }
+  }
+  return { numerator: String(cases.length), denominator: String(den), cases };
+}
+
+/** Every case whose comparison proposal differs from the proposal of any Qwen run (G-05: computed, never typed). */
+export function proposalDifferences(qwen, cmp) {
+  const out = [];
+  for (const g of cmp.res) {
+    const q = qwen.map((x) => x.res.find((r) => r.case_id === g.case_id));
+    if (q.some((r) => r?.proposal !== g.proposal)) out.push({ case_id: g.case_id, expected: g.expected_proposal, proposal: g.proposal, qwen: q.map((r) => r?.proposal ?? "not run") });
+  }
+  return out;
+}
+
+/**
+ * Root-cause line of every false conforming (release where the expected proposal is not release), generated from
+ * the recorded values (G-06): each field not read correctly (read vs correct), and the rule path: every rule on a
+ * field the expectation says fails, or on one of those fields, with its outcome, limit and observed value.
+ */
+export function fcRootCauses(run, expectedRules = (id) => JSON.parse(readFileSync(path.join(ROOT, "data", "expected", `${id}.json`), "utf8")).rule_failures ?? []) {
+  return run.res.filter((r) => r.proposal === "release" && r.expected_proposal !== "release").map((r) => {
+    const bad = Object.entries(r.fields).filter(([, f]) => NOT_CORRECT(f.category));
+    const fields = bad.length === 0 ? "every critical field read correctly" : bad.map(([k, f]) => `\`${k}\` read \`${f.model ?? "∅"}\`${f.model_unit ? ` ${f.model_unit}` : ""}, correct \`${f.correct ?? "∅"}\` (${f.category})`).join("; ");
+    const want = expectedRules(r.case_id).map((x) => x.field);
+    const rules = (r.receipt?.rule_results ?? []).filter((x) => x.input_field_refs.some((f) => want.some((w) => f === w || f.endsWith(`.${w}`)) || bad.some(([k]) => k === f)));
+    const path_ = rules.length === 0 ? "no rule result recorded for those fields" : rules.map((x) => `${x.rule_id} ${x.outcome} (limit ${x.expected}, observed ${x.observed ?? "∅"})`).join("; ");
+    return `${r.case_id}: expected ${r.expected_proposal}, proposed release; ${fields}; rule path: ${path_}; reasons: ${r.reasons.length ? r.reasons.join(", ") : "none"}.`;
+  });
+}
+
+function gemmaSection(qwen, cmp) {
+  const runs = [...qwen, ...cmp];
+  const name = (x) => (x.model ? x.key : `qwen ${x.key}`);
+  const L = [];
+  const row = (label, f) => L.push(`| ${label} | ${runs.map(f).join(" | ")} |`);
+  const head = (first) => { L.push(`|${first ? ` ${first} ` : " "}| ${runs.map(name).join(" | ")} |`); L.push(`|---|${runs.map(() => "---").join("|")}|`); };
+  L.push("## Comparison run: Gemma-4-31B-IT (Stage 5)");
+  L.push("");
+  L.push("CertGate reads with Qwen3.8-27B. The landing figures, the stories and the deployed site use only the Qwen runs above, which are unchanged. This section adds a comparison run of Gemma-4-31B-IT on the same 27 cases, through the same endpoint, with the same frozen prompt, the same request (only the model id differs) and the same rules; `MODEL_ID` was set only in the environment of the evaluation command. The figures are generated from the committed artifacts like the rest of this file. The runs were made at different times on a shared service, so the seconds compare runs, not models.");
+  L.push("");
+  head("");
+  row("Artifacts", (x) => `\`${x.dir}/\``);
+  row("Candidate commit", (x) => `\`${short(x.r.candidate_commit)}\``);
+  row("Prompt SHA-256", (x) => `\`${short(x.r.prompt_sha256)}…\``);
+  row("Started → finished (UTC)", (x) => `${x.r.started_utc} → ${x.r.finished_utc}`);
+  row("Model requested", (x) => x.r.model_requested);
+  row("Model as reported", (x) => [...new Set(x.res.map((c) => c.endpoint_response?.model).filter(Boolean))].join(", ") || "unknown");
+  row("Outcome", (x) => (x.r.blocked ? `BLOCKED: ${x.r.blocked.reason}` : `completed, ${x.r.completed_cases} of ${x.r.cases.length} cases`));
+  L.push("");
+  head("Metric");
+  row("**False conforming, FC-broad** (released where the expected proposal was not release)", (x) => `**${frac(x.m.headline.fc_broad)}**`);
+  row("False conforming, FC-strict (released where the expected proposal was block)", (x) => frac(x.m.headline.fc_strict));
+  row("Non-conformities caught (expected block, not released)", (x) => frac(x.m.headline.non_conformities_caught));
+  row("… of which proposed block", (x) => frac(x.m.headline.non_conformities_blocked));
+  row("Proposal equal to the expected proposal", (x) => frac(x.m.headline.proposal_agreement));
+  row("Rule abstention (review, status processed)", (x) => frac(x.m.abstentions.rule_abstention));
+  row("Failures (status error)", (x) => frac(x.m.abstentions.failure));
+  row("Requests · retries", (x) => `${x.m.retries.requests} · ${x.m.retries.cases_with_retry.length ? x.m.retries.cases_with_retry.join(", ") : "0"}`);
+  row("Seconds per certificate (processed; mean · median · N)", (x) => `${x.m.headline.seconds_per_certificate.mean} · ${x.m.headline.seconds_per_certificate.median} · ${x.m.headline.seconds_per_certificate.n}`);
+  row("Tokens per certificate (total mean · completion mean · reasoning mean)", (x) => `${x.m.tokens.total_per_certificate.mean} · ${x.m.tokens.completion_per_certificate.mean} · ${x.m.tokens.reasoning_per_certificate.mean}`);
+  row(`Cost per certificate (mean · median · N; ${COST_LABEL})`, (x) => `${x.m.headline.cost_per_certificate.mean} · ${x.m.headline.cost_per_certificate.median} · ${x.m.headline.cost_per_certificate.n} (unknown ${x.m.headline.cost_per_certificate.unknown})`);
+  L.push("");
+  for (const x of cmp) {
+    const lines = fcRootCauses(x);
+    L.push(lines.length === 0
+      ? `No false conforming in the ${x.key} run, so no root-cause line is owed. Register E-12: C-19 (any false conforming is a REJECT) applies to the product model; a comparison-run false conforming is reported here with its root-cause line, never hidden.`
+      : `False conforming in the ${x.key} run (${frac(x.m.headline.fc_broad)}), root-cause lines generated from the artifacts:`);
+    for (const l of lines) L.push(`- ${l}`);
+    L.push("");
+  }
+  L.push("### Per-case proposals, three runs");
+  L.push("");
+  L.push(`| Case | Expected | ${runs.map(name).join(" | ")} |`);
+  L.push(`|---|---|${runs.map(() => "---").join("|")}|`);
+  const ids = [...new Set(runs.flatMap((x) => x.res.map((r) => r.case_id)))].sort();
+  for (const id of ids) {
+    const rs = runs.map((x) => x.res.find((r) => r.case_id === id));
+    const exp = rs.find(Boolean)?.expected_proposal ?? "?";
+    L.push(`| ${id} | ${exp} | ${rs.map((r) => (r ? (r.proposal === exp ? r.proposal : `**${r.proposal}**`) : "not run")).join(" | ")} |`);
+  }
+  L.push("");
+  for (const x of cmp) {
+    const d = proposalDifferences(qwen, x);
+    L.push(`Every case where the ${x.key} proposal differs from a Qwen run (${d.length}): ${d.length === 0 ? "none" : d.map((c) => `${c.case_id} (expected ${c.expected}; ${x.key} ${c.proposal}; ${qwen.map((q, i) => `qwen ${q.key} ${c.qwen[i]}`).join(", ")})`).join("; ")}.`);
+    const mm = x.m.proposal_mismatches;
+    L.push("");
+    L.push(`Mismatches against the expected proposal in the ${x.key} run: ${mm.length === 0 ? "none" : mm.map((p) => `${p.case_id} proposed ${p.proposal}, expected ${p.expected} (${p.reasons.join(", ")})`).join("; ")}.`);
+    L.push("");
+  }
+  L.push("### Per-field accuracy, three runs");
+  L.push("");
+  head("Category");
+  const FIXED = ["correct", "correct_absent", "correct_unknown", "unknown", "wrong", "invented", "confident_on_illegible"];
+  const cats = [...new Set([...FIXED, ...runs.flatMap((x) => Object.keys(x.m.per_field_accuracy.totals))])];
+  for (const c of cats) row(c.replace(/_/g, " "), (x) => (x.m.per_field_accuracy.totals[c] ? frac(x.m.per_field_accuracy.totals[c]) : `0 / ${Object.values(x.m.per_field_accuracy.totals)[0]?.denominator ?? "?"}`));
+  row("unit missing (a numeric field read with a value and no unit)", (x) => frac(unitMissing(x.res)));
+  L.push("");
+  L.push("Every field not read correctly, with its category and value as recorded:");
+  L.push("");
+  for (const x of runs) {
+    const bad = x.res.filter((r) => r.status !== "error").flatMap((r) => Object.entries(r.fields).filter(([, f]) => NOT_CORRECT(f.category)).map(([k, f]) => ({ r, k, f })));
+    L.push(`- ${name(x)}: ${bad.length === 0 ? "none" : bad.map(({ r, k, f }) => `${r.case_id} \`${k}\` ${f.category.replace(/_/g, " ")}: read \`${f.model ?? "∅"}\`${f.model_unit ? ` ${f.model_unit}` : ""}, correct \`${f.correct ?? "∅"}\` (${f.correct_status}); the case was proposed ${r.proposal}`).join("; ")}.`);
+  }
+  L.push("");
+  L.push("### Usage reconciliation, comparison run");
+  L.push("");
+  for (const x of cmp) {
+    const u = x.m.usage_reconciliation;
+    L.push(`- ${x.key}: daily_cost_used ${u.usage_before_daily_cost_used} → ${u.usage_after_daily_cost_used}; delta ${u.usage_delta}, sum of per-reply cost ${u.sum_of_per_request_cost}, difference ${u.difference}.`);
+  }
+  L.push("");
+  return L;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

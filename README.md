@@ -95,6 +95,62 @@ which is generated from those artifacts.
 - The landing page shows the figures of the implementer run and names that run. They come from
   `public/figures.json`, which is generated from the artifacts and never written by hand.
 
+## Comparison with Gemma-4-31B-IT
+
+CertGate reads with Qwen3.8-27B. As a comparison, Gemma-4-31B-IT read the same 27 fictitious certificates
+(cg-004 … cg-030) through the same AMD Token Factory endpoint, with the same frozen prompt, the same request (only
+the model id differs) and the same rules. Every reply reported the model as `self-dploy/Gemma-4-31B-IT`. Its
+publisher is Google (the model card names the authors as Google DeepMind), and its licence, as published by the
+publisher, is apache-2.0, with a link to the Gemma 4 licence terms (https://huggingface.co/google/gemma-4-31b-it,
+retrieved 2026-10-14; see [docs/sources/gemma.md](docs/sources/gemma.md)). The figures come from the committed run
+artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with every per-case difference.
+
+| | Gemma-4-31B-IT run |
+|---|---|
+| Artifacts | [evaluation/runs/real-gemma-04100b9/](evaluation/runs/real-gemma-04100b9/) |
+| Candidate · time (UTC) | `04100b93` · 2026-10-14 10:47–10:55 |
+| **False conforming** (released when the expected proposal was not release) | **0 of 18** (strict, expected block: 0 of 6) |
+| Non-conformities caught | 6 of 6, 5 of 6 proposed block |
+| Proposal as expected | 26 of 27 (cg-021: review, expected block) |
+| Failures · retries | 0 of 27 · 0 |
+| Field readings correct | 591 of 594 |
+| Confident on illegible · unknown · wrong | 1 of 594 · 1 of 594 · 0 of 594 |
+| Seconds per certificate | mean 34.5, median 30 (N 27) |
+| Cost per certificate | mean 0.00007789 |
+
+- cg-021: Gemma returned Si as absent while the text layer read 0.62 % (limit 0.55 %). The two channels disagreed,
+  so CertGate proposed review instead of block; the non-conformity was not released. Both Qwen runs proposed block.
+- cg-017: on a smudged heat number, Gemma returned a value (`24-73269`) where the correct reading is illegible;
+  both Qwen runs reported it as unknown. The case was proposed review, as expected: with no text layer, a person
+  must confirm every critical field.
+- cg-004: Gemma proposed release, as expected and as the Qwen implementer run did; the Qwen auditor run proposed
+  review.
+- The seconds and tokens come from runs made at different times on a shared service; they compare runs, not models.
+- Costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.
+- One extra Gemma reading of the story certificate cg-003 is kept as evidence only, outside the evaluation and the
+  demo ([gemma-read-cg-003.json](evidence/runs/certgate-001/stage-5/implementer/endpoint/gemma-read-cg-003.json)):
+  Gemma read the smudged ReH as 338 MPa, as the recorded Qwen story reading does, so the proposal was block.
+- Dated facts reported by the human, not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint
+  returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered
+  correctly. The comparison run above started after that re-test.
+
+**Why the demo and the landing use Qwen.** Qwen3.8-27B is the model CertGate was built, tuned and accepted with, and
+its two runs are the figures of record. In the Gemma run there was no false conforming (0 of 18), but it proposed
+review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field
+(1 of 594, cg-017) that both Qwen runs reported as unknown. The landing figures, the stories and the product
+default stay Qwen3.8-27B. The deployed site makes no model call: judge mode replays recorded Qwen readings.
+
+To run the comparison, set `MODEL_ID` only in the environment of the evaluation command (the other two `MODEL_*`
+variables as for any real run):
+
+```sh
+MODEL_ID=Gemma-4-31B-IT node tools/evaluate/run-eval.mjs --out evaluation/runs/<name>   # endpoint: cg-004..cg-030 with Gemma, GET /usage before and after
+node tools/evaluate/metrics.mjs evaluation/runs/<name>                                 # offline: recompute metrics.json from results.json
+```
+
+`public/figures.json` and the stories are never generated from a Gemma run. This comparison makes no claim about any
+prize or award.
+
 ## Demo procedure
 
 Start the container in mock mode (no endpoint and no network needed); see "Run it". Then open
@@ -346,7 +402,7 @@ The codes of [data/expected/README.md](data/expected/README.md), plus these, rai
 ```
 src/         product code (TypeScript, Node 24)
 public/      web UI, recorded stories, landing figures
-api/         Vercel function entry
+api/         Vercel function handler
 test/        tests (vitest), runnable offline; test/browser: Playwright checks
 config/      band-defined plausibility ranges (not from any standard)
 data/        fictitious dataset, spec ESP-014 r3, delivery notes

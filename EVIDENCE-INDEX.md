@@ -8,8 +8,8 @@ root. Run `certgate-001` was built by the band: analyst, implementer, adversary 
 
 | What | Where |
 |---|---|
-| Human dispatches (verbatim) | [evidence/runs/certgate-001/DISPATCH-1.txt](evidence/runs/certgate-001/DISPATCH-1.txt), [DISPATCH-2.txt](evidence/runs/certgate-001/DISPATCH-2.txt) |
-| Obligation registers, one per stage | [stage-1](evidence/runs/certgate-001/stage-1/OBLIGATIONS.md), [stage-2](evidence/runs/certgate-001/stage-2/OBLIGATIONS.md), [stage-3](evidence/runs/certgate-001/stage-3/OBLIGATIONS.md) (R3.3), [stage-4](evidence/runs/certgate-001/stage-4/OBLIGATIONS.md) |
+| Human dispatches (verbatim) | [evidence/runs/certgate-001/DISPATCH-1.txt](evidence/runs/certgate-001/DISPATCH-1.txt), [DISPATCH-2.txt](evidence/runs/certgate-001/DISPATCH-2.txt), [DISPATCH-3.txt](evidence/runs/certgate-001/DISPATCH-3.txt) |
+| Obligation registers, one per stage | [stage-1](evidence/runs/certgate-001/stage-1/OBLIGATIONS.md), [stage-2](evidence/runs/certgate-001/stage-2/OBLIGATIONS.md), [stage-3](evidence/runs/certgate-001/stage-3/OBLIGATIONS.md) (R3.3), [stage-4](evidence/runs/certgate-001/stage-4/OBLIGATIONS.md), [stage-5](evidence/runs/certgate-001/stage-5/OBLIGATIONS.md) |
 | Hashes of the planning sources at each stage start | `evidence/runs/certgate-001/stage-N/SOURCES.sha256` |
 | Stage register (verdicts and checkpoints) | [evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md) |
 
@@ -57,6 +57,16 @@ root. Run `certgate-001` was built by the band: analyst, implementer, adversary 
 | Checks over the documents (claims proofs, figures, env vars, duration, forbidden claims, secrets, local paths) | [test/docs.test.ts](test/docs.test.ts) |
 | Implementer handoff record | [evidence/runs/certgate-001/stage-4/implementer/](evidence/runs/certgate-001/stage-4/implementer/) |
 | Auditor's anonymous GitHub API baselines | [evidence/runs/certgate-001/stage-4/auditor/](evidence/runs/certgate-001/stage-4/auditor/) |
+
+## Stage 5 (Gemma-4-31B-IT comparison)
+
+| What | Where |
+|---|---|
+| Gemma run of record (27 cases, `MODEL_ID=Gemma-4-31B-IT` in the command's environment only) | [evaluation/runs/real-gemma-04100b9/](evaluation/runs/real-gemma-04100b9/) |
+| Comparison tables, generated | [METRICS.md](METRICS.md), section "Comparison run: Gemma-4-31B-IT (Stage 5)" |
+| Gemma publisher and licence, as published | [docs/sources/gemma.md](docs/sources/gemma.md) |
+| cg-003 Gemma reading (evidence only), the run log and GET /usage before and after the lease | [evidence/runs/certgate-001/stage-5/implementer/endpoint/](evidence/runs/certgate-001/stage-5/implementer/endpoint/) |
+| Checks: model identity, request golden hash, byte-identical Qwen product, generated differences, README Gemma figures, prize check; Vercel bundle (E-15) | [test/stage5-gemma.test.ts](test/stage5-gemma.test.ts), [test/vercel-config.test.ts](test/vercel-config.test.ts) |
 
 The adversary's Stage 3 bundles and mutation reports were posted in the room (msgs 7d0d6556, 540fb415). Their
 evidence lives in the adversary's clean checkouts, at the test revisions named in those messages.

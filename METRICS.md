@@ -117,3 +117,92 @@ Every wrong field, with its cause as derived from the recorded values:
 
 All costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.
 
+## Comparison run: Gemma-4-31B-IT (Stage 5)
+
+CertGate reads with Qwen3.8-27B. The landing figures, the stories and the deployed site use only the Qwen runs above, which are unchanged. This section adds a comparison run of Gemma-4-31B-IT on the same 27 cases, through the same endpoint, with the same frozen prompt, the same request (only the model id differs) and the same rules; `MODEL_ID` was set only in the environment of the evaluation command. The figures are generated from the committed artifacts like the rest of this file. The runs were made at different times on a shared service, so the seconds compare runs, not models.
+
+| | qwen implementer | qwen auditor | gemma |
+|---|---|---|---|
+| Artifacts | `evaluation/runs/real-candidate-dd557fd/` | `evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/` | `evaluation/runs/real-gemma-04100b9/` |
+| Candidate commit | `dd557fd2` | `a892f771` | `04100b93` |
+| Prompt SHA-256 | `32fad2f9…` | `32fad2f9…` | `32fad2f9…` |
+| Started → finished (UTC) | 2026-10-13T17:28:48.044Z → 2026-10-13T17:49:07.371Z | 2026-10-13T19:13:55.353Z → 2026-10-13T19:31:41.732Z | 2026-10-14T10:47:17.581Z → 2026-10-14T10:55:09.401Z |
+| Model requested | Qwen3.8-27B | Qwen3.8-27B | Gemma-4-31B-IT |
+| Model as reported | self-dploy/Qwen3.8-27B | self-dploy/Qwen3.8-27B | self-dploy/Gemma-4-31B-IT |
+| Outcome | completed, 27 of 27 cases | completed, 27 of 27 cases | completed, 27 of 27 cases |
+
+| Metric | qwen implementer | qwen auditor | gemma |
+|---|---|---|---|
+| **False conforming, FC-broad** (released where the expected proposal was not release) | **0 / 18** | **0 / 18** | **0 / 18** |
+| False conforming, FC-strict (released where the expected proposal was block) | 0 / 6 | 0 / 6 | 0 / 6 |
+| Non-conformities caught (expected block, not released) | 6 / 6 | 6 / 6 | 6 / 6 |
+| … of which proposed block | 6 / 6 | 6 / 6 | 5 / 6 |
+| Proposal equal to the expected proposal | 27 / 27 | 26 / 27 | 26 / 27 |
+| Rule abstention (review, status processed) | 12 / 27 | 13 / 27 | 13 / 27 |
+| Failures (status error) | 0 / 27 | 0 / 27 | 0 / 27 |
+| Requests · retries | 27 · 0 | 27 · 0 | 27 · 0 |
+| Seconds per certificate (processed; mean · median · N) | 89.6 · 80.6 · 27 | 77.1 · 76.9 · 27 | 34.5 · 30 · 27 |
+| Tokens per certificate (total mean · completion mean · reasoning mean) | 4234 · 1441 · 552 | 4211 · 1418 · 529 | 2003 · 934 · 0 |
+| Cost per certificate (mean · median · N; cost reported by the endpoint; Token Factory credits are free and have no monetary value) | 0.00020529 · 0.00020112 · 27 (unknown 0) | 0.00020863 · 0.0001993 · 27 (unknown 0) | 0.00007789 · 0.00007608 · 27 (unknown 0) |
+
+No false conforming in the gemma run, so no root-cause line is owed. Register E-12: C-19 (any false conforming is a REJECT) applies to the product model; a comparison-run false conforming is reported here with its root-cause line, never hidden.
+
+### Per-case proposals, three runs
+
+| Case | Expected | qwen implementer | qwen auditor | gemma |
+|---|---|---|---|---|
+| cg-004 | release | release | **review** | release |
+| cg-005 | block | block | block | block |
+| cg-006 | block | block | block | block |
+| cg-007 | block | block | block | block |
+| cg-008 | release | release | release | release |
+| cg-009 | release | release | release | release |
+| cg-010 | review | review | review | review |
+| cg-011 | review | review | review | review |
+| cg-012 | block | block | block | block |
+| cg-013 | review | review | review | review |
+| cg-014 | release | release | release | release |
+| cg-015 | review | review | review | review |
+| cg-016 | review | review | review | review |
+| cg-017 | review | review | review | review |
+| cg-018 | release | release | release | release |
+| cg-019 | review | review | review | review |
+| cg-020 | block | block | block | block |
+| cg-021 | block | block | block | **review** |
+| cg-022 | review | review | review | review |
+| cg-023 | release | release | release | release |
+| cg-024 | release | release | release | release |
+| cg-025 | review | review | review | review |
+| cg-026 | release | release | release | release |
+| cg-027 | release | release | release | release |
+| cg-028 | review | review | review | review |
+| cg-029 | review | review | review | review |
+| cg-030 | review | review | review | review |
+
+Every case where the gemma proposal differs from a Qwen run (2): cg-004 (expected release; gemma release; qwen implementer release, qwen auditor review); cg-021 (expected block; gemma review; qwen implementer block, qwen auditor block).
+
+Mismatches against the expected proposal in the gemma run: cg-021 proposed review, expected block (CHANNEL_DISAGREE:Si, CRITICAL_UNKNOWN:Si, RULE_NOT_EVALUABLE:Si).
+
+### Per-field accuracy, three runs
+
+| Category | qwen implementer | qwen auditor | gemma |
+|---|---|---|---|
+| correct | 591 / 594 | 591 / 594 | 591 / 594 |
+| correct absent | 1 / 594 | 1 / 594 | 1 / 594 |
+| correct unknown | 1 / 594 | 1 / 594 | 0 / 594 |
+| unknown | 0 / 594 | 0 / 594 | 1 / 594 |
+| wrong | 1 / 594 | 1 / 594 | 0 / 594 |
+| invented | 0 / 594 | 0 / 594 | 0 / 594 |
+| confident on illegible | 0 / 594 | 0 / 594 | 1 / 594 |
+| unit missing (a numeric field read with a value and no unit) | 1 / 594 | 1 / 594 | 0 / 594 |
+
+Every field not read correctly, with its category and value as recorded:
+
+- qwen implementer: cg-028 `cev_printed` wrong: read `0,41`, correct `0.41` (read); the case was proposed review.
+- qwen auditor: cg-004 `cev_printed` wrong: read `0,39`, correct `0.39` (read); the case was proposed review.
+- gemma: cg-017 `heat_or_lot` confident on illegible: read `24-73269`, correct `∅` (unknown); the case was proposed review; cg-021 `chemistry.Si` unknown: read `∅`, correct `0.62` (read); the case was proposed review.
+
+### Usage reconciliation, comparison run
+
+- gemma: daily_cost_used 0.017769629135727882 → 0.01987258717417717; delta 0.00210296, sum of per-reply cost 0.00210296, difference -0.
+

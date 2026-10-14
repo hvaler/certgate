@@ -12,5 +12,6 @@ Recorded from the publisher's own page, not from memory.
 | Served by | AMD Token Factory (OpenAI-compatible endpoint; host recorded in the evaluation artifacts) | dispatch 2; event page notebooks.amd.com/tokenfactory |
 
 Not exposed by the endpoint, and therefore not claimed anywhere in this product: the GPU model, the ROCm
-version and the vLLM (or other serving) version. The model is not Gemma, so no Gemma statement applies. No prize
+version and the vLLM (or other serving) version. The product model is not Gemma; the Gemma-4-31B-IT comparison run
+is recorded in [gemma.md](gemma.md). No prize
 claim of any kind is made.
