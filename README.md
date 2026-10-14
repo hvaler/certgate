@@ -148,8 +148,8 @@ MODEL_ID=Gemma-4-31B-IT node tools/evaluate/run-eval.mjs --out evaluation/runs/<
 node tools/evaluate/metrics.mjs evaluation/runs/<name>                                 # offline: recompute metrics.json from results.json
 ```
 
-`public/figures.json` and the stories are never generated from a Gemma run. This comparison makes no claim about any
-prize or award.
+`public/figures.json` and the stories are never generated from a Gemma run.
+This comparison makes no claim about any prize or award.
 
 ## Demo procedure
 
