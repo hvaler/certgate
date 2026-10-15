@@ -38,6 +38,12 @@ export const REASONS = {
   model_mismatch: "the endpoint reported a different model than the one requested; the reading is not shown",
   store_unavailable: "the shared store is unavailable; live reading refused",
   internal: "internal error while preparing the reading; it is not an endpoint failure",
+  // Stage 8 (S8-06, S8-25, L-02): refusals of the chosen model, before any model call and before the hourly count.
+  model_missing: "choose a model for the live reading",
+  model_not_offered: "this model is not offered on this site; only measured models, and experimental models with probe evidence, can be chosen",
+  model_ack_required: "this model is not evaluated; confirm that no figure of CertGate applies to it",
+  probe_unavailable: "the endpoint's model list is being checked; try again in a minute",
+  model_unlisted: "the endpoint does not list this model now; choose a listed model",
 } as const;
 export type ReasonClass = keyof typeof REASONS;
 
@@ -49,12 +55,19 @@ export interface JobRecord {
   started_at: string | null;
   finished_at: string | null;
   model_requested: string;
+  /** Stage 8 (S8-08, S8-24, L-12, L-C2): the model's group, whether it is evaluated, the model as reported (null
+   * until a reply; kept on model_mismatch) and the checked_at of the listing that validated the POST. */
+  model_group?: "measured" | "experimental";
+  evaluated?: boolean;
+  model_reported?: string | null;
+  listing_checked_at?: string;
   reason_class: ReasonClass | null;
   reason: string | null;
   /** Only for state "done": the view and receipt of this job's own reading. */
   result: unknown;
 }
-export type Outcome = { kind: "done"; result: Record<string, unknown> } | { kind: "failed"; reason_class: ReasonClass };
+export type Outcome = { kind: "done"; result: Record<string, unknown>; model_reported?: string | null } | { kind: "failed"; reason_class: ReasonClass; model_reported?: string | null };
+export type JobModel = Pick<JobRecord, "model_group" | "evaluated" | "model_reported" | "listing_checked_at">;
 
 export interface CodeAttempt { over: boolean; reopens_at: string; keys: { client: string; global: string } }
 
@@ -112,11 +125,11 @@ export class LiveJobs {
    * the job in the fixed UTC-hour window with one atomic INCR+EXPIRE, then create it. `arrivedAt` is the request's
    * arrival, from which the deadline is measured (J-14).
    */
-  async admit(readsPerHour: number, modelRequested: string, arrivedAt: Date): Promise<JobRecord & { position: number }> {
+  async admit(readsPerHour: number, modelRequested: string, arrivedAt: Date, model: JobModel = {}): Promise<JobRecord & { position: number }> {
     const d = this.clock();
     const job: JobRecord = {
       job_id: randomBytes(16).toString("hex"), state: "queued", created_at: arrivedAt.toISOString(), started_at: null, finished_at: null,
-      model_requested: modelRequested, reason_class: null, reason: null, result: null,
+      model_requested: modelRequested, ...model, reason_class: null, reason: null, result: null,
     };
     // W-04: take a place in the queue first, then look at it, so a burst cannot overfill the queue; a busy refusal
     // gives the place back and consumes nothing (it comes before the hourly count).
@@ -164,8 +177,8 @@ export class LiveJobs {
     const { position: _position, ...stored } = admitted;
     let job: JobRecord = stored;
     const created = Date.parse(job.created_at);
-    const fail = async (reason_class: ReasonClass) => {
-      await this.save({ ...job, state: "failed", finished_at: this.clock().toISOString(), reason_class, reason: REASONS[reason_class], result: null });
+    const fail = async (reason_class: ReasonClass, model_reported?: string | null) => {
+      await this.save({ ...job, ...(model_reported !== undefined ? { model_reported } : {}), state: "failed", finished_at: this.clock().toISOString(), reason_class, reason: REASONS[reason_class], result: null });
     };
     let slot = -1;
     try {
@@ -208,9 +221,9 @@ export class LiveJobs {
       if (first.kind === "done") {
         const finished_at = this.clock().toISOString();
         // J-11: the result carries this job's id and times next to the receipt of its own reading.
-        await this.save({ ...job, state: "done", finished_at, result: { ...first.result, job_id: job.job_id, started_at: job.started_at, finished_at } });
+        await this.save({ ...job, ...(first.model_reported !== undefined ? { model_reported: first.model_reported } : {}), state: "done", finished_at, result: { ...first.result, job_id: job.job_id, started_at: job.started_at, finished_at } });
       } else {
-        await fail(first.reason_class);
+        await fail(first.reason_class, first.model_reported);
       }
     } catch {
       // The store went away after the reading: the poll derives "failed" (J-06), never "done".

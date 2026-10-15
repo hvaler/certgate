@@ -196,6 +196,20 @@ export interface RunReceipt {
   /** Free text from the model channel, kept only as untrusted text; never used by the decision (I1, F2-04). */
   model_text: { text: string; references: string[]; planted: boolean; untrusted: true; used_for_decision: false } | null;
   notice: string;
+  /**
+   * Stage 8 (S8-08, S8-24, L-C2, L-25): the live reading's model choice, added by the live job after the pipeline.
+   * evaluated is false for an experimental model, which carries its probe evidence and no figures. Absent elsewhere.
+   */
+  model_choice?: {
+    requested: string;
+    reported: string | null;
+    group: "measured" | "experimental";
+    evaluated: boolean;
+    label: string;
+    figures: { metrics_section: string; runs: string[] } | null;
+    probe_evidence: string | null;
+    listing_checked_at: string;
+  };
 }
 
 /**
@@ -244,4 +258,8 @@ export interface F1Snapshot {
   daily_spend_remaining: string | null;
   usage_source: string | null;
   probe_cached: boolean;
+  /** Stage 8 (S8-08, S8-24, L-11): in a live job's receipt copy only, never in the shared cached snapshot. */
+  model_requested?: string;
+  model_evaluated?: boolean;
+  model_probe_evidence?: string | null;
 }

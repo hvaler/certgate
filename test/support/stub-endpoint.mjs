@@ -16,16 +16,24 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const STUB_MODEL_ID = "certgate-test-stub";
 
-export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null, delayMs = 0, errorText = null, failFirst = 0, failMode = "http_429" } = {}) {
-  // reportedModel: the "model" field of the chat reply (null => STUB_MODEL_ID; "" => omitted is not supported here).
+export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null, delayMs = 0, errorText = null, failFirst = 0, failMode = "http_429", models = null } = {}) {
+  // reportedModel: the "model" field of the chat reply (null => STUB_MODEL_ID; "" => omitted is not supported here;
+  //   a function => called with the requested model, Stage 8).
   // delayMs: the chat reply waits this long (concurrency tests); inFlight/maxInFlight count open chat requests.
   // errorText: the body text of the http_429/http_5xx replies (leak tests put sentinel values there).
   // failFirst: the first N chat replies use failMode, then the configured mode (deterministic retry tests).
-  const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null, delayMs, errorText, inFlight: 0, maxInFlight: 0, modelsCalls: 0, failFirst, failMode };
+  // models: Stage 8, the GET /models list: ids or entries with their own metadata (null => STUB_MODEL_ID only).
+  //   state.models may be changed while the stub runs, to simulate the endpoint's list changing.
+  const state = { mode, caseId, readingFile, reportedModel, omitModel: false, chatCalls: 0, lastAuthorization: null, lastModel: null, models: [], delayMs, errorText, inFlight: 0, maxInFlight: 0, modelsCalls: 0, failFirst, failMode };
+  state.models = models;
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", "http://stub");
     const json = (status, body, headers = {}) => { res.writeHead(status, { "content-type": "application/json", ...headers }); res.end(JSON.stringify(body)); };
-    if (url.pathname === "/v1/models") { state.modelsCalls++; return json(200, { object: "list", data: [{ id: STUB_MODEL_ID, object: "model" }] }); }
+    if (url.pathname === "/v1/models") {
+      state.modelsCalls++;
+      const data = state.models === null ? [{ id: STUB_MODEL_ID, object: "model" }] : state.models.map((m) => (typeof m === "string" ? { id: m, object: "model" } : m));
+      return json(200, { object: "list", data });
+    }
     if (url.pathname === "/v1/usage") {
       state.usageCalls = (state.usageCalls ?? 0) + 1;
       return json(200, { rpm_limit: 20, daily_cost_limit_usd: 1, daily_cost_used_usd: 0.001 * state.chatCalls, daily_cost_remaining_usd: 1 - 0.001 * state.chatCalls });
@@ -41,6 +49,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
         if (state.delayMs > 0) await new Promise((r) => setTimeout(r, state.delayMs));
         state.lastAuthorization = req.headers.authorization ?? null;
         try { state.lastModel = JSON.parse(body).model ?? null; } catch { state.lastModel = null; }
+        (state.requestedModels ??= []).push(state.lastModel);
         const current = state.failFirst > 0 ? (state.failFirst--, state.failMode) : state.mode;
         switch (current) {
           case "timeout": return; // never answers
@@ -52,7 +61,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
           default: {
             const output = readFileSync(state.readingFile ?? path.join(ROOT, "data", "cases", state.caseId, "reading.json"), "utf8");
             return json(200, {
-              id: `stub-${state.chatCalls}`, created: 1760371200, ...(state.omitModel ? {} : { model: state.reportedModel ?? STUB_MODEL_ID }),
+              id: `stub-${state.chatCalls}`, created: 1760371200, ...(state.omitModel ? {} : { model: typeof state.reportedModel === "function" ? state.reportedModel(state.lastModel) : state.reportedModel ?? STUB_MODEL_ID }),
               choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content: output } }],
               usage: { prompt_tokens: 1800, completion_tokens: 420, total_tokens: 2220, completion_tokens_details: { reasoning_tokens: 300 }, cost: 0.001 },
             }, { "x-ratelimit-limit-user-rpm": "20", "x-ratelimit-remaining-user-rpm": "19", "x-ratelimit-limit-user-daily-usd": "1", "x-ratelimit-remaining-user-daily-usd": String(1 - 0.001 * state.chatCalls) });
