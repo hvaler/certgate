@@ -1,0 +1,126 @@
+{
+  "schema": "certgate.model-probe-batch/1",
+  "started_utc": "2026-10-15T19:46:54.461Z",
+  "finished_utc": "2026-10-15T19:50:36.891Z",
+  "endpoint_host": "developer.amd.com.cn",
+  "provenance": {
+    "commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000",
+    "product_tree_dirty": false,
+    "built_from": "dist/src",
+    "dist_tree_sha256": "e506edc3da147b2ece5cc0a8b3bea18ecf6570d8f46207eadcf5d30ef7d568a5",
+    "dist_files": "33",
+    "live_reader_sha256": "54d3fbe45757b07d6ec1bf1b12b1e026552b2fa64b696316a0d9229da8d62c4e",
+    "model_output_sha256": "51a87d208cb9c95352980490bda28a9acca5125fab58fc13b267fef3e8af6893",
+    "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567"
+  },
+  "probe_certificate": "cg-016",
+  "call_cap": "18",
+  "chat_calls": "9",
+  "listed": [
+    {
+      "id": "DeepSeek-V4.1-Flash",
+      "action": "probe"
+    },
+    {
+      "id": "DeepSeek-V4-Flash",
+      "action": "no_image_input",
+      "field": "architecture.input_modalities = [\"text\"]"
+    },
+    {
+      "id": "DeepSeek-V4-Flash-Vision-Exp",
+      "action": "probe"
+    },
+    {
+      "id": "GLM-5.3-Flash",
+      "action": "no_image_input",
+      "field": "architecture.input_modalities = [\"text\"]"
+    },
+    {
+      "id": "MiMo-V2.6-Flash",
+      "action": "probe"
+    },
+    {
+      "id": "MinerU2.5-Pro",
+      "action": "not_chat",
+      "field": "output = [\"ocr\"]"
+    },
+    {
+      "id": "MiniCPM5-2B",
+      "action": "no_image_input",
+      "field": "architecture.input_modalities = [\"text\"]"
+    },
+    {
+      "id": "MiniCPM-V-4.7-1B",
+      "action": "probe"
+    },
+    {
+      "id": "MiniCPM-V-4.7-35B-A3B",
+      "action": "probe"
+    },
+    {
+      "id": "Qwen3.8-27B",
+      "action": "measured"
+    },
+    {
+      "id": "Qwen3.8-Flash-Next",
+      "action": "probe"
+    }
+  ],
+  "probed": [
+    {
+      "id": "DeepSeek-V4.1-Flash",
+      "result": "passed",
+      "failure_class": null,
+      "chat_calls": "1",
+      "elapsed_ms": "151649",
+      "evidence": "DeepSeek-V4.1-Flash.json"
+    },
+    {
+      "id": "DeepSeek-V4-Flash-Vision-Exp",
+      "result": "passed",
+      "failure_class": null,
+      "chat_calls": "1",
+      "elapsed_ms": "39793",
+      "evidence": "DeepSeek-V4-Flash-Vision-Exp.json"
+    },
+    {
+      "id": "MiMo-V2.6-Flash",
+      "result": "passed",
+      "failure_class": null,
+      "chat_calls": "2",
+      "elapsed_ms": "39396",
+      "evidence": "MiMo-V2.6-Flash.json"
+    },
+    {
+      "id": "MiniCPM-V-4.7-1B",
+      "result": "failed",
+      "failure_class": "reply failed the response schema (invalid_output)",
+      "chat_calls": "1",
+      "elapsed_ms": "11668",
+      "evidence": "MiniCPM-V-4.7-1B.json"
+    },
+    {
+      "id": "MiniCPM-V-4.7-35B-A3B",
+      "result": "failed",
+      "failure_class": "endpoint http_5xx (HTTP 500)",
+      "chat_calls": "3",
+      "elapsed_ms": "11216",
+      "evidence": "MiniCPM-V-4.7-35B-A3B.json"
+    },
+    {
+      "id": "Qwen3.8-Flash-Next",
+      "result": "passed",
+      "failure_class": null,
+      "chat_calls": "1",
+      "elapsed_ms": "29170",
+      "evidence": "Qwen3.8-Flash-Next.json"
+    }
+  ],
+  "not_probed_over_max_ids": [],
+  "experimental_set": [
+    "DeepSeek-V4.1-Flash",
+    "DeepSeek-V4-Flash-Vision-Exp",
+    "MiMo-V2.6-Flash",
+    "Qwen3.8-Flash-Next"
+  ]
+}

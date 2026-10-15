@@ -38,11 +38,25 @@ export const MEASURED_MODELS: readonly MeasuredModel[] = [
   },
 ];
 
-/** Filled only from probes that passed (tools/probe-models.mjs); a test ties every entry to its evidence file. */
-export const EXPERIMENTAL_MODELS: readonly ExperimentalModel[] = [];
+const PROBES = "evidence/runs/certgate-001/stage-8/probes";
 
-/** Probes that failed, and ids the committed /models snapshot marks as not a chat model. */
-export const PROBE_OUTCOMES: readonly ProbeOutcome[] = [];
+/**
+ * Filled only from probes that passed (tools/probe-models.mjs, batch of 2026-10-15 19:46-19:50Z at 303c32bb, in the
+ * /models order); a test ties every entry to its evidence file. NOT EVALUATED: no figure of CertGate applies to them.
+ */
+export const EXPERIMENTAL_MODELS: readonly ExperimentalModel[] = [
+  { id: "DeepSeek-V4.1-Flash", evidence: `${PROBES}/DeepSeek-V4.1-Flash.json`, probed_at: "2026-10-15T19:46:55.290Z" },
+  { id: "DeepSeek-V4-Flash-Vision-Exp", evidence: `${PROBES}/DeepSeek-V4-Flash-Vision-Exp.json`, probed_at: "2026-10-15T19:46:55.404Z" },
+  { id: "MiMo-V2.6-Flash", evidence: `${PROBES}/MiMo-V2.6-Flash.json`, probed_at: "2026-10-15T19:49:27.146Z" },
+  { id: "Qwen3.8-Flash-Next", evidence: `${PROBES}/Qwen3.8-Flash-Next.json`, probed_at: "2026-10-15T19:50:06.821Z" },
+];
+
+/** Probes that failed, and ids the committed /models snapshot marks as not a chat model (output without "text"). */
+export const PROBE_OUTCOMES: readonly ProbeOutcome[] = [
+  { id: "MiniCPM-V-4.7-1B", outcome: "probe_failed", evidence: `${PROBES}/MiniCPM-V-4.7-1B.json` },
+  { id: "MiniCPM-V-4.7-35B-A3B", outcome: "probe_failed", evidence: `${PROBES}/MiniCPM-V-4.7-35B-A3B.json` },
+  { id: "MinerU2.5-Pro", outcome: "not_chat", evidence: `${PROBES}/models-snapshot.json` },
+];
 
 export const MODEL_CATALOG = { measured: MEASURED_MODELS, experimental: EXPERIMENTAL_MODELS, outcomes: PROBE_OUTCOMES };
 export type ModelCatalog = { measured: readonly MeasuredModel[]; experimental: readonly ExperimentalModel[]; outcomes: readonly ProbeOutcome[] };
