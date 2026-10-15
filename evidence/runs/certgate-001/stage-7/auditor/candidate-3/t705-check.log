@@ -1,0 +1,49 @@
+T7-05 check of cf97dfadec83c4603b538adca081f9966de4830e (base dc228d10636cc3cf7b12f3b1226e88027cce12b2, deployed d1aaa3e8e55a390f10dbb68e341199515d3a6791); secrets checked: code value + code sha256 + key + base-URL path (4 needles)
+files changed outside evidence: 20; product files among them: none
+  M	CLAIMS.md
+  M	README.md
+  M	claims-map.json
+  A	docs/screenshots/amd-1280.png
+  A	docs/screenshots/amd-375.png
+  A	docs/screenshots/judge-1280.png
+  A	docs/screenshots/judge-375.png
+  A	docs/screenshots/landing-1280.png
+  A	docs/screenshots/landing-375.png
+  A	docs/screenshots/live-1280.png
+  A	docs/screenshots/live-375.png
+  A	docs/screenshots/live-failed-1280.png
+  A	docs/screenshots/live-reading-1280.png
+  A	docs/screenshots/manifest.json
+  A	docs/screenshots/story-cg-003-1280.png
+  A	docs/screenshots/story-cg-003-375.png
+  A	docs/screenshots/story-cg-003-decision-1280.png
+  A	docs/screenshots/story-cg-003-decision-375.png
+  M	test/stage7.test.ts
+  M	tools/capture-screenshots.mjs
+HAR/trace/video files in tree: none
+screenshots: 14
+manifest keys: site, site_commit, captured_at, viewports, playwright, chromium_build, served_files_sha256, secret_check, live, images
+manifest secret hits: 0
+manifest site commit: d1aaa3e8e55a390f10dbb68e341199515d3a6791 (deployed d1aaa3e8e55a390f10dbb68e341199515d3a6791: MATCH)
+served-file manifest mismatches vs d1aaa3e8e55a390f10dbb68e341199515d3a6791: 0
+  docs/screenshots/amd-1280.png: 92237 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/amd-375.png: 91224 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/judge-1280.png: 34827 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/judge-375.png: 41472 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/landing-1280.png: 92340 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/landing-375.png: 52775 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/live-1280.png: 68090 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/live-375.png: 72850 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/live-failed-1280.png: 73001 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/live-reading-1280.png: 71932 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/story-cg-003-1280.png: 505698 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/story-cg-003-375.png: 559078 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/story-cg-003-decision-1280.png: 68543 bytes, text chunks none, byte-level secret hits 0
+  docs/screenshots/story-cg-003-decision-375.png: 88106 bytes, text chunks none, byte-level secret hits 0
+README screenshot section names d1aaa3e: True; ISO times present: 19
+README screenshot section secret hits: 0
+  README screenshot section mentions 'endpoint_5xx': True
+  README screenshot section mentions '05:15': True
+  README screenshot section mentions 'not shown': True
+  README screenshot section mentions 'queued': True
+  README screenshot section mentions 'done': True
