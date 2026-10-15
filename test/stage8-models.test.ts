@@ -43,7 +43,7 @@ describe("one identity rule (L-C1, CH8-03, CH8-30)", () => {
 });
 
 repoOnly("the closed set is tied to METRICS.md and its runs (S8-01, L-16, CH8-16)", () => {
-  const metrics = readFileSync(path.join(ROOT, "METRICS.md"), "utf8");
+  const metrics = REPO ? readFileSync(path.join(ROOT, "METRICS.md"), "utf8") : "";
   it("exactly Qwen3.8-27B then Gemma-4-31B-IT, each with runs whose recorded model is the entry and that METRICS.md names", () => {
     expect(MEASURED_MODELS.map((m) => m.id)).toEqual([Q, G]);
     for (const m of MEASURED_MODELS) {
