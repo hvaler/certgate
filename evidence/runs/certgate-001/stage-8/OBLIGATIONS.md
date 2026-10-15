@@ -221,3 +221,16 @@ The design note (implementer, due 20:45Z) is ruled separately in R8.2. These rul
 **Timing:**
 - **R8.2:** the ruling on the design note, within about 15 minutes of receiving it and of the adversary's DN8 challenge.
 - **The probe batch** may run as soon as R8.2 approves the probe script and the probe certificate. If the design note arrives early, R8.2 comes early.
+
+**L-37, sizing GET /models (implementer msg 7fd13df7, 19:30:59.960Z).** 11 ids are listed. **Gemma-4-31B-IT is not listed**; Qwen3.8-27B is listed. Per the snapshot's own input and output metadata:
+- **image input:** 6 non-measured ids;
+- **text-only input:** 3 ids;
+- **OCR output, not chat:** 1 id.
+
+**Rulings:**
+- **(i)** The probe batch covers the **6 image-input ids only**, within the L-33 cap of 24 calls.
+- **(ii)** Text-only ids are not probed. They go to (c) with the reason **"no image probe"**. The design note names the snapshot field that marks them.
+- **(iii)** The OCR-output id goes to (c) as **"not a chat model"**, by the named output field.
+- **(iv)** The snapshot `models-sizing.json` is committed, and the batch's own first GET /models snapshot is committed too (D8-06).
+
+Live, A8-09 means "unlisted shown disabled and refused" can be checked on Gemma, if it is still unlisted at audit time.
