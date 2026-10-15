@@ -426,7 +426,7 @@ describe("guards (S8-12, L-17, A8-11, Q-10)", () => {
     expect(app).toMatch(/const catalog = deps\.modelCatalog \?\? MODEL_CATALOG;/);
     expect(app).not.toMatch(/certgate-test-stub/);
   });
-  it("no default path yields Gemma or an experimental model in the absence of configuration (L-06)", () => {
+  it.skipIf(!existsSync(path.join(ROOT, "Dockerfile")))("no default path yields Gemma or an experimental model in the absence of configuration (L-06)", () => {
     expect(readFileSync(path.join(ROOT, "src", "web", "config.ts"), "utf8")).not.toMatch(/gemma|qwen/i);
     expect(readFileSync(path.join(ROOT, "Dockerfile"), "utf8")).not.toMatch(/MODEL_ID=.*(gemma|deepseek|mimo|flash)/i);
   });
@@ -508,7 +508,7 @@ describe("the secrets stay on the server in every Stage 8 answer (S8-13)", () =>
 
 // Keeps the import of execFileSync used where git is available (provenance of the probe evidence, P-07).
 describe("probe evidence provenance (P-07, T8-21)", () => {
-  it.skipIf(!existsSync(path.join(ROOT, ".git")))("the probe batch ran at an ancestor commit where live-reader.ts and model-output.ts equal feaadff", () => {
+  it.skipIf(!existsSync(path.join(ROOT, ".git")) || !existsSync(path.join(ROOT, "evidence")))("the probe batch ran at an ancestor commit where live-reader.ts and model-output.ts equal feaadff", () => {
     const batch = JSON.parse(readFileSync(path.join(ROOT, "evidence", "runs", "certgate-001", "stage-8", "probes", "BATCH.json"), "utf8"));
     const c = batch.provenance.commit as string;
     expect(c).toMatch(/^[0-9a-f]{40}$/);

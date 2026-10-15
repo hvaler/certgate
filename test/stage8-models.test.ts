@@ -1,6 +1,6 @@
 // Stage 8 (dispatch 6, amendment 1; register R8.0-R8.2): the closed model set, the identity rule, the offer, the
 // three groups, and the probe batch script. Endpoint behaviour is a local TEST STUB (test/support/stub-endpoint.mjs).
-import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -13,6 +13,11 @@ import { ROOT } from "./helpers.js";
 import { startStub } from "./support/stub-endpoint.mjs";
 // @ts-expect-error plain JS tool
 import { classify, PROBE_CASE, runBatch } from "../tools/probe-models.mjs";
+
+// The run artifacts, METRICS.md and the evidence are not in the Docker image (.dockerignore): these checks run in
+// every checkout of the repository and are reported as skipped inside the image, like test/stage5-gemma.test.ts.
+const REPO = existsSync(path.join(ROOT, "evidence")) && existsSync(path.join(ROOT, "METRICS.md"));
+const repoOnly = describe.skipIf(!REPO);
 
 const Q = "Qwen3.8-27B";
 const G = "Gemma-4-31B-IT";
@@ -37,7 +42,7 @@ describe("one identity rule (L-C1, CH8-03, CH8-30)", () => {
   });
 });
 
-describe("the closed set is tied to METRICS.md and its runs (S8-01, L-16, CH8-16)", () => {
+repoOnly("the closed set is tied to METRICS.md and its runs (S8-01, L-16, CH8-16)", () => {
   const metrics = readFileSync(path.join(ROOT, "METRICS.md"), "utf8");
   it("exactly Qwen3.8-27B then Gemma-4-31B-IT, each with runs whose recorded model is the entry and that METRICS.md names", () => {
     expect(MEASURED_MODELS.map((m) => m.id)).toEqual([Q, G]);
@@ -245,7 +250,7 @@ describe("probe batch script (tools/probe-models.mjs)", () => {
   });
 });
 
-describe("each probe's request_body_sha256 equals a fresh local capture of the product request (L-21, Q-11, CH8-21)", () => {
+repoOnly("each probe's request_body_sha256 equals a fresh local capture of the product request (L-21, Q-11, CH8-21)", () => {
   it("for every committed probe record, the full body hash and the image-masked hash are reproduced by LiveReader on cg-016", async () => {
     const { LiveReader } = await import("../src/web/live-reader.js");
     const { createServer } = await import("node:http");
@@ -270,7 +275,7 @@ describe("each probe's request_body_sha256 equals a fresh local capture of the p
   });
 });
 
-describe("the committed experimental set and probe outcomes are tied to their evidence (S8-22, L-20, T8-21)", () => {
+repoOnly("the committed experimental set and probe outcomes are tied to their evidence (S8-22, L-20, T8-21)", () => {
   const dir = path.join(ROOT, "evidence", "runs", "certgate-001", "stage-8", "probes");
   it("every experimental id has one passing probe file naming it; no failed probe is in the set; the outcomes match their files", () => {
     for (const x of EXPERIMENTAL_MODELS) {
