@@ -1,0 +1,180 @@
+{
+ "run_utc": "2026-10-15T20:12:58.225Z",
+ "snapshot_ids": 11,
+ "classification": [
+  {
+   "id": "DeepSeek-V4.1-Flash",
+   "cls": "probe"
+  },
+  {
+   "id": "DeepSeek-V4-Flash",
+   "cls": "no_image"
+  },
+  {
+   "id": "DeepSeek-V4-Flash-Vision-Exp",
+   "cls": "probe"
+  },
+  {
+   "id": "GLM-5.3-Flash",
+   "cls": "no_image"
+  },
+  {
+   "id": "MiMo-V2.6-Flash",
+   "cls": "probe"
+  },
+  {
+   "id": "MinerU2.5-Pro",
+   "cls": "not_chat"
+  },
+  {
+   "id": "MiniCPM5-2B",
+   "cls": "no_image"
+  },
+  {
+   "id": "MiniCPM-V-4.7-1B",
+   "cls": "probe"
+  },
+  {
+   "id": "MiniCPM-V-4.7-35B-A3B",
+   "cls": "probe"
+  },
+  {
+   "id": "Qwen3.8-27B",
+   "cls": "measured"
+  },
+  {
+   "id": "Qwen3.8-Flash-Next",
+   "cls": "probe"
+  }
+ ],
+ "probes": [
+  {
+   "file": "DeepSeek-V4-Flash-Vision-Exp.json",
+   "id": "DeepSeek-V4-Flash-Vision-Exp",
+   "recorded_result": "passed",
+   "failure_class": null,
+   "reparse": true,
+   "reparse_error": null,
+   "model_reported": "self-dploy/DeepSeek-V4-Flash-Vision-Exp",
+   "http200": true,
+   "strict_same": true,
+   "elapsed_ms": 39793,
+   "wall_span_ms": 39796,
+   "within": true,
+   "auditor_result": "passed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  },
+  {
+   "file": "DeepSeek-V4.1-Flash.json",
+   "id": "DeepSeek-V4.1-Flash",
+   "recorded_result": "passed",
+   "failure_class": null,
+   "reparse": true,
+   "reparse_error": null,
+   "model_reported": "self-dploy/DeepSeek-V4.1-Flash",
+   "http200": true,
+   "strict_same": true,
+   "elapsed_ms": 151649,
+   "wall_span_ms": 151649,
+   "within": true,
+   "auditor_result": "passed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  },
+  {
+   "file": "MiMo-V2.6-Flash.json",
+   "id": "MiMo-V2.6-Flash",
+   "recorded_result": "passed",
+   "failure_class": null,
+   "reparse": true,
+   "reparse_error": null,
+   "model_reported": "self-dploy/MiMo-V2.6-Flash",
+   "http200": true,
+   "strict_same": true,
+   "elapsed_ms": 39396,
+   "wall_span_ms": 39397,
+   "within": true,
+   "auditor_result": "passed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  },
+  {
+   "file": "MiniCPM-V-4.7-1B.json",
+   "id": "MiniCPM-V-4.7-1B",
+   "recorded_result": "failed",
+   "failure_class": "reply failed the response schema (invalid_output)",
+   "reparse": false,
+   "reparse_error": "model output does not match the reading schema: issuer is not an object",
+   "model_reported": "self-dploy/MiniCPM-V-4.7-1B",
+   "http200": true,
+   "strict_same": true,
+   "elapsed_ms": 11668,
+   "wall_span_ms": 11669,
+   "within": true,
+   "auditor_result": "failed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  },
+  {
+   "file": "MiniCPM-V-4.7-35B-A3B.json",
+   "id": "MiniCPM-V-4.7-35B-A3B",
+   "recorded_result": "failed",
+   "failure_class": "endpoint http_5xx (HTTP 500)",
+   "reparse": null,
+   "reparse_error": null,
+   "model_reported": null,
+   "http200": false,
+   "strict_same": false,
+   "elapsed_ms": 11216,
+   "wall_span_ms": 11217,
+   "within": true,
+   "auditor_result": "failed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  },
+  {
+   "file": "Qwen3.8-Flash-Next.json",
+   "id": "Qwen3.8-Flash-Next",
+   "recorded_result": "passed",
+   "failure_class": null,
+   "reparse": true,
+   "reparse_error": null,
+   "model_reported": "self-dploy/Qwen3.8-Flash-Next",
+   "http200": true,
+   "strict_same": true,
+   "elapsed_ms": 29170,
+   "wall_span_ms": 29170,
+   "within": true,
+   "auditor_result": "passed",
+   "body_full_match": true,
+   "body_masked_match": true,
+   "provenance_commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000"
+  }
+ ],
+ "chat_calls_total": 9,
+ "cap": 18,
+ "cost_sum_replies": 0.00278817,
+ "usage_daily_cost_delta": 0.0027881700079888105,
+ "code_experimental": [
+  "DeepSeek-V4-Flash-Vision-Exp",
+  "DeepSeek-V4.1-Flash",
+  "MiMo-V2.6-Flash",
+  "Qwen3.8-Flash-Next"
+ ],
+ "code_outcomes": [
+  "MinerU2.5-Pro:not_chat",
+  "MiniCPM-V-4.7-1B:probe_failed",
+  "MiniCPM-V-4.7-35B-A3B:probe_failed"
+ ],
+ "secret_scan": {
+  "key_available": true,
+  "base_path_checked": true
+ },
+ "findings": []
+}
