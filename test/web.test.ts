@@ -10,7 +10,7 @@ import { InMemoryHourlyCounter } from "../src/web/limiter.js";
 import { DATA, ROOT, runCase, expected } from "./helpers.js";
 import { recordHumanDecision, HumanDecisionError } from "../src/pipeline.js";
 // @ts-expect-error plain JS test double
-import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+import { startStub, STUB_CATALOG, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 import { buildStories } from "../src/tools/build-stories.js";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -21,7 +21,7 @@ const open: { close: () => Promise<void> }[] = [];
 afterEach(async () => { while (open.length) await open.pop()!.close(); });
 
 async function app(deps: AppDeps) {
-  const server = createApp(deps).listen(0);
+  const server = createApp({ modelCatalog: STUB_CATALOG, ...deps }).listen(0);
   await new Promise((r) => server.once("listening", r));
   const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   open.push({ close: () => new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); }) });
@@ -304,7 +304,11 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
   it("model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)", async () => {
     const s = await stub();
     s.state.reportedModel = "adv-stub-model-7f3a";
-    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3", MODEL_ID: "configured-name-not-from-endpoint" }) });
+    // Stage 8 (L-05): the legacy route reads only a measured MODEL_ID that the endpoint lists, so this test's
+    // configured name is made a catalog entry and listed by the stub; what it checks is unchanged.
+    s.state.models = ["configured-name-not-from-endpoint"];
+    const catalog = { measured: [{ id: "configured-name-not-from-endpoint", metrics_section: "TEST STUB, not a model", runs: [] }], experimental: [], outcomes: [] };
+    const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3", MODEL_ID: "configured-name-not-from-endpoint" }), modelCatalog: catalog });
     const j = await (await postJson(`${base}/api/live/read`, liveBody())).json();
     expect(j.view.receipt.reader.model_id).toBe("adv-stub-model-7f3a");
     expect(j.view.receipt.reader.requested_model_id).toBe("configured-name-not-from-endpoint");

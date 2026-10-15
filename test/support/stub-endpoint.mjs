@@ -15,6 +15,16 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const STUB_MODEL_ID = "certgate-test-stub";
+/**
+ * Stage 8: a model catalog for the existing Stage 2-7 suites, passed as the test-only AppDeps.modelCatalog, so they
+ * can keep reading through the TEST STUB as before. It names the stub as the only "measured" model; it has no run and
+ * no figure. The product's own catalog (src/web/models.ts) never contains it, and the entry points never pass this.
+ */
+export const STUB_CATALOG = Object.freeze({
+  measured: Object.freeze([Object.freeze({ id: STUB_MODEL_ID, metrics_section: "TEST STUB, not a model: no evaluation run", runs: Object.freeze([]) })]),
+  experimental: Object.freeze([]),
+  outcomes: Object.freeze([]),
+});
 
 export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFile = null, reportedModel = null, delayMs = 0, errorText = null, failFirst = 0, failMode = "http_429", models = null } = {}) {
   // reportedModel: the "model" field of the chat reply (null => STUB_MODEL_ID; "" => omitted is not supported here;

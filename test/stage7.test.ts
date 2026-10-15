@@ -11,7 +11,7 @@ import type { AppDeps } from "../src/web/app.js";
 import { MemoryStore } from "../src/web/live-store.js";
 import { ROOT } from "./helpers.js";
 // @ts-expect-error plain JS test double
-import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+import { startStub, STUB_CATALOG, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 // @ts-expect-error plain JS tool
 import { PREVIEW_IDS, preview } from "../tools/previews.mjs";
 
@@ -19,7 +19,7 @@ type Closable = { close: () => Promise<void> };
 const open: Closable[] = [];
 afterEach(async () => { while (open.length) await open.pop()!.close(); });
 async function serve(deps: AppDeps) {
-  const server = createApp(deps).listen(0, "127.0.0.1");
+  const server = createApp({ modelCatalog: STUB_CATALOG, ...deps }).listen(0, "127.0.0.1");
   await new Promise((r) => server.once("listening", r));
   open.push({ close: () => new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); }) });
   return (server.address() as AddressInfo).port;
@@ -131,7 +131,7 @@ describe("a recorded story says it is recorded, next to reading_source; a live r
     const port = await serve({ env: { MODEL_BASE_URL: s.url, MODEL_ID: STUB_MODEL_ID, MODEL_API_KEY: "sentinel-model-key-91bd44", LIVE_READS_PER_HOUR: "3" }, liveStore: new MemoryStore(), liveBudget: { pollMs: 20, queueMaxWaitMs: 20_000, readBudgetMs: 20_000, deadlineMs: 40_000, staleGraceMs: 10_000, leaseTtlMs: 45_000, marginMs: 0 } });
     const base = `http://127.0.0.1:${port}`;
     const cert = readFileSync(path.join(ROOT, "data", "cases", "cg-004", "certificate.pdf")).toString("base64");
-    const j = await (await fetch(`${base}/api/live/jobs`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ certificate_base64: cert, synthetic_confirmed: true }) })).json();
+    const j = await (await fetch(`${base}/api/live/jobs`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ certificate_base64: cert, synthetic_confirmed: true, model: STUB_MODEL_ID }) })).json();
     let v: { state: string; result?: { view: Record<string, unknown> } } = { state: "queued" };
     const until = Date.now() + 30_000;
     while (Date.now() < until && v.state !== "done" && v.state !== "failed") {

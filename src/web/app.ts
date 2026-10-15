@@ -27,7 +27,7 @@ import { MemoryStore, StoreUnavailable, UpstashRestStore, storeEnv, type LiveSto
 import { JOB_ID, KEYS, LiveJobs, REASONS, Refusal, WINDOW_TTL_S, hourKey, type Outcome, type ReasonClass } from "./live-jobs.js";
 import { getDataDir } from "../config.js";
 import { toView } from "./view.js";
-import { MODEL_CATALOG, choiceView, computeOffer, defaultModel, isListed, modelChoiceRecord, resolveChoice, sameModel, type ModelCatalog } from "./models.js";
+import { MODEL_CATALOG, choiceView, computeOffer, isListed, modelChoiceRecord, resolveChoice, sameModel, type ModelCatalog } from "./models.js";
 import type { PlantedEntry } from "../model-output.js";
 
 /** The three judge-mode stories (S2-14). */
@@ -86,6 +86,8 @@ export const SAMPLE_IDS = ["cg-004", "cg-005", "cg-010"] as const;
 /** The live job API's request header for the access code; never a query parameter (CH6-01). */
 export const ACCESS_CODE_HEADER = "x-live-access-code";
 const JOB_POLL_INTERVAL_S = 2;
+/** Q-03: a listing dated more than 5 s ahead of this instance's clock is stale (clock skew between instances). */
+const LISTING_FUTURE_TOLERANCE_MS = 5_000;
 
 const NO_STORE = { "cache-control": "no-store" };
 const TYPES: Record<string, string> = {
@@ -260,11 +262,12 @@ export function createHandler(deps: AppDeps = {}) {
     if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
     // Stage 8 (L-05): the legacy route reads only with MODEL_ID canonicalised against the measured offer and listed by
     // this probe, decided before anything is counted; never an experimental model and never a model from the request.
-    const legacyModel = defaultModel({ ...offer, experimental: [] }, cfg.modelId, f1.model_ids);
-    if (legacyModel === null) {
-      const cls = offer.measured.length === 0 ? "model_not_offered" : "model_unlisted";
+    const legacyChoice = resolveChoice({ ...offer, experimental: [] }, cfg.modelId ?? "");
+    if (legacyChoice === null || !isListed(legacyChoice.id, f1.model_ids)) {
+      const cls = legacyChoice === null ? "model_not_offered" : "model_unlisted";
       throw new HttpError(409, REASONS[cls], { reason_class: cls });
     }
+    const legacyModel = legacyChoice.id;
     // The container's synchronous route shares the job API's hourly count in the in-process store (CH6-17).
     if (jobs && (await jobs.store.incr(KEYS.reads(hourKey(clock())), WINDOW_TTL_S)) > cfg.liveReadsPerHour) {
       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: liveCounter.peek().reopens_at });
@@ -275,9 +278,6 @@ export function createHandler(deps: AppDeps = {}) {
     }
     const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: legacyModel, apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
     const r = await processCase({ ...inputBase, reader, f1 });
-    if (reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? "")) {
-      throw new HttpError(502, REASONS.model_mismatch, { reason_class: "model_mismatch" });
-    }
     if (reader.lastCall) {
       lastLive = reader.lastCall;
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);
@@ -308,7 +308,8 @@ export function createHandler(deps: AppDeps = {}) {
     // Stage 8 (S8-04, S8-21, L-24, L-27): the model choice from the same cached probe the F1 panel uses.
     const snap = gate.enabled ? await f1Now() : null;
     const models = snap ? choiceView(offer, cfg.modelId, snap.state === "on" ? snap.model_ids : [], snap.checked_at, catalog) : null;
-    const noModel = !models ? null
+    // With no endpoint configured the status stays as before (the endpoint-off case); the POST refuses as before.
+    const noModel = !models || cfg.modelBaseUrl === null ? null
       : offer.measured.length + offer.experimental.length === 0 ? "no measured or probed model is enabled on this site"
       : snap!.state === "on" && models.selectable === 0 ? `no offered model is listed by the endpoint now (checked ${snap!.checked_at})`
       : null;
@@ -427,8 +428,8 @@ export function createHandler(deps: AppDeps = {}) {
     if (f1.state !== "on") throw new HttpError(503, `no live endpoint: ${f1.detail}`);
     // 3c. Stage 8 (L-01, L-02): the listing that validates the choice is no older than the probe cache, by the
     //     snapshot's own checked_at; f1:last or a stale copy never validates. Then the choice must be listed now.
-    const checked = Date.parse(f1.checked_at ?? "");
-    if (!Number.isFinite(checked) || clock().getTime() - checked > F1_CACHE_MS) throw new Refusal(503, REASONS.probe_unavailable, { reason_class: "probe_unavailable" });
+    const age = clock().getTime() - Date.parse(f1.checked_at ?? "");
+    if (!Number.isFinite(age) || age > F1_CACHE_MS || age < -LISTING_FUTURE_TOLERANCE_MS) throw new Refusal(503, REASONS.probe_unavailable, { reason_class: "probe_unavailable" });
     if (!isListed(choice.id, f1.model_ids)) throw new Refusal(409, REASONS.model_unlisted, { reason_class: "model_unlisted" });
     const listingCheckedAt: string = f1.checked_at;
     // 4. Admission: busy check, then one atomic count in the UTC hour (CH6-05, CH6-08).

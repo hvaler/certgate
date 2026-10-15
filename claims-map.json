@@ -541,11 +541,6 @@
  },
  {
   "doc": "README.md",
-  "text": "| `MODEL_ID` | none | model id requested from the endpoint |",
-  "row": "C-33"
- },
- {
-  "doc": "README.md",
   "text": "| `LIVE_WINDOWS` | none | announced live windows, shown as text |",
   "row": "C-55"
  },
@@ -2216,16 +2211,6 @@
  },
  {
   "doc": "README.md",
-  "text": "Live reading on the deployed site uses the model set in Vercel's `MODEL_ID`, and each live receipt names the model as the endpoint reports it.",
-  "row": "C-85"
- },
- {
-  "doc": "README.md",
-  "text": "From dispatch 4 it was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).",
-  "row": "C-85"
- },
- {
-  "doc": "README.md",
   "text": "**Live reading:** on the deployed site, when it is configured (DEPLOY.md), or from the container in real mode with the three `MODEL_*` variables (see \"Run it\").",
   "row": "C-83"
  },
@@ -2481,11 +2466,6 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "| `MODEL_ID` | set: `Qwen3.8-27B` | no | the live model of the deployed site. From dispatch 4 it was `Gemma-4-31B-IT`, which read live on 2026-10-14; on 2026-10-15 it failed with HTTP 5xx at 05:15 UTC and by 18:23 UTC Token Factory no longer listed it and refused it (HTTP 4xx), so the operator set `Qwen3.8-27B` and redeployed, with no code changes. To switch again, set the id and redeploy |",
-  "row": "C-85"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "| `LIVE_ACCESS_CODE` | set: a code you choose and give to the judges | yes | mandatory: without it live reading stays off on the deployed site |",
   "row": "C-80"
  },
@@ -2571,11 +2551,6 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "200, \"enabled\": true, \"access_code_required\": true, \"used_this_hour\" and \"in_flight\" counts",
-  "row": "C-46"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "the sample certificate",
   "row": "C-83"
  },
@@ -2586,18 +2561,8 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "Then one real live reading, in a browser: open the site, go to \"Read a certificate live\", download the sample cg-004 certificate and its delivery note, choose them, give line 1 and the access code, tick the notice and press \"Read live\".",
-  "row": "C-77"
- },
- {
-  "doc": "DEPLOY.md",
   "text": "The page shows \"Queued\", then \"Reading at AMD Token Factory\" with the seconds so far, then opens the case file.",
   "row": "C-77"
- },
- {
-  "doc": "DEPLOY.md",
-  "text": "Its receipt names the model as reported by the endpoint, with the endpoint snapshot taken at reading time.",
-  "row": "C-85"
  },
  {
   "doc": "DEPLOY.md",
@@ -2801,11 +2766,6 @@
  },
  {
   "doc": "README.md",
-  "text": "gemma[\"Deployed live model<br/>Qwen3.8-27B (MODEL_ID)\"]",
-  "row": "C-89"
- },
- {
-  "doc": "README.md",
   "text": "qwen[\"Evaluated product model<br/>Qwen3.8-27B\"]",
   "row": "C-89"
  },
@@ -2857,11 +2817,6 @@
  {
   "doc": "README.md",
   "text": "reader -->|\"/chat/completions\"| amd",
-  "row": "C-89"
- },
- {
-  "doc": "README.md",
-  "text": "amd -->|\"MODEL_ID\"| gemma",
   "row": "C-89"
  },
  {
@@ -3293,5 +3248,250 @@
   "doc": "README.md",
   "text": "Stage 5: the auditor's own independent Gemma-4-31B-IT run, identical to the run of record case by case ([stage-5/auditor/real-run/](evidence/runs/certgate-001/stage-5/auditor/real-run/)).",
   "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Model choice:** the live screen lists every model AMD Token Factory lists now, with the time of that check.",
+  "row": "C-94"
+ },
+ {
+  "doc": "README.md",
+  "text": "You can choose only a measured model (Qwen3.8-27B, Gemma-4-31B-IT) or an experimental model that passed a probe in this stage, and only while the endpoint lists it.",
+  "row": "C-93"
+ },
+ {
+  "doc": "README.md",
+  "text": "An experimental model is labelled \"not evaluated\", needs an explicit acknowledgement, and no figure of CertGate applies to it.",
+  "row": "C-96"
+ },
+ {
+  "doc": "README.md",
+  "text": "Choosing the model for a live reading",
+  "row": "none: section heading"
+ },
+ {
+  "doc": "README.md",
+  "text": "Token Factory's model list changes without notice: Gemma-4-31B-IT was listed on 2026-10-13 and absent on 2026-10-15.",
+  "row": "C-100"
+ },
+ {
+  "doc": "README.md",
+  "text": "So the live screen shows the list as the endpoint gives it now, in three groups:",
+  "row": "C-94"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Measured:** Qwen3.8-27B and Gemma-4-31B-IT, the only models with an evaluation run in [METRICS.md](METRICS.md).",
+  "row": "C-93"
+ },
+ {
+  "doc": "README.md",
+  "text": "Each is selectable only while the endpoint lists it, and names its METRICS.md section and run directory.",
+  "row": "C-93"
+ },
+ {
+  "doc": "README.md",
+  "text": "The default is `MODEL_ID` when it is listed, otherwise the first listed measured model; it is never an experimental model.",
+  "row": "C-93"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Not evaluated · experimental:** models that, in one real probe on 2026-10-15, accepted CertGate's request (the page image of the scan cg-016 and the frozen prompt) and returned a reply that passed the response schema, named the requested model and finished within 210 s. Four passed: DeepSeek-V4.1-Flash, DeepSeek-V4-Flash-Vision-Exp, MiMo-V2.6-Flash and Qwen3.8-Flash-Next ([probe evidence](evidence/runs/certgate-001/stage-8/probes/BATCH.md)).",
+  "row": "C-95"
+ },
+ {
+  "doc": "README.md",
+  "text": "The probe does not judge the values read.",
+  "row": "C-95"
+ },
+ {
+  "doc": "README.md",
+  "text": "Choosing one needs the acknowledgement \"this model is not evaluated; no figure of CertGate applies to it\", and its reading is labelled \"not evaluated\" next to the proposal and in its receipt (`evaluated: false`, with the probe evidence path).",
+  "row": "C-96"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Listed, not offered:** every other id the endpoint lists, shown disabled with its reason: \"no image probe\", \"probe failed\", \"not a chat model\" or \"not enabled on this site\".",
+  "row": "C-94"
+ },
+ {
+  "doc": "README.md",
+  "text": "The server checks the choice again before anything is counted: a model outside the offer, an experimental model without the acknowledgement, or a model the endpoint does not list now is refused before any model call and without spending the hourly limit.",
+  "row": "C-97"
+ },
+ {
+  "doc": "README.md",
+  "text": "The reply must name the requested model (equal ignoring case, or with one provider prefix such as `self-dploy/`); a reading never falls back to another model or to a stored result.",
+  "row": "C-97"
+ },
+ {
+  "doc": "README.md",
+  "text": "Every live receipt and its endpoint snapshot record the model requested and the model as reported.",
+  "row": "C-98"
+ },
+ {
+  "doc": "README.md",
+  "text": "The rules, the two-channel check, the review triggers and the person's decision are the same for every model.",
+  "row": "C-99"
+ },
+ {
+  "doc": "README.md",
+  "text": "`LIVE_MODELS` (optional) narrows the choice; without it only `MODEL_ID` is selectable.",
+  "row": "C-93"
+ },
+ {
+  "doc": "README.md",
+  "text": "Live reading uses the model chosen on the live screen, with Vercel's `MODEL_ID` as the default, and each live receipt names the model requested and the model as the endpoint reports it.",
+  "row": "C-85"
+ },
+ {
+  "doc": "README.md",
+  "text": "From dispatch 4 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).",
+  "row": "C-100"
+ },
+ {
+  "doc": "README.md",
+  "text": "gemma[\"Live model, chosen per reading<br/>measured or experimental (offer)\"]",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "amd -->|\"model chosen\"| gemma",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `MODEL_ID` | none | model id requested from the endpoint; the default choice for live reading when it is a measured model |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "| `LIVE_MODELS` | none (only `MODEL_ID`) | optional, comma-separated model ids that may be chosen for live reading; it can only narrow the measured and experimental sets of `src/web/models.ts`, and any other id is ignored and named in the server log |",
+  "row": "C-33"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Experimental models are not evaluated.** Each passed one probe on one certificate on 2026-10-15; that shows the request is accepted and the reply has the right shape, not that the values are right.",
+  "row": "C-95"
+ },
+ {
+  "doc": "README.md",
+  "text": "A model's behaviour can change after its probe (Gemma-4-31B-IT did, between 2026-10-13 and 2026-10-15).",
+  "row": "C-100"
+ },
+ {
+  "doc": "README.md",
+  "text": "The rules, the channel check and the person's confirmation apply to them as to every model.",
+  "row": "C-99"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Model list.** The list on the live screen is the endpoint's own, checked at most once per 60 s; a model can disappear between that check and a reading, and the server then refuses it.",
+  "row": "C-94"
+ },
+ {
+  "doc": "README.md",
+  "text": "Model ids longer than 200 characters are not shown.",
+  "row": "C-94"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `MODEL_ID` | set: `Qwen3.8-27B` | no | the live model of the deployed site. From dispatch 4 it was `Gemma-4-31B-IT`, which read live on 2026-10-14; on 2026-10-15 it failed with HTTP 5xx at 05:15 UTC and by 18:23 UTC Token Factory no longer listed it and refused it (HTTP 4xx), so the operator set `Qwen3.8-27B` and redeployed, with no code changes. From Stage 8 it is the default choice on the live screen when the endpoint lists it |",
+  "row": "C-100"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "| `LIVE_MODELS` | set: `Qwen3.8-27B,Gemma-4-31B-IT,DeepSeek-V4.1-Flash,DeepSeek-V4-Flash-Vision-Exp,MiMo-V2.6-Flash,Qwen3.8-Flash-Next` | no | the models a judge may choose for a live reading (section 4a). It can only narrow the measured and experimental sets in `src/web/models.ts`; any other id is ignored and named in the server log. Leave it unset to keep the single-model behaviour (`MODEL_ID` only) |",
+  "row": "C-93"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "4a. The model choice (Stage 8)",
+  "row": "none: section heading"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "With `LIVE_MODELS` set to the value above, the live screen shows every model AMD Token Factory lists now (the same check as \"Runs on AMD\", at most once per 60 s), in three groups:",
+  "row": "C-94"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "**measured** (Qwen3.8-27B, Gemma-4-31B-IT): selectable while listed; the default is `MODEL_ID` when listed;",
+  "row": "C-93"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "**not evaluated · experimental** (the four models that passed the Stage 8 probe): selectable while listed, only with the acknowledgement on the page;",
+  "row": "C-96"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "**listed, not offered:** every other id, disabled with its reason.",
+  "row": "C-94"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "The choice is limited to measured models and to what Token Factory lists now.",
+  "row": "C-93"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "A model the endpoint stops listing is shown disabled, and the server refuses it before any model call; nothing falls back to another model.",
+  "row": "C-97"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "No redeploy is needed when the list changes.",
+  "row": "C-94"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Without `LIVE_MODELS` only `MODEL_ID` can be chosen.",
+  "row": "C-93"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "200, \"enabled\": true, \"access_code_required\": true, \"used_this_hour\" and \"in_flight\" counts, and \"models\" with the three groups and their \"checked_at\"",
+  "row": "C-94"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "code: a model outside the offer, and an experimental model without the acknowledgement, are refused; used_this_hour does not move",
+  "row": "C-97"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "400, \"reason_class\": \"model_not_offered\"",
+  "row": "C-97"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "400, \"reason_class\": \"model_ack_required\"",
+  "row": "C-96"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "\"used_this_hour\" unchanged by the two refusals",
+  "row": "C-97"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "If an offered model is not listed at that time (for example Gemma-4-31B-IT), check that the live screen shows it disabled with \"not listed by the endpoint now (checked <time>)\", and that a POST naming it with the code answers 409 with `\"reason_class\": \"model_unlisted\"` and leaves `used_this_hour` unchanged.",
+  "row": "C-97"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Then one real live reading **with each offered model the endpoint lists at that time**, in a browser: open the site, go to \"Read a certificate live\", download the sample cg-004 certificate and its delivery note, choose them, give line 1 and the access code, choose the model (for an experimental model, tick its acknowledgement), tick the notice and press \"Read live\".",
+  "row": "C-93"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Its receipt names the model requested and the model as reported by the endpoint, with the endpoint snapshot taken at reading time; a reading by an experimental model is labelled \"not evaluated\" next to its proposal.",
+  "row": "C-98"
+ },
+ {
+  "doc": "DEPLOY.md",
+  "text": "Each reading counts once against `LIVE_READS_PER_HOUR`.",
+  "row": "C-79"
  }
 ]

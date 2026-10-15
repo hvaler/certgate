@@ -30,8 +30,8 @@
   <rect x="858" y="440.5" width="112" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
   <text x="914" y="453.5" font-size="11" text-anchor="middle" fill="#333333">/chat/completions</text>
   <line x1="914" y1="530" x2="914" y2="577" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
-  <rect x="885" y="544.5" width="58" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
-  <text x="914" y="557.5" font-size="11" text-anchor="middle" fill="#333333">MODEL_ID</text>
+  <rect x="873" y="544.5" width="82" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
+  <text x="914" y="557.5" font-size="11" text-anchor="middle" fill="#333333">model chosen</text>
   <line x1="984" y1="530" x2="1101.5" y2="577" stroke="#333333" stroke-width="1.5" marker-end="url(#arrow-architecture)"/>
   <rect x="992.8" y="544.5" width="100" height="18" rx="3" fill="#ffffff" stroke="#bbbbbb" stroke-width="0.5"/>
   <text x="1042.8" y="557.5" font-size="11" text-anchor="middle" fill="#333333">evaluation runs</text>
@@ -69,8 +69,8 @@
   <text x="914" y="498.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">AMD Token Factory</text>
   <text x="914" y="513.5" font-size="12" text-anchor="middle" fill="#111111">OpenAI-compatible endpoint</text>
   <rect x="804" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
-  <text x="914" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Deployed live model</text>
-  <text x="914" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Qwen3.8-27B (MODEL_ID)</text>
+  <text x="914" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Live model, chosen per reading</text>
+  <text x="914" y="617.5" font-size="12" text-anchor="middle" fill="#111111">measured or experimental (offer)</text>
   <rect x="1064" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
   <text x="1174" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Evaluated product model</text>
   <text x="1174" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Qwen3.8-27B</text>

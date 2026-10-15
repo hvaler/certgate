@@ -245,6 +245,31 @@ describe("probe batch script (tools/probe-models.mjs)", () => {
   });
 });
 
+describe("each probe's request_body_sha256 equals a fresh local capture of the product request (L-21, Q-11, CH8-21)", () => {
+  it("for every committed probe record, the full body hash and the image-masked hash are reproduced by LiveReader on cg-016", async () => {
+    const { LiveReader } = await import("../src/web/live-reader.js");
+    const { createServer } = await import("node:http");
+    const { createHash } = await import("node:crypto");
+    // @ts-expect-error plain JS tool
+    const { maskedBodySha256 } = await import("../tools/probe-models.mjs");
+    const dir = path.join(ROOT, "evidence", "runs", "certgate-001", "stage-8", "probes");
+    const certificate = new Uint8Array(readFileSync(path.join(ROOT, "data", "cases", PROBE_CASE, "certificate.pdf")));
+    const records = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(readFileSync(path.join(dir, f), "utf8"))).filter((r) => r.schema === "certgate.model-probe/1");
+    expect(records.length).toBe(6);
+    for (const rec of records) {
+      let seen = "";
+      const server = createServer((req, res) => { let b = ""; req.on("data", (c) => { b += c; }); req.on("end", () => { seen ||= b; res.writeHead(500); res.end("{}"); }); }).listen(0, "127.0.0.1");
+      await new Promise((r) => server.once("listening", r));
+      const reader = new LiveReader({ baseUrl: `http://127.0.0.1:${(server.address() as { port: number }).port}/v1`, modelId: rec.model_requested, apiKey: "capture-not-a-key", backoffBaseMs: 1 });
+      await reader.read({ case_id: PROBE_CASE, certificate }).catch(() => undefined);
+      await new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); });
+      expect(createHash("sha256").update(Buffer.from(seen, "utf8")).digest("hex"), rec.model_requested).toBe(rec.request_body_sha256);
+      expect(maskedBodySha256(seen), rec.model_requested).toBe(rec.request_body_masked_sha256);
+      expect(rec.certificate.sha256).toBe(createHash("sha256").update(certificate).digest("hex"));
+    }
+  });
+});
+
 describe("the committed experimental set and probe outcomes are tied to their evidence (S8-22, L-20, T8-21)", () => {
   const dir = path.join(ROOT, "evidence", "runs", "certgate-001", "stage-8", "probes");
   it("every experimental id has one passing probe file naming it; no failed probe is in the set; the outcomes match their files", () => {

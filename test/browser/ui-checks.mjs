@@ -13,7 +13,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 const require = createRequire(path.join(process.cwd(), "noop.js"));
 const { chromium } = require("playwright");
 const { createApp } = await import(pathToFileURL(path.join(ROOT, "dist", "src", "server.js")).href);
-const { startStub } = await import(pathToFileURL(path.join(ROOT, "test", "support", "stub-endpoint.mjs")).href);
+const { startStub, STUB_CATALOG } = await import(pathToFileURL(path.join(ROOT, "test", "support", "stub-endpoint.mjs")).href);
 
 const out = process.argv[2] || path.join(tmpdir(), "certgate-ui-checks");
 mkdirSync(out, { recursive: true });
@@ -21,7 +21,7 @@ const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok: !!ok, detail });
 
 async function serve(env) {
-  const s = createApp({ env }).listen(0);
+  const s = createApp({ env, modelCatalog: STUB_CATALOG }).listen(0);
   await new Promise((r) => s.once("listening", r));
   return { base: `http://127.0.0.1:${s.address().port}`, close: () => new Promise((r) => { s.closeAllConnections(); s.close(() => r()); }) };
 }

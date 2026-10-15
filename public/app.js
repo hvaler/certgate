@@ -145,6 +145,56 @@ function explainSection() {
     h("p", {}, h("strong", {}, "A person"), " releases, blocks or asks for a new certificate."));
 }
 
+/**
+ * Stage 8 (S8-04, S8-21…S8-24, L-08, L-24): the model choice from the server's status, in three groups. Every id
+ * shown comes from the server's probe of the endpoint and is inserted as text; only enabled measured and experimental
+ * entries become choices. No model is preselected unless the server names a default, which is always measured.
+ */
+function modelChoice(models) {
+  const box = h("fieldset", { class: "stack", id: "live-models" });
+  const ack = h("input", { id: "live-ack", type: "checkbox" });
+  const ackText = h("span", { id: "live-ack-text" }, "");
+  const ackRow = h("label", { class: "check", for: "live-ack", id: "live-ack-row", hidden: true }, ack, ackText);
+  let current = models;
+  let chosen = null;
+  const pick = (item, group) => {
+    chosen = item ? { id: item.id, group } : null;
+    ack.checked = false;
+    ackRow.hidden = !(chosen && group === "experimental");
+    ackText.textContent = chosen && group === "experimental" ? `I understand: ${item.acknowledgement}.` : "";
+  };
+  const option = (item, group, label) => {
+    const id = `live-model-${group}-${(current.measured.concat(current.experimental).indexOf(item))}`;
+    const input = h("input", { type: "radio", name: "live-model", id, value: item.id, disabled: !item.enabled, checked: item.enabled && current.default === item.id, onchange: () => pick(item, group) });
+    return h("li", {}, h("label", { for: id, class: "check" }, input,
+      h("span", {}, h("strong", { class: "mono" }, item.id), label ? " " : "", label ? badge(label, "review") : null, ` · ${item.state}`,
+        group === "measured" ? h("span", { class: "muted small" }, ` · measured: ${item.metrics_section}; runs ${item.runs.join(", ")}`) : null,
+        group === "experimental" ? h("span", { class: "muted small" }, ` · probe evidence ${item.evidence}`) : null)));
+  };
+  const draw = (m) => {
+    current = m;
+    chosen = null;
+    const dflt = m.measured.find((x) => x.enabled && x.id === m.default);
+    box.replaceChildren(
+      h("legend", {}, "Model for this live reading"),
+      h("p", { class: "small", id: "live-models-statement" }, m.statement),
+      h("p", { class: "small muted" }, `Models listed by AMD Token Factory now, checked ${m.checked_at}. Model ids longer than 200 characters are not shown.`),
+      h("div", { class: "eyebrow" }, "MEASURED"),
+      h("ul", { class: "small", id: "live-models-measured" }, m.measured.map((x) => option(x, "measured", null))),
+      h("div", { class: "eyebrow" }, "NOT EVALUATED · EXPERIMENTAL"),
+      m.experimental.length
+        ? h("ul", { class: "small", id: "live-models-experimental" }, m.experimental.map((x) => option(x, "experimental", x.label)))
+        : h("p", { class: "small muted", id: "live-models-experimental" }, "none offered on this site"),
+      h("div", { class: "eyebrow" }, "LISTED, NOT OFFERED"),
+      h("ul", { class: "small muted", id: "live-models-other" }, m.listed_not_offered.map((x) => h("li", {}, h("span", { class: "mono" }, x.id), ` · ${x.reason}`)),
+        m.not_shown > 0 ? h("li", {}, `+${m.not_shown} more listed, not shown`) : null),
+      ackRow);
+    if (dflt) pick(dflt, "measured"); else pick(null, null);
+  };
+  draw(models);
+  return { node: box, get: () => ({ chosen, acknowledged: ack.checked }), redraw: draw };
+}
+
 async function liveSection(st) {
   await refreshF1();
   const on = lastF1 && lastF1.state === "on";
@@ -156,7 +206,8 @@ async function liveSection(st) {
   const exhausted = st && st.enabled && st.remaining_this_hour === "0";
   const canRead = !!(st && st.enabled && !exhausted && st.job_api);
   const confirm = h("input", { id: "live-confirm", type: "checkbox" });
-  const inputs = { pdf, csv, line, code, confirm };
+  const choice = st && st.models ? modelChoice(st.models) : null;
+  const inputs = { pdf, csv, line, code, confirm, choice };
   const btn = h("button", { class: "btn primary", type: "button", disabled: !canRead, onclick: () => doLiveRead(st, inputs, msg, btn) }, "Read live");
   const why = !st ? "Live status unavailable."
     : st.deployed_site && !st.enabled ? `${st.reason}.`
@@ -168,9 +219,11 @@ async function liveSection(st) {
     h("div", { class: "btns between" }, h("h2", { id: "live-title" }, "Read a certificate live"), badge("LIVE · needs the model endpoint")),
     h("p", { class: "muted" }, on ? "" : "When the endpoint is off, live reading opens during the announced windows: ",
       on ? "" : h("strong", {}, st && st.windows ? st.windows : "no live window is announced"), on ? "" : ". The three recorded runs work at any time."),
-    st && st.job_api ? h("p", { class: "small", id: "live-model" }, "A live reading is made by the model this server requests (",
-      h("strong", { class: "mono" }, st.model_requested || "not configured"),
-      "); its receipt shows the model as reported by the endpoint. The landing figures and the three recorded runs come from the evaluation runs named with them; the comparison with Gemma is in METRICS.md.") : null,
+    choice ? h("p", { class: "small", id: "live-model" }, "A live reading is made by the model you choose below; its receipt shows the model requested and the model as reported by the endpoint. The landing figures and the three recorded runs come from the evaluation runs named with them; the comparison with Gemma is in METRICS.md.")
+      : st && st.job_api ? h("p", { class: "small", id: "live-model" }, "A live reading is made by the model this server requests (",
+        h("strong", { class: "mono" }, st.model_requested || "not configured"),
+        "); its receipt shows the model as reported by the endpoint. The landing figures and the three recorded runs come from the evaluation runs named with them; the comparison with Gemma is in METRICS.md.") : null,
+    choice ? choice.node : null,
     samples,
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "live-pdf" }, "Mill certificate (PDF)"), pdf),
@@ -214,9 +267,12 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** Starts a live reading job and polls it (S6-02): queued with position, reading at AMD Token Factory with elapsed time, done, failed. */
 async function doLiveRead(st, inputs, msg, btn) {
-  const { pdf, csv, line, code, confirm } = inputs;
+  const { pdf, csv, line, code, confirm, choice } = inputs;
   msg.replaceChildren();
+  const pickNow = choice ? choice.get() : null;
   if (!pdf.files[0]) { msg.textContent = "Choose a certificate PDF first."; return; }
+  if (choice && !pickNow.chosen) { msg.textContent = "Choose a model first: only a listed model can be chosen."; return; }
+  if (choice && pickNow.chosen.group === "experimental" && !pickNow.acknowledged) { msg.textContent = "Confirm first that this model is not evaluated and that no figure of CertGate applies to it."; return; }
   if (!confirm.checked) { msg.textContent = "Confirm the notice first: the file goes to a third-party service and must be synthetic."; return; }
   btn.disabled = true;
   msg.textContent = "Sending… the server checks the file, the code, the endpoint and the limit.";
@@ -228,11 +284,18 @@ async function doLiveRead(st, inputs, msg, btn) {
       delivery_line: line.value.trim() || null,
       synthetic_confirmed: confirm.checked,
     };
+    // Stage 8: the chosen model; the acknowledgement is sent only for an experimental model, and only when ticked.
+    if (pickNow && pickNow.chosen) {
+      body.model = pickNow.chosen.id;
+      if (pickNow.chosen.group === "experimental") body.not_evaluated_acknowledged = pickNow.acknowledged === true;
+    }
     const headers = { "content-type": "application/json" };
     if (code && code.value) headers[st.access_code_header] = code.value;
     const r = await api(st.job_api, { method: "POST", headers, body: JSON.stringify(body) });
     if (!r.ok) {
       msg.textContent = `${r.body && r.body.error ? r.body.error : `Refused (${r.status})`}${r.body && r.body.reopens_at ? `. Reopens at ${r.body.reopens_at}` : ""}. No reading was made.`;
+      // Stage 8 (L-15): the listing may have changed; the choice is redrawn from a fresh status, nothing is started.
+      if (choice) { const again = await api("/api/live/status"); if (again.ok && again.body && again.body.models) choice.redraw(again.body.models); }
       btn.disabled = false;
       return;
     }
@@ -289,6 +352,7 @@ function caseFile(view, ctx) {
   const prop = h("section", { class: `proposal ${view.proposal}`, "aria-labelledby": "proposal" },
     h("div", { class: "eyebrow" }, "CERTGATE PROPOSES"),
     h("h2", { id: "proposal" }, PROPOSAL_TITLE[view.proposal] || view.proposal),
+    modelChoiceLine(rc.model_choice),
     view.status === "error" ? h("p", {}, "The reading failed: no value was read, nothing is guessed, and no positive proposal is made.") : null,
     h("ul", {}, view.reasons.map((r) => h("li", {}, h("span", { class: "mono small" }, r.code), ` — ${r.detail}`))),
     view.reasons.length === 0 ? h("p", {}, "No rule fails and no review trigger holds. A person in Quality still decides.") : null,
@@ -323,6 +387,22 @@ function caseFile(view, ctx) {
     view.explanation.available ? h("p", {}, view.explanation.text) : null,
     h("p", { class: "muted small" }, view.explanation.note));
   return [top, prop, steps, h("div", { class: "row" }, table, h("div", { class: "stack" }, originalPanel(ctx.original), f1Panel(rc.f1, "Runs on AMD", "Copy of the endpoint data at reading time, stored in the receipt. Never typed by hand."))), expl];
+}
+
+/**
+ * Stage 8 (S8-24, L-25, Q-12): the model a live reading used, next to the proposal. An experimental model is labelled
+ * "not evaluated" and carries no figure; a receipt from before Stage 8 has no model_choice and shows nothing here.
+ */
+function modelChoiceLine(mc) {
+  if (!mc || typeof mc !== "object") return null;
+  if (mc.evaluated === false) {
+    return h("p", { class: "small", id: "model-choice" }, badge("not evaluated", "review"),
+      ` Read by ${mc.requested} (experimental; reported as ${mc.reported ?? "no model id"}). No figure of CertGate applies to this model; probe evidence ${mc.probe_evidence}. The rules and the person's decision apply as for every model.`);
+  }
+  if (mc.evaluated === true) {
+    return h("p", { class: "small", id: "model-choice" }, `Read by ${mc.requested}, a measured model (reported as ${mc.reported ?? "no model id"}; ${mc.figures ? mc.figures.metrics_section : "METRICS.md"}).`);
+  }
+  return null;
 }
 
 /** S7-04: the image of the document the reading came from, beside the values, so a person can confirm against it. */
@@ -488,6 +568,11 @@ function receiptScreen(view, opts) {
         h("dt", {}, "Spec"), h("dd", {}, `${rc.spec.spec_id} rev. ${rc.spec.revision} · SHA-256 ${rc.hashes.spec_sha256}`),
         h("dt", {}, "Rules version"), h("dd", {}, rc.rules_version),
         h("dt", {}, "Reader"), h("dd", {}, `${rc.reader.model_id} · calls ${rc.reader.calls}`),
+        rc.reader.requested_model_id ? [h("dt", {}, "Model requested"), h("dd", { id: "receipt-model-requested" }, rc.reader.requested_model_id),
+          h("dt", {}, "Model as reported"), h("dd", { id: "receipt-model-reported" }, rc.model_choice ? rc.model_choice.reported ?? "no model id reported" : rc.reader.model_id)] : null,
+        rc.model_choice ? [h("dt", {}, "Evaluated"), h("dd", { id: "receipt-model-evaluated" }, rc.model_choice.evaluated === false
+          ? `not evaluated: experimental model; probe evidence ${rc.model_choice.probe_evidence}; no figure of CertGate applies`
+          : `measured model: ${rc.model_choice.figures ? rc.model_choice.figures.metrics_section : "METRICS.md"}`)] : null,
         h("dt", {}, "Reading source"), h("dd", {}, opts.kind === "story" ? `recorded: read from the endpoint at ${rc.created_at}; stored, not live` : readingText(rc)))),
     h("section", { class: "card stack" }, h("h2", {}, "Values, channels and rules"),
       h("div", { class: "tablebox" }, h("table", {},

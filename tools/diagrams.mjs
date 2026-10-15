@@ -28,7 +28,7 @@ export const DIAGRAMS = {
       { id: "store", col: 0, row: 4, label: ["Upstash Redis store", "UpstashRestStore"], file: "src/web/live-store.ts", symbol: "export class UpstashRestStore" },
       { id: "memory", col: 2, row: 4, label: ["In-process store", "MemoryStore"], file: "src/web/live-store.ts", symbol: "export class MemoryStore" },
       { id: "amd", col: 3, row: 4, label: ["AMD Token Factory", "OpenAI-compatible endpoint"], file: "src/web/f1.ts", symbol: "ENDPOINT_NAME = \"AMD Token Factory\"" },
-      { id: "gemma", col: 3, row: 5, label: ["Deployed live model", "Qwen3.8-27B (MODEL_ID)"], file: "DEPLOY.md", symbol: "set: `Qwen3.8-27B`" },
+      { id: "gemma", col: 3, row: 5, label: ["Live model, chosen per reading", "measured or experimental (offer)"], file: "src/web/models.ts", symbol: "computeOffer" },
       { id: "qwen", col: 4, row: 5, label: ["Evaluated product model", "Qwen3.8-27B"], file: "METRICS.md", symbol: "Qwen3.8-27B" },
     ],
     edges: [
@@ -42,7 +42,7 @@ export const DIAGRAMS = {
       { from: "jobs", to: "store", label: "deployed site", file: "src/web/app.ts", symbol: "new UpstashRestStore(sEnv.url, sEnv.token)" },
       { from: "jobs", to: "memory", label: "container", file: "src/web/app.ts", symbol: "new MemoryStore(() => clock().getTime())" },
       { from: "reader", to: "amd", label: "/chat/completions", file: "src/web/live-reader.ts", symbol: "/chat/completions" },
-      { from: "amd", to: "gemma", label: "MODEL_ID", file: "src/web/config.ts", symbol: "env.MODEL_ID" },
+      { from: "amd", to: "gemma", label: "model chosen", file: "src/web/app.ts", symbol: "resolveChoice(offer, body.model)" },
       { from: "amd", to: "qwen", label: "evaluation runs", file: "METRICS.md", symbol: "developer.amd.com.cn · Qwen3.8-27B" },
     ],
   },
