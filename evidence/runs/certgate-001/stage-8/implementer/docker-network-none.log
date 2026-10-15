@@ -1,0 +1,90 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/app[39m
+
+ [32m✓[39m test/stage5-gemma.test.ts [2m([22m[2m17 tests[22m[2m | [22m[33m10 skipped[39m[2m)[22m[33m 748[2mms[22m[39m
+   [32m✓[39m request body (G-03, S5-02, S5-15 c) [2m(2)[22m
+     [33m[2m✓[22m[39m the Qwen request body for cg-004 hashes to its value at b0ec67a6[33m 424[2mms[22m[39m
+     [33m[2m✓[22m[39m the Gemma request body equals the Qwen request body except the model id, with no thinking control[33m 311[2mms[22m[39m
+ [2m[90m↓[39m[22m test/docs.test.ts [2m([22m[2m15 tests[22m[2m | [22m[33m15 skipped[39m[2m)[22m
+[90mstderr[2m | test/stage8-live.test.ts[2m > [22m[2mstatus: the three groups from the cached probe, with the product catalog (S8-04, S8-21…S8-23, Q-10)[2m > [22m[2mwith live reading disabled the existing routes answer byte for byte as the golden (L-07), with the product catalog
+[22m[39m[certgate] live reading disabled on the deployed site: no shared store variables
+
+[90mstderr[2m | test/stage8-live.test.ts[2m > [22m[2mPOST refusals before any model call, queue entry or count (S8-06, S8-25, L-04, L-09, L-23, Q-01, Q-03, Q-06)[2m > [22m[2mLIVE_MODELS cannot promote a listed id that is in neither set (L-28)
+[22m[39m[certgate] LIVE_MODELS: ignored "Llama-x" (not a measured or probed model)
+
+ [32m✓[39m test/rules.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 220[2mms[22m[39m
+ [32m✓[39m test/stage7.test.ts [2m([22m[2m14 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[33m 2017[2mms[22m[39m
+   [32m✓[39m previews regenerate byte-identical from the committed PDFs (S7-03, T7-03, CH7-06) [2m(2)[22m
+     [33m[2m✓[22m[39m a fresh run of tools/previews.mjs equals every committed PNG; the README lists each hash next to its PDF[33m 1436[2mms[22m[39m
+ [32m✓[39m test/stage8-models.test.ts [2m([22m[2m40 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[33m 5521[2mms[22m[39m
+   [32m✓[39m probe batch script (tools/probe-models.mjs) [2m(8)[22m
+     [33m[2m✓[22m[39m probes each image-input id once with the product request, records the evidence fields, and writes no secret[33m 2071[2mms[22m[39m
+     [33m[2m✓[22m[39m a reported near-miss id fails as model_mismatch and stays out of the set (CH8-30)[33m 467[2mms[22m[39m
+     [33m[2m✓[22m[39m a reply that fails the response schema fails the probe[33m 313[2mms[22m[39m
+     [33m[2m✓[22m[39m one probe per id, at most 3 attempts on 5xx, never a fourth call; the cap stops the batch and the rest is infrastructure (L-33, Q-09, CH8-33)[33m 821[2mms[22m[39m
+     [33m[2m✓[22m[39m a single id that keeps failing on 5xx gets exactly 3 attempts and no fourth call (Q-09)[33m 775[2mms[22m[39m
+     [33m[2m✓[22m[39m a probe whose whole read, retries included, exceeds the reading budget fails (L-29, Q-08)[33m 750[2mms[22m[39m
+ [32m✓[39m test/web.test.ts [2m([22m[2m47 tests[22m[2m)[22m[33m 5428[2mms[22m[39m
+   [32m✓[39m live reading without an endpoint (S2-15, S2-20, S2-31, B-13) [2m(4)[22m
+     [33m[2m✓[22m[39m an upload byte-identical to a dataset PDF never reaches MockReader: C11 endpoint_off, live attempt with no reading, not counted[33m 393[2mms[22m[39m
+   [32m✓[39m live upload policy and deployed site (R3.1 C-02, C-07, S3-24) [2m(5)[22m
+     [33m[2m✓[22m[39m without LIVE_ACCESS_CODE an uploaded file that is not a dataset certificate is refused before anything is counted or sent (C-02 a)[33m 514[2mms[22m[39m
+     [33m[2m✓[22m[39m the live limit is per instance: two instances with LIVE_READS_PER_HOUR=2 on one endpoint give 4 readings, not 2 (S3-23, measured)[33m 404[2mms[22m[39m
+   [32m✓[39m live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B-24) [2m(14)[22m
+     [33m[2m✓[22m[39m a client-sent remaining_this_hour is ignored: 10 parallel reads against a limit of 3 give exactly 3 (S2M04)[33m 462[2mms[22m[39m
+     [33m[2m✓[22m[39m C11 through HTTP, stub mode timeout: status error, review, 1 call(s), counted once, no secret[33m 377[2mms[22m[39m
+ [32m✓[39m test/stage4-claims.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 298[2mms[22m[39m
+ [32m✓[39m test/reader.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 374[2mms[22m[39m
+ [32m✓[39m test/inputs.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+ [32m✓[39m test/labels.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 214[2mms[22m[39m
+ [32m✓[39m test/entrypoints.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 331[2mms[22m[39m
+ [32m✓[39m test/evaluation-receipts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 336[2mms[22m[39m
+ [32m✓[39m test/story-screen-render.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m test/channels.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 518[2mms[22m[39m
+ [32m✓[39m test/stage8-live.test.ts [2m([22m[2m37 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[33m 7685[2mms[22m[39m
+   [32m✓[39m status: the three groups from the cached probe, with the product catalog (S8-04, S8-21…S8-23, Q-10) [2m(5)[22m
+     [33m[2m✓[22m[39m with live reading disabled the existing routes answer byte for byte as the golden (L-07), with the product catalog[33m 751[2mms[22m[39m
+   [32m✓[39m POST refusals before any model call, queue entry or count (S8-06, S8-25, L-04, L-09, L-23, Q-01, Q-03, Q-06) [2m(9)[22m
+     [33m[2m✓[22m[39m a stale, future-dated or lock-held listing never validates: probe_unavailable (L-01, L-02, Q-03)[33m 3179[2mms[22m[39m
+   [32m✓[39m readings: the chosen model, its receipt, no fallback (S8-07, S8-08, S8-24, L-11, L-12, L-25, L-C1, L-C2, Q-05) [2m(7)[22m
+     [33m[2m✓[22m[39m two concurrent jobs, one per model: each receipt carries its own requested and reported model[33m 346[2mms[22m[39m
+   [32m✓[39m the request body through the job path differs from the Stage 7 request only in the model id (S8-12, A8-06, T8-02) [2m(1)[22m
+     [33m[2m✓[22m[39m for Qwen3.8-27B, Gemma-4-31B-IT and an experimental model, on cg-004 and cg-021: the body sent equals the unchanged builder's body for that id[33m 876[2mms[22m[39m
+   [32m✓[39m one GET /models per period across instances, with the shortened copy and the released lock (Q-02, DN8-01) [2m(2)[22m
+     [33m[2m✓[22m[39m 3 instances on one store, traffic every 5 s for 10 simulated minutes: at most 11 upstream probes[33m 528[2mms[22m[39m
+ [32m✓[39m test/stage7-capture.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m test/dataset.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 661[2mms[22m[39m
+ [32m✓[39m test/static.test.ts [2m([22m[2m50 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m test/stage7-diagrams.test.ts [2m([22m[2m58 tests[22m[2m | [22m[33m52 skipped[39m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m test/human.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 283[2mms[22m[39m
+ [2m[90m↓[39m[22m test/metrics-md.test.ts [2m([22m[2m3 tests[22m[2m | [22m[33m3 skipped[39m[2m)[22m
+ [32m✓[39m test/vercel-config.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m test/live-reader.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 4063[2mms[22m[39m
+   [32m✓[39m calling discipline (S3-02) [2m(4)[22m
+     [33m[2m✓[22m[39m 429 is retried, honouring Retry-After, at most 3 attempts in all[33m 2189[2mms[22m[39m
+     [33m[2m✓[22m[39m at most 2 requests in flight, across readers[33m 785[2mms[22m[39m
+ [32m✓[39m test/isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 287[2mms[22m[39m
+ [32m✓[39m test/live-reader-prose.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 608[2mms[22m[39m
+[90mstderr[2m | test/stage6-live.test.ts[2m > [22m[2mdeployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03)[2m > [22m[2mevery existing route answers byte for byte as the 409fb69a build did, in three disabled configurations
+[22m[39m[certgate] live reading disabled on the deployed site: no shared store variables
+
+[90mstderr[2m | test/stage6-live.test.ts[2m > [22m[2mdeployed site with live reading disabled answers as at 409fb69a (S6-01, CH6-03, CH6-04, J-08, T6-03)[2m > [22m[2mthe new live routes give one identical refusal with no code header, an empty one or a wrong one; nothing is called
+[22m[39m[certgate] live reading disabled on the deployed site: no shared store variables
+
+ [32m✓[39m test/stage6-live.test.ts [2m([22m[2m58 tests[22m[2m)[22m[33m 23340[2mms[22m[39m
+   [32m✓[39m job state machine on both store implementations (S6-02, CH6-17, J-11) [2m(3)[22m
+     [33m[2m✓[22m[39m memory: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported[33m 1197[2mms[22m[39m
+     [33m[2m✓[22m[39m upstash-rest: queued -> reading -> done, with this job's own live reading, its F1 snapshot and the model as reported[33m 622[2mms[22m[39m
+   [32m✓[39m global limits across two instances sharing one store (S6-03, CH6-05, CH6-06, T6-05) [2m(3)[22m
+     [33m[2m✓[22m[39m 4 jobs from 2 instances: at most 2 reading at any time, the others queued with positions; a 5th waiting job is refused as busy[33m 16368[2mms[22m[39m
+   [32m✓[39m code and lease guards that only show across instances or over time (S6-14, J-02, J-03, CH6-06) [2m(13)[22m
+     [33m[2m✓[22m[39m an idle system admits 4 simultaneous jobs from 4 clients (2 to read, 2 to wait); busy is never claimed when it is false (W-07)[33m 944[2mms[22m[39m
+     [33m[2m✓[22m[39m two workers that look for a slot at the same moment on a slow store take two different slots: admission is atomic SET NX, never read-then-write (CH6-06)[33m 364[2mms[22m[39m
+   [32m✓[39m timeout, failure and model paths: no stored result, fixed reasons, nothing leaked (S6-02, CH6-07, CH6-10, CH6-12, CH6-14, J-06, J-07, J-10) [2m(13)[22m
+     [33m[2m✓[22m[39m a reading that outlives the deadline fails as timed out; the attempt ends at the deadline, no attempt starts after it, and the slot comes back (W-03)[33m 1837[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m24 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (26)[39m
+[2m      Tests [22m [1m[32m474 passed[39m[22m[2m | [22m[33m90 skipped[39m[90m (564)[39m
+[2m   Start at [22m 20:34:29
+[2m   Duration [22m 24.76s[2m (tests 89%, transform 7%, import 4%)[22m
+
