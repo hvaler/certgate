@@ -50,3 +50,12 @@ Times are UTC, from the machine clock or band/git records. Append-only.
 The handoff parts were sent between 19:22Z and 19:24Z. From now on this log uses machine times only (`date -u`, commit or band times).
 
 **19:27Z, operator amendment 1 received.** msg 79b781e6. It widens the model choice: a measured group, an experimental group with real probe evidence, and a listed-not-offered group. The Stage 8 limit rises to 480 min; at most 3 repair cycles stay. Filed verbatim as DISPATCH-6-AMENDMENT-1.txt.
+
+| Commit | Time | Event |
+|---|---|---|
+| 6b3b730 | 19:29Z | R8.0a; sent as part 11 (831d0ba8). All 3 seats acknowledged |
+| — | — | Adversary CH8-01…29 (ef22b976) and supplement CH8-30…36 (53ff3d65); auditor T8 rules (314563fa) and delta (f439150d) |
+| 88b9ae8 | 19:32Z | R8.1, rulings on all CH8 items and C-1…C-6 |
+| 46f12fd | — | L-37, on the implementer's sizing GET /models (19:30:59.960Z, 11 ids, Gemma unlisted; msg 7fd13df7). R8.1 sent as part 12 (aec584cc) |
+| ecb6c22 | — | The auditor committed T8-RULES.md under a lent lease and released it (a3b0c781) |
+| 24622f2 | 19:35Z | R8.2a, the probe-gating rulings on design note 4328e0ec; sent as part 13 (3ae07e1a). R8.2 (the rest of the note) waits for the adversary's DN8 |
