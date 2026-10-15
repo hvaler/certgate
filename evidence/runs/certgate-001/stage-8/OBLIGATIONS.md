@@ -307,3 +307,11 @@ The rest of the note is ruled in R8.2, after the adversary's DN8 challenge.
 **For the operator (push request and addendum):**
 - The value remains in the published history at d3dd58d, e0de5c7 and feaadff.
 - Whether to rotate or confirm the endpoint URL, or to rewrite published history, is the operator's decision. The band does neither.
+
+## R8.3: routing of adversary findings aca78529 on candidate 1 cb7d83b (msg 967d24f4)
+
+| ID | Ruling |
+|---|---|
+| F8-A01 (low) | **Repair.** In the container, the legacy `/api/live/read` lacks the strict `sameModel` mismatch guard that the approved design note §4 (R8.2) and S8-07/L-C1 require. A reading reported as another model is shown live and counted. The repair goes in `liveRead` after `processCase`: 502 `model_mismatch`, with the fixed text, nothing shown, the unit spent. It comes with a killer test and a mutant. Not deployed-site affecting (503 there) |
+| O8-A02 (pre-existing) | A flaky ordering assumption in `test/stage6-live.test.ts:219`, about 1 in 25 under load. A fix of equal strength is allowed in candidate 2 as a listed Q-14 hunk; otherwise it is recorded like F7-01 |
+| Order | Candidate 1 stays frozen until the auditor's local verdict. Candidate 2 is prepared as a new commit on top of cb7d83b and frozen after that verdict (or at 23:30Z if the verdict is late). If cb7d83b is rejected, candidate 2 is repair cycle 1 of 3 |
