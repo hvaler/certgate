@@ -13,9 +13,10 @@ import { clearF1Cache } from "../src/web/f1.js";
 import { KEYS, REASONS } from "../src/web/live-jobs.js";
 import { CONTAINER_LIVE_BUDGET, DEPLOYED_LIVE_BUDGET, DEPLOYED_LIVE_UNAVAILABLE } from "../src/web/limits.js";
 import { DEL_IF_EQUALS_SCRIPT, MemoryStore, UpstashRestStore, type LiveStore } from "../src/web/live-store.js";
+import { EXPERIMENTAL_MODELS } from "../src/web/models.js";
 import { DATA, ROOT } from "./helpers.js";
 // @ts-expect-error plain JS test double
-import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+import { startStub, STUB_CATALOG, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 // @ts-expect-error plain JS test double
 import { startFakeUpstash, VERIFIED_DEL_IF_EQUALS_SCRIPT } from "./support/fake-upstash.mjs";
 // @ts-expect-error plain JS helper
@@ -35,7 +36,7 @@ beforeEach(() => clearF1Cache());
 afterEach(async () => { while (open.length) await open.pop()!.close(); });
 
 async function serve(deps: AppDeps) {
-  const server = createApp(deps).listen(0, "127.0.0.1");
+  const server = createApp({ modelCatalog: STUB_CATALOG, ...deps }).listen(0, "127.0.0.1");
   await new Promise((r) => server.once("listening", r));
   open.push({ close: () => new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); }) });
   return `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -59,13 +60,13 @@ async function call(url: string, init: RequestInit = {}) {
   try { body = JSON.parse(text); } catch { /* not JSON */ }
   return { status: res.status, body, text, headers: res.headers };
 }
-function startJob(base: string, opts: { code?: string | null; id?: string; client?: string; spoof?: string; query?: string } = {}) {
+function startJob(base: string, opts: { code?: string | null; id?: string; client?: string; spoof?: string; query?: string; model?: string } = {}) {
   const headers: Record<string, string> = { "content-type": "application/json" };
   if (opts.code !== null) headers["x-live-access-code"] = opts.code ?? CODE;
   // K-01: on the deployed site the client address arrives in the platform header only.
   if (opts.client) headers["x-vercel-forwarded-for"] = opts.client;
   if (opts.spoof) { headers["x-forwarded-for"] = opts.spoof; headers["x-real-ip"] = opts.spoof; }
-  return call(`${base}/api/live/jobs${opts.query ?? ""}`, { method: "POST", headers, body: JSON.stringify({ certificate_base64: cert(opts.id ?? "cg-004").toString("base64"), synthetic_confirmed: true }) });
+  return call(`${base}/api/live/jobs${opts.query ?? ""}`, { method: "POST", headers, body: JSON.stringify({ certificate_base64: cert(opts.id ?? "cg-004").toString("base64"), synthetic_confirmed: true, model: opts.model ?? STUB_MODEL_ID }) });
 }
 async function poll(base: string, id: string, until: (s: string) => boolean, ms = 30_000) {
   const t0 = Date.now();
@@ -215,7 +216,9 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
     const firstTwo = await Promise.all(readers.map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)));
     expect(firstTwo.map((v) => v.body.state)).toEqual(["reading", "reading"]);
     const holders = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
-    expect(holders.sort()).toEqual([jobs[0]!.body.job_id, jobs[1]!.body.job_id].sort());
+    // O8-A02 (R8.3): the three POSTs race, so any two of them may take the slots; the holders are exactly the two
+    // jobs observed reading (not jobs[0] and jobs[1]).
+    expect(holders.sort()).toEqual(readers.map((j) => String(j.body.job_id)).sort());
   });
 });
 
@@ -707,7 +710,15 @@ describe("what stays the same, and what the browser gets (S6-08, S6-09, T6-01, T
     const walk = (d: string) => { for (const e of readdirSync(d)) { const p = path.join(d, e); if (statSync(p).isDirectory()) { if (e !== "stories") walk(p); } else if (/\.(ts|js|html|json|css)$/.test(e)) files.push(p); } };
     walk(path.join(ROOT, "src"));
     walk(path.join(ROOT, "public"));
-    for (const f of files) expect(readFileSync(f, "utf8"), f).not.toMatch(/gemma-4-31b/i);
+    // Stage 8 (A8-11, A8-18, L-06): narrowed, not removed. The Gemma id and every experimental id may appear in
+    // exactly one module, the closed set src/web/models.ts, and nowhere else; that it is never a default is shown in
+    // test/stage8-models.test.ts and test/stage8-live.test.ts.
+    const CLOSED_SET = path.join(ROOT, "src", "web", "models.ts");
+    const ids = [/gemma-4-31b/i, ...EXPERIMENTAL_MODELS.map((m) => new RegExp(m.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"))];
+    for (const re of ids) {
+      const hits = files.filter((f) => re.test(readFileSync(f, "utf8")));
+      expect(hits, String(re)).toEqual([CLOSED_SET]);
+    }
   });
   it("the job module imports no recorded reader and no story; the browser sends the code in a header, never in a URL", () => {
     const jobs = readFileSync(path.join(ROOT, "src", "web", "live-jobs.ts"), "utf8");

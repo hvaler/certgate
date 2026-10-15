@@ -25,6 +25,8 @@ const repoOnly = describe.skipIf(!REPO);
 /** Product files Stage 6 changes or adds (its handoff lists each with the reason); nothing else may differ. */
 // @ts-expect-error plain JS helper
 import { beforeStage7, isStage7New, STAGE7_MAY_CHANGE } from "./support/stage7.mjs";
+// @ts-expect-error plain JS helper
+import { isStage8New, STAGE8_MAY_CHANGE } from "./support/stage8.mjs";
 export const STAGE6_MAY_CHANGE = new Set([
   "src/web/app.ts", "src/web/limits.ts", "src/web/live-store.ts", "src/web/live-jobs.ts", "src/web/deadline-reader.ts", "api/index.ts",
   "package.json", "package-lock.json", "public/app.js",
@@ -112,10 +114,12 @@ repoOnly("Qwen stays the product (E-13, G-04, CH5-07, S5-09, S5-15 d)", () => {
     // Stage 6 (dispatch 4) may change exactly these product files (live jobs on the deployed site); the reading path,
     // data, config, evaluation, figures and stories stay pinned here and in test/stage6-live.test.ts (S6-09).
     // Stage 7 (dispatch 5) may change only what test/support/stage7.mjs states, in the way it states.
-    const may = (p: string) => STAGE6_MAY_CHANGE.has(p) || STAGE7_MAY_CHANGE.has(p);
+    // Stage 8 (dispatch 6) may change only what test/support/stage8.mjs states; test/stage8-live.test.ts pins the rest
+    // to feaadff.
+    const may = (p: string) => STAGE6_MAY_CHANGE.has(p) || STAGE7_MAY_CHANGE.has(p) || STAGE8_MAY_CHANGE.has(p);
     for (const [p, id] of Object.entries(base.blobs)) if (!may(p)) expect(blob(p, id), p).toBe(id);
     const present: string[] = [];
-    const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) { for (const e of readdirSync(abs)) if (e !== ".sonar") walk(`${p}/${e}`); } else if (!isStage7New(p)) present.push(p); };
+    const walk = (p: string) => { const abs = path.join(ROOT, p); if (statSync(abs).isDirectory()) { for (const e of readdirSync(abs)) if (e !== ".sonar") walk(`${p}/${e}`); } else if (!isStage7New(p) && !isStage8New(p)) present.push(p); };
     for (const r of base.roots) walk(r);
     expect(present.filter((p) => !may(p)).sort()).toEqual(Object.keys(base.blobs).filter((p) => !may(p)).sort());
   });

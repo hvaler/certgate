@@ -14,14 +14,14 @@ import type { AppDeps } from "../src/web/app.js";
 import { WEB_MAX_DELIVERY_BYTES } from "../src/web/limits.js";
 import { DATA, ROOT, runCase } from "./helpers.js";
 // @ts-expect-error plain JS test double
-import { startStub, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+import { startStub, STUB_CATALOG, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
 import { loadApp } from "./support/fake-dom.js";
 import { readFileSync } from "node:fs";
 
 const open: { close: () => Promise<void> }[] = [];
 afterEach(async () => { while (open.length) await open.pop()!.close(); });
 async function app(deps: AppDeps) {
-  const server = createApp(deps).listen(0);
+  const server = createApp({ modelCatalog: STUB_CATALOG, ...deps }).listen(0);
   await new Promise((r) => server.once("listening", r));
   open.push({ close: () => new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); }) });
   return `http://127.0.0.1:${(server.address() as AddressInfo).port}`;

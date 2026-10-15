@@ -1,0 +1,67 @@
+{
+  "schema": "certgate.model-probe/1",
+  "note": "One probe of CertGate's own request (the certificate page as an image plus the frozen prompt) through the unchanged reading path. Pass means the request was accepted and the reply passed the existing response schema, named the requested model and finished within the 210 s reading budget. The correctness of the values read is NOT judged; no figure of CertGate applies to this model.",
+  "model_requested": "MiniCPM-V-4.7-35B-A3B",
+  "model_reported": null,
+  "started_utc": "2026-10-15T19:50:06.731Z",
+  "finished_utc": "2026-10-15T19:50:17.948Z",
+  "elapsed_ms": "11216",
+  "reading_budget_ms": "210000",
+  "attempts": [
+    {
+      "started_at": "2026-10-15T19:50:06.819Z",
+      "elapsed_ms": "1094",
+      "outcome": "http_5xx",
+      "http_status": "500"
+    },
+    {
+      "started_at": "2026-10-15T19:50:10.009Z",
+      "elapsed_ms": "967",
+      "outcome": "http_5xx",
+      "http_status": "500"
+    },
+    {
+      "started_at": "2026-10-15T19:50:15.092Z",
+      "elapsed_ms": "2855",
+      "outcome": "http_5xx",
+      "http_status": "500"
+    }
+  ],
+  "chat_calls": "3",
+  "tokens": null,
+  "cost_reported": null,
+  "finish_reason": null,
+  "certificate": {
+    "case_id": "cg-016",
+    "sha256": "4bdfea0e37bdf6ca2f929910ceda3d4787c8a7c08f982d1f3604d6bd293fe6e0",
+    "kind": "scan (page image, no text layer)"
+  },
+  "request_body_sha256": "239b3587f75409a43c33d684c2045cc16af48a101a9232f200444f600d6243da",
+  "request_body_masked_sha256": "b08bd7b48fdd3a773cee1baafef6fd718e7e904817f21100aabc3f774cdc634b",
+  "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567",
+  "reply_content": null,
+  "validator": "readCase -> parseModelOutput (src/model-output.ts), unchanged since feaadff",
+  "checks": {
+    "http_200": false,
+    "schema_parsed": false,
+    "same_model": false,
+    "within_reading_budget": true
+  },
+  "result": "failed",
+  "failure_class": "endpoint http_5xx (HTTP 500)",
+  "informational_not_a_quality_figure": {
+    "critical_fields_read": null,
+    "proposal": null
+  },
+  "endpoint_host": "developer.amd.com.cn",
+  "provenance": {
+    "commit": "303c32bb0a969a4ad4d79157426b6b2ff9fce000",
+    "product_tree_dirty": false,
+    "built_from": "dist/src",
+    "dist_tree_sha256": "e506edc3da147b2ece5cc0a8b3bea18ecf6570d8f46207eadcf5d30ef7d568a5",
+    "dist_files": "33",
+    "live_reader_sha256": "54d3fbe45757b07d6ec1bf1b12b1e026552b2fa64b696316a0d9229da8d62c4e",
+    "model_output_sha256": "51a87d208cb9c95352980490bda28a9acca5125fab58fc13b267fef3e8af6893",
+    "prompt_sha256": "32fad2f980bcf755841d80bb2385d9601465f83b5b42c1b6c048f3bfe1cfb567"
+  }
+}

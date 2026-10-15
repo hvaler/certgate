@@ -1,0 +1,246 @@
+{
+  "schema": "certgate.stage8-container-smoke/1",
+  "site": "container (docker run, network on)",
+  "endpoint_host": "developer.amd.com.cn",
+  "usage_before": {
+    "read_utc": "2026-10-15T20:35:43.145Z",
+    "status": 200,
+    "daily_cost_used_usd": 0.003014585003256798,
+    "all_time_requests": 192,
+    "all_time_errors": 10
+  },
+  "status": {
+    "enabled": true,
+    "reason": "open within the limit",
+    "models": {
+      "checked_at": "2026-10-15T20:35:44.338Z",
+      "statement": "You can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.",
+      "default": "Qwen3.8-27B",
+      "selectable": 5,
+      "measured": [
+        {
+          "id": "Qwen3.8-27B",
+          "enabled": true,
+          "state": "listed by the endpoint, checked 2026-10-15T20:35:44.338Z",
+          "evaluated": true,
+          "metrics_section": "METRICS.md: Runs, Headline (the figures of record)",
+          "runs": [
+            "evaluation/runs/real-candidate-dd557fd",
+            "evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1"
+          ]
+        },
+        {
+          "id": "Gemma-4-31B-IT",
+          "enabled": false,
+          "state": "not listed by the endpoint now (checked 2026-10-15T20:35:44.338Z)",
+          "evaluated": true,
+          "metrics_section": "METRICS.md: Comparison run: Gemma-4-31B-IT (Stage 5)",
+          "runs": [
+            "evaluation/runs/real-gemma-04100b9"
+          ]
+        }
+      ],
+      "experimental": [
+        {
+          "id": "DeepSeek-V4.1-Flash",
+          "enabled": true,
+          "state": "listed by the endpoint, checked 2026-10-15T20:35:44.338Z",
+          "evaluated": false,
+          "label": "not evaluated · experimental · probed 2026-10-15",
+          "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+          "evidence": "evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json",
+          "probed_at": "2026-10-15T19:46:55.290Z"
+        },
+        {
+          "id": "DeepSeek-V4-Flash-Vision-Exp",
+          "enabled": true,
+          "state": "listed by the endpoint, checked 2026-10-15T20:35:44.338Z",
+          "evaluated": false,
+          "label": "not evaluated · experimental · probed 2026-10-15",
+          "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+          "evidence": "evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4-Flash-Vision-Exp.json",
+          "probed_at": "2026-10-15T19:46:55.404Z"
+        },
+        {
+          "id": "MiMo-V2.6-Flash",
+          "enabled": true,
+          "state": "listed by the endpoint, checked 2026-10-15T20:35:44.338Z",
+          "evaluated": false,
+          "label": "not evaluated · experimental · probed 2026-10-15",
+          "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+          "evidence": "evidence/runs/certgate-001/stage-8/probes/MiMo-V2.6-Flash.json",
+          "probed_at": "2026-10-15T19:49:27.146Z"
+        },
+        {
+          "id": "Qwen3.8-Flash-Next",
+          "enabled": true,
+          "state": "listed by the endpoint, checked 2026-10-15T20:35:44.338Z",
+          "evaluated": false,
+          "label": "not evaluated · experimental · probed 2026-10-15",
+          "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+          "evidence": "evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json",
+          "probed_at": "2026-10-15T19:50:06.821Z"
+        }
+      ],
+      "listed_not_offered": [
+        {
+          "id": "DeepSeek-V4-Flash",
+          "reason": "no image probe"
+        },
+        {
+          "id": "GLM-5.3-Flash",
+          "reason": "no image probe"
+        },
+        {
+          "id": "MinerU2.5-Pro",
+          "reason": "not a chat model"
+        },
+        {
+          "id": "MiniCPM5-2B",
+          "reason": "no image probe"
+        },
+        {
+          "id": "MiniCPM-V-4.7-1B",
+          "reason": "probe failed"
+        },
+        {
+          "id": "MiniCPM-V-4.7-35B-A3B",
+          "reason": "probe failed"
+        }
+      ],
+      "not_shown": 0
+    }
+  },
+  "readings": [
+    {
+      "model": "Qwen3.8-27B",
+      "post_status": "202",
+      "job_id": "ae7047686b3e4e1151e382b635c7580c",
+      "state": "done",
+      "reason_class": null,
+      "wall_ms": "54838",
+      "model_group": "measured",
+      "evaluated": true,
+      "listing_checked_at": "2026-10-15T20:35:44.338Z",
+      "receipt": {
+        "reading_source": "live",
+        "proposal": "review",
+        "reader": {
+          "reader_id": "live-reader-openai-compatible",
+          "reading_source": "live",
+          "model_id": "self-dploy/Qwen3.8-27B",
+          "requested_model_id": "Qwen3.8-27B",
+          "model_version": "as reported by the endpoint",
+          "vllm_version": "not exposed by the endpoint",
+          "rocm_version": "not exposed by the endpoint",
+          "calls": "1"
+        },
+        "model_choice": {
+          "requested": "Qwen3.8-27B",
+          "reported": "self-dploy/Qwen3.8-27B",
+          "group": "measured",
+          "evaluated": true,
+          "label": "evaluated: measured model",
+          "figures": {
+            "metrics_section": "METRICS.md: Runs, Headline (the figures of record)",
+            "runs": [
+              "evaluation/runs/real-candidate-dd557fd",
+              "evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1"
+            ]
+          },
+          "probe_evidence": null,
+          "listing_checked_at": "2026-10-15T20:35:44.338Z"
+        },
+        "f1": {
+          "state": "on",
+          "model_requested": "Qwen3.8-27B",
+          "model_reported": "self-dploy/Qwen3.8-27B",
+          "model_evaluated": true,
+          "model_probe_evidence": null,
+          "cost_reported": "0.000236355",
+          "last_reading_ms": "52075"
+        },
+        "endpoint_response": {
+          "response_id": "21d2d91f708a465ebbae33912ec70dfd",
+          "created": "1792096598",
+          "model": "self-dploy/Qwen3.8-27B",
+          "finish_reason": "stop",
+          "prompt_tokens": "2799",
+          "completion_tokens": "1438",
+          "reasoning_tokens": "539",
+          "total_tokens": "4237",
+          "cost_reported": "0.000236355",
+          "elapsed_ms": "52075",
+          "input": "page_images"
+        }
+      }
+    },
+    {
+      "model": "Qwen3.8-Flash-Next",
+      "post_status": "202",
+      "job_id": "d03baff24658fcf28e5fef3e75fbe25b",
+      "state": "done",
+      "reason_class": null,
+      "wall_ms": "40544",
+      "model_group": "experimental",
+      "evaluated": false,
+      "listing_checked_at": "2026-10-15T20:35:44.338Z",
+      "receipt": {
+        "reading_source": "live",
+        "proposal": "review",
+        "reader": {
+          "reader_id": "live-reader-openai-compatible",
+          "reading_source": "live",
+          "model_id": "self-dploy/Qwen3.8-Flash-Next",
+          "requested_model_id": "Qwen3.8-Flash-Next",
+          "model_version": "as reported by the endpoint",
+          "vllm_version": "not exposed by the endpoint",
+          "rocm_version": "not exposed by the endpoint",
+          "calls": "1"
+        },
+        "model_choice": {
+          "requested": "Qwen3.8-Flash-Next",
+          "reported": "self-dploy/Qwen3.8-Flash-Next",
+          "group": "experimental",
+          "evaluated": false,
+          "label": "not evaluated",
+          "figures": null,
+          "probe_evidence": "evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json",
+          "listing_checked_at": "2026-10-15T20:35:44.338Z"
+        },
+        "f1": {
+          "state": "on",
+          "model_requested": "Qwen3.8-Flash-Next",
+          "model_reported": "self-dploy/Qwen3.8-Flash-Next",
+          "model_evaluated": false,
+          "model_probe_evidence": "evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json",
+          "cost_reported": "0.00066514",
+          "last_reading_ms": "40353"
+        },
+        "endpoint_response": {
+          "response_id": "7aabbf7688394790b0562fa824b1775e",
+          "created": "1792096639",
+          "model": "self-dploy/Qwen3.8-Flash-Next",
+          "finish_reason": "stop",
+          "prompt_tokens": "2799",
+          "completion_tokens": "943",
+          "reasoning_tokens": "33",
+          "total_tokens": "3742",
+          "cost_reported": "0.00066514",
+          "elapsed_ms": "40353",
+          "input": "page_images"
+        }
+      }
+    }
+  ],
+  "status_after": {
+    "used_this_hour": "2"
+  },
+  "usage_after": {
+    "read_utc": "2026-10-15T20:37:20.743Z",
+    "status": 200,
+    "daily_cost_used_usd": 0.003916080109775066,
+    "all_time_requests": 194,
+    "all_time_errors": 10
+  }
+}

@@ -19,6 +19,10 @@ human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) ·
   makes no model call and has no limit. Each run is labelled "recorded real reading … not live".
 - **Live reading:** a new reading of a certificate on AMD Token Factory. It needs the access code given to the
   judges; the code is never written in this repository.
+- **Model choice:** the live screen lists every model AMD Token Factory lists now, with the time of that check.
+  You can choose only a measured model (Qwen3.8-27B, Gemma-4-31B-IT) or an experimental model that passed a probe
+  in this stage, and only while the endpoint lists it. An experimental model is labelled "not evaluated", needs an
+  explicit acknowledgement, and no figure of CertGate applies to it.
 - **Sample certificates:** the live screen offers three fictitious certificates (cg-004, cg-005, cg-010) and their
   delivery notes, to download and upload back.
 - **The original certificate:** every case shows "View the original certificate", the page image of the document
@@ -63,6 +67,33 @@ for a digital certificate, page 1 rendered by the pinned pdf.js. Running the scr
     Nothing else claims them.
 - **Cost:** the cost shown is the cost reported by the endpoint; Token Factory credits are free and have no
   monetary value.
+
+### Choosing the model for a live reading
+
+Token Factory's model list changes without notice: Gemma-4-31B-IT was listed on 2026-10-13 and absent on
+2026-10-15. So the live screen shows the list as the endpoint gives it now, in three groups:
+
+- **Measured:** Qwen3.8-27B and Gemma-4-31B-IT, the only models with an evaluation run in [METRICS.md](METRICS.md).
+  Each is selectable only while the endpoint lists it, and names its METRICS.md section and run directory. The
+  default is `MODEL_ID` when it is listed, otherwise the first listed measured model; it is never an experimental
+  model.
+- **Not evaluated · experimental:** models that, in one real probe on 2026-10-15, accepted CertGate's request
+  (the page image of the scan cg-016 and the frozen prompt) and returned a reply that passed the response schema,
+  named the requested model and finished within 210 s. Four passed: DeepSeek-V4.1-Flash, DeepSeek-V4-Flash-Vision-Exp,
+  MiMo-V2.6-Flash and Qwen3.8-Flash-Next ([probe evidence](evidence/runs/certgate-001/stage-8/probes/BATCH.md)).
+  The probe does not judge the values read. Choosing one needs the acknowledgement "this model is not evaluated;
+  no figure of CertGate applies to it", and its reading is labelled "not evaluated" next to the proposal and in its
+  receipt (`evaluated: false`, with the probe evidence path).
+- **Listed, not offered:** every other id the endpoint lists, shown disabled with its reason: "no image probe",
+  "probe failed", "not a chat model" or "not enabled on this site".
+
+The server checks the choice again before anything is counted: a model outside the offer, an experimental model
+without the acknowledgement, or a model the endpoint does not list now is refused before any model call and
+without spending the hourly limit. The reply must name the requested model (equal ignoring case, or with one
+provider prefix such as `self-dploy/`); a reading never falls back to another model or to a stored result. Every
+live receipt and its endpoint snapshot record the model requested and the model as reported. The rules, the
+two-channel check, the review triggers and the person's decision are the same for every model. `LIVE_MODELS`
+(optional) narrows the choice; without it only `MODEL_ID` is selectable.
 
 ## Evaluation (real model)
 
@@ -133,7 +164,7 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 its two runs are the figures of record. In the Gemma run there was no false conforming (0 of 18), but it proposed
 review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field
 (1 of 594, cg-017) that both Qwen runs reported as unknown. The landing figures, the stories and the product
-default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading on the deployed site uses the model set in Vercel's `MODEL_ID`, and each live receipt names the model as the endpoint reports it. From dispatch 4 it was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).
+default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading uses the model chosen on the live screen, with Vercel's `MODEL_ID` as the default, and each live receipt names the model requested and the model as the endpoint reports it. From dispatch 4 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).
 
 To run the comparison, set `MODEL_ID` only in the environment of the evaluation command (the other two `MODEL_*`
 variables as for any real run):
@@ -166,7 +197,7 @@ flowchart TB
   store["Upstash Redis store<br/>UpstashRestStore"]
   memory["In-process store<br/>MemoryStore"]
   amd["AMD Token Factory<br/>OpenAI-compatible endpoint"]
-  gemma["Deployed live model<br/>Qwen3.8-27B (MODEL_ID)"]
+  gemma["Live model, chosen per reading<br/>measured or experimental (offer)"]
   qwen["Evaluated product model<br/>Qwen3.8-27B"]
   browser -->|"page, stories"| static
   browser -->|"/api/*"| api
@@ -178,7 +209,7 @@ flowchart TB
   jobs -->|"deployed site"| store
   jobs -->|"container"| memory
   reader -->|"/chat/completions"| amd
-  amd -->|"MODEL_ID"| gemma
+  amd -->|"model chosen"| gemma
   amd -->|"evaluation runs"| qwen
 ```
 <!-- /diagram -->
@@ -440,7 +471,8 @@ Secrets (`MODEL_API_KEY`, `LIVE_ACCESS_CODE`) stay on the server and are never s
 | `CERTGATE_DATA_DIR` | `<repo>/data` | dataset directory |
 | `MODEL_BASE_URL` | none | OpenAI-compatible endpoint (AMD Token Factory), including `/v1`; unset = endpoint off |
 | `MODEL_API_KEY` | none | secret, sent only to that endpoint |
-| `MODEL_ID` | none | model id requested from the endpoint |
+| `MODEL_ID` | none | model id requested from the endpoint; the default choice for live reading when it is a measured model |
+| `LIVE_MODELS` | none (only `MODEL_ID`) | optional, comma-separated model ids that may be chosen for live reading; it can only narrow the measured and experimental sets of `src/web/models.ts`, and any other id is ignored and named in the server log |
 | `LIVE_READS_PER_HOUR` | none (disabled) | live readings per UTC hour, counted on the server (in the shared store on the deployed site, in process in the container); unset, invalid or 0 = disabled; documented deployment value 20 |
 | `LIVE_ACCESS_CODE` | none (no default) | mandatory for live reading on the deployed site; in the container, needed for a visitor-uploaded file (without it only dataset certificates are read live) |
 | `LIVE_CODE_FAILURES_PER_HOUR` | `5` | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code |
@@ -463,6 +495,13 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
 ## Limitations
 
 - **Quick navigation (F7-02).** Navigating very quickly between screens can show the previous screen under the new address. Reload the page to see the right one.
+- **Experimental models are not evaluated.** Each passed one probe on one certificate on 2026-10-15; that shows
+  the request is accepted and the reply has the right shape, not that the values are right. A model's behaviour can
+  change after its probe (Gemma-4-31B-IT did, between 2026-10-13 and 2026-10-15). The rules, the channel check and
+  the person's confirmation apply to them as to every model.
+- **Model list.** The list on the live screen is the endpoint's own, checked at most once per 60 s; a model can
+  disappear between that check and a reading, and the server then refuses it. Model ids longer than 200 characters
+  are not shown.
 - **Shared service.** AMD Token Factory is a shared service.
   - Per key: about 20–30 requests per minute, 8 concurrent requests, and a rolling daily spend cap read from
     GET /usage (1, in free credits).

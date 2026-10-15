@@ -2,7 +2,7 @@
 // the versioned files in the repository. No case is kept on the server; the live-read counters are the only
 // server state (D2-06). The same handler serves the local container and is the shape of a Vercel function
 // (api/index.ts); nothing is deployed in this dispatch (S2-23).
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
@@ -17,7 +17,7 @@ import { CRITICAL_FIELDS } from "../fields.js";
 import type { FieldConfirmation, HumanAction } from "../types.js";
 import { summary } from "../cli.js";
 import { loadWebConfig, type WebConfig } from "./config.js";
-import { probeF1 } from "./f1.js";
+import { F1_CACHE_MS, probeF1 } from "./f1.js";
 import { datasetCertificateHashes } from "./dataset-hashes.js";
 import { InMemoryHourlyCounter, type HourlyCounter } from "./limiter.js";
 import { LiveReader, type LiveCallInfo } from "./live-reader.js";
@@ -27,6 +27,7 @@ import { MemoryStore, StoreUnavailable, UpstashRestStore, storeEnv, type LiveSto
 import { JOB_ID, KEYS, LiveJobs, REASONS, Refusal, WINDOW_TTL_S, hourKey, type Outcome, type ReasonClass } from "./live-jobs.js";
 import { getDataDir } from "../config.js";
 import { toView } from "./view.js";
+import { MODEL_CATALOG, choiceView, computeOffer, isListed, modelChoiceRecord, resolveChoice, sameModel, type ModelCatalog } from "./models.js";
 import type { PlantedEntry } from "../model-output.js";
 
 /** The three judge-mode stories (S2-14). */
@@ -73,6 +74,11 @@ export interface AppDeps {
   defer?: (work: Promise<unknown>) => void;
   /** Test-only budget and polling override; never reachable over HTTP. */
   liveBudget?: Partial<LiveBudget>;
+  /**
+   * Test-only replacement of the model catalog (models.ts), so the existing suites can keep their test stub as a
+   * "measured" model. Never reachable from the environment or HTTP; api/index.ts and src/server.ts never pass it.
+   */
+  modelCatalog?: ModelCatalog;
 }
 
 /** Dataset certificates offered for download on the live screen (S6-06, CH6-16): a fixed allow-list by id. */
@@ -80,6 +86,8 @@ export const SAMPLE_IDS = ["cg-004", "cg-005", "cg-010"] as const;
 /** The live job API's request header for the access code; never a query parameter (CH6-01). */
 export const ACCESS_CODE_HEADER = "x-live-access-code";
 const JOB_POLL_INTERVAL_S = 2;
+/** Q-03: a listing dated more than 5 s ahead of this instance's clock is stale (clock skew between instances). */
+const LISTING_FUTURE_TOLERANCE_MS = 5_000;
 
 const NO_STORE = { "cache-control": "no-store" };
 const TYPES: Record<string, string> = {
@@ -178,6 +186,11 @@ export function createHandler(deps: AppDeps = {}) {
   if (loaded.deployedSite && deployedMissing !== null && deployedMissing !== "code") {
     console.warn(`[certgate] live reading disabled on the deployed site: ${deployedMissing === "store" ? "no shared store variables" : deployedMissing === "limit" ? "LIVE_READS_PER_HOUR not set or 0" : "MODEL_BASE_URL or MODEL_ID not set"}`);
   }
+  // Stage 8 (S8-01…S8-03, S8-26): the offer is fixed at start from MODEL_ID, LIVE_MODELS and the code constants.
+  // Ignored ids are named in the server log only (S8-02, L-13).
+  const catalog = deps.modelCatalog ?? MODEL_CATALOG;
+  const offer = computeOffer(cfg.modelId, env.LIVE_MODELS, catalog);
+  if (cfg.modelBaseUrl !== null) for (const line of offer.log) console.warn(line);
 
   function liveStatus() {
     const p = liveCounter.peek();
@@ -247,6 +260,14 @@ export function createHandler(deps: AppDeps = {}) {
     // 5. Limit, checked and consumed atomically, on the server (S2-16, B-02).
     await validateCertificate(inputBase.certificate);
     if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
+    // Stage 8 (L-05): the legacy route reads only with MODEL_ID canonicalised against the measured offer and listed by
+    // this probe, decided before anything is counted; never an experimental model and never a model from the request.
+    const legacyChoice = resolveChoice({ ...offer, experimental: [] }, cfg.modelId ?? "");
+    if (legacyChoice === null || !isListed(legacyChoice.id, f1.model_ids)) {
+      const cls = legacyChoice === null ? "model_not_offered" : "model_unlisted";
+      throw new HttpError(409, REASONS[cls], { reason_class: cls });
+    }
+    const legacyModel = legacyChoice.id;
     // The container's synchronous route shares the job API's hourly count in the in-process store (CH6-17).
     if (jobs && (await jobs.store.incr(KEYS.reads(hourKey(clock())), WINDOW_TTL_S)) > cfg.liveReadsPerHour) {
       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: liveCounter.peek().reopens_at });
@@ -255,8 +276,13 @@ export function createHandler(deps: AppDeps = {}) {
     if (!slot.ok) {
       throw new HttpError(429, cfg.liveReadsPerHour > 0 ? "live readings exhausted this hour" : "live reading disabled", { reopens_at: slot.reopens_at });
     }
-    const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: cfg.modelId ?? "unknown", apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
+    const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: legacyModel, apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
     const r = await processCase({ ...inputBase, reader, f1 });
+    // Stage 8 (F8-A01, R8.3, design note §4, S8-07, L-C1): as on the job path, a reading counts only if the endpoint
+    // reports the requested model; otherwise nothing read is shown (the unit is already spent, CH8-19).
+    if (reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? "")) {
+      throw new HttpError(502, REASONS.model_mismatch, { reason_class: "model_mismatch" });
+    }
     if (reader.lastCall) {
       lastLive = reader.lastCall;
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);
@@ -284,11 +310,20 @@ export function createHandler(deps: AppDeps = {}) {
     const gate = jobGate();
     const c = await jobs!.counts(cfg.liveCodeFailuresPerHour, clientKey(req));
     const remaining = Math.max(0, cfg.liveReadsPerHour - c.used_this_hour);
+    // Stage 8 (S8-04, S8-21, L-24, L-27): the model choice from the same cached probe the F1 panel uses.
+    const snap = gate.enabled ? await f1Now() : null;
+    const models = snap ? choiceView(offer, cfg.modelId, snap.state === "on" ? snap.model_ids : [], snap.checked_at, catalog) : null;
+    // With no endpoint configured the status stays as before (the endpoint-off case); the POST refuses as before.
+    const noModel = !models || cfg.modelBaseUrl === null ? null
+      : offer.measured.length + offer.experimental.length === 0 ? "no measured or probed model is enabled on this site"
+      : snap!.state === "on" && models.selectable === 0 ? `no offered model is listed by the endpoint now (checked ${snap!.checked_at})`
+      : null;
+    const enabled = gate.enabled && noModel === null;
     return {
       ...base,
-      enabled: gate.enabled,
-      reason: gate.enabled ? (remaining > 0 ? "open within the limit" : "limit reached this hour") : gate.reason,
-      remaining_this_hour: String(gate.enabled ? remaining : 0),
+      enabled,
+      reason: !gate.enabled ? gate.reason : noModel !== null ? noModel : remaining > 0 ? "open within the limit" : "limit reached this hour",
+      remaining_this_hour: String(enabled ? remaining : 0),
       reopens_at: c.reopens_at,
       scope_note: cfg.deployedSite ? "global: counted in the shared store across all instances" : "global for this server process: counted in the in-process store",
       used_this_hour: String(c.used_this_hour),
@@ -302,6 +337,7 @@ export function createHandler(deps: AppDeps = {}) {
       poll_interval_s: String(JOB_POLL_INTERVAL_S),
       model_requested: cfg.modelId,
       samples: "/api/samples",
+      models,
     };
   }
 
@@ -310,10 +346,15 @@ export function createHandler(deps: AppDeps = {}) {
     if (!deployedLive || !store) return probeF1(cfg, clock, lastLive);
     const hit = await store.get(KEYS.f1);
     if (hit) return JSON.parse(hit);
-    if (await store.setNx(KEYS.f1Lock, "1", 60_000)) {
+    const lock = randomBytes(16).toString("hex");
+    if (await store.setNx(KEYS.f1Lock, lock, 60_000)) {
       const snap = await probeF1(cfg, clock, lastLive);
-      await store.set(KEYS.f1, JSON.stringify(snap), 60);
+      // Stage 8 (L-01): the shared copy expires when the snapshot itself is 60 s old, so a store hit is never older
+      // than the probe cache; the lock is released once the copy is written, so the next miss probes at once.
+      const ttl = Math.max(1, Math.floor((F1_CACHE_MS - (clock().getTime() - Date.parse(snap.checked_at ?? ""))) / 1000) || 1);
+      await store.set(KEYS.f1, JSON.stringify(snap), ttl);
       await store.set(KEYS.f1Last, JSON.stringify(snap), 3600);
+      await store.delIfEquals(KEYS.f1Lock, lock);
       return snap;
     }
     // Another instance holds the probe (J-09): wait briefly for its snapshot instead of probing again.
@@ -368,6 +409,13 @@ export function createHandler(deps: AppDeps = {}) {
     } else if (!datasetCertificateHashes().has(createHash("sha256").update(cert).digest("hex"))) {
       throw new HttpError(403, "live reading of an uploaded file needs the access code, which is not configured on this server; only the dataset certificates can be read live here");
     }
+    // 2b. Stage 8 (S8-06, S8-25, A8-03, L-04, L-09, L-23): the chosen model, after the code and before the probe, the
+    //     queue and the hourly count, so a refused model creates no job, no queue entry and no count. The constant's
+    //     spelling is used from here on; the acknowledgement is required for an experimental model only.
+    if (typeof body.model !== "string" || body.model === "") throw new Refusal(400, REASONS.model_missing, { reason_class: "model_missing" });
+    const choice = resolveChoice(offer, body.model);
+    if (choice === null) throw new Refusal(400, REASONS.model_not_offered, { reason_class: "model_not_offered" });
+    if (choice.group === "experimental" && body.not_evaluated_acknowledged !== true) throw new Refusal(400, REASONS.model_ack_required, { reason_class: "model_ack_required" });
     // 3. Documents valid and endpoint on, still before counting.
     const inputBase = {
       case_id: `upload-${createHash("sha256").update(cert).digest("hex").slice(0, 12)}`,
@@ -383,9 +431,17 @@ export function createHandler(deps: AppDeps = {}) {
     if (inputBase.delivery_note) validateDeliveryNote(inputBase.delivery_note.bytes);
     const f1 = await f1Now();
     if (f1.state !== "on") throw new HttpError(503, `no live endpoint: ${f1.detail}`);
+    // 3c. Stage 8 (L-01, L-02): the listing that validates the choice is no older than the probe cache, by the
+    //     snapshot's own checked_at; f1:last or a stale copy never validates. Then the choice must be listed now.
+    const age = clock().getTime() - Date.parse(f1.checked_at ?? "");
+    if (!Number.isFinite(age) || age > F1_CACHE_MS || age < -LISTING_FUTURE_TOLERANCE_MS) throw new Refusal(503, REASONS.probe_unavailable, { reason_class: "probe_unavailable" });
+    if (!isListed(choice.id, f1.model_ids)) throw new Refusal(409, REASONS.model_unlisted, { reason_class: "model_unlisted" });
+    const listingCheckedAt: string = f1.checked_at;
     // 4. Admission: busy check, then one atomic count in the UTC hour (CH6-05, CH6-08).
-    const job = await jobs!.admit(cfg.liveReadsPerHour, cfg.modelId!, arrivedAt);
-    const requested = cfg.modelId!;
+    const job = await jobs!.admit(cfg.liveReadsPerHour, choice.id, arrivedAt, {
+      model_group: choice.group, evaluated: choice.group === "measured", model_reported: null, listing_checked_at: listingCheckedAt,
+    });
+    const requested = choice.id;
     const work = async (attemptTimeoutMs: number): Promise<Outcome> => {
       // W-03: each attempt ends by the job's deadline, and none starts after it (deadline-reader.ts).
       const reader = new DeadlineReader({ baseUrl: cfg.modelBaseUrl!, modelId: requested, apiKey: cfg.modelApiKey, backoffBaseMs: deps.backoffBaseMs }, Date.now() + attemptTimeoutMs, deps.adapterTimeoutMs ?? ADAPTER_ATTEMPT_TIMEOUT_MS);
@@ -395,21 +451,26 @@ export function createHandler(deps: AppDeps = {}) {
         const cls = [...r.receipt.errors].reverse().find((e) => !e.recovered)?.class ?? "endpoint_off";
         return { kind: "failed", reason_class: READER_CLASS[cls] ?? "invalid_model_output" };
       }
-      // CH6-12: the reading counts only if the endpoint reports the requested model.
+      // CH6-12, L-C1: the reading counts only if the endpoint reports the requested model (one strict identity rule).
       const reported = reader.lastCall.model_reported ?? "";
-      if (!reported.toLowerCase().includes(requested.toLowerCase())) return { kind: "failed", reason_class: "model_mismatch" };
+      if (!sameModel(requested, reported)) return { kind: "failed", reason_class: "model_mismatch", model_reported: reader.lastCall.model_reported };
       lastLive = reader.lastCall;
-      r.receipt.f1 = await probeF1(cfg, clock, lastLive);
+      // S8-08, S8-24, L-11, L-C2: this job's own copy of the F1 values carries the model choice; the shared cached
+      // snapshot never does.
+      const mc = modelChoiceRecord(choice, reader.lastCall.model_reported, listingCheckedAt, catalog);
+      r.receipt.f1 = { ...(await probeF1(cfg, clock, reader.lastCall)), model_requested: mc.requested, model_evaluated: mc.evaluated, model_probe_evidence: mc.probe_evidence };
+      r.receipt.model_choice = mc;
       // W-02 (CH6-10): the job API never returns provider text: each recorded error keeps its class only.
       const out = viewJson(r);
       const rc = out.view.receipt as { errors?: { class: string; detail: string }[] };
       for (const e of rc.errors ?? []) e.detail = `attempt failed (${e.class}); it was retried`;
-      return { kind: "done", result: { counted: true, ...out } };
+      return { kind: "done", result: { counted: true, ...out }, model_reported: reader.lastCall.model_reported };
     };
     defer(jobs!.run(job, work));
     return {
       job_id: job.job_id, state: job.state, position: job.position, created_at: job.created_at,
-      model_requested: requested, poll: `/api/live/jobs/${job.job_id}`, poll_interval_s: JOB_POLL_INTERVAL_S,
+      model_requested: requested, model_group: choice.group, evaluated: choice.group === "measured", listing_checked_at: listingCheckedAt,
+      poll: `/api/live/jobs/${job.job_id}`, poll_interval_s: JOB_POLL_INTERVAL_S,
     };
   }
 

@@ -1,0 +1,48 @@
+{
+  "schema": "certgate.implementer-mutants/1",
+  "commit": "37a16b3afa2f35dfa504c068699e4ce7e6297676",
+  "run_utc": "2026-10-15T21:25:45.186Z",
+  "results": [
+    {
+      "id": "M07",
+      "what": "mismatch guard reverted to a substring test",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a near-miss reported id is model_mismatch, keeping the reported id; the prefix form passes (L-C1)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M12",
+      "what": "legacy route unguarded (MODEL_ID or the default read whatever it is)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::in the container it reads only MODEL_ID canonicalised against the measured set, listed now; otherwise refused with no call and nothing counted"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M17",
+      "what": "legacy route mismatch guard removed (F8-A01)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)",
+        "web.test.ts::model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M18",
+      "what": "legacy route mismatch guard reverted to a substring test",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)"
+      ],
+      "killer_count": "1"
+    }
+  ]
+}
