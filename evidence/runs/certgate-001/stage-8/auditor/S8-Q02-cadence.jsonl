@@ -1,0 +1,6 @@
+{"tree":"s8-baseline-feaadff","instances":3,"step_ms":1000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0,0]}
+{"tree":"s8-baseline-feaadff","instances":3,"step_ms":5000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0,0]}
+{"tree":"s8-baseline-feaadff","instances":2,"step_ms":1000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0]}
+{"tree":"s8-c1","instances":3,"step_ms":1000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0,0]}
+{"tree":"s8-c1","instances":3,"step_ms":5000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0,0]}
+{"tree":"s8-c1","instances":2,"step_ms":1000,"minutes":10,"status_enabled":true,"f1_state":"on","upstream_models_calls":10,"per_instance":[10,0]}

@@ -1,0 +1,16 @@
+{
+ "run_utc": "2026-10-15T21:23:22.472Z",
+ "tree": "<auditor-scratch>/s8-baseline-feaadff/repo",
+ "status": 200,
+ "reason_class": null,
+ "error": null,
+ "reading_source": "live",
+ "receipt_requested": "Qwen3.8-27B",
+ "receipt_reported": "Gemma-4-31B-IT",
+ "chat_calls": 1,
+ "models_sent": [
+  "Qwen3.8-27B"
+ ],
+ "used_before": "0",
+ "used_after": "1"
+}
