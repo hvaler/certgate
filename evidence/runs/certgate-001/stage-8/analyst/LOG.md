@@ -59,3 +59,17 @@ The handoff parts were sent between 19:22Z and 19:24Z. From now on this log uses
 | 46f12fd | — | L-37, on the implementer's sizing GET /models (19:30:59.960Z, 11 ids, Gemma unlisted; msg 7fd13df7). R8.1 sent as part 12 (aec584cc) |
 | ecb6c22 | — | The auditor committed T8-RULES.md under a lent lease and released it (a3b0c781) |
 | 24622f2 | 19:35Z | R8.2a, the probe-gating rulings on design note 4328e0ec; sent as part 13 (3ae07e1a). R8.2 (the rest of the note) waits for the adversary's DN8 |
+
+| Commit | Time | Event |
+|---|---|---|
+| e41ff65 | 19:37Z | R8.2 approves the design note with Q-01…Q-15; part 14 (ca855d94). R8.2b, no re-probe and P-07 provenance, had already been sent as c00521b9. All 3 seats acknowledged R8.2 |
+| — | 19:46Z–19:50Z | **Probe batch** by the implementer (lease fbf783a5, released e901b933) on P-04 commit 303c32bb, ancestor of 157f469 checked. Probe certificate cg-016, which the auditor verified has no text layer (6286395d) |
+
+Probe batch details:
+- 9 chat calls of the 18-call cap.
+- **Passed (4):** DeepSeek-V4.1-Flash (151.6 s), DeepSeek-V4-Flash-Vision-Exp, MiMo-V2.6-Flash, Qwen3.8-Flash-Next.
+- **Failed (2):** MiniCPM-V-4.7-1B (`invalid_output`); MiniCPM-V-4.7-35B-A3B (HTTP 500 ×3).
+- **Text-only, "no image probe" (3):** not probed.
+- **"not a chat model" (1):** MinerU2.5-Pro, from `output: ["ocr"]`.
+- **/usage reconciles:** cost delta 0.00278817 equals the sum of the probes' costs (free credits). Requests +8, because the endpoint does not count the 429. Errors +3.
+- Gemma-4-31B-IT is still unlisted at 19:46:54Z.
