@@ -26,7 +26,9 @@ const st = await get("/api/live/status");
 out.status = { enabled: st.enabled, reason: st.reason, models: st.models };
 out.readings = [];
 const cert = readFileSync(path.join(ROOT, "data", "cases", "cg-004", "certificate.pdf")).toString("base64");
-const csv = readFileSync(path.join(ROOT, "data", "delivery", "ALB-2026-0917.csv"), "utf8");
+// The sample's own delivery note (data/cases/cg-004/case.json). The run of 2026-10-15 20:35Z used ALB-2026-0917.csv by
+// mistake, so both readings proposed review on the heat mismatch; the model path, not the proposal, was the point.
+const csv = readFileSync(path.join(ROOT, "data", JSON.parse(readFileSync(path.join(ROOT, "data", "cases", "cg-004", "case.json"), "utf8")).delivery_note), "utf8");
 for (const model of list.split(",")) {
   const exp = st.models.experimental.some((x) => x.id === model);
   const body = { certificate_base64: cert, delivery_csv: csv, delivery_line: "1", synthetic_confirmed: true, model, ...(exp ? { not_evaluated_acknowledged: true } : {}) };
