@@ -192,6 +192,25 @@ describe.skipIf(!REPO)("the README for a judge (S7-06, T7-07, CH7-08, CH7-10)", 
       expect(register, fragment).toContain(fragment);
     }
   });
+  it("the README screenshot table lists exactly the captured images, with their captions and hashes (T7-05)", () => {
+    const m = JSON.parse(readFileSync(path.join(ROOT, "docs", "screenshots", "manifest.json"), "utf8"));
+    const sec = readme.slice(readme.indexOf("## Screenshots"), readme.indexOf("## Problem and user"));
+    const rows = [...sec.matchAll(/^\| [^|]+ \| (\d+) px \| \[([^\]]+)\]\(docs\/screenshots\/([^)]+)\) \| ([^|]+) \|$/gm)];
+    expect(rows.map((r) => r[3]).sort()).toEqual(m.images.map((i: { file: string }) => i.file).sort());
+    for (const im of m.images as { file: string; sha256: string; caption: string; width: number }[]) {
+      const row = rows.find((r) => r[3] === im.file)!;
+      expect(row[4]!.trim(), im.file).toBe(im.caption);
+      expect(Number(row[1]), im.file).toBe(im.width);
+      expect(im.caption, im.file).toContain(`site commit ${m.site_commit.slice(0, 7)} · captured ${m.captured_at}`);
+      expect(createHash("sha256").update(readFileSync(path.join(ROOT, "docs", "screenshots", im.file))).digest("hex"), im.file).toBe(im.sha256);
+    }
+    // Nothing is presented as live that was not: a failed live capture is stated, and no done screen is claimed.
+    if (m.live && m.live.outcome === "failed") {
+      expect(m.images.some((i: { screen: string }) => i.screen === "live-done")).toBe(false);
+      expect(sec).toContain(`reason class \`${m.live.failure.reason_class}\``);
+      expect(sec).toMatch(/the queued and done screens/);
+    }
+  });
   it("Try it never contains an access code; it names the code only as the one given to the judges", () => {
     const sec = readme.slice(readme.indexOf("## Try it"), readme.indexOf("## What runs on AMD"));
     expect(sec).toMatch(/the access code given to the\s+judges/);

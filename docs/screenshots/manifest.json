@@ -1,0 +1,149 @@
+{
+  "site": "https://certgate-wheat.vercel.app",
+  "site_commit": "d1aaa3e8e55a390f10dbb68e341199515d3a6791",
+  "captured_at": "2026-10-15T05:15:09.161Z",
+  "viewports": [
+    1280,
+    375
+  ],
+  "playwright": "1.56.1",
+  "chromium_build": "1194",
+  "served_files_sha256": {
+    "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+    "/app.js": "e3fdddbc204bcbe20a0a7fdb2450a1ac1e7cd321b274d2f362ff3d10b7df78c8",
+    "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029",
+    "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+    "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+    "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6"
+  },
+  "secret_check": "visible-field rule: innerText scanned for the access code and the key; code input empty",
+  "live": {
+    "sample": "cg-004",
+    "width": 1280,
+    "job_posts": 1,
+    "job_id": "2ce1c257e73f6fc13ff44f05a85bb586",
+    "post_status": 202,
+    "states_observed": [
+      "reading",
+      "failed"
+    ],
+    "timeline": [
+      {
+        "state": "reading",
+        "at": "2026-10-15T05:15:19.113Z"
+      },
+      {
+        "state": "failed",
+        "at": "2026-10-15T05:15:40.956Z"
+      }
+    ],
+    "outcome": "failed",
+    "failure": {
+      "job_id": "2ce1c257e73f6fc13ff44f05a85bb586",
+      "state": "failed",
+      "reason_class": "endpoint_5xx",
+      "reason": "the model endpoint failed or could not be reached",
+      "polled_at": "2026-10-15T05:15:40.956Z"
+    }
+  },
+  "images": [
+    {
+      "file": "landing-1280.png",
+      "screen": "landing",
+      "width": 1280,
+      "sha256": "2d75ea75a64adf2537948f57baae88a5754865180de624042a7baef855bbef3c",
+      "caption": "landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "judge-1280.png",
+      "screen": "judge",
+      "width": 1280,
+      "sha256": "e21ecf3497dfb801ca40ece5fa472b5e5e48f53754a9e68e1042048b3bffdc3c",
+      "caption": "judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "story-cg-003-1280.png",
+      "screen": "story-cg-003",
+      "width": 1280,
+      "sha256": "e0053c986674ba79b58a81bac29a7db3a5cb0d81f32c27788569df33ea3d1140",
+      "caption": "story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "story-cg-003-decision-1280.png",
+      "screen": "story-cg-003-decision",
+      "width": 1280,
+      "sha256": "9ff4a9fc004ee86885e07bc725fb6cf8353eefecfabcac92967a2b418652695f",
+      "caption": "story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "amd-1280.png",
+      "screen": "amd",
+      "width": 1280,
+      "sha256": "aec87f32725d83f65e89c82e3f48b7a4a9a3ab1deed55e0fa822c8ae2fac2f8f",
+      "caption": "amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "live-1280.png",
+      "screen": "live",
+      "width": 1280,
+      "sha256": "9bb85ed9ffdace31098723922e96160854bb15dde3f2551d10f5f2e21678fa09",
+      "caption": "live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "live-reading-1280.png",
+      "screen": "live-reading",
+      "width": 1280,
+      "sha256": "e0ddf2f92b92868cd5f46c31240336b0cc2824d36395b05b6e1a457bf6d56933",
+      "caption": "live-reading · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "live-failed-1280.png",
+      "screen": "live-failed",
+      "width": 1280,
+      "sha256": "906e4d09a1fd319488ce4e458fb4617c2af5d13cf1af2a104d26f038ba00bd2e",
+      "caption": "live-failed · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "landing-375.png",
+      "screen": "landing",
+      "width": 375,
+      "sha256": "9e37406e636fddbd0ff946ef8f41ec291352e85e1d7fd65de893d3a0154d9b9e",
+      "caption": "landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "judge-375.png",
+      "screen": "judge",
+      "width": 375,
+      "sha256": "f6aa342be3c5a5ba569c01c7aaa0896607ad2191d3b21bbc7da70fbaddbd220f",
+      "caption": "judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "story-cg-003-375.png",
+      "screen": "story-cg-003",
+      "width": 375,
+      "sha256": "66823e7db53fac8cbc63d8d76c86c3e67fadc185a8be43e2f02ddce5ed176da6",
+      "caption": "story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "story-cg-003-decision-375.png",
+      "screen": "story-cg-003-decision",
+      "width": 375,
+      "sha256": "efc18cd723e7beee6a3ce68b6966adea84ba80f1fb736b2a19604f8a7dd516e5",
+      "caption": "story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "amd-375.png",
+      "screen": "amd",
+      "width": 375,
+      "sha256": "11b5bdb0f91abf4b90c0b411285a34b9c6a0a1f78d2be6e0f4d0901242dba0d8",
+      "caption": "amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    },
+    {
+      "file": "live-375.png",
+      "screen": "live",
+      "width": 375,
+      "sha256": "26e55ffc7a11250846e350f25316de37f28144d8f5a7a0eec26c6f4f86ceb9f2",
+      "caption": "live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+    }
+  ]
+}

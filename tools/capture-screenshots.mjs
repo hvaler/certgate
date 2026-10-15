@@ -184,7 +184,11 @@ async function capture(run, accessCode) {
       // Deliberately only a viewport and a scale factor: see CH7-02 in the header.
       const context = await browser.newContext({ viewport: vp, deviceScaleFactor: 1 });
       const page = await context.newPage();
+      // Each screen is loaded from a fresh document. A hash-only navigation lets an earlier screen's slow async
+      // render land on top of the next one (seen on the deployed site: the landing overwrote story cg-003 about
+      // 3 s later), so screens never follow one another by hash change here.
       const go = async (hash) => {
+        await page.goto("about:blank");
         await page.goto(`${args.site}/${hash}`, { waitUntil: "networkidle" });
       };
 
@@ -248,7 +252,7 @@ async function capture(run, accessCode) {
     chromium_build: CHROMIUM_BUILD,
     served_files_sha256: served,
     secret_check: SECRET_CHECK_NOTE,
-    live: live.requested ? { sample: LIVE_SAMPLE, width: LIVE_WIDTH, job_posts: live.job_posts, states_observed: live.states_observed } : null,
+    live: live.requested ? { sample: LIVE_SAMPLE, width: LIVE_WIDTH, job_posts: live.job_posts, job_id: live.job_id ?? null, post_status: live.post_status ?? null, states_observed: live.states_observed, timeline: live.timeline ?? [], outcome: live.failure ? "failed" : live.states_observed.includes("done") ? "done" : "not run", failure: live.failure ?? null } : null,
     images,
   };
   writeFileSync(path.join(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
@@ -279,6 +283,14 @@ async function liveReading(page, args, accessCode, live, shoot, width) {
     return route.continue({ headers });
   });
 
+  // Every state seen, with its machine-recorded UTC time (manifest; no header value, no code).
+  const seen = (state) => { live.states_observed.push(state); (live.timeline ??= []).push({ state, at: new Date().toISOString() }); };
+  // The job id from the POST's answer (it is not a secret), so that a failed job's reason can be read back.
+  page.on("response", async (r) => {
+    if (r.request().method() === "POST" && r.url().endsWith("/api/live/jobs")) {
+      try { const b = await r.json(); live.job_id = typeof b.job_id === "string" ? b.job_id : null; live.post_status = r.status(); } catch { /* not JSON */ }
+    }
+  });
   await page.locator("#live-pdf").setInputFiles({ name: `${LIVE_SAMPLE}-certificate.pdf`, mimeType: "application/pdf", buffer: pdf });
   await page.locator("#live-csv").setInputFiles({ name: `${LIVE_SAMPLE}-delivery.csv`, mimeType: "text/csv", buffer: csv });
   await page.locator("#live-line").fill(String(sample.delivery_line));
@@ -295,19 +307,35 @@ async function liveReading(page, args, accessCode, live, shoot, width) {
     if (/^#\/local\//.test(await page.evaluate(() => location.hash))) break;
     const text = (await msg.innerText().catch(() => "")).trim();
     if (/^Queued/.test(text) && !live.states_observed.includes("queued")) {
-      live.states_observed.push("queued");
+      seen("queued");
       await shoot(page, "live-queued", width, { locator: page.locator("#live") });
     } else if (/^Reading at AMD/.test(text) && !live.states_observed.includes("reading")) {
-      live.states_observed.push("reading");
+      seen("reading");
       await shoot(page, "live-reading", width, { locator: page.locator("#live") });
     } else if (/failed|Refused|No reading was made|could not be read/.test(text)) {
-      fail("live reading failed on the site");
+      // A failed reading is recorded, not hidden: the failure screen, then the job's final state and reason class
+      // from a read-only poll (no reading is spent). Its fixed reason text carries no provider text (W-02).
+      await shoot(page, "live-failed", width, { locator: page.locator("#live") });
+      if (live.job_id) {
+        const j = await (await page.request.get(`${args.site}/api/live/jobs/${live.job_id}`)).json().catch(() => ({}));
+        live.failure = { job_id: live.job_id, state: j.state ?? null, reason_class: j.reason_class ?? null, reason: j.reason ?? null, polled_at: new Date().toISOString() };
+      } else {
+        live.failure = { job_id: null, state: null, reason_class: null, reason: null, polled_at: new Date().toISOString() };
+      }
+      seen("failed");
+      await page.unroute("**/api/live/jobs");
+      console.log(`live reading failed on the site: job ${live.failure.job_id ?? "unknown"} · state ${live.failure.state ?? "unknown"} · reason_class ${live.failure.reason_class ?? "unknown"}`);
+      return;
     }
     await page.waitForTimeout(250);
   }
   await page.locator("#proposal").waitFor();
-  live.states_observed.push("done");
+  seen("done");
   await shoot(page, "live-done", width, { fullPage: true });
+  // The same done screen at 375 px: the one reading is made once, so the viewport is narrowed on the same page.
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.waitForTimeout(300);
+  await shoot(page, "live-done", 375, { fullPage: true });
   await page.unroute("**/api/live/jobs");
   if (live.job_posts !== 1) fail("expected exactly one job POST");
   for (const s of ["queued", "reading"]) if (!live.states_observed.includes(s)) console.log(`state not observed: ${s}`);
