@@ -79,3 +79,10 @@ Probe batch details:
 | 1497571 | ~20:50Z | O8-01 redaction of the base-URL path in `final/room.json`, on the implementer's finding 043a9050. Messages a469c39e and c40785d4 |
 | — | 20:35Z–20:37Z | Implementer container smoke under lease: Qwen3.8-27B done 54.8 s; Qwen3.8-Flash-Next done 40.5 s, `evaluated: false`. The usage cost delta equals the two reply costs. Both used cg-001's delivery note by mistake, so both proposals are review; recorded by the implementer |
 | cb7d83b | 20:54Z | **Candidate 1** (tree 8344f8f2), handoff 3/3 in ffbd7d81, 559e2743, af8f4f9b. The analyst checked: it contains 1497571 and fd326d6; the product diff against feaadff is 5 files (app.js, types.ts, app.ts, live-jobs.ts, new models.ts); live-reader, pipeline, data, config, evaluation, vercel.json, the Dockerfile and the package files are unchanged |
+
+| Commit | Time | Event |
+|---|---|---|
+| — | — | Adversary findings aca78529: F8-A01 (low) and O8-A02 (pre-existing flake). Interim bundle b4a9e7ec: suite 564/564, probes 30/30, mutants 26/26, probe count 10 vs 10 at feaadff |
+| f2f09a0 | ~21:15Z | **R8.3** routes the F8-A01 repair and allows the O8-A02 test fix (msg 967d24f4). The implementer reproduced F8-A01 (432e449c); its F2-03 hunk was approved under conditions (095b90eb) |
+| 44f8cd0 | ~21:3xZ | **Auditor: candidate 1 cb7d83b REJECTED locally** on F8-A01 only (b8f4577e). Repair cycle 1 of 3. All else passed: T8-01/02 (8/8 job-path bodies), T8-03, 564×3, Docker 474+90 skipped, claims 0/0, mutants 22/22, value scan 0, browser 16/16. Record committed under a lent lease |
+| — | — | The implementer was told to freeze candidate 2 (6ee50944) |
