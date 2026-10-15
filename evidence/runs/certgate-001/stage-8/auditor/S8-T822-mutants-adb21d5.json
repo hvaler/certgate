@@ -1,0 +1,371 @@
+{
+ "repo_head": "adb21d5ef03163b5caeb76b1b063f7fae1e7e037",
+ "tests": [
+  "test/stage8-live.test.ts",
+  "test/stage8-models.test.ts",
+  "test/stage6-live.test.ts",
+  "test/web.test.ts"
+ ],
+ "results": [
+  {
+   "id": "M8-01",
+   "what": "offer = union: LIVE_MODELS no longer narrows the measured set",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-models.test.ts::an id in neither set is ignored and logged by name, even when listed; only unknown ids give an empty offer, never MODEL_ID",
+    "stage8-models.test.ts::every listed id appears exactly once, measured always in (a), with its state and the probe's own time"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-02",
+   "what": "an id outside both sets is accepted (canonical returns the given string)",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::LIVE_MODELS set: measured, experimental and listed-not-offered, every listed id once, with the probe's own time",
+    "stage8-live.test.ts::an unmeasured MODEL_ID with LIVE_MODELS unset disables live reading with its reason; the id is in the log, not in a response (L-13)",
+    "stage8-live.test.ts::nothing offered is listed: disabled with the listing reason and its time; an experimental-only listing stays enabled with no default (L-24)",
+    "stage8-live.test.ts::a model outside the offer (unmeasured, unprobed, listed-not-offered, padded, look-alike, prefixed): model_not_offered",
+    "stage8-live.test.ts::LIVE_MODELS cannot promote a listed id that is in neither set (L-28)",
+    "stage8-live.test.ts::an experimental model without the acknowledgement, or with anything but true: model_ack_required",
+    "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)",
+    "stage8-live.test.ts::code order (CH8-10): a wrong code with a bad model is the code refusal, with no probe; a correct code with a bad model forgives the attempt"
+   ],
+   "killer_count": 17,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-03",
+   "what": "an unlisted offered measured model is shown enabled",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::LIVE_MODELS set: measured, experimental and listed-not-offered, every listed id once, with the probe's own time",
+    "stage8-live.test.ts::nothing offered is listed: disabled with the listing reason and its time; an experimental-only listing stays enabled with no default (L-24)",
+    "stage8-models.test.ts::unlisted offered models are disabled with the unlisted text; nothing listed means nothing selectable",
+    "stage8-models.test.ts::no measured model listed but an experimental one: selectable with no default (L-24)"
+   ],
+   "killer_count": 4,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-04",
+   "what": "the server listing check on POST is removed",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an offered model the endpoint does not list now: model_unlisted"
+   ],
+   "killer_count": 1,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-05",
+   "what": "the listing check runs after admission (after the queue entry and the hourly INCR)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an offered model the endpoint does not list now: model_unlisted"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-06",
+   "what": "a stale listing is accepted (freshness limit multiplied by 1000)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a stale, future-dated or lock-held listing never validates: probe_unavailable (L-01, L-02, Q-03)"
+   ],
+   "killer_count": 1,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-07",
+   "what": "the mismatch guard compares against MODEL_ID instead of the chosen model",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-08",
+   "what": "the job reads with MODEL_ID instead of the chosen model (a second model id reaches the endpoint)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model",
+    "stage8-live.test.ts::a refusal by the endpoint (4xx) fails the job; no other model is ever asked and nothing stored is shown (S8-07)",
+    "stage8-live.test.ts::for Qwen3.8-27B, Gemma-4-31B-IT and an experimental model, on cg-004 and cg-021: the body sent equals the unchanged builder's body for that id"
+   ],
+   "killer_count": 4,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-09a",
+   "what": "the requested model is dropped from the receipt's F1 copy",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated",
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model"
+   ],
+   "killer_count": 3,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-09b",
+   "what": "the requested model is dropped from the receipt's model_choice",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated",
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model",
+    "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+   ],
+   "killer_count": 4,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-10",
+   "what": "a missing model silently defaults to MODEL_ID",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::missing, empty or non-string model: model_missing",
+    "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)"
+   ],
+   "killer_count": 2,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-11",
+   "what": "the default falls through to an experimental model",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::nothing offered is listed: disabled with the listing reason and its time; an experimental-only listing stays enabled with no default (L-24)",
+    "stage8-models.test.ts::MODEL_ID if offered and listed, else the first listed measured id in code order, never an experimental one",
+    "stage8-models.test.ts::no measured model listed but an experimental one: selectable with no default (L-24)"
+   ],
+   "killer_count": 3,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-12a",
+   "what": "the acknowledgement is not checked on the server",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model without the acknowledgement, or with anything but true: model_ack_required",
+    "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-12b",
+   "what": "the acknowledgement is checked as truthy, not === true",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model without the acknowledgement, or with anything but true: model_ack_required"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-13",
+   "what": "an experimental reading is recorded as evaluated",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-14",
+   "what": "an id without passing probe evidence is added to the experimental set",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-models.test.ts::every experimental id has one passing probe file naming it; no failed probe is in the set; the outcomes match their files"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-15",
+   "what": "the identity rule reverted to a substring test",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a near-miss reported id is model_mismatch, keeping the reported id; the prefix form passes (L-C1)",
+    "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)",
+    "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"Qwen3.8-27B-FP8\") is false",
+    "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"xQwen3.8-27B\") is false",
+    "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"a/b/Qwen3.8-27B\") is false",
+    "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"/Qwen3.8-27B\") is false",
+    "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"self-dploy/Qwen3.8-27B-FP8\") is false",
+    "stage8-models.test.ts::sameModel(\"Gemma-4-31B-IT\", \"Gemma-4-31B-IT-v2\") is false"
+   ],
+   "killer_count": 10,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-16",
+   "what": "a future-dated listing is accepted (clock-skew tolerance removed)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a stale, future-dated or lock-held listing never validates: probe_unavailable (L-01, L-02, Q-03)"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-17",
+   "what": "measured precedence removed: a measured id may also be offered as experimental",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-models.test.ts::measured takes precedence: a measured id in the experimental set is never offered as experimental"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-18",
+   "what": "the legacy route reads with MODEL_ID unchecked (no offer, no listing)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::in the container it reads only MODEL_ID canonicalised against the measured set, listed now; otherwise refused with no call and nothing counted"
+   ],
+   "killer_count": 1,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-19",
+   "what": "figures attached to an experimental reading",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+    "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+   ],
+   "killer_count": 2,
+   "seconds": 26,
+   "note": null
+  },
+  {
+   "id": "M8-20",
+   "what": "the experimental label dropped from the choice view",
+   "file": "src/web/models.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-models.test.ts::every listed id appears exactly once, measured always in (a), with its state and the probe's own time"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-21",
+   "what": "legacy route: the model_mismatch guard removed (F8-A01)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)",
+    "web.test.ts::model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-22",
+   "what": "legacy route: the guard reverted to a case-insensitive substring test",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)"
+   ],
+   "killer_count": 1,
+   "seconds": 27,
+   "note": null
+  },
+  {
+   "id": "M8-23",
+   "what": "legacy route: on mismatch the reading is shown anyway (guard answers but after the view is built: status 200)",
+   "file": "src/web/app.ts",
+   "exit": 1,
+   "killed": true,
+   "killers": [
+    "stage8-live.test.ts::a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)",
+    "web.test.ts::model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)"
+   ],
+   "killer_count": 2,
+   "seconds": 27,
+   "note": null
+  }
+ ]
+}

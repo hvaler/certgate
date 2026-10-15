@@ -62,6 +62,16 @@ const M = [
     to: "    figures: { metrics_section: m?.metrics_section ?? \"Qwen3.8-27B\", runs: [...(m?.runs ?? [\"evaluation/runs/real-candidate-dd557fd\"])] }," },
   { id: "M8-20", what: "the experimental label dropped from the choice view", file: MODELS,
     from: "label: `${NOT_EVALUATED_LABEL} · experimental · probed ${x.probed_at.slice(0, 10)}`,", to: "label: `experimental`," },
+  // Candidate 2 (F8-A01 repair): the legacy route's mismatch guard.
+  { id: "M8-21", what: "legacy route: the model_mismatch guard removed (F8-A01)", file: APP, since: "c2",
+    from: "if (reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? \"\")) {",
+    to: "if (false && reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? \"\")) {" },
+  { id: "M8-22", what: "legacy route: the guard reverted to a case-insensitive substring test", file: APP, since: "c2",
+    from: "if (reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? \"\")) {",
+    to: "if (reader.lastCall && !(reader.lastCall.model_reported ?? \"\").toLowerCase().includes(legacyModel.toLowerCase())) {" },
+  { id: "M8-23", what: "legacy route: on mismatch the reading is shown anyway (guard answers but after the view is built: status 200)", file: APP, since: "c2",
+    from: "      throw new HttpError(502, REASONS.model_mismatch, { reason_class: \"model_mismatch\" });\n    }\n    if (reader.lastCall) {",
+    to: "      void 0;\n    }\n    if (reader.lastCall) {" },
 ];
 
 const git = (...a) => execFileSync("git", ["-C", repo, ...a]).toString();

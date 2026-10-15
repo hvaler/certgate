@@ -1,0 +1,16 @@
+{
+ "run_utc": "2026-10-15T22:31:27.639Z",
+ "tree": "<auditor-scratch>/s8-c2/repo",
+ "status": 502,
+ "reason_class": "model_mismatch",
+ "error": "the endpoint reported a different model than the one requested; the reading is not shown",
+ "reading_source": null,
+ "receipt_requested": null,
+ "receipt_reported": null,
+ "chat_calls": 1,
+ "models_sent": [
+  "Qwen3.8-27B"
+ ],
+ "used_before": "0",
+ "used_after": "1"
+}

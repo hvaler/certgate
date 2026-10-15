@@ -1,0 +1,70 @@
+{
+ "tree": "<auditor-scratch>/s8-c2/repo",
+ "mode": "candidate",
+ "rows": [
+  {
+   "model": "Qwen3.8-27B",
+   "case_id": "cg-004",
+   "status": 202,
+   "body_model": "Qwen3.8-27B",
+   "body_sha256": "996361d83e6c1a36a47c64f1db4e2c197fd275aae4f619f0ee92b38022527e35",
+   "body_masked_sha256": "c0cfad20cd9dd28f02582111aa3647e3144e30ca8efba8bb8a8af649aff97372"
+  },
+  {
+   "model": "Qwen3.8-27B",
+   "case_id": "cg-021",
+   "status": 202,
+   "body_model": "Qwen3.8-27B",
+   "body_sha256": "54d6877cf043b3fa77722943f1a333afb1f3e080467556beeba34f29fce1ff0f",
+   "body_masked_sha256": "ce6a38732f4337430230b7f02b24fd7fd243c5dff1d51ed95bc1190de1a22ed7"
+  },
+  {
+   "model": "Gemma-4-31B-IT",
+   "case_id": "cg-004",
+   "status": 202,
+   "body_model": "Gemma-4-31B-IT",
+   "body_sha256": "39477610d0ebd07a1eca254e300a5c1aaf886effdb7c8d3e46c4911336822766",
+   "body_masked_sha256": "f38ff35910a51524d32c424d5d726374fb2b27b78bc64f9af42db6610bc8d5e2"
+  },
+  {
+   "model": "Gemma-4-31B-IT",
+   "case_id": "cg-021",
+   "status": 202,
+   "body_model": "Gemma-4-31B-IT",
+   "body_sha256": "0b0734cf7f93ea183bd857a336946931bb8d47a93aa4cd9d79e672cd0713a5f4",
+   "body_masked_sha256": "61624e2baabf3ddfa20720b4b0712fb1eca6f028c370bbb1702f14ed6eb70fd5"
+  },
+  {
+   "model": "DeepSeek-V4.1-Flash",
+   "case_id": "cg-004",
+   "status": 202,
+   "body_model": "DeepSeek-V4.1-Flash",
+   "body_sha256": "e791cc10713b718d0986c76353e78335fb6ea2bae504073c3d2d33b424e6b93b",
+   "body_masked_sha256": "0922934f12c3486f624e98da6d5326c5bee006cbd73b766fbb228600637547a8"
+  },
+  {
+   "model": "DeepSeek-V4.1-Flash",
+   "case_id": "cg-021",
+   "status": 202,
+   "body_model": "DeepSeek-V4.1-Flash",
+   "body_sha256": "b58671fc925b64846828ea60ca43cbf2a0793b0e0d56398fd3f9607094f3e8ec",
+   "body_masked_sha256": "8398d4744f43058c1b125c617ca1f3853c2e0de1282bee34e62a4fac40d3a95d"
+  },
+  {
+   "model": "Qwen3.8-Flash-Next",
+   "case_id": "cg-004",
+   "status": 202,
+   "body_model": "Qwen3.8-Flash-Next",
+   "body_sha256": "dd3cd7f952ada5a0bada067868d5c2b7a4b648624a10b3179430724a2d4855e2",
+   "body_masked_sha256": "b168ef75c2f655034645cc51bf134031d5b603c0517997da2c086eb6cc68ad87"
+  },
+  {
+   "model": "Qwen3.8-Flash-Next",
+   "case_id": "cg-021",
+   "status": 202,
+   "body_model": "Qwen3.8-Flash-Next",
+   "body_sha256": "b91f3b4202a2c278f3c958101ce6cb14b2c70e7fed145cccb4a4055ad2a5932f",
+   "body_masked_sha256": "dec06af8059d45d6a47543e375fc4b0b2edde75bdc081be1c1e6b651eb4a1f52"
+  }
+ ]
+}
