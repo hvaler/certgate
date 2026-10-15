@@ -1,0 +1,86 @@
+S7-09 live GET checks on https://certgate-wheat.vercel.app at 2026-10-15T05:01:36Z; candidate dc228d10636cc3cf7b12f3b1226e88027cce12b2; README at d1aaa3e8e55a390f10dbb68e341199515d3a6791
+/index.html 200 MATCH
+/app.js 200 MATCH
+/labels.js 200 MATCH
+/styles.css 200 MATCH
+/figures.json 200 MATCH
+/stories/cg-001.json 200 MATCH
+/stories/cg-002.json 200 MATCH
+/stories/cg-003.json 200 MATCH
+/api/originals/cg-001 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-002 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-003 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-004 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-005 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-010 200 image/png nosniff=nosniff bytes=MATCH data/previews
+/api/originals/cg-020 -> 404
+/api/originals/cg-017 -> 404
+/api/originals/CG-003 -> 404
+/api/originals/cg-003.png -> 404
+/api/originals/cg-0031 -> 404
+/api/originals/.. -> 404
+/api/originals/%2e%2e -> 404
+/api/originals/..%2fpackage.json -> 404
+/api/originals/%2e%2e%2fpackage.json -> 404
+/api/originals/..%5cpackage.json -> 404
+/api/originals/%00 -> 400
+/api/originals/__proto__ -> 404
+/api/originals/constructor -> 404
+/api/originals/cg-003%2fcase.json -> 404
+/api/originals/cg-003/case.json -> 404
+/api/originals/../../package.json -> 404
+/api/originals/by-certificate/0000000000000000000000000000000000000000000000000000000000000000 -> 404
+/api/originals/by-certificate/../cg-003 -> 200
+/api/originals/by-certificate/<sha256 of cg-004> -> 200 bytes=MATCH
+/api/originals/by-certificate/<sha256 of cg-005> -> 200 bytes=MATCH
+/api/originals/by-certificate/<sha256 of cg-010> -> 200 bytes=MATCH
+/api/originals/by-certificate/<sha256 of cg-001> -> 404
+/api/originals/by-certificate/<sha256 of cg-003> -> 404
+/stories/cg-001.json recorded=True recorded_at=2026-10-13T17:49:52.325Z next_to_reading_source=['recorded', 'recorded_at']
+/stories/cg-002.json recorded=True recorded_at=2026-10-13T17:50:57.586Z next_to_reading_source=['recorded', 'recorded_at']
+/stories/cg-003.json recorded=True recorded_at=2026-10-13T17:52:09.471Z next_to_reading_source=['recorded', 'recorded_at']
+POST cg-003 evaluate: proposal=block reading_source=live recorded=True recorded_at=2026-10-13T17:52:09.471Z
+README link .env.example -> 200
+README link CLAIMS.md -> 200
+README link DEPLOY.md -> 200
+README link EVIDENCE-INDEX.md -> 200
+README link LICENSE -> 200
+README link METRICS.md -> 200
+README link data/README.md -> 200
+README link data/cases/cg-001/certificate.pdf -> 200
+README link data/cases/cg-002/certificate.pdf -> 200
+README link data/cases/cg-003/certificate.pdf -> 200
+README link data/cases/cg-004/certificate.pdf -> 200
+README link data/cases/cg-005/certificate.pdf -> 200
+README link data/cases/cg-010/certificate.pdf -> 200
+README link data/expected/README.md -> 200
+README link data/previews/cg-001.png -> 200
+README link data/previews/cg-002.png -> 200
+README link data/previews/cg-003.png -> 200
+README link data/previews/cg-004.png -> 200
+README link data/previews/cg-005.png -> 200
+README link data/previews/cg-010.png -> 200
+README link docs/diagrams/architecture.svg -> 200
+README link docs/diagrams/flow.svg -> 200
+README link docs/sources/cev-formula.md -> 200
+README link docs/sources/gemma.md -> 200
+README link docs/sources/model.md -> 200
+README link docs/sources/upstash-redis.md -> 200
+README link docs/sources/vercel-functions.md -> 200
+README link docs/sources/vercel-limits.md -> 200
+README link evaluation/expectations-real-run.json -> 200
+README link evaluation/runs/real-candidate-dd557fd/REPORT.md -> 200
+README link evaluation/runs/real-gemma-04100b9/ -> 404
+README link evidence/runs/certgate-001/STAGE-REGISTER.md -> 200
+README link evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1/ -> 404
+README link evidence/runs/certgate-001/stage-5/implementer/endpoint/gemma-read-cg-003.json -> 200
+README link tools/capture-screenshots.mjs -> 200
+README link tools/diagrams.mjs -> 200
+README link tools/previews.mjs -> 200
+README URL https://certgate-wheat.vercel.app -> 200
+README URL https://huggingface.co/Qwen/Qwen3.8-27B -> 200
+README URL https://huggingface.co/google/gemma-4-31b-it -> 200
+README links/URLs not answering 200: 2
+evaluation/runs/real-gemma-04100b9 -> 200
+evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1 -> 200
+note: the two directory links fail on raw.githubusercontent (directories are not files) and answer 200 as GitHub tree pages (above); every README link therefore resolves
