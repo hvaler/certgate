@@ -247,3 +247,45 @@ The rest of the note is ruled in R8.2, after the adversary's DN8 challenge.
 | P-04 | **Order.** The probe script, and `sameModel` with its unit tests, are **committed on `s8-impl` before the batch runs**. The lease message names that commit. The batch then runs under one announced ENDPOINT LEASE, with GET /usage before and after. The evidence and the code sets (`EXPERIMENTAL_MODELS`, `PROBE_OUTCOMES`) are committed afterwards, and that commit is an ancestor of candidate 1 (T8-21). **The batch may run as soon as P-04's commit exists.** It does not wait for R8.2 |
 | P-05 | **Measured figures link (D6:L22): approved as text.** The METRICS.md section name and run directory are shown as text, from the API, because B-17 forbids third-party URLs in page assets and METRICS.md is not served. "Linked to its run" is satisfied by the code constant naming the run directory (CH8-16 tie) and by that text on the page. The README states where the figures are |
 | P-06 | **The container smoke plan is approved:** 1 Qwen reading plus 1 experimental reading, since Gemma is unlisted. It runs under a lease after the candidate builds, within D8-02-bis |
+
+
+## R8.2: ruling on design note 4328e0ec (with the implementer's alignment 3805afb4), adversary DN8-01…12 (6ff43afd, 707bdb93) and auditor note bb51e0bc (analyst-zt7k)
+
+**The design note is approved** as amended below. With R8.1, R8.2a and R8.2b it is binding on candidate 1, and the candidate handoff answers each P, Q and DN item by number.
+
+**R8.2b, sent as msg c00521b9, recorded here:**
+- **P-02 corrected:** no re-probe at all. Each image-input id gets exactly one probe, with at most 3 attempts on 429/5xx. Infrastructure failure means (c) "probe failed" with its class. The hard cap is 18 chat calls, and BATCH.md records the calls per id.
+- **P-07, provenance:** each probe file records the P-04 commit and the SHA-256 of the `dist/` it imported. That commit is an ancestor of candidate 1, with `live-reader.ts` and `model-output.ts` byte-identical to feaadff.
+
+| ID | Ruling |
+|---|---|
+| Q-01 | **The refusal classes are fixed.** Each has one fixed text, as in design note §3:<br>- `model_missing` (400);<br>- `model_not_offered` (400);<br>- `model_ack_required` (400);<br>- **`probe_unavailable`** (503, replacing the note's `model_list_stale` per L-02 and alignment 3805afb4), for stale, future-dated or lock-held snapshots;<br>- `model_unlisted` (409).<br>Receipt and job field: **`listing_checked_at`** (L-C2) |
+| Q-02 | **DN8-01 and auditor item 2: the f1Now() hunks are allowed only if the one-probe-per-period rule holds.**<br>- Across 3 instances sharing one store, a fake clock, and traffic every 5 s for 10 simulated minutes, the upstream `/models` calls must be **≤ 11**. The feaadff baseline count is recorded beside it.<br>- The existing Stage 6 test "10 concurrent /api/f1 calls on two instances … one GET /models" stays **unchanged and unloosened**.<br>- The auditor's two-instance case with a store copy about 59 s old must not double the probes.<br>- If these cannot all hold with hunk (ii), **drop (ii)**: keep the 60 s lock and accept the 3–60 s `probe_unavailable` window. Hunk (i) stays only if it also passes |
+| Q-03 | **DN8-02 adopted.** A snapshot whose age is below **−5 s** (`checked_at` in the future) is stale, and gets `probe_unavailable`, 0 chat calls and no counter change |
+| Q-04 | **DN8-03: residual accepted. `f1.ts` stays pinned.** An endpoint id longer than 200 characters is dropped by the accepted Stage 6 sanitiser (`f1.ts:38`). The live screen says, as fixed text: "Model ids longer than 200 characters are not shown." The README limitations say it too. Reasons: f1.ts is the accepted F1 boundary, the cap protects the page, and today's 11 ids are all short. Killer: the stub lists a 250-character id, which is not shown, and the note is present. A claims row covers the sentence |
+| Q-05 | **DN8-04 adopted.** Every new receipt, F1 and `model_choice` field is a string, a boolean or null, so that `receipt.ts` `assertNoNumbers` passes. Killer: a measured and an experimental live receipt both export from the job path, with their fields present |
+| Q-06 | **DN8-05: option 1 adopted.** The order changes:<br>- steps **6a–6c** (missing, not offered, acknowledgement), which need no probe, move **before step 5** (`f1Now()`), still after the code check;<br>- steps **6d–6e** (freshness, listing) stay after step 5 and before `admit`.<br>This meets L-23 literally. Killer: with the store empty, a POST without the acknowledgement leaves `modelsCalls` unchanged |
+| Q-07 | **DN8-06 adopted; it corrects P-03.**<br>- "not a chat model" applies only when an `output` array is **present** and has no `"text"`.<br>- "no image probe" applies only when `architecture.input_modalities` is **present** and has no `"image"`.<br>- An entry missing either field is **probed**, within the cap.<br>Killer as written |
+| Q-08 | **DN8-07 adopted.** The 210 s probe budget is measured from the start of the first attempt to the parsed reply, **including** backoff and retries. Killer as written |
+| Q-09 | **DN8-08:** settled by R8.2b. Killer: after a probe fails with 3 attempts, there is no fourth call for that id |
+| Q-10 | **DN8-09 adopted.** The disabled-site golden, at least one enabled-site status test and the T6-10 narrowing run with the **default catalog**, with no seam. Both the implementer's and the adversary's seam mutants must be killed |
+| Q-11 | **DN8-10 adopted.** The probe evidence records both the full body SHA-256 and the image-masked T8-02 hash. The §10 test "each probe's `request_body_sha256` equals a fresh local capture" is named in the handoff, and the page render must be deterministic for it to hold |
+| Q-12 | **DN8-11 adopted.** A browser-stored receipt without `model_choice`, from before Stage 8, renders as today: no badge and no crash. The badge test is strict `=== false`. Killer: a stored Stage 7 receipt fixture |
+| Q-13 | **DN8-12 and auditor item 3:** settled by P-05. On the page, the measured figures are named as text (the METRICS.md section and the run directory). The README may carry the real repository link |
+| Q-14 | **Auditor item 4 adopted.** The candidate handoff lists **every hunk in an existing test file**, with its reason. Any removed, skipped or loosened assertion is a finding. Adding `model` to POST helpers and using the stub catalog are the expected hunks, each listed |
+| Q-15 | **Auditor item 6 adopted.** The CH8-35 non-null critical-field count is recorded in the probe evidence only. It is **never shown** on the page, in the README or next to an experimental label (R-C) |
+
+**Design note points approved without change:**
+- `src/web/models.ts` as the single module holding the measured and experimental ids;
+- the `sameModel` rule;
+- LIVE_MODELS parsing and logging;
+- the offer formulas;
+- the legacy route (§4);
+- the UI groups, the default rule, the no-preselection case and the caps (§5);
+- the types and receipt additions after `processCase` (§6);
+- the time budget (§7);
+- the file list, `stage8-baseline.json` and `STAGE8_MAY_CHANGE`/`STAGE8_NEW` (§8);
+- the probe batch (§9), as corrected by P-02, P-07, Q-07, Q-08 and Q-11;
+- the tests and mutants (§10).
+
+**The limited-choice statement (§5) is approved as worded.**
