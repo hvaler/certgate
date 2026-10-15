@@ -1,0 +1,6 @@
+[Excerpt of `band --session analyst-xwz3 usage agents`, run 2026-10-15 ~05:23Z by analyst-xwz3: header and the four certgate-001 seats only. Estimated at list prices, not a bill; cumulative since each seat was created.]
+AGENT                     SESSIONS         TOKENS   ESTIMATE  LAST ACTIVITY
+hugo.valer/implementer-xwz4         1      926956954    $240.60  2026-10-14T19:41:32.703Z
+hugo.valer/auditor-xwz6          1      807566972    $194.06  2026-10-14T19:58:14.848Z
+hugo.valer/analyst-xwz3          1      769439707    $179.02  2026-10-14T19:44:08.390Z
+hugo.valer/adversary-xwz5         1      745408733    $178.59  2026-10-14T19:41:36.515Z
