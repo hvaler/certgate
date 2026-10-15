@@ -11,6 +11,7 @@ import { DATA, ROOT, runCase, expected } from "./helpers.js";
 import { recordHumanDecision, HumanDecisionError } from "../src/pipeline.js";
 // @ts-expect-error plain JS test double
 import { startStub, STUB_CATALOG, STUB_MODEL_ID } from "./support/stub-endpoint.mjs";
+import { REASONS } from "../src/web/live-jobs.js";
 import { buildStories } from "../src/tools/build-stories.js";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -303,21 +304,25 @@ describe("live reading through the test stub (S2-16, S2-17, S2-25, B-02..B-05, B
   });
   it("model id: the receipt shows the id the endpoint reported, the configured one only as requested (F2-03)", async () => {
     const s = await stub();
-    s.state.reportedModel = "adv-stub-model-7f3a";
-    // Stage 8 (L-05): the legacy route reads only a measured MODEL_ID that the endpoint lists, so this test's
-    // configured name is made a catalog entry and listed by the stub; what it checks is unchanged.
+    // Stage 8 (L-05, L-C1, F8-A01): the legacy route reads only a measured MODEL_ID that the endpoint lists, and the
+    // reply must name it; so the configured name is a catalog entry listed by the stub, and the stub reports it with
+    // a provider prefix: the reported id still differs verbatim from the configured one, which is what F2-03 checks.
+    s.state.reportedModel = "adv-stub/configured-name-not-from-endpoint";
     s.state.models = ["configured-name-not-from-endpoint"];
     const catalog = { measured: [{ id: "configured-name-not-from-endpoint", metrics_section: "TEST STUB, not a model", runs: [] }], experimental: [], outcomes: [] };
     const base = await app({ env: stubEnv(s, { LIVE_READS_PER_HOUR: "3", MODEL_ID: "configured-name-not-from-endpoint" }), modelCatalog: catalog });
     const j = await (await postJson(`${base}/api/live/read`, liveBody())).json();
-    expect(j.view.receipt.reader.model_id).toBe("adv-stub-model-7f3a");
+    expect(j.view.receipt.reader.model_id).toBe("adv-stub/configured-name-not-from-endpoint");
     expect(j.view.receipt.reader.requested_model_id).toBe("configured-name-not-from-endpoint");
-    expect(j.summary.note).toContain("model as reported by the endpoint: adv-stub-model-7f3a");
+    expect(j.summary.note).toContain("model as reported by the endpoint: adv-stub/configured-name-not-from-endpoint");
     expect(j.summary.note).toContain("requested: configured-name-not-from-endpoint");
     expect(JSON.stringify(j.view.rows)).not.toContain("configured-name-not-from-endpoint");
+    // A reply that names no model cannot name the requested one: model_mismatch, and nothing read is shown.
     s.state.omitModel = true;
-    const k = await (await postJson(`${base}/api/live/read`, liveBody())).json();
-    expect(k.view.receipt.reader.model_id).toMatch(/^unknown/);
+    const k = await postJson(`${base}/api/live/read`, liveBody());
+    expect(k.status).toBe(502);
+    const kb = await k.json();
+    expect(kb).toEqual({ status: "rejected", reason_class: "model_mismatch", error: REASONS.model_mismatch });
   });
   it("a reply carrying explanation text is never displayed as an explanation; kept only as untrusted text (R3.1 C-04, cg-021 contamination)", async () => {
     const s = await stub();

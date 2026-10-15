@@ -278,6 +278,11 @@ export function createHandler(deps: AppDeps = {}) {
     }
     const reader = new LiveReader({ baseUrl: cfg.modelBaseUrl!, modelId: legacyModel, apiKey: cfg.modelApiKey, attemptTimeoutMs: deps.adapterTimeoutMs, backoffBaseMs: deps.backoffBaseMs });
     const r = await processCase({ ...inputBase, reader, f1 });
+    // Stage 8 (F8-A01, R8.3, design note §4, S8-07, L-C1): as on the job path, a reading counts only if the endpoint
+    // reports the requested model; otherwise nothing read is shown (the unit is already spent, CH8-19).
+    if (reader.lastCall && !sameModel(legacyModel, reader.lastCall.model_reported ?? "")) {
+      throw new HttpError(502, REASONS.model_mismatch, { reason_class: "model_mismatch" });
+    }
     if (reader.lastCall) {
       lastLive = reader.lastCall;
       r.receipt.f1 = await probeF1(cfg, clock, lastLive);

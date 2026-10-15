@@ -216,7 +216,9 @@ describe("global limits across two instances sharing one store (S6-03, CH6-05, C
     const firstTwo = await Promise.all(readers.map((j) => call(`${base}/api/live/jobs/${j.body.job_id}`)));
     expect(firstTwo.map((v) => v.body.state)).toEqual(["reading", "reading"]);
     const holders = await Promise.all([store.get(KEYS.slot(0)), store.get(KEYS.slot(1))]);
-    expect(holders.sort()).toEqual([jobs[0]!.body.job_id, jobs[1]!.body.job_id].sort());
+    // O8-A02 (R8.3): the three POSTs race, so any two of them may take the slots; the holders are exactly the two
+    // jobs observed reading (not jobs[0] and jobs[1]).
+    expect(holders.sort()).toEqual(readers.map((j) => String(j.body.job_id)).sort());
   });
 });
 

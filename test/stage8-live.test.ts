@@ -352,6 +352,23 @@ describe("the legacy one-request route (L-05, CF-07, T8-37)", () => {
     expect(r.status).toBe(200);
     expect(s.state.requestedModels).toEqual([Q]);
   });
+  it("a reply that names another model is model_mismatch on the legacy route too: 502, nothing read is shown (F8-A01)", async () => {
+    for (const reported of [G, `${Q}-FP8`, `xQwen3.8-27B`]) {
+      clearF1Cache();
+      const s = await stub({ models: [Q], reportedModel: reported });
+      const base = await serve({ env: { MODEL_BASE_URL: s.url, MODEL_API_KEY: KEY, MODEL_ID: Q, LIVE_READS_PER_HOUR: "3" } });
+      const r = await call(`${base}/api/live/read`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ certificate_base64: cert(), synthetic_confirmed: true }) });
+      expect({ status: r.status, body: r.body }, reported).toEqual({ status: 502, body: { status: "rejected", reason_class: "model_mismatch", error: REASONS.model_mismatch } });
+      expect(s.state.chatCalls, reported).toBe(1);
+      expect(r.text, reported).not.toMatch(/"view"|"receipt"|reading_source/);
+    }
+    clearF1Cache();
+    const s = await stub({ models: [Q] });
+    const base = await serve({ env: { MODEL_BASE_URL: s.url, MODEL_API_KEY: KEY, MODEL_ID: Q, LIVE_READS_PER_HOUR: "3" } });
+    const ok = await call(`${base}/api/live/read`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ certificate_base64: cert(), synthetic_confirmed: true }) });
+    expect(ok.status).toBe(200);
+    expect(ok.body.view.receipt.reader.model_id).toBe(`self-dploy/${Q}`);
+  });
   it("on the deployed site it stays 503, with or without a model in the body", async () => {
     const s = await stub({ models: [Q] });
     const base = await serve({ env: deployedEnv(s.url), liveStore: new MemoryStore(), liveBudget: FAST });
