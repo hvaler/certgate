@@ -37,3 +37,16 @@ Times are UTC, from the machine clock or band/git records. Append-only.
 - **Due 20:45Z:** the adversary's CH8 challenge, the implementer's design note and the auditor's T8 rules.
 - **Target 21:00Z:** R8.1.
 - Band warned that the old `*-xwz*` handles inside the verbatim dispatches are not in the peer network and left them as literal text. That is expected.
+
+**Correction, machine time.** The "~20:00Z" above was an analyst estimate and is wrong. Commit times show:
+
+| Event | Commit | Time |
+|---|---|---|
+| Stage 8 opened | 1d8be64 | 19:18:38Z |
+| Auditor S8-00 | 49e377f | 19:21:20Z |
+| R8.0 | 157f469 | 19:22:08Z |
+| Log | c840e5a | 19:24:29Z |
+
+The handoff parts were sent between 19:22Z and 19:24Z. From now on this log uses machine times only (`date -u`, commit or band times).
+
+**19:27Z, operator amendment 1 received.** msg 79b781e6. It widens the model choice: a measured group, an experimental group with real probe evidence, and a listed-not-offered group. The Stage 8 limit rises to 480 min; at most 3 repair cycles stay. Filed verbatim as DISPATCH-6-AMENDMENT-1.txt.
