@@ -1,0 +1,82 @@
+[
+  {
+    "name": "S8-21 (375): the three groups, the probe time and the 200-character note are shown",
+    "ok": true,
+    "detail": "Model for this live reading\n\nYou can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.\n\nModels listed by AMD Token Factory now, checked 2"
+  },
+  {
+    "name": "L-08 (375): an endpoint id with HTML is shown as text and never runs; the 250-character id is not shown",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-04 (375): Qwen3.8-27B is the checked default; Gemma-4-31B-IT is disabled as not listed",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-23 (375): a listed-not-offered id is text with its reason, never a choice",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-22 (375): no acknowledgement box is shown while a measured model is chosen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-22 (375): choosing the experimental model shows its acknowledgement",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-25 (375): without the acknowledgement the page sends nothing",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-24 (375): the experimental reading is labelled not evaluated next to the proposal, with no figure",
+    "ok": true,
+    "detail": "not evaluated Read by DeepSeek-V4.1-Flash (experimental; reported as self-dploy/DeepSeek-V4.1-Flash). No figure of CertGate applies to this model; probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json. The rules and the person's decision apply as for every model."
+  },
+  {
+    "name": "S8-21 (1280): the three groups, the probe time and the 200-character note are shown",
+    "ok": true,
+    "detail": "Model for this live reading\n\nYou can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.\n\nModels listed by AMD Token Factory now, checked 2"
+  },
+  {
+    "name": "L-08 (1280): an endpoint id with HTML is shown as text and never runs; the 250-character id is not shown",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-04 (1280): Qwen3.8-27B is the checked default; Gemma-4-31B-IT is disabled as not listed",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-23 (1280): a listed-not-offered id is text with its reason, never a choice",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-22 (1280): no acknowledgement box is shown while a measured model is chosen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-22 (1280): choosing the experimental model shows its acknowledgement",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-25 (1280): without the acknowledgement the page sends nothing",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8-24 (1280): the experimental reading is labelled not evaluated next to the proposal, with no figure",
+    "ok": true,
+    "detail": "not evaluated Read by DeepSeek-V4.1-Flash (experimental; reported as self-dploy/DeepSeek-V4.1-Flash). No figure of CertGate applies to this model; probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json. The rules and the person's decision apply as for every model."
+  }
+]

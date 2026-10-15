@@ -161,6 +161,8 @@ function modelChoice(models) {
     chosen = item ? { id: item.id, group } : null;
     ack.checked = false;
     ackRow.hidden = !(chosen && group === "experimental");
+    // The .check class sets display, which would override [hidden]: hide it explicitly too.
+    if (ackRow.style) ackRow.style.display = ackRow.hidden ? "none" : "";
     ackText.textContent = chosen && group === "experimental" ? `I understand: ${item.acknowledgement}.` : "";
   };
   const option = (item, group, label) => {

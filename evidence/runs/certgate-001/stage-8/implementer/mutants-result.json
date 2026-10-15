@@ -1,0 +1,438 @@
+{
+  "schema": "certgate.implementer-mutants/1",
+  "commit": "f2599da69e0817215e23157256b18f5994dd255a",
+  "run_utc": "2026-10-15T20:25:11.102Z",
+  "results": [
+    {
+      "id": "M01",
+      "what": "acknowledgement truthy instead of === true",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model without the acknowledgement, or with anything but true: model_ack_required"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M02",
+      "what": "acknowledgement not checked on the server",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model without the acknowledgement, or with anything but true: model_ack_required",
+        "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M03",
+      "what": "a missing model defaults to MODEL_ID",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::missing, empty or non-string model: model_missing",
+        "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M04",
+      "what": "listing freshness ignored (stale and f1:last accepted)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a stale, future-dated or lock-held listing never validates: probe_unavailable (L-01, L-02, Q-03)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M05",
+      "what": "a future-dated listing accepted",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a stale, future-dated or lock-held listing never validates: probe_unavailable (L-01, L-02, Q-03)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M06",
+      "what": "the server listing check removed",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an offered model the endpoint does not list now: model_unlisted"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M07",
+      "what": "mismatch guard reverted to a substring test",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a near-miss reported id is model_mismatch, keeping the reported id; the prefix form passes (L-C1)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M08",
+      "what": "mismatch guard compares against MODEL_ID",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M09",
+      "what": "model_choice dropped from the receipt",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated",
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model"
+      ],
+      "killer_count": "3"
+    },
+    {
+      "id": "M10",
+      "what": "requested model dropped from the receipt's F1 copy",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated",
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-live.test.ts::two concurrent jobs, one per model: each receipt carries its own requested and reported model"
+      ],
+      "killer_count": "3"
+    },
+    {
+      "id": "M11",
+      "what": "the client's string sent uncanonicalised",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M12",
+      "what": "legacy route unguarded (MODEL_ID or the default read whatever it is)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::in the container it reads only MODEL_ID canonicalised against the measured set, listed now; otherwise refused with no call and nothing counted"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M13",
+      "what": "the test stub catalog used by default",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::LIVE_MODELS set: measured, experimental and listed-not-offered, every listed id once, with the probe's own time",
+        "stage8-live.test.ts::LIVE_MODELS unset: only MODEL_ID is selectable; Gemma stays in (a) as not enabled; experimental ids go to (c) as not enabled (A8-14, L-26)",
+        "stage8-live.test.ts::the entry points never pass the test-only model catalog (Q-10)"
+      ],
+      "killer_count": "3"
+    },
+    {
+      "id": "M14",
+      "what": "listing check moved after admission (after the hourly count)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an offered model the endpoint does not list now: model_unlisted"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M15",
+      "what": "the shared F1 copy carries a requested model",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a measured model named in any ASCII case is read with the constant's id; the receipt and its F1 copy say requested, reported and evaluated"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M16",
+      "what": "offer checks moved after the probe (ack before probe broken)",
+      "file": "src/web/app.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::the name, offer and acknowledgement checks need no probe: with an empty store they make no GET /models (Q-06)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M20",
+      "what": "offer = all measured (union, LIVE_MODELS ignored)",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::an id in neither set is ignored and logged by name, even when listed; only unknown ids give an empty offer, never MODEL_ID",
+        "stage8-models.test.ts::every listed id appears exactly once, measured always in (a), with its state and the probe's own time"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M21",
+      "what": "an unknown LIVE_MODELS id offered",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::LIVE_MODELS cannot promote a listed id that is in neither set (L-28)",
+        "stage8-models.test.ts::an id in neither set is ignored and logged by name, even when listed; only unknown ids give an empty offer, never MODEL_ID"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M22",
+      "what": "an empty intersection falls back to MODEL_ID",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::an id in neither set is ignored and logged by name, even when listed; only unknown ids give an empty offer, never MODEL_ID"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M23",
+      "what": "an unmeasured MODEL_ID offered",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an unmeasured MODEL_ID with LIVE_MODELS unset disables live reading with its reason; the id is in the log, not in a response (L-13)",
+        "stage8-models.test.ts::an unmeasured or unset MODEL_ID gives an empty offer, named in the log only"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M24",
+      "what": "sameModel reverted to a substring test",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a near-miss reported id is model_mismatch, keeping the reported id; the prefix form passes (L-C1)",
+        "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"Qwen3.8-27B-FP8\") is false",
+        "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"xQwen3.8-27B\") is false",
+        "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"a/b/Qwen3.8-27B\") is false",
+        "stage8-models.test.ts::sameModel(\"Qwen3.8-27B\", \"/Qwen3.8-27B\") is false"
+      ],
+      "killer_count": "9"
+    },
+    {
+      "id": "M25",
+      "what": "the default falls through to an experimental model",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::nothing offered is listed: disabled with the listing reason and its time; an experimental-only listing stays enabled with no default (L-24)",
+        "stage8-models.test.ts::MODEL_ID if offered and listed, else the first listed measured id in code order, never an experimental one",
+        "stage8-models.test.ts::no measured model listed but an experimental one: selectable with no default (L-24)"
+      ],
+      "killer_count": "3"
+    },
+    {
+      "id": "M26",
+      "what": "MODEL_ID preference dropped from the default",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::MODEL_ID if offered and listed, else the first listed measured id in code order, never an experimental one"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M27",
+      "what": "an unlisted measured model shown enabled",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::LIVE_MODELS set: measured, experimental and listed-not-offered, every listed id once, with the probe's own time",
+        "stage8-live.test.ts::nothing offered is listed: disabled with the listing reason and its time; an experimental-only listing stays enabled with no default (L-24)",
+        "stage8-models.test.ts::unlisted offered models are disabled with the unlisted text; nothing listed means nothing selectable",
+        "stage8-models.test.ts::no measured model listed but an experimental one: selectable with no default (L-24)"
+      ],
+      "killer_count": "4"
+    },
+    {
+      "id": "M28",
+      "what": "evaluated true on an experimental reading",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M29",
+      "what": "the not-evaluated label dropped from the receipt",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M30",
+      "what": "measured precedence removed (a measured id offered as experimental)",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::measured takes precedence: a measured id in the experimental set is never offered as experimental"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M31",
+      "what": "a hard-coded check time",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::LIVE_MODELS set: measured, experimental and listed-not-offered, every listed id once, with the probe's own time",
+        "stage8-models.test.ts::every listed id appears exactly once, measured always in (a), with its state and the probe's own time"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M32",
+      "what": "an experimental id in the set without evidence",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::every experimental id has one passing probe file naming it; no failed probe is in the set; the outcomes match their files"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M33",
+      "what": "a listed-not-offered id accepted on POST",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a model outside the offer (unmeasured, unprobed, listed-not-offered, padded, look-alike, prefixed): model_not_offered",
+        "stage8-live.test.ts::LIVE_MODELS cannot promote a listed id that is in neither set (L-28)",
+        "stage8-live.test.ts::code order (CH8-10): a wrong code with a bad model is the code refusal, with no probe; a correct code with a bad model forgives the attempt",
+        "stage8-live.test.ts::in the container it reads only MODEL_ID canonicalised against the measured set, listed now; otherwise refused with no call and nothing counted",
+        "stage8-models.test.ts::matches exactly ignoring ASCII case and returns the constant's spelling; no trimming, no folding, no non-string"
+      ],
+      "killer_count": "5"
+    },
+    {
+      "id": "M34",
+      "what": "figures attached to an experimental reading",
+      "file": "src/web/models.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental model with the acknowledgement is read and labelled not evaluated, with its probe evidence and no figure",
+        "stage8-models.test.ts::the receipt record: measured carries its figures; experimental is not evaluated, with its evidence and no figure"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M40",
+      "what": "badge test truthy instead of === false",
+      "file": "public/app.js",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a browser-held receipt from before Stage 8 (no model_choice) renders as before: no label and no crash (Q-12)",
+        "stage8-live.test.ts::the page never builds HTML from strings, and the acknowledgement is sent only for an experimental choice"
+      ],
+      "killer_count": "2"
+    },
+    {
+      "id": "M41",
+      "what": "the not-evaluated badge dropped from the page",
+      "file": "public/app.js",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::an experimental reading shows the not-evaluated label next to the proposal, and no figure; a measured one names its runs"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M42",
+      "what": "the acknowledgement always sent as true",
+      "file": "public/app.js",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::the page never builds HTML from strings, and the acknowledgement is sent only for an experimental choice"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M43",
+      "what": "a listed-not-offered id rendered as a choice",
+      "file": "public/app.js",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::three groups, the probe time, the 200-character note, (c) ids as text and never as a choice, Gemma disabled, the default checked"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M50",
+      "what": "the reported model dropped from a mismatch job",
+      "file": "src/web/live-jobs.ts",
+      "killed": true,
+      "killers": [
+        "stage8-live.test.ts::a near-miss reported id is model_mismatch, keeping the reported id; the prefix form passes (L-C1)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M60",
+      "what": "the probe pass uses a substring test",
+      "file": "tools/probe-models.mjs",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::a reported near-miss id fails as model_mismatch and stays out of the set (CH8-30)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M61",
+      "what": "the probe time budget ignored",
+      "file": "tools/probe-models.mjs",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::a probe whose whole read, retries included, exceeds the reading budget fails (L-29, Q-08)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M62",
+      "what": "the probe call cap ignored",
+      "file": "tools/probe-models.mjs",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::one probe per id, at most 3 attempts on 5xx, never a fourth call; the cap stops the batch and the rest is infrastructure (L-33, Q-09, CH8-33)"
+      ],
+      "killer_count": "1"
+    },
+    {
+      "id": "M63",
+      "what": "a non-chat model probed",
+      "file": "tools/probe-models.mjs",
+      "killed": true,
+      "killers": [
+        "stage8-models.test.ts::classifies from present fields only: measured skipped, output without text = not chat, input without image = no image probe, missing fields = probe (Q-07)",
+        "stage8-models.test.ts::probes each image-input id once with the product request, records the evidence fields, and writes no secret"
+      ],
+      "killer_count": "2"
+    }
+  ]
+}
