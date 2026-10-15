@@ -60,6 +60,7 @@ export function startStub({ port = 0, mode = "ok", caseId = "cg-001", readingFil
         state.lastAuthorization = req.headers.authorization ?? null;
         try { state.lastModel = JSON.parse(body).model ?? null; } catch { state.lastModel = null; }
         (state.requestedModels ??= []).push(state.lastModel);
+        (state.bodies ??= []).push(body);
         const current = state.failFirst > 0 ? (state.failFirst--, state.failMode) : state.mode;
         switch (current) {
           case "timeout": return; // never answers

@@ -305,6 +305,34 @@ describe("readings: the chosen model, its receipt, no fallback (S8-07, S8-08, S8
   });
 });
 
+describe("the request body through the job path differs from the Stage 7 request only in the model id (S8-12, A8-06, T8-02)", () => {
+  async function builderBody(modelId: string, caseId: string) {
+    const { LiveReader } = await import("../src/web/live-reader.js");
+    let seen = "";
+    const { createServer } = await import("node:http");
+    const server = createServer((req, res) => { let b = ""; req.on("data", (c) => { b += c; }); req.on("end", () => { seen ||= b; res.writeHead(500); res.end("{}"); }); }).listen(0, "127.0.0.1");
+    await new Promise((r) => server.once("listening", r));
+    const reader = new LiveReader({ baseUrl: `http://127.0.0.1:${(server.address() as AddressInfo).port}/v1`, modelId, apiKey: "x", backoffBaseMs: 1 });
+    await reader.read({ case_id: `upload-${createHash("sha256").update(readFileSync(path.join(DATA, "cases", caseId, "certificate.pdf"))).digest("hex").slice(0, 12)}`, certificate: new Uint8Array(readFileSync(path.join(DATA, "cases", caseId, "certificate.pdf"))) }).catch(() => undefined);
+    await new Promise<void>((r) => { server.closeAllConnections(); server.close(() => r()); });
+    return seen;
+  }
+  it("for Qwen3.8-27B, Gemma-4-31B-IT and an experimental model, on cg-004 and cg-021: the body sent equals the unchanged builder's body for that id", async () => {
+    for (const caseId of ["cg-004", "cg-021"]) {
+      for (const [model, ack] of [[Q, undefined], [G, undefined], [X, true]] as const) {
+        clearF1Cache();
+        const s = await stub({ models: [Q, G, X] });
+        const base = await serve({ env: deployedEnv(s.url, { LIVE_MODELS: ALL }), liveStore: new MemoryStore(), liveBudget: FAST });
+        const r = await call(`${base}/api/live/jobs`, { method: "POST", headers: { "content-type": "application/json", "x-live-access-code": CODE }, body: JSON.stringify({ certificate_base64: cert(caseId), synthetic_confirmed: true, model, ...(ack ? { not_evaluated_acknowledged: true } : {}) }) });
+        await poll(base, r.body.job_id);
+        expect(s.state.bodies.length, `${caseId} ${model}`).toBe(1);
+        expect(s.state.bodies[0], `${caseId} ${model}`).toBe(await builderBody(model, caseId));
+        expect(JSON.parse(s.state.bodies[0]).model).toBe(model);
+      }
+    }
+  });
+});
+
 describe("the legacy one-request route (L-05, CF-07, T8-37)", () => {
   const body = () => JSON.stringify({ certificate_base64: cert(), synthetic_confirmed: true, model: X });
   it("in the container it reads only MODEL_ID canonicalised against the measured set, listed now; otherwise refused with no call and nothing counted", async () => {
