@@ -73,3 +73,9 @@ Probe batch details:
 - **"not a chat model" (1):** MinerU2.5-Pro, from `output: ["ocr"]`.
 - **/usage reconciles:** cost delta 0.00278817 equals the sum of the probes' costs (free credits). Requests +8, because the endpoint does not count the 429. Errors +3.
 - Gemma-4-31B-IT is still unlisted at 19:46:54Z.
+
+| Commit | Time | Event |
+|---|---|---|
+| 1497571 | ~20:50Z | O8-01 redaction of the base-URL path in `final/room.json`, on the implementer's finding 043a9050. Messages a469c39e and c40785d4 |
+| — | 20:35Z–20:37Z | Implementer container smoke under lease: Qwen3.8-27B done 54.8 s; Qwen3.8-Flash-Next done 40.5 s, `evaluated: false`. The usage cost delta equals the two reply costs. Both used cg-001's delivery note by mistake, so both proposals are review; recorded by the implementer |
+| cb7d83b | 20:54Z | **Candidate 1** (tree 8344f8f2), handoff 3/3 in ffbd7d81, 559e2743, af8f4f9b. The analyst checked: it contains 1497571 and fd326d6; the product diff against feaadff is 5 files (app.js, types.ts, app.ts, live-jobs.ts, new models.ts); live-reader, pipeline, data, config, evaluation, vercel.json, the Dockerfile and the package files are unchanged |
