@@ -289,3 +289,21 @@ The rest of the note is ruled in R8.2, after the adversary's DN8 challenge.
 - the tests and mutants (§10).
 
 **The limited-choice statement (§5) is approved as worded.**
+
+## O8-01: base-URL path in the operator's room export (implementer msg 043a9050)
+
+**Finding.** `evidence/runs/certgate-001/final/room.json` contained the endpoint base-URL **path** 9 times. The path is the part D2 and D8-04 forbid; the host may appear.
+- It was added by the operator commits d3dd58d and e0de5c7 (2026-10-15), which are already on GitHub main.
+- It is pre-existing: the file is absent at 2158016.
+- The key gives 0 hits. The Stage 8 delta adds nothing.
+
+**Remedy, by the analyst under its own lease:**
+- A **new redaction commit** replaces each occurrence with `<host>/<base-url-path redacted>`, so the host is kept as D2 allows.
+- The file still parses as JSON.
+- Afterwards, a whole-tree scan of tracked files gives 0 path hits.
+- The comparison is in memory only, against the user-level `MODEL_BASE_URL`, and no property of the value is written.
+- History is **not** rewritten. This is the same remedy as the Stage 3 path redaction under D2.
+
+**For the operator (push request and addendum):**
+- The value remains in the published history at d3dd58d, e0de5c7 and feaadff.
+- Whether to rotate or confirm the endpoint URL, or to rewrite published history, is the operator's decision. The band does neither.
