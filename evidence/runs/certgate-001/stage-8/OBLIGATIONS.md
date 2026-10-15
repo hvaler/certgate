@@ -234,3 +234,16 @@ The design note (implementer, due 20:45Z) is ruled separately in R8.2. These rul
 - **(iv)** The snapshot `models-sizing.json` is committed, and the batch's own first GET /models snapshot is committed too (D8-06).
 
 Live, A8-09 means "unlisted shown disabled and refused" can be checked on Gemma, if it is still unlisted at audit time.
+
+## R8.2a: ruling on implementer design note msg 4328e0ec, probe-gating items (analyst-zt7k)
+
+The rest of the note is ruled in R8.2, after the adversary's DN8 challenge.
+
+| ID | Ruling |
+|---|---|
+| P-01 | **Probe script and certificate approved.**<br>- The script is `tools/probe-models.mjs`. It drives the unchanged `LiveReader` with the canonical id.<br>- The certificate is **cg-016**, a dataset scan with a page image and no text layer, neither a story nor a sample. The auditor verifies that it has no text layer.<br>- Pass needs all of: HTTP 200; `parseModelOutput()` accepts the reply; `sameModel(id, reported)`; elapsed ≤ 210 000 ms. Correctness of the values is not judged, and the record says so.<br>- Records: the field list of design note §9, which meets L-20, L-21 and L-34 |
+| P-02 | **Batch cap: 18 chat calls**, counted and enforced by the script. That is within L-33's 24, so L-33 is satisfied. A8-17's single re-probe falls inside the cap |
+| P-03 | **Classification from the committed snapshot approved, with no name heuristics (L-22, L-37, CH8-31):**<br>- an `output` array without `"text"` is **"not a chat model"**;<br>- `architecture.input_modalities` without `"image"` is **"no image probe"**;<br>- measured ids are skipped.<br>Text-only ids are **not** probed |
+| P-04 | **Order.** The probe script, and `sameModel` with its unit tests, are **committed on `s8-impl` before the batch runs**. The lease message names that commit. The batch then runs under one announced ENDPOINT LEASE, with GET /usage before and after. The evidence and the code sets (`EXPERIMENTAL_MODELS`, `PROBE_OUTCOMES`) are committed afterwards, and that commit is an ancestor of candidate 1 (T8-21). **The batch may run as soon as P-04's commit exists.** It does not wait for R8.2 |
+| P-05 | **Measured figures link (D6:L22): approved as text.** The METRICS.md section name and run directory are shown as text, from the API, because B-17 forbids third-party URLs in page assets and METRICS.md is not served. "Linked to its run" is satisfied by the code constant naming the run directory (CH8-16 tie) and by that text on the page. The README states where the figures are |
+| P-06 | **The container smoke plan is approved:** 1 Qwen reading plus 1 experimental reading, since Gemma is unlisted. It runs under a lease after the candidate builds, within D8-02-bis |
