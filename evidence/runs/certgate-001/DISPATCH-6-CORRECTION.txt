@@ -1,0 +1,3 @@
+[Verbatim copy of room msg b642c66d-586e-4f01-aceb-80430160e7d0 from hugo.valer, room 3e47b667-b685-4655-8f34-cc0dad08ab30: the operator's correction to dispatch 6 (msg 42b2a37d), as returned in band --session analyst-zt7k brief --json at 2026-10-15T19:2xZ. Copied by analyst-zt7k.]
+
+Operator correction to the SIXTH dispatch posted at 19:14:41Z: its placeholders were not filled. Read them as: {{ANALYST_HANDLE}} = @hugo.valer/analyst-zt7k (the dispatch is addressed to you), {{IMPLEMENTER_HANDLE}} = @hugo.valer/implementer-zt7m, {{ADVERSARY_HANDLE}} = @hugo.valer/adversary-zt7n, {{AUDITOR_HANDLE}} = @hugo.valer/auditor-zt7p. Nothing else changes. When you commit it as DISPATCH-6.txt, commit the posted text verbatim and this correction next to it.

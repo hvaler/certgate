@@ -1,0 +1,40 @@
+[Verbatim copy of room msg 42b2a37d-9da8-45bf-871a-dd047100f569 from hugo.valer, room 3e47b667-b685-4655-8f34-cc0dad08ab30, as returned in the content field of band --session analyst-zt7k brief --json at 2026-10-15T19:15Z. Copied by analyst-zt7k. The text is unaltered: the unresolved {{..._HANDLE}} placeholders and the line break inside the path 'C:
+exus' (rendered as 'C:' + newline + 'exus') are as received. The intended path is C:
+exus\dev\certgate.]
+
+{{ANALYST_HANDLE}} This is a SIXTH human dispatch for CertGate (AMD Developer Hackathon: ACT III, track Intelligent Industry). It authorises ONE more stage, STAGE 8 — MODEL CHOICE FOR LIVE READING, in the same BAND room and result repository, starting from main = feaadff (the Stage 7 product, accepted at 2158016, plus operator commits that only redact the room export and record the live-model change below; the auditor confirms by diff that nothing else changed). Dispatches 1 to 5 remain in force (source of truth, invariants I1-I7, mutation check, calling discipline, acceptance and recovery, autonomy, claims table fail-closed) except where this message changes them. Include all six dispatches and the relevant specification text in every delegated handoff.
+
+NEW SEATS
+The four seats of Stages 1-7 (analyst-xwz3, implementer-xwz4, adversary-xwz5, auditor-xwz6) are gone from Band; this stage is run by four NEW seats with the same mandates: analyst {{ANALYST_HANDLE}}, implementer {{IMPLEMENTER_HANDLE}}, adversary {{ADVERSARY_HANDLE}}, auditor {{AUDITOR_HANDLE}}. You have no memory of earlier stages. Before anything else, every seat reads in the result repository C:
+exus\dev\certgate: evidence/runs/certgate-001/DISPATCH-1.txt to DISPATCH-5.txt (dispatches 1 to 5, verbatim), evidence/runs/certgate-001/STAGE-REGISTER.md, FACTORY.md, CLAIMS.md and the final report addenda in evidence/runs/certgate-001/final/. Earlier handles in the evidence refer to the previous seats with the same roles. The analyst also commits this dispatch verbatim as evidence/runs/certgate-001/DISPATCH-6.txt, as was done for the others.
+
+WHY
+On 2026-10-15 the deployed live model failed. Gemma-4-31B-IT read live on the site on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC); on 2026-10-15 a Stage 7 live reading failed with HTTP 5xx at 05:15 UTC (O7-01), and by 18:23 UTC Token Factory no longer listed Gemma in GET /models and refused it (HTTP 4xx). The human switched Vercel's MODEL_ID to Qwen3.8-27B and redeployed; a live reading of cg-004 then completed (self-dploy/Qwen3.8-27B, 53.8 s). README and DEPLOY.md record this (commit feaadff). The human wants the next failure of this kind to be a visible choice for the judge, not a redeploy: the judge picks the model for a live reading from the models CertGate has measured, the page shows which of them the endpoint lists right now, and every receipt says what was requested and what the endpoint reported.
+
+FACTS THE DESIGN MUST RESPECT
+- Measured models (METRICS.md): Qwen3.8-27B (two runs, figures of record) and Gemma-4-31B-IT (Stage 5 comparison run). No other model has an evaluation run; none may be offered.
+- Token Factory's model list changes without notice (Gemma: listed on 2026-10-13, absent on 2026-10-15). A model offered by the page may disappear between the page load and the reading.
+- Qwen3.8-27B takes about 77-90 s per reading (live: 53.8 s once), Gemma about 35 s; the Stage 6 deadline (270 s inside the 300 s function limit) must hold for both.
+- Everything else in Stage 6 stands: mandatory access code, global queue, at most 2 in flight, global hourly limit, I7 labels, no key or code in the browser.
+
+STAGE 8 — DELIVER
+- A closed set of offerable models in the code: exactly the models that have an evaluation run in METRICS.md, each linked to its run. A new optional environment variable LIVE_MODELS (comma-separated model ids) may only narrow that set; an id outside it is ignored and logged by name, never offered. Without LIVE_MODELS the offer is MODEL_ID alone, so the site behaves exactly as today.
+- The live-reading screen shows a model choice. Each offered model is enabled only if the endpoint lists it in the server-side probe (the same cached GET /models the F1 panel uses), and shows its measured figures link and "listed by the endpoint, checked <time>"; an offered model the endpoint does not list is shown disabled with "not listed by the endpoint now (checked <time>)". The default selection is MODEL_ID if listed, otherwise the first listed offered model; if none is listed, live reading is disabled with that reason.
+- The server validates the chosen model on POST: it must be in the offer and listed by a probe no older than the probe cache; otherwise the job is refused before any model call and before the hourly counter moves, with a reason the page shows. A model that the endpoint refuses during the reading (4xx) fails the job with the existing honest reason; it never falls back to another model or to a stored result. The existing model_mismatch guard stays: the reported model must match the requested one.
+- Receipts and the F1 snapshot record the requested model and the model as reported. Judge mode, the landing figures and the stories do not change (Qwen3.8-27B, recorded).
+- The page, README and DEPLOY.md say plainly that the choice is limited to measured models and to what Token Factory lists now, and keep the dated record of the Gemma change. DEPLOY.md documents LIVE_MODELS and the post-deploy checks, including one real live reading with each model the endpoint lists at that time. Every new capability sentence has a claims-map row.
+- Nothing in Stage 8 changes the reading path except the model id in the request, the frozen prompt, the rules or the evaluation figures; the auditor checks that by diff.
+- Tests: offer = measured set intersected with LIVE_MODELS; an id outside the measured set is never offered; listed and unlisted states from a stubbed probe; POST with an unoffered, unlisted or missing model is refused before any model call and without spending the hourly limit; the request body differs from Stage 7 only in the model id; receipts carry requested and reported model; no fallback; I7 labels; mutants for each new guard.
+
+THE HUMAN'S PART (outside the band)
+The human will set LIVE_MODELS in Vercel when the band names its value in DEPLOY.md (expected: Qwen3.8-27B,Gemma-4-31B-IT), push the accepted commit (Vercel redeploys on push) and post in the room when each is done. The access code and the key stay in the environment as before; the band never sees their values.
+
+LIMITS
+At most 3 repair cycles, 2 infrastructure retries per command, 300 minutes for Stage 8 including final verification. STAGE HARD STOP: 2026-10-17T08:00:00Z (Saturday 10:00 in Madrid), so the human can re-record the live-reading clip and submit; if Stage 8 is not accepted by then, the band reports where it stands and the human keeps feaadff on the site. The dispatch-wide HARD STOP stays 2026-10-17T18:00:00Z.
+
+ACCEPTANCE
+The auditor: runs the full suite from a clean clone and in Docker with no network; re-applies the mutants; checks the reading path, prompt, rules and figures are byte-identical to feaadff except the model id in the request; and, once the human reports the deployment, runs DEPLOY.md against https://certgate-wheat.vercel.app: the choice offers only measured models, an unlisted model is shown disabled and refused by the server without spending the limit, a POST naming a model outside the offer is refused, one real live reading with each listed offered model completes with that model as reported by the endpoint and is labelled live with its F1 snapshot, and no secret appears in the bundle or the responses. A model offered without an evaluation run, a fallback to another model or to a stored result, or the key reachable from the browser, rejects the stage.
+
+FINAL REPORT
+An addendum to the final report, same shape, with the deployment audit and the push request. The band never deploys, never pushes, never submits.
+@hugo.valer/analyst-zt7k @hugo.valer/implementer-zt7m @hugo.valer/adversary-zt7n @hugo.valer/auditor-zt7p
