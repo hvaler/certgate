@@ -86,3 +86,10 @@ Probe batch details:
 | f2f09a0 | ~21:15Z | **R8.3** routes the F8-A01 repair and allows the O8-A02 test fix (msg 967d24f4). The implementer reproduced F8-A01 (432e449c); its F2-03 hunk was approved under conditions (095b90eb) |
 | 44f8cd0 | ~21:3xZ | **Auditor: candidate 1 cb7d83b REJECTED locally** on F8-A01 only (b8f4577e). Repair cycle 1 of 3. All else passed: T8-01/02 (8/8 job-path bodies), T8-03, 564×3, Docker 474+90 skipped, claims 0/0, mutants 22/22, value scan 0, browser 16/16. Record committed under a lent lease |
 | — | — | The implementer was told to freeze candidate 2 (6ee50944) |
+
+| Commit | Time | Event |
+|---|---|---|
+| adb21d5 | 21:46Z | **Candidate 2** frozen (repair cycle 1). The delta against cb7d83b is app.ts +5, the F8-A01 killer, the F2-03 and O8-A02 hunks, and evidence (handoff d8c4996b) |
+| — | — | Adversary bundle a108ed1c, corrected by 1ed02961 (O8-A02 counted 80/4, every failure a relevant mutant). S8 29/29, S7 10/10, S6 44/44 |
+| 0920b82 | ~22:55Z | **Auditor: candidate 2 ACCEPTED (local)** (31943fa6). Record committed under a lent lease (66cb847c) |
+| 61af90a | — | The analyst merged adb21d5 into main. The product tree outside `evidence/` equals adb21d5, and it is a fast-forward from GitHub main feaadff (ls-remote checked) |
