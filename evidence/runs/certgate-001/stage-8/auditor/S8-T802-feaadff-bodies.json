@@ -1,0 +1,62 @@
+[
+ {
+  "model": "Qwen3.8-27B",
+  "case_id": "cg-004",
+  "certificate_sha256": "7c55fcfb3ad39d85c25e8349993d8bf4bde7d6a721551161cd9e0c053e6984c5",
+  "attempts_seen": 1,
+  "body_sha256": "10dd28b72ab9e4ec9bd2173fe60723457f1b7ed9cbc8a579400f06349a45357b",
+  "body_masked_sha256": "69cb47715bc59b6383f3442bf2a6449043de92b07d9161c5429240102771655e",
+  "body_model": "Qwen3.8-27B",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ },
+ {
+  "model": "Qwen3.8-27B",
+  "case_id": "cg-021",
+  "certificate_sha256": "cad93ad18abe37be227aea6b58f04cf6b6f2ebf5f44c918d1e47227ba087a3f4",
+  "attempts_seen": 1,
+  "body_sha256": "ec993797c0fc204bc3f87fc38b43bdaf4b5e5c372df856dbb6bff2848c800157",
+  "body_masked_sha256": "12cbb5adbba2a15ddb498b5ed04d0a6636203f241bfa7be65a5a23d4b10cc9cb",
+  "body_model": "Qwen3.8-27B",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ },
+ {
+  "model": "Qwen3.8-27B",
+  "case_id": "cg-016",
+  "certificate_sha256": "4bdfea0e37bdf6ca2f929910ceda3d4787c8a7c08f982d1f3604d6bd293fe6e0",
+  "attempts_seen": 1,
+  "body_sha256": "e489083427304647365e0aacc6fcd1d41c22c6fed4ebd21c9a4bf4346daeab1b",
+  "body_masked_sha256": "889dbab250211e2c7c5f07d95afd71ee4e2dba2f6e3267ad06c5a256952dd2f2",
+  "body_model": "Qwen3.8-27B",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ },
+ {
+  "model": "Gemma-4-31B-IT",
+  "case_id": "cg-004",
+  "certificate_sha256": "7c55fcfb3ad39d85c25e8349993d8bf4bde7d6a721551161cd9e0c053e6984c5",
+  "attempts_seen": 1,
+  "body_sha256": "c6011a4164583a308a9c4318c437c4de9e34ee14995d0322f5773150690c6ade",
+  "body_masked_sha256": "8318ee1c44cfd812d3ad3855a1ea05736a3d4625d33f0a6e56d6fd737c0b51fd",
+  "body_model": "Gemma-4-31B-IT",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ },
+ {
+  "model": "Gemma-4-31B-IT",
+  "case_id": "cg-021",
+  "certificate_sha256": "cad93ad18abe37be227aea6b58f04cf6b6f2ebf5f44c918d1e47227ba087a3f4",
+  "attempts_seen": 1,
+  "body_sha256": "34a2a30bed596f4cdd8150877df0c053cd720bb8764e6e370d53b78db10a4f0a",
+  "body_masked_sha256": "e59cbac2f435a848d24d7cde7e5919de414e212e88a6159dad1d718e214dd4b0",
+  "body_model": "Gemma-4-31B-IT",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ },
+ {
+  "model": "Gemma-4-31B-IT",
+  "case_id": "cg-016",
+  "certificate_sha256": "4bdfea0e37bdf6ca2f929910ceda3d4787c8a7c08f982d1f3604d6bd293fe6e0",
+  "attempts_seen": 1,
+  "body_sha256": "e3a75dfb5e5ef029533a42adc2d2a20a93fe944a7529dfa38323fb6227a31874",
+  "body_masked_sha256": "ad58515a60b4fdfcac5190003c17e4379d7f64b010295f9d0db2758c5c7a209c",
+  "body_model": "Gemma-4-31B-IT",
+  "keys": "max_tokens,messages,model,response_format,temperature"
+ }
+]
