@@ -56,7 +56,7 @@ Development deselected and Sensitive enabled, as that page describes, then redep
 |---|---|---|---|
 | `MODEL_BASE_URL` | set: the AMD Token Factory base URL, including `/v1` | yes | the endpoint of live reading, read only on the server |
 | `MODEL_API_KEY` | set: the team's Token Factory key | yes | sent only from the server to the endpoint; never to the browser |
-| `MODEL_ID` | set: `Gemma-4-31B-IT` | no | the live model of the deployed site (dispatch 4). To switch back to Qwen, set it to `Qwen3.8-27B` and redeploy; no code changes. Do that if Gemma returns unusable readings again, as on 2026-10-13 |
+| `MODEL_ID` | set: `Qwen3.8-27B` | no | the live model of the deployed site. From dispatch 4 it was `Gemma-4-31B-IT`, which read live on 2026-10-14; on 2026-10-15 it failed with HTTP 5xx at 05:15 UTC and by 18:23 UTC Token Factory no longer listed it and refused it (HTTP 4xx), so the operator set `Qwen3.8-27B` and redeployed, with no code changes. To switch again, set the id and redeploy |
 | `LIVE_ACCESS_CODE` | set: a code you choose and give to the judges | yes | mandatory: without it live reading stays off on the deployed site |
 | `LIVE_READS_PER_HOUR` | set: `20` | no | the global hourly limit of live readings, counted in the shared store across all instances |
 | `LIVE_CODE_FAILURES_PER_HOUR` | optional, default `5` | no | wrong codes allowed per client per UTC hour; other clients’ wrong codes never block a correct code (section 6) |

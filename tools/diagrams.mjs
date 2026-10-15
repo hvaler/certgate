@@ -28,7 +28,7 @@ export const DIAGRAMS = {
       { id: "store", col: 0, row: 4, label: ["Upstash Redis store", "UpstashRestStore"], file: "src/web/live-store.ts", symbol: "export class UpstashRestStore" },
       { id: "memory", col: 2, row: 4, label: ["In-process store", "MemoryStore"], file: "src/web/live-store.ts", symbol: "export class MemoryStore" },
       { id: "amd", col: 3, row: 4, label: ["AMD Token Factory", "OpenAI-compatible endpoint"], file: "src/web/f1.ts", symbol: "ENDPOINT_NAME = \"AMD Token Factory\"" },
-      { id: "gemma", col: 3, row: 5, label: ["Deployed live model", "Gemma-4-31B-IT (MODEL_ID)"], file: "DEPLOY.md", symbol: "Gemma-4-31B-IT" },
+      { id: "gemma", col: 3, row: 5, label: ["Deployed live model", "Qwen3.8-27B (MODEL_ID)"], file: "DEPLOY.md", symbol: "set: `Qwen3.8-27B`" },
       { id: "qwen", col: 4, row: 5, label: ["Evaluated product model", "Qwen3.8-27B"], file: "METRICS.md", symbol: "Qwen3.8-27B" },
     ],
     edges: [

@@ -133,9 +133,7 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 its two runs are the figures of record. In the Gemma run there was no false conforming (0 of 18), but it proposed
 review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field
 (1 of 594, cg-017) that both Qwen runs reported as unknown. The landing figures, the stories and the product
-default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading on the
-deployed site uses the model set in Vercel's `MODEL_ID` (Gemma-4-31B-IT, from dispatch 4; see DEPLOY.md), and each
-live receipt names the model as the endpoint reports it.
+default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading on the deployed site uses the model set in Vercel's `MODEL_ID`, and each live receipt names the model as the endpoint reports it. From dispatch 4 it was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).
 
 To run the comparison, set `MODEL_ID` only in the environment of the evaluation command (the other two `MODEL_*`
 variables as for any real run):
@@ -168,7 +166,7 @@ flowchart TB
   store["Upstash Redis store<br/>UpstashRestStore"]
   memory["In-process store<br/>MemoryStore"]
   amd["AMD Token Factory<br/>OpenAI-compatible endpoint"]
-  gemma["Deployed live model<br/>Gemma-4-31B-IT (MODEL_ID)"]
+  gemma["Deployed live model<br/>Qwen3.8-27B (MODEL_ID)"]
   qwen["Evaluated product model<br/>Qwen3.8-27B"]
   browser -->|"page, stories"| static
   browser -->|"/api/*"| api

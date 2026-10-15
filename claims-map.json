@@ -2216,7 +2216,12 @@
  },
  {
   "doc": "README.md",
-  "text": "Live reading on the deployed site uses the model set in Vercel's `MODEL_ID` (Gemma-4-31B-IT, from dispatch 4; see DEPLOY.md), and each live receipt names the model as the endpoint reports it.",
+  "text": "Live reading on the deployed site uses the model set in Vercel's `MODEL_ID`, and each live receipt names the model as the endpoint reports it.",
+  "row": "C-85"
+ },
+ {
+  "doc": "README.md",
+  "text": "From dispatch 4 it was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).",
   "row": "C-85"
  },
  {
@@ -2476,7 +2481,7 @@
  },
  {
   "doc": "DEPLOY.md",
-  "text": "| `MODEL_ID` | set: `Gemma-4-31B-IT` | no | the live model of the deployed site (dispatch 4). To switch back to Qwen, set it to `Qwen3.8-27B` and redeploy; no code changes. Do that if Gemma returns unusable readings again, as on 2026-10-13 |",
+  "text": "| `MODEL_ID` | set: `Qwen3.8-27B` | no | the live model of the deployed site. From dispatch 4 it was `Gemma-4-31B-IT`, which read live on 2026-10-14; on 2026-10-15 it failed with HTTP 5xx at 05:15 UTC and by 18:23 UTC Token Factory no longer listed it and refused it (HTTP 4xx), so the operator set `Qwen3.8-27B` and redeployed, with no code changes. To switch again, set the id and redeploy |",
   "row": "C-85"
  },
  {
@@ -2796,7 +2801,7 @@
  },
  {
   "doc": "README.md",
-  "text": "gemma[\"Deployed live model<br/>Gemma-4-31B-IT (MODEL_ID)\"]",
+  "text": "gemma[\"Deployed live model<br/>Qwen3.8-27B (MODEL_ID)\"]",
   "row": "C-89"
  },
  {

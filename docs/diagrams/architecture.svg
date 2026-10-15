@@ -70,7 +70,7 @@
   <text x="914" y="513.5" font-size="12" text-anchor="middle" fill="#111111">OpenAI-compatible endpoint</text>
   <rect x="804" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
   <text x="914" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Deployed live model</text>
-  <text x="914" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Gemma-4-31B-IT (MODEL_ID)</text>
+  <text x="914" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Qwen3.8-27B (MODEL_ID)</text>
   <rect x="1064" y="580" width="220" height="52" rx="6" fill="#eef3fb" stroke="#2f5d9e" stroke-width="1.5"/>
   <text x="1174" y="602.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#111111">Evaluated product model</text>
   <text x="1174" y="617.5" font-size="12" text-anchor="middle" fill="#111111">Qwen3.8-27B</text>
