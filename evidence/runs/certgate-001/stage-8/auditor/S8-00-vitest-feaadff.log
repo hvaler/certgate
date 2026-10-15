@@ -1,0 +1,9 @@
+
+ RUN  v5.0.4 C:/Users/<user>/AppData/Local/Temp/claude/C--nexus-dev-certgate/700c9e87-a3de-41c2-8771-39b00f5155be/scratchpad/s8-baseline-feaadff/repo
+
+
+ Test Files  24 passed (24)
+      Tests  486 passed (486)
+   Start at  21:17:43
+   Duration  32.48s (tests 94%, transform 3%, import 3%)
+
