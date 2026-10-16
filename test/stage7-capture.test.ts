@@ -121,6 +121,15 @@ describe("Stage 9 capture script: measured models only, one reading, per-image m
     expect(s9).toContain('const note = args.fallback ? ` · fallback: ${args.fallback}` : "";');
     expect(s9).toContain('if (out.fallback !== null && out.model !== "Qwen3.8-27B") fail(');
   });
+  it("routes only the job POST, never logs or stores request headers, and removes the route (W-08)", () => {
+    expect(s9.match(/page\.route\(/g)).toEqual(["page.route("]);
+    expect(s9).toContain('await page.route("**/api/live/jobs", async (route) => {');
+    expect(s9).toContain('if (req.method() !== "POST") return route.continue();');
+    expect(s9).toContain("const headers = { ...req.headers() };");
+    expect(s9.match(/headers\(\)/g)).toEqual(["headers()"]);
+    expect(s9).not.toMatch(/console\.\w+\([^)]*headers/);
+    expect((s9.match(/page\.unroute\("\*\*\/api\/live\/jobs"\)/g) ?? []).length).toBeGreaterThanOrEqual(3);
+  });
   it("records the visible-field result of every image (CH9-02)", () => {
     expect(s9).toContain("const visible = await guard(page, screen, secrets);");
     expect(s9).toContain("visible_field: visible");

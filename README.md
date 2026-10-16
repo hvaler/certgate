@@ -248,31 +248,35 @@ flowchart TB
 
 ## Screenshots
 
-Real captures of the deployed site (see "Try it"), made by [tools/capture-screenshots.mjs](tools/capture-screenshots.mjs) (Playwright 1.56.1, Chromium build 1194) at 1280 px and 375 px, in one run at `2026-10-15T05:15:09.161Z` from the site deployed from commit `d1aaa3e`. [docs/screenshots/manifest.json](docs/screenshots/manifest.json) records the SHA-256 of every image and of the files the site served during the capture.
+Real captures of the deployed site (see "Try it"), served from commit `37938b2`, at 1280 px and 375 px, made on 2026-10-16 between `2026-10-16T05:58:08.081Z` and `2026-10-16T05:59:09.027Z` (machine times). Two committed scripts took them with Playwright 1.56.1 (Chromium build 1194):
+- [tools/capture-screenshots.mjs](tools/capture-screenshots.mjs), unchanged since Stage 7: the first twelve rows. Their caption carries the time that run started.
+- [capture-stage9.mjs](evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs): the model choice and one real live reading of sample cg-004 with Gemma-4-31B-IT, a measured model. Each caption carries the model and the machine time of that screenshot.
 
-| Screen | Width | Image | Caption |
+[docs/screenshots/manifest.json](docs/screenshots/manifest.json) records the SHA-256 of every image and of the 12 files the site served during the capture, the job record of the live reading and the access-code field state of every new image. The live reading (job `bc8a3b3a63f4…`) was reading at `2026-10-16T05:58:37.342Z` and done at `2026-10-16T05:59:07.224Z`; the endpoint reported `self-dploy/Gemma-4-31B-IT` and the proposal was release, as the cg-004 expectation says. The queued state was not observed: the job went straight to reading. The case file of a live reading is held in the browser, so its label says "Stored in this browser · live reading … · not live".
+
+| Screen | Width | Image | Caption · capture time (machine) |
 |---|---|---|---|
-| Landing, with the four evaluation figures | 1280 px | [landing-1280.png](docs/screenshots/landing-1280.png) | landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Judge mode: the three recorded real readings | 1280 px | [judge-1280.png](docs/screenshots/judge-1280.png) | judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Story cg-003: the ReH row and the Block proposal | 1280 px | [story-cg-003-1280.png](docs/screenshots/story-cg-003-1280.png) | story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Confirmation and decision section of cg-003 | 1280 px | [story-cg-003-decision-1280.png](docs/screenshots/story-cg-003-decision-1280.png) | story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| The "Runs on AMD" panel | 1280 px | [amd-1280.png](docs/screenshots/amd-1280.png) | amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| The live-reading screen | 1280 px | [live-1280.png](docs/screenshots/live-1280.png) | live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Live reading of cg-004, admitted and reading | 1280 px | [live-reading-1280.png](docs/screenshots/live-reading-1280.png) | live-reading · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| The same live reading, failed at the endpoint (endpoint_5xx); nothing stored is shown instead | 1280 px | [live-failed-1280.png](docs/screenshots/live-failed-1280.png) | live-failed · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Landing, with the four evaluation figures | 375 px | [landing-375.png](docs/screenshots/landing-375.png) | landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Judge mode: the three recorded real readings | 375 px | [judge-375.png](docs/screenshots/judge-375.png) | judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Story cg-003: the ReH row and the Block proposal | 375 px | [story-cg-003-375.png](docs/screenshots/story-cg-003-375.png) | story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| Confirmation and decision section of cg-003 | 375 px | [story-cg-003-decision-375.png](docs/screenshots/story-cg-003-decision-375.png) | story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| The "Runs on AMD" panel | 375 px | [amd-375.png](docs/screenshots/amd-375.png) | amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
-| The live-reading screen | 375 px | [live-375.png](docs/screenshots/live-375.png) | live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z |
+| Landing, with the four evaluation figures | 1280 px | [landing-1280.png](docs/screenshots/landing-1280.png) | landing · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Judge mode: the three recorded real readings | 1280 px | [judge-1280.png](docs/screenshots/judge-1280.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Story cg-003: the ReH row and the Block proposal | 1280 px | [story-cg-003-1280.png](docs/screenshots/story-cg-003-1280.png) | story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Confirmation and decision section of cg-003 | 1280 px | [story-cg-003-decision-1280.png](docs/screenshots/story-cg-003-decision-1280.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| The "Runs on AMD" panel | 1280 px | [amd-1280.png](docs/screenshots/amd-1280.png) | amd · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| The live-reading screen, with the model choice in three groups | 1280 px | [live-1280.png](docs/screenshots/live-1280.png) | live · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Landing, with the four evaluation figures | 375 px | [landing-375.png](docs/screenshots/landing-375.png) | landing · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Judge mode: the three recorded real readings | 375 px | [judge-375.png](docs/screenshots/judge-375.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Story cg-003: the ReH row and the Block proposal | 375 px | [story-cg-003-375.png](docs/screenshots/story-cg-003-375.png) | story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| Confirmation and decision section of cg-003 | 375 px | [story-cg-003-decision-375.png](docs/screenshots/story-cg-003-decision-375.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| The "Runs on AMD" panel | 375 px | [amd-375.png](docs/screenshots/amd-375.png) | amd · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| The live-reading screen, with the model choice in three groups | 375 px | [live-375.png](docs/screenshots/live-375.png) | live · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |
+| The model choice: MEASURED, NOT EVALUATED · EXPERIMENTAL, LISTED, NOT OFFERED, with the probe time | 375 px | [live-models-375.png](docs/screenshots/live-models-375.png) | live-models · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:33.668Z |
+| The model choice: MEASURED, NOT EVALUATED · EXPERIMENTAL, LISTED, NOT OFFERED, with the probe time | 1280 px | [live-models-1280.png](docs/screenshots/live-models-1280.png) | live-models · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:35.004Z |
+| Live reading of sample cg-004 with Gemma-4-31B-IT, reading at AMD Token Factory | 1280 px | [live-reading-1280.png](docs/screenshots/live-reading-1280.png) | live-reading · reading · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:37.345Z |
+| The same live reading, done: the proposal with its model line | 1280 px | [live-done-1280.png](docs/screenshots/live-done-1280.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.377Z |
+| The same live reading, done: the proposal with its model line | 375 px | [live-done-375.png](docs/screenshots/live-done-375.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.954Z |
+| Its receipt: model requested, model as reported and the endpoint data copied at reading time | 1280 px | [live-receipt-1280.png](docs/screenshots/live-receipt-1280.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:08.528Z |
+| Its receipt: model requested, model as reported and the endpoint data copied at reading time | 375 px | [live-receipt-375.png](docs/screenshots/live-receipt-375.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:09.027Z |
 
-**The live reading could not be shown done.**
-- **Second attempt:** job `2ce1c257e73f…`, reading at `2026-10-15T05:15:19.113Z`, failed at `2026-10-15T05:15:40.956Z` with reason class `endpoint_5xx` ("the model endpoint failed or could not be reached").
-- **First attempt:** between `2026-10-15T05:07:34.574Z` and `2026-10-15T05:09:29.106Z` (the GET /usage reads around it); its class was not recorded.
-- **On the endpoint's side:** each attempt made 3 calls, the maximum, and the endpoint's usage counters show no tokens for them, so the failure was at AMD Token Factory, not in CertGate.
-- **What is not shown:** the queued and done screens. Nothing stored is shown in their place.
-- **Last verified live reading:** the auditor's Stage 6 live check on the deployed site, 2026-10-14 at 18:01Z: done in 27 s, labelled live ([VERDICT-S6-FINAL.md](evidence/runs/certgate-001/stage-6/auditor/VERDICT-S6-FINAL.md)).
+**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (endpoint_5xx, O7-01); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/).
 
 ## Problem and user
 

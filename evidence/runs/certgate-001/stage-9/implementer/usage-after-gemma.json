@@ -1,0 +1,59 @@
+{
+  "read_utc": "2026-10-16T05:59:10.990Z",
+  "host": "developer.amd.com.cn",
+  "status": 200,
+  "daily_cost_used_usd": 0.00535182561725378,
+  "all_time_requests": 200,
+  "all_time_errors": 10,
+  "all_time_total_tokens": 535876,
+  "by_model": [
+    {
+      "model": "Qwen3.8-27B",
+      "requests": 4,
+      "errors": 0,
+      "cost": 0.0009386999881826341
+    },
+    {
+      "model": "Gemma-4-31B-IT",
+      "requests": 3,
+      "errors": 0,
+      "cost": 0.0003075554850511253
+    },
+    {
+      "model": "MiniCPM-V-4.7-35B-A3B",
+      "requests": 3,
+      "errors": 3,
+      "cost": 0
+    },
+    {
+      "model": "Qwen3.8-Flash-Next",
+      "requests": 3,
+      "errors": 0,
+      "cost": 0.0019802998285740614
+    },
+    {
+      "model": "DeepSeek-V4-Flash-Vision-Exp",
+      "requests": 1,
+      "errors": 0,
+      "cost": 0.00040782001451589167
+    },
+    {
+      "model": "DeepSeek-V4.1-Flash",
+      "requests": 1,
+      "errors": 0,
+      "cost": 0.0009976399596780539
+    },
+    {
+      "model": "MiMo-V2.6-Flash",
+      "requests": 1,
+      "errors": 0,
+      "cost": 0.0006389599875546992
+    },
+    {
+      "model": "MiniCPM-V-4.7-1B",
+      "requests": 1,
+      "errors": 0,
+      "cost": 0.00008084999717539176
+    }
+  ]
+}
