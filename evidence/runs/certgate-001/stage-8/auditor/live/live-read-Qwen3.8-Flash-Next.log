@@ -1,0 +1,11 @@
+S8-18 read on https://certgate-wheat.vercel.app at 2026-10-16T04:27:46.015Z; GitHub main 37938b251189fed7be636fc2187e6fbd1fe778fa; expected pushed commit 37938b251189fed7be636fc2187e6fbd1fe778fa: EQUAL
+T8-34 Qwen3.8-Flash-Next: listed by direct GET /models at 2026-10-16T04:27:47.472Z: true; usage before 0.004258173517882824; used 2,2,2,2,2
+T8-34 POST 202 {"job_id":"caf743a4c6ebc100737271c81653d1db","state":"queued","model_requested":"Qwen3.8-Flash-Next","model_group":"experimental","evaluated":false,"listing_checked_at":"2026-10-16T04:27:32.044Z"}
+T8-34 states: 2s reading/ | 56s done/; final state=done reason_class=null
+T8-34 receipt: reading_source=live recorded=null reader.model_id=self-dploy/Qwen3.8-Flash-Next requested=Qwen3.8-Flash-Next proposal=release
+T8-34 model_choice: {"requested":"Qwen3.8-Flash-Next","reported":"self-dploy/Qwen3.8-Flash-Next","group":"experimental","evaluated":false,"label":"not evaluated","figures":null,"probe_evidence":"evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json","listing_checked_at":"2026-10-16T04:27:32.044Z"}
+T8-34 F1 copy: state=on model_requested=Qwen3.8-Flash-Next model_reported=self-dploy/Qwen3.8-Flash-Next model_evaluated=false model_probe_evidence=evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json checked_at=2026-10-16T04:28:44.060Z
+T8-34 identity: requested Qwen3.8-Flash-Next reported self-dploy/Qwen3.8-Flash-Next strict-same=true
+T8-34 figures next to it: none
+T8-34 used before 2,2,2,2,2 after 3,3,3,3,3; usage delta 0.0006522601; reply cost see final.json
+T8-36 secret scan over 40 exchanges (site bodies and headers; code, SHA-256(code), key, SHA-256(key), base-URL host+path): 0 hit(s) []

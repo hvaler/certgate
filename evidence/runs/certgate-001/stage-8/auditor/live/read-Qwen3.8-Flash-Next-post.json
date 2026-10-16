@@ -1,0 +1,12 @@
+{
+ "job_id": "caf743a4c6ebc100737271c81653d1db",
+ "state": "queued",
+ "position": 1,
+ "created_at": "2026-10-16T04:27:50.171Z",
+ "model_requested": "Qwen3.8-Flash-Next",
+ "model_group": "experimental",
+ "evaluated": false,
+ "listing_checked_at": "2026-10-16T04:27:32.044Z",
+ "poll": "/api/live/jobs/caf743a4c6ebc100737271c81653d1db",
+ "poll_interval_s": 2
+}

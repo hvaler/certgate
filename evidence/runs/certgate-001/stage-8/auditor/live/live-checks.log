@@ -1,0 +1,27 @@
+S8-18 checks on https://certgate-wheat.vercel.app at 2026-10-16T04:23:29.322Z; GitHub main 37938b251189fed7be636fc2187e6fbd1fe778fa; expected pushed commit 37938b251189fed7be636fc2187e6fbd1fe778fa: EQUAL
+T8-30 /index.html 200 MATCH fadc9504228454f0
+T8-30 /app.js 200 MATCH 9d0dfda9e8407404
+T8-30 /labels.js 200 MATCH 3e424eff17b9b94a
+T8-30 /styles.css 200 MATCH 2b91ea73d2db128c
+T8-30 /figures.json 200 MATCH c0c8b6c404fab434
+T8-30 /stories/cg-003.json 200 MATCH ebe28aea22d541f7
+T8-30 /health 200 status=ok reader=live
+T8-30 /api/f1 200 state=on checked_at=2026-10-16T04:23:33.252Z
+T8-30 cg-003 evaluate 200 proposal=block recorded=true
+T8-31 direct GET /models 2026-10-16T04:23:34.429Z: 11 ids; 2026-10-16T04:23:34.963Z: 11 ids; equal=true
+T8-31 status 200: enabled=true code_required=true reason=open within the limit; models.checked_at=2026-10-16T04:23:33.252Z default=Qwen3.8-27B selectable=6
+T8-31 measured: [{"id":"Qwen3.8-27B","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z"},{"id":"Gemma-4-31B-IT","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z"}]
+T8-31 experimental: [{"id":"DeepSeek-V4.1-Flash","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z","label":"not evaluated · experimental · probed 2026-10-15"},{"id":"DeepSeek-V4-Flash-Vision-Exp","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z","label":"not evaluated · experimental · probed 2026-10-15"},{"id":"MiMo-V2.6-Flash","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z","label":"not evaluated · experimental · probed 2026-10-15"},{"id":"Qwen3.8-Flash-Next","enabled":true,"state":"listed by the endpoint, checked 2026-10-16T04:23:33.252Z","label":"not evaluated · experimental · probed 2026-10-15"}]
+T8-31 listed-not-offered: [{"id":"DeepSeek-V4-Flash","reason":"no image probe"},{"id":"GLM-5.3-Flash","reason":"no image probe"},{"id":"MinerU2.5-Pro","reason":"not a chat model"},{"id":"MiniCPM5-2B","reason":"no image probe"},{"id":"MiniCPM-V-4.7-1B","reason":"probe failed"}] not_shown=0
+T8-31/T8-32 offered now: ["Qwen3.8-27B","Gemma-4-31B-IT","DeepSeek-V4.1-Flash","DeepSeek-V4-Flash-Vision-Exp","MiMo-V2.6-Flash","Qwen3.8-Flash-Next"]; group problems: 0 []
+T8-33 UTC minute 23 (must be 3..56 to stay inside one hour)
+T8-33 outside the offer (unknown id): 400 reason_class=model_not_offered (want model_not_offered) OK job_id=none
+T8-33 outside the offer (listed, group c: DeepSeek-V4-Flash): 400 reason_class=model_not_offered (want model_not_offered) OK job_id=none
+T8-33 experimental DeepSeek-V4.1-Flash without the acknowledgement: 400 reason_class=model_ack_required (want model_ack_required) OK job_id=none
+T8-33 experimental DeepSeek-V4.1-Flash with "true" (string): 400 reason_class=model_ack_required (want model_ack_required) OK job_id=none
+T8-33 no model: 400 reason_class=model_missing (want model_missing) OK job_id=none
+T8-33 status x5 before [["0","0","0"],["0","0","0"],["0","0","0"],["0","0","0"],["0","0","0"]] after [["0","0","0"],["0","0","0"],["0","0","0"],["0","0","0"],["0","0","0"]]: ALL EQUAL
+T8-33 /usage daily_cost 0.003916080109775066 -> 0.003916080109775066; requests null -> null
+T8-37 POST /api/live/read without model: 503 live reading unavailable on the deployed site; live demonstration from the container
+T8-37 POST /api/live/read with model: 503 live reading unavailable on the deployed site; live demonstration from the container
+T8-36 secret scan over 31 exchanges (site bodies and headers; code, SHA-256(code), key, SHA-256(key), base-URL host+path): 0 hit(s) []

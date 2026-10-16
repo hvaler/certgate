@@ -1,0 +1,114 @@
+{
+ "before": [
+  {
+   "used": "0",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "0",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "0",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "0",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "0",
+   "cf_client": "0",
+   "cf_global": "0"
+  }
+ ],
+ "after": [
+  {
+   "used": "1",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "1",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "1",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "1",
+   "cf_client": "0",
+   "cf_global": "0"
+  },
+  {
+   "used": "1",
+   "cf_client": "0",
+   "cf_global": "0"
+  }
+ ],
+ "usage_before": {
+  "at": "2026-10-16T04:23:59.372Z",
+  "status": 200,
+  "daily_cost_used_usd": 0.003916080109775066,
+  "total_requests": null,
+  "keys": [
+   "organization_id",
+   "project_id",
+   "rpm_limit",
+   "daily_cost_limit_usd",
+   "daily_cost_used_usd",
+   "daily_cost_remaining_usd",
+   "daily_reset_timezone",
+   "daily_reset_at",
+   "daily_reset_epoch",
+   "period_started_at",
+   "period_duration_value",
+   "period_duration_unit",
+   "window_hours",
+   "recent_limit",
+   "all_time",
+   "today",
+   "last_24_hours",
+   "last_30_days",
+   "by_model",
+   "by_source",
+   "recent"
+  ]
+ },
+ "usage_after": {
+  "at": "2026-10-16T04:26:23.193Z",
+  "status": 200,
+  "daily_cost_used_usd": 0.004155654925853014,
+  "total_requests": null,
+  "keys": [
+   "organization_id",
+   "project_id",
+   "rpm_limit",
+   "daily_cost_limit_usd",
+   "daily_cost_used_usd",
+   "daily_cost_remaining_usd",
+   "daily_reset_timezone",
+   "daily_reset_at",
+   "daily_reset_epoch",
+   "period_started_at",
+   "period_duration_value",
+   "period_duration_unit",
+   "window_hours",
+   "recent_limit",
+   "all_time",
+   "today",
+   "last_24_hours",
+   "last_30_days",
+   "by_model",
+   "by_source",
+   "recent"
+  ]
+ }
+}

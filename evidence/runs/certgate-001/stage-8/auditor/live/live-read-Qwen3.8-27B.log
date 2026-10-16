@@ -1,0 +1,11 @@
+S8-18 read on https://certgate-wheat.vercel.app at 2026-10-16T04:23:58.131Z; GitHub main 37938b251189fed7be636fc2187e6fbd1fe778fa; expected pushed commit 37938b251189fed7be636fc2187e6fbd1fe778fa: EQUAL
+T8-34 Qwen3.8-27B: listed by direct GET /models at 2026-10-16T04:23:59.766Z: true; usage before 0.003916080109775066; used 0,0,0,0,0
+T8-34 POST 202 {"job_id":"d76d4c9aa670d2d571e5e8926f84c705","state":"queued","model_requested":"Qwen3.8-27B","model_group":"measured","evaluated":true,"listing_checked_at":"2026-10-16T04:23:33.252Z"}
+T8-34 states: 3s reading/ | 138s done/; final state=done reason_class=null
+T8-34 receipt: reading_source=live recorded=null reader.model_id=self-dploy/Qwen3.8-27B requested=Qwen3.8-27B proposal=release
+T8-34 model_choice: {"requested":"Qwen3.8-27B","reported":"self-dploy/Qwen3.8-27B","group":"measured","evaluated":true,"label":"evaluated: measured model","figures":{"metrics_section":"METRICS.md: Runs, Headline (the figures of record)","runs":["evaluation/runs/real-candidate-dd557fd","evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1"]},"probe_evidence":null,"listing_checked_at":"2026-10-16T04:23:33.252Z"}
+T8-34 F1 copy: state=on model_requested=Qwen3.8-27B model_reported=self-dploy/Qwen3.8-27B model_evaluated=true model_probe_evidence=null checked_at=2026-10-16T04:26:19.295Z
+T8-34 identity: requested Qwen3.8-27B reported self-dploy/Qwen3.8-27B strict-same=true
+T8-34 figures next to it: PRESENT
+T8-34 used before 0,0,0,0,0 after 1,1,1,1,1; usage delta 0.0002395748; reply cost see final.json
+T8-36 secret scan over 78 exchanges (site bodies and headers; code, SHA-256(code), key, SHA-256(key), base-URL host+path): 0 hit(s) []

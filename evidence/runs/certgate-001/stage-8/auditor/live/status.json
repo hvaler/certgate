@@ -1,0 +1,121 @@
+{
+ "enabled": true,
+ "reason": "open within the limit",
+ "deployed_site": true,
+ "upload_policy": "any synthetic PDF, with the access code",
+ "notice": "The file is sent to AMD Token Factory, a third-party service that keeps prompts and outputs for about 2 days. Send only synthetic, fictitious certificates, never real data.",
+ "limit_per_hour": "20",
+ "remaining_this_hour": "20",
+ "reopens_at": "2026-10-16T05:00:00.000Z",
+ "access_code_required": true,
+ "endpoint_configured": true,
+ "windows": null,
+ "windows_note": "no live window is announced",
+ "scope_note": "global: counted in the shared store across all instances",
+ "checked_at": "2026-10-16T04:23:36.229Z",
+ "used_this_hour": "0",
+ "in_flight": "0",
+ "waiting": "0",
+ "code_failures_this_hour_global": "0",
+ "code_failures_this_hour_this_client": "0",
+ "code_failure_limit_per_client": "5",
+ "job_api": "/api/live/jobs",
+ "access_code_header": "x-live-access-code",
+ "poll_interval_s": "2",
+ "model_requested": "Qwen3.8-27B",
+ "samples": "/api/samples",
+ "models": {
+  "checked_at": "2026-10-16T04:23:33.252Z",
+  "statement": "You can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.",
+  "default": "Qwen3.8-27B",
+  "selectable": 6,
+  "measured": [
+   {
+    "id": "Qwen3.8-27B",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": true,
+    "metrics_section": "METRICS.md: Runs, Headline (the figures of record)",
+    "runs": [
+     "evaluation/runs/real-candidate-dd557fd",
+     "evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1"
+    ]
+   },
+   {
+    "id": "Gemma-4-31B-IT",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": true,
+    "metrics_section": "METRICS.md: Comparison run: Gemma-4-31B-IT (Stage 5)",
+    "runs": [
+     "evaluation/runs/real-gemma-04100b9"
+    ]
+   }
+  ],
+  "experimental": [
+   {
+    "id": "DeepSeek-V4.1-Flash",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": false,
+    "label": "not evaluated · experimental · probed 2026-10-15",
+    "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+    "evidence": "evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json",
+    "probed_at": "2026-10-15T19:46:55.290Z"
+   },
+   {
+    "id": "DeepSeek-V4-Flash-Vision-Exp",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": false,
+    "label": "not evaluated · experimental · probed 2026-10-15",
+    "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+    "evidence": "evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4-Flash-Vision-Exp.json",
+    "probed_at": "2026-10-15T19:46:55.404Z"
+   },
+   {
+    "id": "MiMo-V2.6-Flash",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": false,
+    "label": "not evaluated · experimental · probed 2026-10-15",
+    "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+    "evidence": "evidence/runs/certgate-001/stage-8/probes/MiMo-V2.6-Flash.json",
+    "probed_at": "2026-10-15T19:49:27.146Z"
+   },
+   {
+    "id": "Qwen3.8-Flash-Next",
+    "enabled": true,
+    "state": "listed by the endpoint, checked 2026-10-16T04:23:33.252Z",
+    "evaluated": false,
+    "label": "not evaluated · experimental · probed 2026-10-15",
+    "acknowledgement": "this model is not evaluated; no figure of CertGate applies to it",
+    "evidence": "evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json",
+    "probed_at": "2026-10-15T19:50:06.821Z"
+   }
+  ],
+  "listed_not_offered": [
+   {
+    "id": "DeepSeek-V4-Flash",
+    "reason": "no image probe"
+   },
+   {
+    "id": "GLM-5.3-Flash",
+    "reason": "no image probe"
+   },
+   {
+    "id": "MinerU2.5-Pro",
+    "reason": "not a chat model"
+   },
+   {
+    "id": "MiniCPM5-2B",
+    "reason": "no image probe"
+   },
+   {
+    "id": "MiniCPM-V-4.7-1B",
+    "reason": "probe failed"
+   }
+  ],
+  "not_shown": 0
+ }
+}

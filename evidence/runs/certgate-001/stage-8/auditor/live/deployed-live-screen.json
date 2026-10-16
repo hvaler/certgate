@@ -1,0 +1,112 @@
+{
+ "375": {
+  "statement": "You can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.",
+  "measured": [
+   "Qwen3.8-27B · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · measured: METRICS.md: Runs, Headline (the figures of record); runs evaluation/runs/real-candidate-dd557fd, evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1",
+   "Gemma-4-31B-IT · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · measured: METRICS.md: Comparison run: Gemma-4-31B-IT (Stage 5); runs evaluation/runs/real-gemma-04100b9"
+  ],
+  "experimental": [
+   "DeepSeek-V4.1-Flash not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json",
+   "DeepSeek-V4-Flash-Vision-Exp not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4-Flash-Vision-Exp.json",
+   "MiMo-V2.6-Flash not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/MiMo-V2.6-Flash.json",
+   "Qwen3.8-Flash-Next not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json"
+  ],
+  "other": [
+   "DeepSeek-V4-Flash · no image probe",
+   "GLM-5.3-Flash · no image probe",
+   "MinerU2.5-Pro · not a chat model",
+   "MiniCPM5-2B · no image probe",
+   "MiniCPM-V-4.7-1B · probe failed"
+  ],
+  "radios": [
+   {
+    "value": "Qwen3.8-27B",
+    "disabled": false,
+    "checked": true
+   },
+   {
+    "value": "Gemma-4-31B-IT",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "DeepSeek-V4.1-Flash",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "DeepSeek-V4-Flash-Vision-Exp",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "MiMo-V2.6-Flash",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "Qwen3.8-Flash-Next",
+    "disabled": false,
+    "checked": false
+   }
+  ],
+  "ackVisible": false,
+  "dialogs": []
+ },
+ "1280": {
+  "statement": "You can choose only the models CertGate has measured, and experimental models that passed a probe in this stage, and only while AMD Token Factory lists them now. The figures of CertGate apply only to the measured models.",
+  "measured": [
+   "Qwen3.8-27B · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · measured: METRICS.md: Runs, Headline (the figures of record); runs evaluation/runs/real-candidate-dd557fd, evidence/runs/certgate-001/stage-3/auditor/candidate-3/real-run/eval-retry1",
+   "Gemma-4-31B-IT · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · measured: METRICS.md: Comparison run: Gemma-4-31B-IT (Stage 5); runs evaluation/runs/real-gemma-04100b9"
+  ],
+  "experimental": [
+   "DeepSeek-V4.1-Flash not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4.1-Flash.json",
+   "DeepSeek-V4-Flash-Vision-Exp not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/DeepSeek-V4-Flash-Vision-Exp.json",
+   "MiMo-V2.6-Flash not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/MiMo-V2.6-Flash.json",
+   "Qwen3.8-Flash-Next not evaluated · experimental · probed 2026-10-15 · listed by the endpoint, checked 2026-10-16T04:28:44.060Z · probe evidence evidence/runs/certgate-001/stage-8/probes/Qwen3.8-Flash-Next.json"
+  ],
+  "other": [
+   "DeepSeek-V4-Flash · no image probe",
+   "GLM-5.3-Flash · no image probe",
+   "MinerU2.5-Pro · not a chat model",
+   "MiniCPM5-2B · no image probe",
+   "MiniCPM-V-4.7-1B · probe failed"
+  ],
+  "radios": [
+   {
+    "value": "Qwen3.8-27B",
+    "disabled": false,
+    "checked": true
+   },
+   {
+    "value": "Gemma-4-31B-IT",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "DeepSeek-V4.1-Flash",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "DeepSeek-V4-Flash-Vision-Exp",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "MiMo-V2.6-Flash",
+    "disabled": false,
+    "checked": false
+   },
+   {
+    "value": "Qwen3.8-Flash-Next",
+    "disabled": false,
+    "checked": false
+   }
+  ],
+  "ackVisible": false,
+  "dialogs": []
+ },
+ "site": "https://certgate-wheat.vercel.app",
+ "captured_at": "2026-10-16T04:29:39.124Z"
+}
