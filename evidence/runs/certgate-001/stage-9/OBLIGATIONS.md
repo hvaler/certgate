@@ -91,3 +91,17 @@ Run: certgate-001 · Stage: 9 · Register version: **R9.0** (analyst-zt7k, 2026-
 | W-09 | **DN9-09.** The empty-code proof for the live screen is the tool's `live` images at both widths. The new script's visible-field record still has one row per image |
 | W-10 | **DN9-10 [OBS].** The 375 px `live-done` and `live-receipt` carry the same job id as the 1280 px ones |
 | W-11 | **DN9-11 [OBS].** The handoff states the Docker skip count (V-05) |
+
+## R9.3 and R9.4
+
+**R9.3** (msg 82d38226) gives the analyst's interpretation of the two candidate 1 gaps:
+- **G-1:** a byte-equal re-capture is acceptable only if this run is shown to have written it.
+- **G-2:** the "Stored in this browser · not live" label on a live reading is not an automatic rejection, but the rows must explain it.
+
+**R9.4** (msg 6a58e888) routes the adversary findings d78eac00 on e1b927d. All four are repaired in candidate 2, with tests, docs and evidence only:
+- **F9-A01:** the PNG chunk ban is extended to `docs/screenshots/`;
+- **F9-A02:** side-effect `src/` imports are caught;
+- **F9-A03:** the README says the four images are byte-identical to Stage 7, and the mtimes are recorded as local observations only;
+- **F9-A04:** the `live-done` and `live-receipt` rows explain the browser-held label.
+
+Candidate 2 is frozen after the auditor's e1b927d verdict.
