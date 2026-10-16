@@ -66,6 +66,14 @@ repoOnly("Stage 9 screenshot manifest (S9-05, V-05, V-06, W-01, W-02)", () => {
     }
     for (const f of Object.keys(run.public_files_sha256_before)) expect(run.public_files_sha256_after[f], f).toBe(run.public_files_sha256_before[f]);
   });
+  it("every screenshot PNG carries no time, text or software chunk (T9-05, F9-A01)", () => {
+    for (const f of readdirSync(SHOTS).filter((x) => x.endsWith(".png"))) {
+      const b = readFileSync(path.join(SHOTS, f));
+      const types: string[] = [];
+      for (let i = 8; i < b.length; ) { const len = b.readUInt32BE(i); types.push(b.toString("latin1", i + 4, i + 8)); i += 12 + len; }
+      expect(types.filter((t) => ["tIME", "tEXt", "iTXt", "zTXt"].includes(t)), f).toEqual([]);
+    }
+  });
   it("records the access-code field of every Stage 9 image: empty wherever present, and no secret hit (V-02, W-09)", () => {
     const m = load();
     for (const im of (m.images as Img[]).filter((i) => STAGE9_SCREENS.has(i.screen))) {

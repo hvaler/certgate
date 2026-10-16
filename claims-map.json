@@ -3436,17 +3436,7 @@
  },
  {
   "doc": "README.md",
-  "text": "| Judge mode: the three recorded real readings | 1280 px | [judge-1280.png](docs/screenshots/judge-1280.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
-  "row": "C-91"
- },
- {
-  "doc": "README.md",
   "text": "| Story cg-003: the ReH row and the Block proposal | 1280 px | [story-cg-003-1280.png](docs/screenshots/story-cg-003-1280.png) | story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
-  "row": "C-91"
- },
- {
-  "doc": "README.md",
-  "text": "| Confirmation and decision section of cg-003 | 1280 px | [story-cg-003-decision-1280.png](docs/screenshots/story-cg-003-decision-1280.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
   "row": "C-91"
  },
  {
@@ -3466,17 +3456,7 @@
  },
  {
   "doc": "README.md",
-  "text": "| Judge mode: the three recorded real readings | 375 px | [judge-375.png](docs/screenshots/judge-375.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
-  "row": "C-91"
- },
- {
-  "doc": "README.md",
   "text": "| Story cg-003: the ReH row and the Block proposal | 375 px | [story-cg-003-375.png](docs/screenshots/story-cg-003-375.png) | story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
-  "row": "C-91"
- },
- {
-  "doc": "README.md",
-  "text": "| Confirmation and decision section of cg-003 | 375 px | [story-cg-003-decision-375.png](docs/screenshots/story-cg-003-decision-375.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
   "row": "C-91"
  },
  {
@@ -3506,27 +3486,47 @@
  },
  {
   "doc": "README.md",
-  "text": "| The same live reading, done: the proposal with its model line | 1280 px | [live-done-1280.png](docs/screenshots/live-done-1280.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.377Z |",
+  "text": "| Judge mode: the three recorded real readings (identical bytes to the Stage 7 capture: the screen did not change; written by the tool run of 05:58:08Z) | 1280 px | [judge-1280.png](docs/screenshots/judge-1280.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Confirmation and decision section of cg-003 (identical bytes to the Stage 7 capture: the screen did not change; written by the tool run of 05:58:08Z) | 1280 px | [story-cg-003-decision-1280.png](docs/screenshots/story-cg-003-decision-1280.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Judge mode: the three recorded real readings (identical bytes to the Stage 7 capture: the screen did not change; written by the tool run of 05:58:08Z) | 375 px | [judge-375.png](docs/screenshots/judge-375.png) | judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Confirmation and decision section of cg-003 (identical bytes to the Stage 7 capture: the screen did not change; written by the tool run of 05:58:08Z) | 375 px | [story-cg-003-decision-375.png](docs/screenshots/story-cg-003-decision-375.png) | story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z |",
+  "row": "C-91"
+ },
+ {
+  "doc": "README.md",
+  "text": "| The same live reading, done: the proposal with its model line. The page labels its browser-held copy \"Stored in this browser · … · not live\"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 1280 px | [live-done-1280.png](docs/screenshots/live-done-1280.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.377Z |",
   "row": "C-101"
  },
  {
   "doc": "README.md",
-  "text": "| The same live reading, done: the proposal with its model line | 375 px | [live-done-375.png](docs/screenshots/live-done-375.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.954Z |",
+  "text": "| The same live reading, done: the proposal with its model line. The page labels its browser-held copy \"Stored in this browser · … · not live\"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 375 px | [live-done-375.png](docs/screenshots/live-done-375.png) | live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.954Z |",
   "row": "C-101"
  },
  {
   "doc": "README.md",
-  "text": "| Its receipt: model requested, model as reported and the endpoint data copied at reading time | 1280 px | [live-receipt-1280.png](docs/screenshots/live-receipt-1280.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:08.528Z |",
+  "text": "| Its receipt: model requested, model as reported and the endpoint data copied at reading time. The page labels its browser-held copy \"Stored in this browser · … · not live\"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 1280 px | [live-receipt-1280.png](docs/screenshots/live-receipt-1280.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:08.528Z |",
   "row": "C-101"
  },
  {
   "doc": "README.md",
-  "text": "| Its receipt: model requested, model as reported and the endpoint data copied at reading time | 375 px | [live-receipt-375.png](docs/screenshots/live-receipt-375.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:09.027Z |",
+  "text": "| Its receipt: model requested, model as reported and the endpoint data copied at reading time. The page labels its browser-held copy \"Stored in this browser · … · not live\"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 375 px | [live-receipt-375.png](docs/screenshots/live-receipt-375.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:09.027Z |",
   "row": "C-101"
  },
  {
   "doc": "README.md",
-  "text": "**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (endpoint_5xx, O7-01); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/).",
+  "text": "**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (endpoint_5xx, O7-01); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/). Of the 2026-10-16 captures, `judge` and `story-cg-003-decision` (1280 and 375 px) came out byte-identical to the Stage 7 files; they were written by the tool run of 2026-10-16T05:58:08.081Z ([RECAPTURE-NOTE.md](evidence/runs/certgate-001/stage-9/implementer/RECAPTURE-NOTE.md)).",
   "row": "C-102"
  }
 ]

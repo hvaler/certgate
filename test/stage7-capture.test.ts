@@ -24,6 +24,8 @@ describe.skipIf(!stage9Present)("Stage 9 capture scripts are discovered (CH9-01)
     it(`${path.basename(p)} imports nothing from src/, keeps no persistent profile or storage state and dumps no page HTML`, () => {
       expect(t).not.toMatch(/from\s+["'][^"']*\/src\//);
       expect(t).not.toMatch(/import\([^)]*\/src\//);
+      // F9-A02: a side-effect import (import "…/src/…") counts too.
+      expect(t).not.toMatch(/import\s+["'][^"']*\/src\//);
       for (const banned of ["launchPersistentContext", "storageState", "page.content(", ".content()"]) expect(t, banned).not.toContain(banned);
     });
   }
