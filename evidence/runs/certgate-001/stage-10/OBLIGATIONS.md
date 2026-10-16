@@ -1,0 +1,97 @@
+# Obligation register — Stage 10 (README and submission text for a judge)
+
+Run: certgate-001 · Stage: 10 · Register version: **R10.0** (analyst-zt7k, 2026-10-16). Append-only.
+
+- **Dispatch 8:** room msg `fca8944b-ca52-41ed-a62e-74ea140e27ef` from hugo.valer, received 10:11:41Z. Verbatim copy: `evidence/runs/certgate-001/DISPATCH-8.txt`. The untracked `DISPATCH-8-DRAFT.txt` in the checkout is not the band's and is left untouched.
+- **Still in force, except where dispatch 8 changes them:** dispatches 1–7 and operator amendment 1, which these seats hold verbatim (Stage 8 parts 1–11, Stage 9 part 1).
+- **Input revision:** GitHub main **4e5b9fe7b123ef3090daec7aeffddb51ceb2a548**, checked by `ls-remote` at 10:11:41Z. It is also the byte-identity reference.
+- **Limits:**
+  - **120 min,** so the stage **ends 12:11:41Z**. With a 20-minute addendum reserve, no new work starts after 11:51Z.
+  - At most **2 repair cycles**; 2 infrastructure retries per command.
+  - **Stage hard stop: 2026-10-17T12:00:00Z.** If Stage 10 is not accepted by then, the human keeps 4e5b9fe.
+  - **No endpoint call, no live reading, no capture** (D8).
+
+## Obligations
+
+| ID | Obligation (D8, summarised; the verbatim text governs) | Acceptance | Owner |
+|---|---|---|---|
+| S10-01 | **README top block, before everything else, at most six lines:**<br>- the problem and the user in one sentence, using "mill certificate" and "EN 10204 3.1";<br>- how it works in one sentence: the model reads, deterministic versioned rules propose, a person decides;<br>- the key figures, each with its denominator and its run: false conforming **0/18**; proposals equal to the expected proposal **27/27** (implementer run) and **26/27** (auditor's independent run); fields read correctly **591/594**;<br>- links to the deployed site, judge mode and the screenshots.<br>**Every figure must equal METRICS.md, enforced by a test** | Test plus the auditor's recomputation | implementer |
+| S10-02 | **Utility, beside safety.** Of the 9 cases whose expected proposal is release:<br>- the number proposed release in each run (**9/9**, **8/9**);<br>- the number sent to review without need (**0/9**, **1/9**: cg-004, the decimal comma caught by the channel check).<br>**Computed from the committed evaluation artifacts by a test** (A10-06), never typed by hand without a check | Test plus the auditor's recomputation | implementer |
+| S10-03 | **Reading time names its model every time it appears:** Qwen3.8-27B (product model, landing figures) mean 89.6 s, median 80.6 s; Gemma-4-31B-IT (comparison run) mean 34.5 s, median 30 s. **No reading time without its model and run** | Test over README and lablab.md, plus the auditor's read | implementer |
+| S10-04 | **Scope of the second channel, moved up into "Problem and user":**<br>- the model-free text-layer parser covers the two fictitious layouts of the dataset, not arbitrary mill certificates;<br>- a real digital PDF in another layout gets no second channel and goes to review, like a scan; this is safe but reduces the saving;<br>- the evaluation set has its exact scan count (of 30, and of the 27 evaluated), computed from the data (A10-01).<br>The limitation line stays | Auditor read; counts tied to the data | implementer |
+| S10-05 | **Sentences an outsider reads as errors:**<br>- reword the limitation "One endpoint and one model" to what is true (the evaluation figures are for Qwen3.8-27B, there is a separate Gemma comparison run, and live reading now offers a choice);<br>- add one dated sentence: Token Factory listed Gemma-4-31B-IT again on 2026-10-16 (operator observation 04:21:59Z; auditor direct GET /models 04:23:34.429Z), which is why the Stage 9 screenshots show a live Gemma reading | Auditor read | implementer |
+| S10-06 | **Internal jargon out of README.md:** O7-01, F7-02, OI-S2-01/02, I1-I7, 03-DISENO, "dispatch", "the band" and "the human" are translated into plain words ("the four agent seats", "the operator") or moved to `evidence/` with a link. "How it was built and verified" keeps its facts in plain words: the four seats and their roles, expectations committed before any product code, mutation checks at every stage, the auditor's independent real run, and the claims table linking every sentence to its proof | The auditor reads the whole README as a judge and lists any remaining code or contradiction | implementer |
+| S10-07 | **`docs/submission/lablab.md`**, for the human to paste:<br>- **title ≤ 50 characters, short description ≤ 255 characters, long description ≥ 100 words**;<br>- the same figures, denominators and models as the top block, the EN 10204 3.1 wording, "a person decides", the utility figures, the second-channel scope, and one sentence on the process;<br>- it never contains the access code, the key or the base-URL path, and says the access code goes in Additional Information, given by the human.<br>Every sentence is in the claims map with its proof, and a test checks the length limits | Tests plus the auditor | implementer |
+| S10-08 | **Claims:** every new or changed sentence has a claims-map row; **0 unmapped, 0 stale**. The prize check passes (no claim of winning, entering or qualifying). The docs tests are **extended** to cover lablab.md and the top block, and **never loosened** | Suite plus a hunk review | implementer |
+| S10-09 | **Nothing changes outside** `README.md`, `CLAIMS.md`, `claims-map.json`, `docs/`, the docs tests and `evidence/`. Byte-identical to 4e5b9fe: `src/`, `public/`, `api/`, `data/`, `config/`, `evaluation/`, **`tools/`**, the package files, `vercel.json` and `Dockerfile` | Auditor diff | implementer; auditor |
+| S10-10 | **Auditor acceptance:**<br>- the full suite from a clean clone, plus the docs, claims and prize checks;<br>- byte identity;<br>- **every figure recomputed** from METRICS.md and the artifacts;<br>- every reading time names its model;<br>- the length limits;<br>- the README read top to bottom as a judge, with any remaining code or contradiction listed;<br>- no secret in any file.<br>**Automatic rejection:** a figure that does not equal the artifacts, a reading time without its model, a prize claim, or a secret | Auditor verdict | auditor |
+| S10-11 | **Addendum** in the same shape, with the push request. The band never deploys, pushes or submits | Auditor verifies | analyst |
+
+## Ambiguities and decisions
+
+| ID | Decision |
+|---|---|
+| A10-01 | **Scan counts.** D8 says "5 scans of 30 certificates (or the exact count of the evaluated 27)". Both counts are **computed from the committed data**: dataset `kind`/text-layer flags, and the evaluated set's membership. Whichever is stated is tied to the data by a test. If the data does not give 5 of 30, the data wins and the discrepancy is reported to the analyst. It is never written to match the dispatch |
+| A10-02 | **Jargon versus the earlier screenshot and docs tests.** Some accepted tests may assert codes in the README, for example that the "Earlier captures (Stage 7)" line names O7-01 (Stage 9 W-07/T9-07). D8 is the later instruction. Such assertions are **changed to the plain-word equivalent, with a link to the evidence that holds the code**. The property they protect (the failed Stage 7 reading is disclosed and linked) **stays asserted**. Each such hunk is listed, and the auditor judges that strength is preserved. Removing an assertion without a replacement is a finding |
+| A10-03 | **`tools/` is unchanged (D8), and the claims tooling lives in `tools/`.** If `tools/claims-units.mjs` cannot take `docs/submission/lablab.md` without an edit, the docs test splits lablab.md itself, with the same splitter imported unchanged or reimplemented in the test, and checks it against `claims-map.json`. The design note says which |
+| A10-04 | **The prize check and the event name.** lablab.md is a submission text and may need to name the event. It follows the Stage 7 precedent (CH7-08): words such as hackathon, track and challenge may appear **only in exact allow-list sentences reviewed by the auditor**, or not at all. The check is never weakened by a blanket exemption |
+| A10-05 | **Top-block figures and their runs.** 0/18 is FC-broad, over the expected-not-release cases. 27/27 and 26/27 are the implementer and auditor Qwen runs. 591/594 holds for both Qwen runs (METRICS.md:98, :190). The top block says which run, or "both Qwen runs", for each figure. Gemma figures never appear in the top block without being labelled Gemma |
+| A10-06 | **Utility figures.** `tools/evaluate/metrics-md.mjs` is under `tools/` and is unchanged. So the utility counts are **computed by a docs test** from the committed run artifacts (`evaluation/runs/real-candidate-dd557fd/` and the auditor run cited in METRICS.md), and the README/lablab text is checked against them. cg-004's reason (decimal comma, caught by the channel check) is taken from the auditor run's recorded reasons |
+| A10-07 | **Machine times only** (A9-05). **Configured commit e-mail**, never overridden. Heavy work is serialized. D8-04: no property of any secret is written |
+| A10-08 | **Branch.** The implementer works in its worktree on a new branch, `s10-impl`, from 4e5b9fe. Candidates are new commits; only the analyst moves main |
+| A10-09 | **Order and targets.**<br>- Design note (implementer), CH10 (adversary) and T10 (auditor), **all by 10:35Z**.<br>- R10.1 by ~10:40Z.<br>- Candidate 1 by ~11:15Z.<br>- Reviews.<br>- Verdict by 11:45Z.<br>- Addendum and push request |
+
+
+## R10.1: rulings on auditor T10 / C10-1…3 (01ffe395) and adversary CH10-01…15 (279f7c03), analyst-zt7k
+
+These rulings bind the design note and candidate 1. The design note itself is ruled in R10.2. The candidate handoff answers each X item by number.
+
+| ID | Ruling |
+|---|---|
+| X-T10 | **T10-01…T10-08 are adopted** as the acceptance rules for S10-10, together with the automatic rejections. The auditor's reference table, recomputed at 4e5b9fe, is the oracle for every figure |
+| X-01 | **C10-1 and CH10-01 adopted; this refines A10-01.** The data gives **5 scans among the 30 dataset certificates** (cg-002, cg-003, cg-016, cg-017, cg-025) and **3 among the 27 evaluated** (cg-016, cg-017, cg-025). Dispatch 8's "5 scans of 30" is correct only of the dataset. **Every scan count names its set.** Next to any evaluation figure, the README and lablab.md use **3 of the 27 evaluated**. A test computes both counts from `case.json` plus the evaluated set and checks every occurrence. This discrepancy with the dispatch wording is **recorded for the operator** in the addendum |
+| X-02 | **C10-2, CH10-03 and CH10-15 adopted.** "591/594 fields read correctly" names **both Qwen runs**. If it mentions what is not counted, it says **1 wrong**: the other two are correctly absent and correctly unknown. Gemma figures always carry "Gemma-4-31B-IT comparison run", and the top block stays Qwen. A test ties 591/594 to METRICS.md |
+| X-03 | **CH10-02 adopted.** Every seconds figure is in a sentence or table row with **its model and its run**:<br>- Qwen3.8-27B implementer run: 89.6 mean, 80.6 median;<br>- Qwen3.8-27B auditor run: 77.1, 76.9;<br>- Gemma-4-31B-IT comparison run: 34.5, 30.<br>Dispatch 8 quotes only the implementer Qwen times. Those are the landing figures and may be the only Qwen times stated, labelled "implementer run". A test scans both files |
+| X-04 | **CH10-04 adopted.** The cg-004 sentence says that the model read the printed CEV with a decimal comma ("0,39"), the text layer read 0.39, and the **channel check disagreed, so it went to review**. It does not suggest the model was right: that field is the run's one `wrong`. A test reads cg-004's recorded reasons and requires the case id and the channel check |
+| X-05 | **CH10-05 and C10-3 adopted.** The utility counts are **computed by a docs test from each run's `results.json`** and the expected proposals: n(expected release), n(release given expected release), n(review given expected release), and n(block given expected release) = 0. The README and lablab figures are checked against them (9/9, 8/9, 0/9, 1/9). If Gemma utility is mentioned, it is labelled as the comparison run |
+| X-06 | **CH10-06 adopted.** The top block sits **directly after the `# CertGate` H1, before any other paragraph and every `##` heading**, in **at most 6 non-empty source lines**. A test locates it by position and checks its required words, figures, run labels and three links: the site, judge mode, and `#screenshots`. The README-links test resolves those links |
+| X-07 | **CH10-07 adopted; this implements A10-02.** A test bans the listed codes and the words "dispatch", "the band" and "the human" in README.md. The only allow-list is short, exact and reviewed by the auditor. Earlier tests that asserted a code are changed to assert the **plain words plus a link into `evidence/`** that holds the code. **The failed Stage 7 reading stays disclosed** ("failed" stays in the "Earlier captures" line) |
+| X-08 | **CH10-08 adopted.** lablab.md has three fixed headings: Title, Short description, Long description. Each field's text is exactly what gets pasted, with no markdown markup inside a field. Limits are counted in code points (trimmed) and in whitespace tokens. A test checks the limits, and the over-limit mutants must fail |
+| X-09 | **CH10-09 adopted.** lablab.md carries no code, key or base-URL path, and **no example value or placeholder that looks like a code**. It says only that the access code is given in Additional Information. The deployed URL is allowed. The prize check runs over lablab.md, with exact allow-list sentences only, and a sentence about entering a prize must fail |
+| X-10 | **CH10-10 adopted.** lablab.md goes through the **same splitter** as `tools/claims-units.mjs`, imported unchanged. If it is reimplemented, a test shows identical units on README.md. lablab.md needs 0 unmapped and 0 stale entries, and the unmapped and stale mutants must fail |
+| X-11 | **CH10-11 adopted.** The dated Gemma re-listing sentence cites, in its claims row, `stage-8/auditor/live/` (direct GET /models at 04:23:34.429Z) and the R8.4 register line (operator 7afc3c62, 04:21:59Z). The times are given exactly as recorded |
+| X-12 | **CH10-12 adopted.** The implementer lists every README sentence about the live model and confirms each against Stage 8: the choice of measured and experimental models, with Qwen3.8-27B as the evaluation model. Old wording ("one model", "MODEL_ID only", "the deployed model Gemma") is fixed |
+| X-13 | **CH10-13 adopted.** Byte identity also covers `docs/screenshots/`, which stays unchanged, as do `tsconfig.json` and `vitest.config.ts` |
+| X-14 | **CH10-14 adopted.** No existing test file loses an `expect`, gains a skip or widens a regex. Every A10-02 replacement is listed hunk by hunk |
+
+## R10.2: ruling on implementer design note e05af05f (analyst-zt7k)
+
+**Approved as written**, with these notes. Any DN10 item from the adversary is folded in before the freeze, and the handoff answers it by number.
+
+| ID | Ruling |
+|---|---|
+| Y-01 | **Top block approved:** 5 lines, replacing the bold lead paragraph and keeping its facts. It holds no reading time, so every time sits in a table or sentence with its model and run (X-03) |
+| Y-02 | **Figure ties approved.** The figures are tied to each run's `metrics.json` and to the METRICS.md rows. The utility counts are computed from each run's `results.json`, and cg-004's recorded reasons and `wrong` field are checked |
+| Y-03 | **Scan counts and scope paragraph approved:** "Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5" |
+| Y-04 | **Jargon ban approved, with an empty allow-list.** Link targets under `evidence/` are stripped before matching; link text never is. The 03-DISENO link must point to a committed file found by `ls`, or be dropped |
+| Y-05 | **The site-URL test change** (from "once, in Try it" to **exactly 3 occurrences at fixed positions**: Try it, plus the two top-block links) **is approved as a change dispatch 8 requires, not a loosening.** Every other deployment-URL occurrence stays forbidden. The hunk is listed |
+| Y-06 | **lablab.md approved:** it goes through the unchanged `units` from `tools/claims-units.mjs`, with zero prize-family words, `ALLOWED_PRIZE_CLAUSES` unchanged, and the field checks in code points and tokens |
+| Y-07 | **The limit durations** (60 s, 210 s, 300 s) are not reading times. Their exact-sentence exemption list is short, and the auditor reviews each entry |
+| Y-08 | **Target:** candidate 1 by ~11:15Z. The auditor's verdict must come before 11:51Z, after which no new work starts |
+
+## R10.3: rulings on adversary DN10-01…10 (msg 028519f4), analyst-zt7k
+
+**All of them are adopted.** They are binding on candidate 1 before it is frozen.
+
+| ID | Ruling |
+|---|---|
+| Z-01 | **DN10-01 adopted; this corrects the design note's §4 last row.** "How it was built and verified" keeps **one plain-word line per stage with a rejection**, giving the cause (dispatch 5 still applies). The codes go only into the linked STAGE-REGISTER.md. A test checks that every stage with a rejection in STAGE-REGISTER.md has a line naming that stage and "rejected" |
+| Z-02 | **DN10-02 adopted.** "How it works" names Qwen3.8-27B **as the evaluated model behind every figure**, and says that live reading also offers measured and experimental models. For example: "a model on AMD Token Factory reads the certificate (Qwen3.8-27B for every figure below; live reading also offers other measured and experimental models)". A test requires "evaluated" or "figures" next to the Qwen id in the block |
+| Z-03 | **DN10-03 adopted.** The jargon ban also runs over `docs/submission/lablab.md` |
+| Z-04 | **DN10-04 adopted.** Minutes count as reading times. The "52–208 s" range is computed in the test from the implementer run's per-case seconds, and the sentence names Qwen3.8-27B and the run |
+| Z-05 | **DN10-05 adopted.** The three exact site-URL strings must sit at their positions only. A fourth URL fails, and any other host fails. A test confirms that the served `#/judge` route exists |
+| Z-06 | **DN10-06 adopted.** Each figure is matched **with its run label in the same clause**, never by order alone. Swapping the labels must fail |
+| Z-07 | **DN10-07 adopted.** The fictitious-data notice stays unchanged, directly after the block, and the block's word "fictitious" is asserted |
+| Z-08 | **DN10-08 adopted.** Exemptions are full sentences kept in the test file, listed in the handoff and reviewed by the auditor |
+| Z-09 | **DN10-09 [OBS], recommended:** one safety figure in the short description, with its run ("false conforming 0 of 18 in both evaluation runs"), within the 255 characters |
+| Z-10 | **DN10-10 [OBS], adopted:** 03-DISENO is described in plain words with **no link**, because the planning workspace is not in the repository |
