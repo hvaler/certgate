@@ -102,3 +102,4 @@ Probe batch details:
 | — | ~02:15Z | **Budget-end outcome.** Dispatch 6 addendum committed with Stage 8 **ACCEPTED (local) on adb21d5**. Live S8-18/S8-28 are pending the human, before the stage hard stop 2026-10-17T08:00Z. A value secret scan of the addendum, the usage file, the log and the register gives 0 hits |
 
 | — | 02:15Z | Addendum corrections C1-C3 from the auditor S8-20 verification (5ae3342f): C1 machine time (02:11:34Z, not "02:4xZ", which was an analyst estimate); C2 push target 6d7120c3 or later; C3 logging wording |
+| — | 03:11:48Z | Stage 8 budget end (03:15Z) reached with no deployment report. GitHub main is still feaadff. Outcome unchanged: ACCEPTED (local) on adb21d5, live pending the human before 2026-10-17T08:00Z. The listener stays armed |
