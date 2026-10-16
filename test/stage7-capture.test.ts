@@ -15,7 +15,9 @@ const SCRIPTS = [
   { name: "capture script", file: path.join("tools", "capture-screenshots.mjs"), manifestEnd: 'writeFileSync(path.join(OUT_DIR, "manifest.json")' },
   ...stage9Scripts.map((p) => ({ name: `Stage 9 capture script ${path.basename(p)}`, file: path.relative(ROOT, p), manifestEnd: "writeFileSync(manifestPath" })),
 ];
-describe("Stage 9 capture scripts are discovered (CH9-01)", () => {
+// evidence/ is not in the Docker image (.dockerignore): the Stage 9 script checks run in every repository checkout.
+const stage9Present = existsSync(STAGE9_DIR);
+describe.skipIf(!stage9Present)("Stage 9 capture scripts are discovered (CH9-01)", () => {
   it("finds the Stage 9 capture script", () => expect(stage9Scripts.map((p) => path.basename(p))).toContain("capture-stage9.mjs"));
   for (const p of stage9Scripts) {
     const t = readFileSync(p, "utf8");
@@ -104,8 +106,8 @@ describe(`${S.name}: visible-field rule (CH7-11)`, () => {
 
 }
 
-describe("Stage 9 capture script: measured models only, one reading, per-image machine time (S9-02, A9-03, A9-05)", () => {
-  const s9 = readFileSync(path.join(STAGE9_DIR, "implementer", "capture-stage9.mjs"), "utf8").replace(/\r\n/g, "\n");
+describe.skipIf(!stage9Present)("Stage 9 capture script: measured models only, one reading, per-image machine time (S9-02, A9-03, A9-05)", () => {
+  const s9 = stage9Present ? readFileSync(path.join(STAGE9_DIR, "implementer", "capture-stage9.mjs"), "utf8").replace(/\r\n/g, "\n") : "";
   it("accepts only a measured model and stops on a failed reading without retrying", () => {
     expect(s9).toContain('const MEASURED = ["Gemma-4-31B-IT", "Qwen3.8-27B"];');
     expect(s9).toContain("if (!MEASURED.includes(out.model)) fail(");
