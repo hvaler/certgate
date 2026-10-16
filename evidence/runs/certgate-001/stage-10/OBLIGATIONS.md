@@ -63,3 +63,18 @@ These rulings bind the design note and candidate 1. The design note itself is ru
 | X-12 | **CH10-12 adopted.** The implementer lists every README sentence about the live model and confirms each against Stage 8: the choice of measured and experimental models, with Qwen3.8-27B as the evaluation model. Old wording ("one model", "MODEL_ID only", "the deployed model Gemma") is fixed |
 | X-13 | **CH10-13 adopted.** Byte identity also covers `docs/screenshots/`, which stays unchanged, as do `tsconfig.json` and `vitest.config.ts` |
 | X-14 | **CH10-14 adopted.** No existing test file loses an `expect`, gains a skip or widens a regex. Every A10-02 replacement is listed hunk by hunk |
+
+## R10.2: ruling on implementer design note e05af05f (analyst-zt7k)
+
+**Approved as written**, with these notes. Any DN10 item from the adversary is folded in before the freeze, and the handoff answers it by number.
+
+| ID | Ruling |
+|---|---|
+| Y-01 | **Top block approved:** 5 lines, replacing the bold lead paragraph and keeping its facts. It holds no reading time, so every time sits in a table or sentence with its model and run (X-03) |
+| Y-02 | **Figure ties approved.** The figures are tied to each run's `metrics.json` and to the METRICS.md rows. The utility counts are computed from each run's `results.json`, and cg-004's recorded reasons and `wrong` field are checked |
+| Y-03 | **Scan counts and scope paragraph approved:** "Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5" |
+| Y-04 | **Jargon ban approved, with an empty allow-list.** Link targets under `evidence/` are stripped before matching; link text never is. The 03-DISENO link must point to a committed file found by `ls`, or be dropped |
+| Y-05 | **The site-URL test change** (from "once, in Try it" to **exactly 3 occurrences at fixed positions**: Try it, plus the two top-block links) **is approved as a change dispatch 8 requires, not a loosening.** Every other deployment-URL occurrence stays forbidden. The hunk is listed |
+| Y-06 | **lablab.md approved:** it goes through the unchanged `units` from `tools/claims-units.mjs`, with zero prize-family words, `ALLOWED_PRIZE_CLAUSES` unchanged, and the field checks in code points and tokens |
+| Y-07 | **The limit durations** (60 s, 210 s, 300 s) are not reading times. Their exact-sentence exemption list is short, and the auditor reviews each entry |
+| Y-08 | **Target:** candidate 1 by ~11:15Z. The auditor's verdict must come before 11:51Z, after which no new work starts |
