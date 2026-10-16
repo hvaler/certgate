@@ -109,3 +109,4 @@ Probe batch details:
 | 62e087d | 04:22Z | Operator deployment report 7afc3c62 (main 37938b25, Gemma listed again, O8-01 option A, commit e-mail). R8.4 sent (9e567b25) |
 | ccb82d9 | 04:23Z-04:29Z | **Auditor live run.** 3 readings, 0 retries. **Final verdict: Stage 8 ACCEPTED** (2f2825c1) |
 | - | - | Addendum section 4 completed, plus sections 1, 5 and 6 |
+| 8da5a9a | ~04:4xZ | Auditor: the addendum is VERIFIED at bdd587e2 without reservation (7c3a9b16). **Stage 8 closed.** The final evidence-only head is named to the human for an optional push |
