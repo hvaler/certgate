@@ -95,3 +95,18 @@ These rulings bind the design note and candidate 1. The design note itself is ru
 | Z-08 | **DN10-08 adopted.** Exemptions are full sentences kept in the test file, listed in the handoff and reviewed by the auditor |
 | Z-09 | **DN10-09 [OBS], recommended:** one safety figure in the short description, with its run ("false conforming 0 of 18 in both evaluation runs"), within the 255 characters |
 | Z-10 | **DN10-10 [OBS], adopted:** 03-DISENO is described in plain words with **no link**, because the planning workspace is not in the repository |
+
+## R10.5: operator blocker on the long description (auditor msg eb158d80, 11:38Z), message efa2e055
+
+The lablab form enforces a long description of 600–2000 characters; dispatch 8 said "at least 100 words", which was wrong. The committed text is 2201 code points.
+
+**Ruling:** the form's limit governs. Limits: title ≤ 50, short ≤ 255, long 600–2000 code points.
+
+**Repair cycle 2 of 2, candidate 3, deletion only:**
+- delete the three sentences the auditor named;
+- the result is 1980 code points, equal to the text given to the operator;
+- remove their three claims-map entries;
+- the test checks 600–2000, with mutants at 2001 and 599;
+- the scan-sentence assertion applies to README only.
+
+Candidate 2 (18dd217, pushed as 40ea1ae) stays on record.
