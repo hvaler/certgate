@@ -93,3 +93,10 @@ Probe batch details:
 | — | — | Adversary bundle a108ed1c, corrected by 1ed02961 (O8-A02 counted 80/4, every failure a relevant mutant). S8 29/29, S7 10/10, S6 44/44 |
 | 0920b82 | ~22:55Z | **Auditor: candidate 2 ACCEPTED (local)** (31943fa6). Record committed under a lent lease (66cb847c) |
 | 61af90a | — | The analyst merged adb21d5 into main. The product tree outside `evidence/` equals adb21d5, and it is a fast-forward from GitHub main feaadff (ls-remote checked) |
+
+| Commit | Time | Event |
+|---|---|---|
+| — | 22:57Z | Push request d0ce9df6 to the operator: set LIVE_MODELS, push main 61b150e8, report in the room. The auditor's pre-push check passed (7fd2fee4) |
+| — | 23:10Z–02:11Z | **No deployment report.** GitHub main stays feaadff (`ls-remote` every 30 min). The listener was re-armed each time |
+| — | 01:41Z | `band usage agents` recorded |
+| — | ~02:15Z | **Budget-end outcome.** Dispatch 6 addendum committed with Stage 8 **ACCEPTED (local) on adb21d5**. Live S8-18/S8-28 are pending the human, before the stage hard stop 2026-10-17T08:00Z. A value secret scan of the addendum, the usage file, the log and the register gives 0 hits |
