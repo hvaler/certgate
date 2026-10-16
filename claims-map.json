@@ -1,16 +1,6 @@
 [
  {
   "doc": "README.md",
-  "text": "**CertGate prepares the review of a steel mill inspection certificate against a purchase specification, and proposes release, block or review.",
-  "row": "C-01"
- },
- {
-  "doc": "README.md",
-  "text": "A person in Quality decides.** CertGate never releases material on its own.",
-  "row": "C-01"
- },
- {
-  "doc": "README.md",
   "text": "**All data in this repository is fictitious.** Siderúrgica Valdemora S.A. (the mill), Talleres Ribera Norte S.L. (the buyer), the grade TRN-355 and the purchase specification ESP-014 are invented for the demo.",
   "row": "C-02"
  },
@@ -23,11 +13,6 @@
   "doc": "README.md",
   "text": "Only these synthetic certificates are ever sent to the model endpoint.",
   "row": "C-02"
- },
- {
-  "doc": "README.md",
-  "text": "Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY.md](DEPLOY.md) (Vercel, for the human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) · [EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).",
-  "row": "none: navigation to companion documents"
  },
  {
   "doc": "README.md",
@@ -73,11 +58,6 @@
   "doc": "README.md",
   "text": "Reads the certificate through two channels:",
   "row": "none: lead-in to the list that follows"
- },
- {
-  "doc": "README.md",
-  "text": "the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page images** of every certificate, digital or scanned, and returns the values as one JSON object;",
-  "row": "C-04"
  },
  {
   "doc": "README.md",
@@ -257,11 +237,6 @@
  {
   "doc": "README.md",
   "text": "| Field readings correct | 591 of 594 | 591 of 594 |",
-  "row": "C-19"
- },
- {
-  "doc": "README.md",
-  "text": "| Seconds per certificate | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |",
   "row": "C-19"
  },
  {
@@ -571,16 +546,6 @@
  },
  {
   "doc": "README.md",
-  "text": "During the human's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts.",
-  "row": "C-60"
- },
- {
-  "doc": "README.md",
-  "text": "In the band's two evaluation runs there were 0 retries and 0 failures.",
-  "row": "C-19"
- },
- {
-  "doc": "README.md",
   "text": "CertGate keeps at most 2 requests in flight, retries only 429 and 5xx (at most 3 attempts, Retry-After honoured), and waits up to 300 s per attempt.",
   "row": "C-35"
  },
@@ -596,17 +561,7 @@
  },
  {
   "doc": "README.md",
-  "text": "**Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).",
-  "row": "C-57"
- },
- {
-  "doc": "README.md",
   "text": "**Uploads.** Without `LIVE_ACCESS_CODE`, live reading is limited to the 30 dataset certificates, matched by SHA-256; with it, a visitor's synthetic file can also be read.",
-  "row": "C-26"
- },
- {
-  "doc": "README.md",
-  "text": "The access-code path is tested against a local stub with a test-only code, and no real access code is configured on the band's host.",
   "row": "C-26"
  },
  {
@@ -656,11 +611,6 @@
  },
  {
   "doc": "README.md",
-  "text": "This deviates from step 7 of the product design (03-DISENO); it was chosen to keep decisions entirely in the deterministic rules (I1).",
-  "row": "C-14"
- },
- {
-  "doc": "README.md",
   "text": "The case file shows the rule reasons.",
   "row": "C-14"
  },
@@ -698,16 +648,6 @@
   "doc": "README.md",
   "text": "**Cosmetic:** `/favicon.ico` answers 404.",
   "row": "none: states a missing static file (cosmetic limitation)"
- },
- {
-  "doc": "README.md",
-  "text": "**One endpoint and one model.** The results apply to Qwen3.8-27B on AMD Token Factory, as reported on 2026-10-13.",
-  "row": "C-11"
- },
- {
-  "doc": "README.md",
-  "text": "A repeat run may differ: the two independent runs differ in one proposal (cg-004, review) and in timing.",
-  "row": "C-19"
  },
  {
   "doc": "README.md",
@@ -1546,11 +1486,6 @@
  },
  {
   "doc": "README.md",
-  "text": "evidence/ stage records of the band (registers, handoffs, verdicts, logs)",
-  "row": "none: repository layout (directory description)"
- },
- {
-  "doc": "README.md",
   "text": "License",
   "row": "none: heading"
  },
@@ -1741,11 +1676,6 @@
  },
  {
   "doc": "README.md",
-  "text": "| Seconds per certificate | mean 34.5, median 30 (N 27) |",
-  "row": "C-70"
- },
- {
-  "doc": "README.md",
   "text": "| Cost per certificate | mean 0.00007789 |",
   "row": "C-70"
  },
@@ -1788,11 +1718,6 @@
   "doc": "README.md",
   "text": "One extra Gemma reading of the story certificate cg-003 is kept as evidence only, outside the evaluation and the demo ([gemma-read-cg-003.json](evidence/runs/certgate-001/stage-5/implementer/endpoint/gemma-read-cg-003.json)): Gemma read the smudged ReH as 338 MPa, as the recorded Qwen story reading does, so the proposal was block.",
   "row": "C-73"
- },
- {
-  "doc": "README.md",
-  "text": "Dated facts reported by the operator (the human), not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered correctly.",
-  "row": "C-74"
  },
  {
   "doc": "README.md",
@@ -2331,11 +2256,6 @@
  },
  {
   "doc": "README.md",
-  "text": "**Live reading on the deployed site is bounded by the function duration (OI-S2-02).**",
-  "row": "C-82"
- },
- {
-  "doc": "README.md",
   "text": "A job waits at most 60 s for one of the two reading slots and then has at most 210 s to read, inside the 300 s function duration; a reading that does not finish in time fails as \"timed out\" and offers a retry.",
   "row": "C-82"
  },
@@ -2348,11 +2268,6 @@
   "doc": "README.md",
   "text": "Without the access code and the shared store configured, the deployed site has no live reading at all.",
   "row": "C-78"
- },
- {
-  "doc": "README.md",
-  "text": "**Live-read limits (OI-S2-01).** On the deployed site the hourly limit, the two in-flight slots and the wrong-code counts are kept in the shared store, so they hold across all instances.",
-  "row": "C-37"
  },
  {
   "doc": "README.md",
@@ -2691,11 +2606,6 @@
  },
  {
   "doc": "README.md",
-  "text": "The SVG files are the band's own render of the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).",
-  "row": "C-89"
- },
- {
-  "doc": "README.md",
   "text": "Architecture",
   "row": "none: heading"
  },
@@ -2981,22 +2891,12 @@
  },
  {
   "doc": "README.md",
-  "text": "CertGate was built with Claude Code by a band of four seats.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
   "text": "AMD Token Factory runs the product's reading of the certificates.",
   "row": "C-64"
  },
  {
   "doc": "README.md",
   "text": "Every figure below comes from the stage register, [evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md), and the records it names.",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "**Analyst:** wrote each stage's obligation register from the human's dispatch and coordinated the stage.",
   "row": "C-64"
  },
  {
@@ -3018,36 +2918,6 @@
   "doc": "README.md",
   "text": "| Stage | Accepted candidate | Repair cycles used | Rejections before acceptance |",
   "row": "none: table header"
- },
- {
-  "doc": "README.md",
-  "text": "| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1: F-01, F-02, F-05; mutants M13 and M14 survived |",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1: F2-01 |",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3: F3-01, ADV-S3-F01, ADV-S3-F02 |",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4: F4-01, F4-02, F4-03 |",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2: F5-01, F5-02 |",
-  "row": "C-64"
- },
- {
-  "doc": "README.md",
-  "text": "| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1: F6-01, F6-02; then the operator's security repair (R6.4) |",
-  "row": "C-64"
  },
  {
   "doc": "README.md",
@@ -3113,11 +2983,6 @@
   "doc": "README.md",
   "text": "The previews are made by [tools/previews.mjs](tools/previews.mjs) from the committed PDFs: for a scan, the PDF's own page image; for a digital certificate, page 1 rendered by the pinned pdf.js.",
   "row": "C-88"
- },
- {
-  "doc": "README.md",
-  "text": "**Quick navigation (F7-02).** Navigating very quickly between screens can show the previous screen under the new address.",
-  "row": "C-92"
  },
  {
   "doc": "README.md",
@@ -3223,11 +3088,6 @@
   "doc": "README.md",
   "text": "Live reading uses the model chosen on the live screen, with Vercel's `MODEL_ID` as the default, and each live receipt names the model requested and the model as the endpoint reports it.",
   "row": "C-85"
- },
- {
-  "doc": "README.md",
-  "text": "From dispatch 4 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).",
-  "row": "C-100"
  },
  {
   "doc": "README.md",
@@ -3526,7 +3386,342 @@
  },
  {
   "doc": "README.md",
-  "text": "**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (endpoint_5xx, O7-01); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/). Of the 2026-10-16 captures, `judge` and `story-cg-003-decision` (1280 and 375 px) came out byte-identical to the Stage 7 files; they were written by the tool run of 2026-10-16T05:58:08.081Z ([RECAPTURE-NOTE.md](evidence/runs/certgate-001/stage-9/implementer/RECAPTURE-NOTE.md)).",
+  "text": "**CertGate checks a steel mill certificate (an inspection certificate of the EN 10204 3.1 kind) against the purchase specification, for the goods-in or Quality technician who must release or block the batch.** How it works: a model on AMD Token Factory reads the certificate (Qwen3.8-27B, the evaluated model, for every figure below; live reading also offers other measured and experimental models), deterministic versioned rules propose release, block or review, and a person decides; CertGate never releases material on its own.",
+  "row": "C-01"
+ },
+ {
+  "doc": "README.md",
+  "text": "Results on the 27 evaluated fictitious certificates (2 Qwen3.8-27B runs): false conforming **0/18** in both runs; proposals equal to the expected proposal **27/27** (implementer run) and **26/27** (auditor's independent run); fields read correctly **591/594** in both runs.",
+  "row": "C-103"
+ },
+ {
+  "doc": "README.md",
+  "text": "Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** and **1/9** (cg-004: the model read the printed CEV with a decimal comma, \"0,39\", the text layer read 0.39, and the channel check disagreed).",
+  "row": "C-104"
+ },
+ {
+  "doc": "README.md",
+  "text": "[Deployed site](https://certgate-wheat.vercel.app) · [judge mode](https://certgate-wheat.vercel.app/#/judge) · [screenshots](#screenshots)",
+  "row": "none: links to the deployed site, judge mode and the screenshots (navigation)"
+ },
+ {
+  "doc": "README.md",
+  "text": "Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY.md](DEPLOY.md) (Vercel, for the operator) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) · [EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).",
+  "row": "none: navigation to companion documents"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Seconds per certificate, Qwen3.8-27B | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "| Seconds per certificate, Gemma-4-31B-IT | mean 34.5, median 30 (N 27) |",
+  "row": "C-70"
+ },
+ {
+  "doc": "README.md",
+  "text": "Dated facts reported by the operator, not observed by the agent seats: on 2026-10-13 Gemma-4-31B-IT on this endpoint returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the operator re-tested it and it answered correctly.",
+  "row": "C-74"
+ },
+ {
+  "doc": "README.md",
+  "text": "From 2026-10-14 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC ([Stage 7 record](evidence/runs/certgate-001/stage-7/)), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).",
+  "row": "C-100"
+ },
+ {
+  "doc": "README.md",
+  "text": "Token Factory listed Gemma-4-31B-IT again on 2026-10-16 (operator observation at 04:21:59Z; the auditor's direct GET /models at 04:23:34.429Z), which is why the screenshots show a live Gemma-4-31B-IT reading.",
+  "row": "C-106"
+ },
+ {
+  "doc": "README.md",
+  "text": "The SVG files are rendered by the agent seats from the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).",
+  "row": "C-89"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (HTTP 5xx; [Stage 7 record](evidence/runs/certgate-001/stage-7/)); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/). Of the 2026-10-16 captures, `judge` and `story-cg-003-decision` (1280 and 375 px) came out byte-identical to the Stage 7 files; they were written by the tool run of 2026-10-16T05:58:08.081Z ([RECAPTURE-NOTE.md](evidence/runs/certgate-001/stage-9/implementer/RECAPTURE-NOTE.md)).",
   "row": "C-102"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Where the second channel applies.** The model-free text-layer parser covers the two fictitious layouts of the dataset, not arbitrary mill certificates.",
+  "row": "C-105"
+ },
+ {
+  "doc": "README.md",
+  "text": "A real digital PDF in another layout gets no second channel and goes to review, like a scan: this is safe, but it reduces the saving.",
+  "row": "C-105"
+ },
+ {
+  "doc": "README.md",
+  "text": "Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5.",
+  "row": "C-105"
+ },
+ {
+  "doc": "README.md",
+  "text": "the **model channel**: the open model Qwen3.8-27B (the evaluated model; a live reading may use another offered model), served by AMD Token Factory, reads the rendered **page images** of every certificate, digital or scanned, and returns the values as one JSON object;",
+  "row": "C-04"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Quick navigation.** Navigating very quickly between screens can show the previous screen under the new address.",
+  "row": "C-92"
+ },
+ {
+  "doc": "README.md",
+  "text": "During the operator's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts.",
+  "row": "C-60"
+ },
+ {
+  "doc": "README.md",
+  "text": "In the two evaluation runs there were 0 retries and 0 failures.",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Slow readings.** With Qwen3.8-27B, one reading takes about 1 to 4 minutes (52–208 s per certificate in the implementer run).",
+  "row": "C-57"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live reading on the deployed site is bounded by the function duration.**",
+  "row": "C-82"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Live-read limits.** On the deployed site the hourly limit, the two in-flight slots and the wrong-code counts are kept in the shared store, so they hold across all instances.",
+  "row": "C-37"
+ },
+ {
+  "doc": "README.md",
+  "text": "The access-code path is tested against a local stub with a test-only code, and no real access code is configured on the build machine.",
+  "row": "C-26"
+ },
+ {
+  "doc": "README.md",
+  "text": "This deviates from step 7 of the product design written before the build; it was chosen to keep decisions entirely in the deterministic rules.",
+  "row": "C-14"
+ },
+ {
+  "doc": "README.md",
+  "text": "**The evaluation figures are for one model.** They apply to Qwen3.8-27B on AMD Token Factory, as reported on 2026-10-13; Gemma-4-31B-IT has its own comparison run, and live reading offers a choice of models, to which those figures do not apply.",
+  "row": "C-107"
+ },
+ {
+  "doc": "README.md",
+  "text": "A repeat run may differ: the two independent Qwen3.8-27B runs differ in one proposal (cg-004, review) and in timing.",
+  "row": "C-19"
+ },
+ {
+  "doc": "README.md",
+  "text": "evidence/ stage records of the four agent seats (registers, handoffs, verdicts, logs)",
+  "row": "none: repository layout (directory description)"
+ },
+ {
+  "doc": "README.md",
+  "text": "CertGate was built with Claude Code by four agent seats.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "**Analyst:** wrote each stage's obligation register from the operator's instructions and coordinated the stage.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1 rejected: injected reader failures were not labelled as planted, the README run command did not work, and two floating-point mutants survived the suite |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1 rejected: a re-evaluated story showed the re-evaluation time as its stored time |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3 rejected or superseded: receipts of live readings said the endpoint was \"off\"; a \"JSON repaired by guessing\" mutant survived; a mutant dropping \" · not live\" from the story label survived |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4 rejected: capability sentences without a claims-table row, then claims hidden in headings, code comments and text fences |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2 rejected: a forbidden kind of claim survived the documentation check, and the receipt's model id was not checked |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1 rejected: the production store scripts were never run by a test, and a guard test was flaky; then the operator's security repair |",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Later stages, from the same register:",
+  "row": "none: lead-in to the list that follows"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 8 (model choice for live reading): candidate 1 rejected, because the older one-request route accepted a reply naming a different model; candidate 2 `adb21d5e` accepted, 1 of 3 repair cycles.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 9 (fresh screenshots of the deployed site): candidate 1 rejected, because the image-metadata check did not cover the screenshots and the import check missed one import form; candidate 2 `3fff2942` accepted, 1 of 2 repair cycles.",
+  "row": "C-64"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Text for the lablab form",
+  "row": "none: heading of the form text"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "The operator pastes each field below as it stands.",
+  "row": "none: instruction to the operator"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Every sentence is in claims-map.json with its proof.",
+  "row": "C-108"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Title",
+  "row": "none: heading of a form field"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "CertGate: mill certificates, a person decides",
+  "row": "C-01"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Short description",
+  "row": "none: heading of a form field"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "CertGate reads a steel mill certificate (EN 10204 3.1) on AMD Token Factory, checks it against the purchase specification with deterministic rules and proposes release, block or review; a person decides.",
+  "row": "C-01"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "False conforming 0 of 18 in both Qwen3.8-27B runs.",
+  "row": "C-103"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Long description",
+  "row": "none: heading of a form field"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "When steel arrives at a plant, it comes with a mill certificate, an inspection certificate of the EN 10204 3.1 kind.",
+  "row": "none: problem statement (context, not a product capability)"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "A goods-in or Quality technician must check by hand that it belongs to the batch and that every value meets the purchase specification.",
+  "row": "none: intended user (context)"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "CertGate prepares that check.",
+  "row": "C-01"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "The open model Qwen3.8-27B, served by AMD Token Factory, reads the page images of the certificate; it is the evaluated model behind every figure below, and live reading also offers other measured and experimental models.",
+  "row": "C-04"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "On a digital PDF, a second channel without any model reads the text layer, and any disagreement sends the case to review.",
+  "row": "C-06"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Deterministic, versioned rules with exact decimals then propose release, block or review, and a person decides.",
+  "row": "C-08"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "CertGate never releases material on its own.",
+  "row": "C-01"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "On 27 evaluated fictitious certificates, in two independent Qwen3.8-27B runs, false conforming was 0 of 18 in both runs.",
+  "row": "C-103"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Proposals equal to the expected proposal were 27 of 27 in the implementer run and 26 of 27 in the auditor's independent run.",
+  "row": "C-103"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Fields read correctly were 591 of 594 in both runs.",
+  "row": "C-103"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Of the 9 cases whose expected proposal is release, 9 of 9 were proposed release in the implementer run and 8 of 9 in the auditor's run.",
+  "row": "C-104"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Sent to review without need: 0 of 9 in the implementer run and 1 of 9 in the auditor's run (cg-004, where the model read the printed carbon equivalent with a decimal comma and the channel check disagreed with the text layer).",
+  "row": "C-104"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Reading took 89.6 s mean and 80.6 s median per certificate with Qwen3.8-27B in the implementer run.",
+  "row": "C-19"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "The text-layer parser covers the two fictitious layouts of the dataset, not arbitrary mill certificates.",
+  "row": "C-105"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "A digital PDF in another layout gets no second channel and goes to review, like a scan: this is safe, but it reduces the saving.",
+  "row": "C-105"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5.",
+  "row": "C-105"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Four agent seats built and verified CertGate with Claude Code: an analyst, an implementer, an adversary and an independent auditor, with the expected outcomes committed before any product code, mutation checks at every stage, the auditor's own real evaluation run, and a claims table linking every sentence to its proof.",
+  "row": "C-64"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "All data is fictitious.",
+  "row": "C-02"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Additional Information",
+  "row": "none: heading of a form field"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "The operator gives the access code for live reading in this field of the form.",
+  "row": "C-108"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "It is not written in this repository.",
+  "row": "C-108"
  }
 ]
