@@ -103,3 +103,9 @@ Probe batch details:
 
 | — | 02:15Z | Addendum corrections C1-C3 from the auditor S8-20 verification (5ae3342f): C1 machine time (02:11:34Z, not "02:4xZ", which was an analyst estimate); C2 push target 6d7120c3 or later; C3 logging wording |
 | — | 03:11:48Z | Stage 8 budget end (03:15Z) reached with no deployment report. GitHub main is still feaadff. Outcome unchanged: ACCEPTED (local) on adb21d5, live pending the human before 2026-10-17T08:00Z. The listener stays armed |
+
+| Commit | Time | Event |
+|---|---|---|
+| 62e087d | 04:22Z | Operator deployment report 7afc3c62 (main 37938b25, Gemma listed again, O8-01 option A, commit e-mail). R8.4 sent (9e567b25) |
+| ccb82d9 | 04:23Z-04:29Z | **Auditor live run.** 3 readings, 0 retries. **Final verdict: Stage 8 ACCEPTED** (2f2825c1) |
+| - | - | Addendum section 4 completed, plus sections 1, 5 and 6 |
