@@ -197,11 +197,13 @@ describe.skipIf(!REPO)("the README for a judge (S7-06, T7-07, CH7-08, CH7-10)", 
     const sec = readme.slice(readme.indexOf("## Screenshots"), readme.indexOf("## Problem and user"));
     const rows = [...sec.matchAll(/^\| [^|]+ \| (\d+) px \| \[([^\]]+)\]\(docs\/screenshots\/([^)]+)\) \| ([^|]+) \|$/gm)];
     expect(rows.map((r) => r[3]).sort()).toEqual(m.images.map((i: { file: string }) => i.file).sort());
-    for (const im of m.images as { file: string; sha256: string; caption: string; width: number }[]) {
+    for (const im of m.images as { file: string; sha256: string; caption: string; width: number; captured_at?: string }[]) {
       const row = rows.find((r) => r[3] === im.file)!;
       expect(row[4]!.trim(), im.file).toBe(im.caption);
       expect(Number(row[1]), im.file).toBe(im.width);
-      expect(im.caption, im.file).toContain(`site commit ${m.site_commit.slice(0, 7)} · captured ${m.captured_at}`);
+      // Stage 9 (S9-04, A9-05): an image taken by the Stage 9 script carries its own machine time, and its caption
+      // must end with exactly that time; an image of the unchanged Stage 7 tool keeps the run's time.
+      expect(im.caption, im.file).toMatch(new RegExp(` · site commit ${m.site_commit.slice(0, 7)} · captured ${(im.captured_at ?? m.captured_at).replace(/[.]/g, "\\.")}$`));
       expect(createHash("sha256").update(readFileSync(path.join(ROOT, "docs", "screenshots", im.file))).digest("hex"), im.file).toBe(im.sha256);
     }
     // Nothing is presented as live that was not: a failed live capture is stated, and no done screen is claimed.
@@ -209,6 +211,15 @@ describe.skipIf(!REPO)("the README for a judge (S7-06, T7-07, CH7-08, CH7-10)", 
       expect(m.images.some((i: { screen: string }) => i.screen === "live-done")).toBe(false);
       expect(sec).toContain(`reason class \`${m.live.failure.reason_class}\``);
       expect(sec).toMatch(/the queued and done screens/);
+    }
+    // Stage 9 (S9-02): a done reading is shown only with its own receipt, of the model it requested, as reported.
+    if (m.live && m.live.outcome === "done") {
+      for (const s of ["live-done", "live-receipt"]) expect(m.images.some((i: { screen: string }) => i.screen === s), s).toBe(true);
+      expect(m.live.job_posts).toBe(1);
+      const req = String(m.live.model_requested).toLowerCase();
+      const rep = String(m.live.model_reported).toLowerCase();
+      expect(rep === req || (rep.split("/").length === 2 && rep.split("/")[1] === req), `${m.live.model_reported} names ${m.live.model_requested}`).toBe(true);
+      expect(m.live.failure).toBeNull();
     }
   });
   it("Try it never contains an access code; it names the code only as the one given to the judges", () => {

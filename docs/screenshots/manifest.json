@@ -1,7 +1,7 @@
 {
   "site": "https://certgate-wheat.vercel.app",
-  "site_commit": "d1aaa3e8e55a390f10dbb68e341199515d3a6791",
-  "captured_at": "2026-10-15T05:15:09.161Z",
+  "site_commit": "37938b251189fed7be636fc2187e6fbd1fe778fa",
+  "captured_at": "2026-10-16T05:58:08.081Z",
   "viewports": [
     1280,
     375
@@ -10,140 +10,340 @@
   "chromium_build": "1194",
   "served_files_sha256": {
     "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
-    "/app.js": "e3fdddbc204bcbe20a0a7fdb2450a1ac1e7cd321b274d2f362ff3d10b7df78c8",
+    "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
     "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029",
     "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
     "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
-    "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6"
+    "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6",
+    "/stories/cg-001.json": "d45be1b6d4236e06785ae43ad394e043536156888834b136cf4427800c4734ca",
+    "/stories/cg-001.recording.json": "a29231a2f35fe74d750e931302c548a6d2734651fbb09f103eff04aae3b024a7",
+    "/stories/cg-002.json": "4c1e3e2db1e16b582b06e5fc2fe0e502a6b5053f22519f3f8d7a8eb9778be928",
+    "/stories/cg-002.recording.json": "228376e3820a02fad79f798cbc03fcdc792a7f6975c80484aa6ac305e72ab4f0",
+    "/stories/cg-003.json": "ebe28aea22d541f78f955682f221d75ead36066323936fb7b0a7b79962427dce",
+    "/stories/cg-003.recording.json": "75977f5e13460c52fe6f2c48a0bc33f72ef85466208b3291bafa328d92aace36"
   },
   "secret_check": "visible-field rule: innerText scanned for the access code and the key; code input empty",
   "live": {
     "sample": "cg-004",
     "width": 1280,
+    "model_requested": "Gemma-4-31B-IT",
+    "model_reported": "self-dploy/Gemma-4-31B-IT",
+    "evaluated": true,
+    "listing_checked_at": "2026-10-16T05:58:11.891Z",
     "job_posts": 1,
-    "job_id": "2ce1c257e73f6fc13ff44f05a85bb586",
+    "job_id": "bc8a3b3a63f4353fee5ec31c618ac978",
     "post_status": 202,
     "states_observed": [
+      "posted",
       "reading",
-      "failed"
+      "done"
     ],
     "timeline": [
       {
-        "state": "reading",
-        "at": "2026-10-15T05:15:19.113Z"
+        "state": "posted",
+        "at": "2026-10-16T05:58:35.981Z"
       },
       {
-        "state": "failed",
-        "at": "2026-10-15T05:15:40.956Z"
+        "state": "reading",
+        "at": "2026-10-16T05:58:37.342Z"
+      },
+      {
+        "state": "done",
+        "at": "2026-10-16T05:59:07.224Z"
       }
     ],
-    "outcome": "failed",
-    "failure": {
-      "job_id": "2ce1c257e73f6fc13ff44f05a85bb586",
-      "state": "failed",
-      "reason_class": "endpoint_5xx",
-      "reason": "the model endpoint failed or could not be reached",
-      "polled_at": "2026-10-15T05:15:40.956Z"
-    }
+    "outcome": "done",
+    "failure": null
   },
   "images": [
     {
       "file": "landing-1280.png",
       "screen": "landing",
       "width": 1280,
-      "sha256": "2d75ea75a64adf2537948f57baae88a5754865180de624042a7baef855bbef3c",
-      "caption": "landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "c1ecfb169c816756964f4bed0554d088dbddacddcfef748787e762c6ad4f9de8",
+      "caption": "landing · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "judge-1280.png",
       "screen": "judge",
       "width": 1280,
       "sha256": "e21ecf3497dfb801ca40ece5fa472b5e5e48f53754a9e68e1042048b3bffdc3c",
-      "caption": "judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "caption": "judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "story-cg-003-1280.png",
       "screen": "story-cg-003",
       "width": 1280,
-      "sha256": "e0053c986674ba79b58a81bac29a7db3a5cb0d81f32c27788569df33ea3d1140",
-      "caption": "story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "3ab58a6511de7804ac387dbf421a2cb88d7ee1c2b2127ac5f8fc03632c1523ab",
+      "caption": "story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "story-cg-003-decision-1280.png",
       "screen": "story-cg-003-decision",
       "width": 1280,
       "sha256": "9ff4a9fc004ee86885e07bc725fb6cf8353eefecfabcac92967a2b418652695f",
-      "caption": "story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "caption": "story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "amd-1280.png",
       "screen": "amd",
       "width": 1280,
-      "sha256": "aec87f32725d83f65e89c82e3f48b7a4a9a3ab1deed55e0fa822c8ae2fac2f8f",
-      "caption": "amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "0819564356e69710cf6c07e82a09cea3b63cba170f1c8879deab6f7a9c35822d",
+      "caption": "amd · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "live-1280.png",
       "screen": "live",
       "width": 1280,
-      "sha256": "9bb85ed9ffdace31098723922e96160854bb15dde3f2551d10f5f2e21678fa09",
-      "caption": "live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
-    },
-    {
-      "file": "live-reading-1280.png",
-      "screen": "live-reading",
-      "width": 1280,
-      "sha256": "e0ddf2f92b92868cd5f46c31240336b0cc2824d36395b05b6e1a457bf6d56933",
-      "caption": "live-reading · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
-    },
-    {
-      "file": "live-failed-1280.png",
-      "screen": "live-failed",
-      "width": 1280,
-      "sha256": "906e4d09a1fd319488ce4e458fb4617c2af5d13cf1af2a104d26f038ba00bd2e",
-      "caption": "live-failed · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "bac3f1c9a4eae2c8507c513122cc8407bdb41423f604d4e79e8d08f4510081d6",
+      "caption": "live · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "landing-375.png",
       "screen": "landing",
       "width": 375,
-      "sha256": "9e37406e636fddbd0ff946ef8f41ec291352e85e1d7fd65de893d3a0154d9b9e",
-      "caption": "landing · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "7f3870891047e09a158bc4d856fc204a2d8f06ba4dc092297b1e5aed940b182c",
+      "caption": "landing · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "judge-375.png",
       "screen": "judge",
       "width": 375,
       "sha256": "f6aa342be3c5a5ba569c01c7aaa0896607ad2191d3b21bbc7da70fbaddbd220f",
-      "caption": "judge · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "caption": "judge · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "story-cg-003-375.png",
       "screen": "story-cg-003",
       "width": 375,
-      "sha256": "66823e7db53fac8cbc63d8d76c86c3e67fadc185a8be43e2f02ddce5ed176da6",
-      "caption": "story-cg-003 · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "6ad66fb056916a43a6d8b5e73486a7fe5d586dcde8082e9b97026254c3ccc8c3",
+      "caption": "story-cg-003 · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "story-cg-003-decision-375.png",
       "screen": "story-cg-003-decision",
       "width": 375,
       "sha256": "efc18cd723e7beee6a3ce68b6966adea84ba80f1fb736b2a19604f8a7dd516e5",
-      "caption": "story-cg-003-decision · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "caption": "story-cg-003-decision · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "amd-375.png",
       "screen": "amd",
       "width": 375,
-      "sha256": "11b5bdb0f91abf4b90c0b411285a34b9c6a0a1f78d2be6e0f4d0901242dba0d8",
-      "caption": "amd · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "85713c56b4487f3fad754ebd10ad3c29285e00a391eca9a90a3918f6577c0392",
+      "caption": "amd · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
     },
     {
       "file": "live-375.png",
       "screen": "live",
       "width": 375,
-      "sha256": "26e55ffc7a11250846e350f25316de37f28144d8f5a7a0eec26c6f4f86ceb9f2",
-      "caption": "live · site commit d1aaa3e · captured 2026-10-15T05:15:09.161Z"
+      "sha256": "45cdbefdf5d29a947e2dbd55ed16adac18f3fdda8295e09647c6b04bb463e5af",
+      "caption": "live · site commit 37938b2 · captured 2026-10-16T05:58:08.081Z"
+    },
+    {
+      "file": "live-models-375.png",
+      "screen": "live-models",
+      "width": 375,
+      "sha256": "9ee3eaca0b0780def966d436c8616dd7688f94f486f63b3630abd945e832c841",
+      "captured_at": "2026-10-16T05:58:33.668Z",
+      "url": "https://certgate-wheat.vercel.app/#/",
+      "visible_field": {
+        "code_input_present": true,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-models · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:33.668Z"
+    },
+    {
+      "file": "live-models-1280.png",
+      "screen": "live-models",
+      "width": 1280,
+      "sha256": "2c9b969ad07212ca901a4b97d1e1325e84daf652765a57aaef3c43930767e269",
+      "captured_at": "2026-10-16T05:58:35.004Z",
+      "url": "https://certgate-wheat.vercel.app/#/",
+      "visible_field": {
+        "code_input_present": true,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-models · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:35.004Z"
+    },
+    {
+      "file": "live-reading-1280.png",
+      "screen": "live-reading",
+      "width": 1280,
+      "sha256": "388b0241f040fcc73e0674b7b2bacc713d9f2b7f4475e354ea0cf472f667b6db",
+      "captured_at": "2026-10-16T05:58:37.345Z",
+      "url": "https://certgate-wheat.vercel.app/#/",
+      "visible_field": {
+        "code_input_present": true,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-reading · reading · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:58:37.345Z"
+    },
+    {
+      "file": "live-done-1280.png",
+      "screen": "live-done",
+      "width": 1280,
+      "sha256": "63a79a9814b0e7de5ad47cdb7560dfdb9a9525e4d2b042c22186f23cf127967a",
+      "captured_at": "2026-10-16T05:59:07.377Z",
+      "url": "https://certgate-wheat.vercel.app/#/local/upload-7c55fcfb3ad3-bbc84dce-2a39-4c38-9dc5-c0730c1cf1c4",
+      "visible_field": {
+        "code_input_present": false,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.377Z"
+    },
+    {
+      "file": "live-done-375.png",
+      "screen": "live-done",
+      "width": 375,
+      "sha256": "ba5ebd5993102f0bb1c2fe16b2827533354c60186654b65aa05208f5d939d05b",
+      "captured_at": "2026-10-16T05:59:07.954Z",
+      "url": "https://certgate-wheat.vercel.app/#/local/upload-7c55fcfb3ad3-bbc84dce-2a39-4c38-9dc5-c0730c1cf1c4",
+      "visible_field": {
+        "code_input_present": false,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-done · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:07.954Z"
+    },
+    {
+      "file": "live-receipt-1280.png",
+      "screen": "live-receipt",
+      "width": 1280,
+      "sha256": "dfbdcdf02551346e02f2e5d3641d1de19753d85d8abdc7063b9bb91dab121395",
+      "captured_at": "2026-10-16T05:59:08.528Z",
+      "url": "https://certgate-wheat.vercel.app/#/local/upload-7c55fcfb3ad3-bbc84dce-2a39-4c38-9dc5-c0730c1cf1c4",
+      "visible_field": {
+        "code_input_present": false,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:08.528Z"
+    },
+    {
+      "file": "live-receipt-375.png",
+      "screen": "live-receipt",
+      "width": 375,
+      "sha256": "b5b8840ebd426e3297f077949503b05cbd53ec3cdc7d47815421a461928b376d",
+      "captured_at": "2026-10-16T05:59:09.027Z",
+      "url": "https://certgate-wheat.vercel.app/#/local/upload-7c55fcfb3ad3-bbc84dce-2a39-4c38-9dc5-c0730c1cf1c4",
+      "visible_field": {
+        "code_input_present": false,
+        "code_input_empty": true,
+        "secret_hits": 0
+      },
+      "caption": "live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:09.027Z"
+    }
+  ],
+  "served_files_fetched_at": {
+    "/app.js": "2026-10-16T05:58:31.998Z",
+    "/figures.json": "2026-10-16T05:58:32.031Z",
+    "/index.html": "2026-10-16T05:58:32.062Z",
+    "/labels.js": "2026-10-16T05:58:32.114Z",
+    "/stories/cg-001.json": "2026-10-16T05:58:32.139Z",
+    "/stories/cg-001.recording.json": "2026-10-16T05:58:32.169Z",
+    "/stories/cg-002.json": "2026-10-16T05:58:32.201Z",
+    "/stories/cg-002.recording.json": "2026-10-16T05:58:32.225Z",
+    "/stories/cg-003.json": "2026-10-16T05:58:32.265Z",
+    "/stories/cg-003.recording.json": "2026-10-16T05:58:32.306Z",
+    "/stories/index.json": "2026-10-16T05:58:32.342Z",
+    "/styles.css": "2026-10-16T05:58:32.374Z"
+  },
+  "runs": [
+    {
+      "script": "tools/capture-screenshots.mjs (unchanged)",
+      "captured_at": "2026-10-16T05:58:08.081Z",
+      "served_files_sha256": {
+        "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+        "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
+        "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029",
+        "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+        "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+        "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6"
+      }
+    },
+    {
+      "script": "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs",
+      "started_at": "2026-10-16T05:58:31.648Z",
+      "finished_at": "2026-10-16T05:59:09.933Z",
+      "served_files_sha256_before": {
+        "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+        "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
+        "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029",
+        "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+        "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+        "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6"
+      },
+      "served_files_sha256_after": {
+        "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+        "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
+        "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029",
+        "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+        "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+        "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6"
+      },
+      "public_files_sha256_before": {
+        "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
+        "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+        "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+        "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+        "/stories/cg-001.json": "d45be1b6d4236e06785ae43ad394e043536156888834b136cf4427800c4734ca",
+        "/stories/cg-001.recording.json": "a29231a2f35fe74d750e931302c548a6d2734651fbb09f103eff04aae3b024a7",
+        "/stories/cg-002.json": "4c1e3e2db1e16b582b06e5fc2fe0e502a6b5053f22519f3f8d7a8eb9778be928",
+        "/stories/cg-002.recording.json": "228376e3820a02fad79f798cbc03fcdc792a7f6975c80484aa6ac305e72ab4f0",
+        "/stories/cg-003.json": "ebe28aea22d541f78f955682f221d75ead36066323936fb7b0a7b79962427dce",
+        "/stories/cg-003.recording.json": "75977f5e13460c52fe6f2c48a0bc33f72ef85466208b3291bafa328d92aace36",
+        "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6",
+        "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029"
+      },
+      "public_files_sha256_after": {
+        "/app.js": "9d0dfda9e840740492d5c813fc674ad7587c7b445e95d5c4f324c7f2d4d6abc8",
+        "/figures.json": "c0c8b6c404fab43470e376b13961dbece04c24f9e2f1674eb80542e5f8e3b705",
+        "/index.html": "fadc9504228454f01e5696d8f74a8ba6725b3056f375c5d1b9a3b3cf7fc18534",
+        "/labels.js": "3e424eff17b9b94a5069c4e24a849b9b8a4642a130b069f1ee2cd029230903bf",
+        "/stories/cg-001.json": "d45be1b6d4236e06785ae43ad394e043536156888834b136cf4427800c4734ca",
+        "/stories/cg-001.recording.json": "a29231a2f35fe74d750e931302c548a6d2734651fbb09f103eff04aae3b024a7",
+        "/stories/cg-002.json": "4c1e3e2db1e16b582b06e5fc2fe0e502a6b5053f22519f3f8d7a8eb9778be928",
+        "/stories/cg-002.recording.json": "228376e3820a02fad79f798cbc03fcdc792a7f6975c80484aa6ac305e72ab4f0",
+        "/stories/cg-003.json": "ebe28aea22d541f78f955682f221d75ead36066323936fb7b0a7b79962427dce",
+        "/stories/cg-003.recording.json": "75977f5e13460c52fe6f2c48a0bc33f72ef85466208b3291bafa328d92aace36",
+        "/stories/index.json": "b447b870a815e5d808c3f3f2c1ab308ecd6f05fa535eb0d9a5a2bf3d54bccde6",
+        "/styles.css": "2b91ea73d2db128cd11faf095456064bdc3ec534e9578ca005ee2cf2265ed029"
+      },
+      "public_files_fetched_at": {
+        "before": {
+          "/app.js": "2026-10-16T05:58:31.998Z",
+          "/figures.json": "2026-10-16T05:58:32.031Z",
+          "/index.html": "2026-10-16T05:58:32.062Z",
+          "/labels.js": "2026-10-16T05:58:32.114Z",
+          "/stories/cg-001.json": "2026-10-16T05:58:32.139Z",
+          "/stories/cg-001.recording.json": "2026-10-16T05:58:32.169Z",
+          "/stories/cg-002.json": "2026-10-16T05:58:32.201Z",
+          "/stories/cg-002.recording.json": "2026-10-16T05:58:32.225Z",
+          "/stories/cg-003.json": "2026-10-16T05:58:32.265Z",
+          "/stories/cg-003.recording.json": "2026-10-16T05:58:32.306Z",
+          "/stories/index.json": "2026-10-16T05:58:32.342Z",
+          "/styles.css": "2026-10-16T05:58:32.374Z"
+        },
+        "after": {
+          "/app.js": "2026-10-16T05:59:09.577Z",
+          "/figures.json": "2026-10-16T05:59:09.619Z",
+          "/index.html": "2026-10-16T05:59:09.659Z",
+          "/labels.js": "2026-10-16T05:59:09.690Z",
+          "/stories/cg-001.json": "2026-10-16T05:59:09.728Z",
+          "/stories/cg-001.recording.json": "2026-10-16T05:59:09.759Z",
+          "/stories/cg-002.json": "2026-10-16T05:59:09.785Z",
+          "/stories/cg-002.recording.json": "2026-10-16T05:59:09.815Z",
+          "/stories/cg-003.json": "2026-10-16T05:59:09.847Z",
+          "/stories/cg-003.recording.json": "2026-10-16T05:59:09.877Z",
+          "/stories/index.json": "2026-10-16T05:59:09.907Z",
+          "/styles.css": "2026-10-16T05:59:09.933Z"
+        }
+      }
     }
   ]
 }
