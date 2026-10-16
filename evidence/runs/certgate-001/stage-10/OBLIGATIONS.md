@@ -78,3 +78,20 @@ These rulings bind the design note and candidate 1. The design note itself is ru
 | Y-06 | **lablab.md approved:** it goes through the unchanged `units` from `tools/claims-units.mjs`, with zero prize-family words, `ALLOWED_PRIZE_CLAUSES` unchanged, and the field checks in code points and tokens |
 | Y-07 | **The limit durations** (60 s, 210 s, 300 s) are not reading times. Their exact-sentence exemption list is short, and the auditor reviews each entry |
 | Y-08 | **Target:** candidate 1 by ~11:15Z. The auditor's verdict must come before 11:51Z, after which no new work starts |
+
+## R10.3: rulings on adversary DN10-01…10 (msg 028519f4), analyst-zt7k
+
+**All of them are adopted.** They are binding on candidate 1 before it is frozen.
+
+| ID | Ruling |
+|---|---|
+| Z-01 | **DN10-01 adopted; this corrects the design note's §4 last row.** "How it was built and verified" keeps **one plain-word line per stage with a rejection**, giving the cause (dispatch 5 still applies). The codes go only into the linked STAGE-REGISTER.md. A test checks that every stage with a rejection in STAGE-REGISTER.md has a line naming that stage and "rejected" |
+| Z-02 | **DN10-02 adopted.** "How it works" names Qwen3.8-27B **as the evaluated model behind every figure**, and says that live reading also offers measured and experimental models. For example: "a model on AMD Token Factory reads the certificate (Qwen3.8-27B for every figure below; live reading also offers other measured and experimental models)". A test requires "evaluated" or "figures" next to the Qwen id in the block |
+| Z-03 | **DN10-03 adopted.** The jargon ban also runs over `docs/submission/lablab.md` |
+| Z-04 | **DN10-04 adopted.** Minutes count as reading times. The "52–208 s" range is computed in the test from the implementer run's per-case seconds, and the sentence names Qwen3.8-27B and the run |
+| Z-05 | **DN10-05 adopted.** The three exact site-URL strings must sit at their positions only. A fourth URL fails, and any other host fails. A test confirms that the served `#/judge` route exists |
+| Z-06 | **DN10-06 adopted.** Each figure is matched **with its run label in the same clause**, never by order alone. Swapping the labels must fail |
+| Z-07 | **DN10-07 adopted.** The fictitious-data notice stays unchanged, directly after the block, and the block's word "fictitious" is asserted |
+| Z-08 | **DN10-08 adopted.** Exemptions are full sentences kept in the test file, listed in the handoff and reviewed by the auditor |
+| Z-09 | **DN10-09 [OBS], recommended:** one safety figure in the short description, with its run ("false conforming 0 of 18 in both evaluation runs"), within the 255 characters |
+| Z-10 | **DN10-10 [OBS], adopted:** 03-DISENO is described in plain words with **no link**, because the planning workspace is not in the repository |
