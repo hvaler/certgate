@@ -3,7 +3,7 @@
 **CertGate checks a steel mill certificate (an inspection certificate of the EN 10204 3.1 kind) against the purchase specification, for the goods-in or Quality technician who must release or block the batch.**
 How it works: a model on AMD Token Factory reads the certificate (Qwen3.8-27B, the evaluated model, for every figure below; live reading also offers other measured and experimental models), deterministic versioned rules propose release, block or review, and a person decides; CertGate never releases material on its own.
 Results on the 27 evaluated fictitious certificates (2 Qwen3.8-27B runs): false conforming **0/18** in both runs; proposals equal to the expected proposal **27/27** (implementer run) and **26/27** (auditor's independent run); fields read correctly **591/594** in both runs.
-Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** and **1/9** (cg-004: the model read the printed CEV with a decimal comma, "0,39", the text layer read 0.39, and the channel check disagreed).
+Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** (implementer run) and **1/9** (auditor's run, cg-004: the model read the printed CEV with a decimal comma, "0,39", the text layer read 0.39, and the channel check disagreed).
 [Deployed site](https://certgate-wheat.vercel.app) · [judge mode](https://certgate-wheat.vercel.app/#/judge) · [screenshots](#screenshots)
 
 > **All data in this repository is fictitious.** Siderúrgica Valdemora S.A. (the mill), Talleres Ribera Norte
@@ -625,6 +625,7 @@ names.
 | 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1 rejected: the production store scripts were never run by a test, and a guard test was flaky; then the operator's security repair |
 
 Later stages, from the same register:
+- Stage 7 (documentation, visuals and the original certificate): candidate 1 rejected, because a timing-sensitive guard test was flaky; repaired in the tests only, and candidate `cf97dfad` accepted, 1 of 3 repair cycles.
 - Stage 8 (model choice for live reading): candidate 1 rejected, because the older one-request route accepted a reply naming a different model; candidate 2 `adb21d5e` accepted, 1 of 3 repair cycles.
 - Stage 9 (fresh screenshots of the deployed site): candidate 1 rejected, because the image-metadata check did not cover the screenshots and the import check missed one import form; candidate 2 `3fff2942` accepted, 1 of 2 repair cycles.
 
@@ -633,7 +634,11 @@ Later stages, from the same register:
 - Stage 2: the auditor's 29 of 29 killed.
 - Stage 3: 12 of 12 killed.
 - Stage 4: the adversary's 38 of 38 killed.
+- Stage 5: the auditor's 21 claim-wording and 4 identity mutants killed; the adversary's 34 of 39, with 5 recorded as non-binding.
 - Stage 6: the auditor's 13 of 13 on the security delta, and the adversary's 9 of 9.
+- Stage 7: the auditor's 13 of 13 and the adversary's 19 of 19.
+- Stage 8: the auditor's 25 of 25 and the adversary's 29 of 29.
+- Stage 9: the adversary's 20 of 20.
 
 **Independent auditor runs:**
 - Stage 3: the auditor's own real evaluation, 26 of 27 proposals as expected (see "Evaluation").

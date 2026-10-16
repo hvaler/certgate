@@ -3396,11 +3396,6 @@
  },
  {
   "doc": "README.md",
-  "text": "Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** and **1/9** (cg-004: the model read the printed CEV with a decimal comma, \"0,39\", the text layer read 0.39, and the channel check disagreed).",
-  "row": "C-104"
- },
- {
-  "doc": "README.md",
   "text": "[Deployed site](https://certgate-wheat.vercel.app) · [judge mode](https://certgate-wheat.vercel.app/#/judge) · [screenshots](#screenshots)",
   "row": "none: links to the deployed site, judge mode and the screenshots (navigation)"
  },
@@ -3723,5 +3718,35 @@
   "doc": "docs/submission/lablab.md",
   "text": "It is not written in this repository.",
   "row": "C-108"
+ },
+ {
+  "doc": "README.md",
+  "text": "Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** (implementer run) and **1/9** (auditor's run, cg-004: the model read the printed CEV with a decimal comma, \"0,39\", the text layer read 0.39, and the channel check disagreed).",
+  "row": "C-104"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 7 (documentation, visuals and the original certificate): candidate 1 rejected, because a timing-sensitive guard test was flaky; repaired in the tests only, and candidate `cf97dfad` accepted, 1 of 3 repair cycles.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 5: the auditor's 21 claim-wording and 4 identity mutants killed; the adversary's 34 of 39, with 5 recorded as non-binding.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 7: the auditor's 13 of 13 and the adversary's 19 of 19.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 8: the auditor's 25 of 25 and the adversary's 29 of 29.",
+  "row": "C-64"
+ },
+ {
+  "doc": "README.md",
+  "text": "Stage 9: the adversary's 20 of 20.",
+  "row": "C-64"
  }
 ]

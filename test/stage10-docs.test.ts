@@ -95,7 +95,8 @@ repoOnly("README top block (S10-01, X-06, Z-02, Z-05, Z-06, Z-07)", () => {
     expect([i.block, a.block]).toEqual([0, 0]);
     expect(b).toContain(`Utility, of the ${i.n} cases whose expected proposal is release:`);
     expect(b).toContain(`proposed release **${i.release}/${i.n}** (implementer run) and **${a.release}/${a.n}** (auditor's run)`);
-    expect(b).toContain(`sent to review without need **${i.review.length}/${i.n}** and **${a.review.length}/${a.n}** (${a.review.map((r) => r.case_id).join(", ")}:`);
+    // F10-A01: each utility figure carries its own run label in its clause.
+    expect(b).toContain(`sent to review without need **${i.review.length}/${i.n}** (implementer run) and **${a.review.length}/${a.n}** (auditor's run, ${a.review.map((r) => r.case_id).join(", ")}:`);
   });
   it("links the deployed site, judge mode and the screenshots, and the judge route exists", () => {
     const b = topBlock(read("README.md")).lines.join(" ");
@@ -116,7 +117,7 @@ repoOnly("cg-004, the one release case sent to review (S10-02, X-04)", () => {
     const model = c.fields.cev_printed!.model!;
     const correct = c.fields.cev_printed!.correct!;
     expect(model.replace(",", ".")).toBe(correct);
-    expect(flat(read("README.md"))).toContain(`(cg-004: the model read the printed CEV with a decimal comma, "${model}", the text layer read ${correct}, and the channel check disagreed)`);
+    expect(flat(read("README.md"))).toContain(`cg-004: the model read the printed CEV with a decimal comma, "${model}", the text layer read ${correct}, and the channel check disagreed)`);
     expect(flat(read(LABLAB))).toContain("(cg-004, where the model read the printed carbon equivalent with a decimal comma and the channel check disagreed with the text layer)");
   });
 });
@@ -208,8 +209,19 @@ repoOnly("plain words for a judge (S10-06, X-07, Z-03)", () => {
   });
   it("every stage the register records as rejected has a plain-word line naming it and the word rejected (Z-01)", () => {
     const register = read("evidence/runs/certgate-001/STAGE-REGISTER.md");
+    // F10-A02: the set is derived from the register, and every stage whose auditor verdict file rejected a candidate
+    // must be in it (so a stage missing from the register cannot silently drop out of the README).
     const rejected = [...new Set(register.split("\n").filter((l) => /^\| \d \| /.test(l) && /REJECTED/.test(l)).map((l) => l.slice(2, 3)))].sort();
-    expect(rejected).toEqual(["1", "2", "3", "4", "5", "6", "8", "9"]);
+    const base = path.join(ROOT, "evidence", "runs", "certgate-001");
+    const byVerdict = readdirSync(base).filter((d) => /^stage-\d$/.test(d)).filter((d) => {
+      const dir = path.join(base, d, "auditor");
+      return existsSync(dir) && readdirSync(dir).filter((f) => /^VERDICT-S\d-candidate-.*\.md$/.test(f)).some((f) => {
+        const first = readFileSync(path.join(dir, f), "utf8").split("\n").find((l) => /REJECTED|ACCEPTED/.test(l)) ?? "";
+        return /REJECTED/.test(first);
+      });
+    }).map((d) => d.slice("stage-".length)).sort();
+    expect(byVerdict.length).toBeGreaterThanOrEqual(8);
+    expect(rejected).toEqual(byVerdict);
     const readme = read("README.md");
     const sec = readme.slice(readme.indexOf("## How it was built and verified"), readme.indexOf("## License"));
     for (const s of rejected) {
@@ -217,6 +229,35 @@ repoOnly("plain words for a judge (S10-06, X-07, Z-03)", () => {
       expect(line, `stage ${s}`).toBeDefined();
       expect(line!, `stage ${s}`).toMatch(/\brejected\b/);
     }
+  });
+});
+
+repoOnly("mutation checks at every stage (O10-A02)", () => {
+  it("the README gives a mutation line for every accepted stage, each figure found in that stage's register row", () => {
+    const register = read("evidence/runs/certgate-001/STAGE-REGISTER.md");
+    // One physical line of the register may carry two rows (as in test/stage7.test.ts).
+    const rows = register.split("\n").flatMap((l) => l.split(/(?=\| \d \| )/)).filter((l) => /^\| \d \| /.test(l));
+    const accepted = [...new Set(rows.filter((l) => /\*\*ACCEPTED\*\*/.test(l)).map((l) => l.slice(2, 3)))].sort();
+    expect(accepted).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+    const readme = read("README.md");
+    const sec = readme.slice(readme.indexOf("**Mutation checks**"), readme.indexOf("**Independent auditor runs:**"));
+    // Each README figure "n of m" (or "n … mutants") and the register fragment that records it.
+    const facts: Record<string, [string, string][]> = {
+      "5": [["the auditor's 21 claim-wording and 4 identity mutants killed", "auditor 21 prize + 4 identity"], ["the adversary's 34 of 39, with 5 recorded as non-binding", "adversary 34/39 (5 non-binding residuals"]],
+      "7": [["the auditor's 13 of 13", "auditor 12/12 then 13/13"], ["the adversary's 19 of 19", "adversary 19/19"]],
+      "8": [["the auditor's 25 of 25", "auditor 25/25"], ["the adversary's 29 of 29", "adversary S8 29/29"]],
+      "9": [["the adversary's 20 of 20", "adversary 20/20"]],
+    };
+    for (const s of accepted) {
+      const line = sec.split("\n").find((l) => l.startsWith(`- Stage ${s}: `));
+      expect(line, `stage ${s} has a mutation line`).toBeDefined();
+      for (const [text, fragment] of facts[s] ?? []) {
+        expect(line!, `stage ${s}`).toContain(text);
+        const row = rows.filter((l) => l.startsWith(`| ${s} | `) && /\*\*ACCEPTED\*\*/.test(l)).join("\n");
+        expect(row, `stage ${s} register: ${fragment}`).toContain(fragment);
+      }
+    }
+    expect(flat(read(LABLAB))).toContain("mutation checks at every stage");
   });
 });
 
