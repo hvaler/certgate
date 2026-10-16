@@ -172,6 +172,7 @@ async function capture(args, accessCode, secrets) {
   const served = await servedHashes(args.site);
   for (const f of SERVED_FILES) if (served[f] !== base.served_files_sha256[f]) fail(`served file ${f} differs from the tool run's`);
   const publicBefore = await publicHashes(args.site);
+  for (const f of SERVED_FILES) if (publicBefore[f] !== served[f]) fail(`public file ${f} differs between the two reads`);
   for (const [f, h] of Object.entries(served)) console.log(`${h}  served ${f}`);
 
   const images = [];
@@ -234,6 +235,9 @@ async function capture(args, accessCode, secrets) {
 
   const manifest = {
     ...base,
+    // V-05: all 12 files under public/ at the deployed commit, as fetched in this window (the tool hashes 6 of them;
+    // those 6 must agree, checked above).
+    served_files_sha256: { ...base.served_files_sha256, ...publicBefore },
     runs: [
       { script: "tools/capture-screenshots.mjs (unchanged)", captured_at: base.captured_at, served_files_sha256: base.served_files_sha256 },
       { script: "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs", started_at: startedAt, finished_at: finishedAt, served_files_sha256_before: served, served_files_sha256_after: after, public_files_sha256_before: publicBefore, public_files_sha256_after: publicAfter },
