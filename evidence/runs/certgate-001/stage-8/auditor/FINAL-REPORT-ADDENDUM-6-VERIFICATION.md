@@ -72,3 +72,28 @@
 - **Product:** `git diff adb21d5 a7901af5` outside `evidence/` is still **empty**.
 
 **S8-20: the addendum is VERIFIED at a7901af5.** Its §4 stays open until the live checks (S8-18).
+
+## The completed addendum, after the live acceptance: 016e0288 and bdd587e2, checked
+
+- **016e02880a8c9bd97e2c4f73e130a92160ca27a7** (analyst, 2026-10-16T04:33:27Z) completes §4 from VERDICT-S8-FINAL (ccb82d9) and updates §1, §5 and §6.
+  - **Checked against the auditor's final record and `live/`:**
+    - the lease;
+    - the call counts (3 readings, 0 retries, 4 GET /models, 0 wrong codes);
+    - T8-30…T8-37 as recorded;
+    - the readings table (138, 30 and 56 s; the strict reported ids; `evaluated` true, true, false; the hourly count 0→1→2→3);
+    - the per-reading /usage deltas 0.000239575, 0.000102519 and 0.000652260, equal to `live/read-*-counts.json` and to the reply costs;
+    - the total 0.000994354;
+    - T8-35 as condition absent, a limitation and not a pass;
+    - "no automatic rejection";
+    - O8-01 option A;
+    - the push note.
+  - **Product:** `git diff 37938b25 016e0288` outside `evidence/` is empty.
+  - **Two corrections were raised (msg 612ddfc4):**
+    - **D1, commit identity:** 6 auditor commits carry `auditor-zt7p@certgate.local`, not `hvaler@comillas.edu`.
+    - **D2, final time:** 04:29Z was the lease release.
+- **bdd587e2f6234b88b838ddfd7c93b794401b8a4b** applies both, in the addendum only (+5 −2), and they **pass**:
+  - **D1** states the 33 `hvaler@comillas.edu` commits and the 6 auditor commits under `auditor-zt7p@certgate.local`, listed by id, and notes that the human rewrites both.
+  - **D2** gives "final ~04:31Z", with the lease released at 04:29:04Z, the verdict message written at 04:30:49Z and the record committed at 04:31:38Z.
+  - **Product:** `git diff 37938b25 bdd587e2` outside `evidence/` is empty.
+
+**S8-20: the dispatch 6 addendum is VERIFIED at bdd587e2, without reservation.**
