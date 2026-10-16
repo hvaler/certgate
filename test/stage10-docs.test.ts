@@ -132,9 +132,11 @@ repoOnly("scan counts name their set (S10-04, X-01)", () => {
     const scans = (ids: string[]) => ids.filter((id) => k[id] === "scan").length;
     const sentence = `Of the ${evaluated.length} evaluated certificates, ${scans(evaluated)} are scans; of the ${all.length} in the dataset, ${scans(all)}.`;
     expect(sentence).toBe("Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5.");
+    // The counted sentence is in the README; the lablab long description dropped it for the form's 2000-character
+    // limit (auditor eb158d80), and any scan count it gives must still name its set.
+    expect(flat(read("README.md"))).toContain(sentence);
     for (const f of ["README.md", LABLAB]) {
       const t = flat(read(f));
-      expect(t, f).toContain(sentence);
       // Any other scan count must be the dataset's own line, which names the 30.
       for (const m of t.matchAll(/\b(\d+) (?:are )?scan(?:s|ned)\b/g)) {
         const at = t.slice(Math.max(0, m.index! - 80), m.index! + 40);
@@ -182,7 +184,8 @@ repoOnly("reading times name their model (S10-03, X-03, Z-04, Z-08)", () => {
     const secs = results(RUNS.implementer).map((r) => (r as unknown as { case_wall_ms: number }).case_wall_ms / 1000);
     expect(Math.round(Math.min(...secs))).toBeLessThanOrEqual(lo + 1);
     expect(flat(read("README.md"))).toContain(`With Qwen3.8-27B, one reading takes about 1 to 4 minutes (${lo}–${hi} s per certificate in the implementer run).`);
-    expect(flat(read(LABLAB))).toContain(`Reading took ${t.mean} s mean and ${t.median} s median per certificate with Qwen3.8-27B in the implementer run.`);
+    // The lablab long description carries no reading time (dropped for the form's 2000-character limit).
+    expect(flat(read(LABLAB))).not.toMatch(DURATION);
   });
 });
 
@@ -269,7 +272,10 @@ repoOnly("the lablab form text (S10-07, X-08, X-09, Z-09)", () => {
     const long = field(t, "Long description");
     expect([...title].length).toBeLessThanOrEqual(50);
     expect([...short].length).toBeLessThanOrEqual(255);
-    expect(long.split(/\s+/).filter(Boolean).length).toBeGreaterThanOrEqual(100);
+    // The form itself governs (R10.5; operator report, auditor eb158d80): 600–2000 characters, in code points (LF).
+    // The word count is reported for information only, not a limit.
+    expect([...long].length).toBeGreaterThanOrEqual(600);
+    expect([...long].length).toBeLessThanOrEqual(2000);
     for (const [n, s] of [["title", title], ["short", short], ["long", long]] as const) {
       expect(s.length, n).toBeGreaterThan(0);
       expect(s, `${n}: no markdown markup`).not.toMatch(/[*`#[\]_]|^\s*[-+>]\s/m);
