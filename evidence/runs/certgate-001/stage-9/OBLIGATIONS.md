@@ -73,3 +73,21 @@ Run: certgate-001 · Stage: 9 · Register version: **R9.0** (analyst-zt7k, 2026-
 | V-14 | **CH9-14 [OBS], adopted** under V-05 |
 | V-15 | **Design note §2 approved.** The Stage 7-only `live-reading-1280.png` and `live-failed-1280.png` may be removed from `docs/screenshots/`. They remain in history at cf97dfad and are cited on the "Earlier captures (Stage 7)" line. If the Stage 9 reading fails, its own `live-failed-1280.png` is a new file with its own row (V-04) |
 | V-16 | **Order.** R9.1 → CAPTURE START (wait for the auditor's BEFORE) → ENDPOINT LEASE TAKEN → GET /usage → tool run → stage-9 run (Gemma) → GET /usage → CAPTURE DONE → LEASE RELEASED → auditor AFTER → tests and candidate 1. **The capture may start now** |
+
+## R9.2: rulings on adversary DN9-01…11 (msg 21b6fd39), by analyst-zt7k
+
+**All DN9 items are adopted as written.** They bind the capture script and candidate 1.
+
+| ID | Ruling |
+|---|---|
+| W-01 | **DN9-01.** Every `capture-stage9` manifest entry **must** carry `captured_at`, and the test asserts it. Only tool images take the run time |
+| W-02 | **DN9-02.** Captions are built from the manifest and compared **whole**, with exact string equality |
+| W-03 | **DN9-03.** The test has a failed branch too:<br>- **done** means `live-done` and `live-receipt` exist, `live-failed` does not, and the strict reported-model match holds;<br>- **failed** means `live-failed` exists with `failed (<failure>)`, and no done or receipt image exists for that job |
+| W-04 | **DN9-04.** On any failure after the job POST, the script still shoots the current screen, saves the job record (one read-only GET) and writes the outcome and failure to the manifest, **before** exiting non-zero. Such an attempt counts toward the 3. One job POST per run, and every run has an outcome |
+| W-05 | **DN9-05.** If Gemma is unlisted, `live-models-1280` (Gemma disabled, with `checked <time>`) and the status `models` block (without the code) are saved before the fallback. Qwen captions cite them |
+| W-06 | **DN9-06.** The README column is "capture time (machine)". Tool rows state the tool's run start (or start–end), and new rows their own shot time. All times fall within the T9-00 window |
+| W-07 | **DN9-07.** The "Earlier captures (Stage 7)" line links only to targets that resolve: existing `evidence/runs/certgate-001/stage-7/` paths, or full-SHA GitHub URLs at cf97dfad. The README-links test covers it |
+| W-08 | **DN9-08.** The `page.route` hook matches only `POST` to `/api/live/jobs`, sets the header, continues, and is removed after the one POST. It never logs or stores request headers. The static test asserts both |
+| W-09 | **DN9-09.** The empty-code proof for the live screen is the tool's `live` images at both widths. The new script's visible-field record still has one row per image |
+| W-10 | **DN9-10 [OBS].** The 375 px `live-done` and `live-receipt` carry the same job id as the 1280 px ones |
+| W-11 | **DN9-11 [OBS].** The handoff states the Docker skip count (V-05) |
