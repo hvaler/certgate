@@ -4,7 +4,7 @@ Written by implementer-zt7m. These are **local observations, not carried by git*
 
 **What was observed.** Four screenshots written by the unchanged `tools/capture-screenshots.mjs`, in its run of 2026-10-16T05:58:08.081Z (manifest `captured_at`), are byte-identical to their Stage 7 versions at cf97dfad. Those screens did not change between the two deployments.
 
-Their file modification times in the capture worktree (`C:\nexus\dev\certgate-s9impl`) were read with `date -u -r <file>` at about 06:1xZ on 2026-10-16:
+Their file modification times in the capture worktree (`C:\nexus\dev\certgate-s9impl`) were read with `date -u -r <file>` on 2026-10-16 (the time of reading was not recorded):
 
 | File | mtime (UTC, local file system) | SHA-256 |
 |---|---|---|
