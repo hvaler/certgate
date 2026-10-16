@@ -1,14 +1,20 @@
-// Static checks over the screenshot capture script (S7-02, T7-05; CH7-01, CH7-02, CH7-03, CH7-11).
-// The script is never run here: it drives a browser against the deployed site.
+// Static checks over the screenshot capture scripts (S7-02, T7-05; CH7-01, CH7-02, CH7-03, CH7-11).
+// The scripts are never run here: they drive a browser against the deployed site.
+// Stage 9 (dispatch 7, R9.0 A9-01): the same safeguard checks also cover the Stage 9 capture script, which copies the
+// Stage 7 tool's safeguards because the tool cannot be imported (it starts a capture when loaded).
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
 
-const text = readFileSync(path.join(ROOT, "tools", "capture-screenshots.mjs"), "utf8").replace(/\r\n/g, "\n");
+const SCRIPTS = [
+  { name: "capture script", file: path.join("tools", "capture-screenshots.mjs"), manifestEnd: 'writeFileSync(path.join(OUT_DIR, "manifest.json")' },
+  { name: "Stage 9 capture script", file: path.join("evidence", "runs", "certgate-001", "stage-9", "implementer", "capture-stage9.mjs"), manifestEnd: "writeFileSync(manifestPath" },
+];
+for (const S of SCRIPTS) {
+const text = readFileSync(path.join(ROOT, S.file), "utf8").replace(/\r\n/g, "\n");
 const code = text.replace(/^\s*\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
-
-describe("capture script: pinned playwright", () => {
+describe(`${S.name}: pinned playwright`, () => {
   it("states the pinned version and Chromium build in its header", () => {
     expect(text).toContain("playwright@1.56.1");
     expect(text).toMatch(/Chromium build 1194/);
@@ -17,13 +23,13 @@ describe("capture script: pinned playwright", () => {
   });
 });
 
-describe("capture script: no recording of headers (CH7-02)", () => {
+describe(`${S.name}: no recording of headers (CH7-02)`, () => {
   for (const banned of ["tracing.start", "recordHar", "recordVideo", 'on("console"', "on('console'"]) {
     it(`never uses ${banned}`, () => expect(text).not.toContain(banned));
   }
 });
 
-describe("capture script: access code only as a header of the job POST (CH7-01)", () => {
+describe(`${S.name}: access code only as a header of the job POST (CH7-01)`, () => {
   it("intercepts the job POST with page.route and adds x-live-access-code", () => {
     expect(code).toContain("page.route(");
     expect(code).toContain("**/api/live/jobs");
@@ -61,7 +67,7 @@ describe("capture script: access code only as a header of the job POST (CH7-01)"
   });
 });
 
-describe("capture script: visible-field rule (CH7-11)", () => {
+describe(`${S.name}: visible-field rule (CH7-11)`, () => {
   it("scans document.body.innerText for the code, the key and the base URL path, without printing them", () => {
     expect(code).toContain("document.body.innerText");
     expect(code).toContain('userEnv("MODEL_API_KEY")');
@@ -75,10 +81,29 @@ describe("capture script: visible-field rule (CH7-11)", () => {
     for (const l of logs) expect(l).not.toMatch(/accessCode|modelKey|modelBasePath|\bsecrets\b|process\.env/);
   });
   it("never writes the code into the manifest", () => {
-    const manifest = code.slice(code.indexOf("const manifest = {"), code.indexOf('writeFileSync(path.join(OUT_DIR, "manifest.json")'));
+    const manifest = code.slice(code.indexOf("const manifest = {"), code.indexOf(S.manifestEnd));
+    expect(manifest.length).toBeGreaterThan(20);
     expect(manifest).not.toMatch(/accessCode|modelKey|modelBasePath|secrets/);
   });
 });
+
+}
+
+describe("Stage 9 capture script: measured models only, one reading, per-image machine time (S9-02, A9-03, A9-05)", () => {
+  const s9 = readFileSync(path.join(ROOT, SCRIPTS[1]!.file), "utf8").replace(/\r\n/g, "\n");
+  it("accepts only a measured model and stops on a failed reading without retrying", () => {
+    expect(s9).toContain('const MEASURED = ["Gemma-4-31B-IT", "Qwen3.8-27B"];');
+    expect(s9).toContain("if (!MEASURED.includes(out.model)) fail(");
+    expect(s9).toMatch(/seen\("failed"\);\n\s+await page\.unroute\("\*\*\/api\/live\/jobs"\);\n[^\n]*\n\s+return;/);
+  });
+  it("captions every image with its model, the site commit and its own capture time", () => {
+    expect(s9).toContain("caption: `${screen} · model ${args.model} · site commit ${short} · captured ${at}`");
+    expect(s9).toContain("const at = new Date().toISOString();");
+  });
+});
+
+const text = readFileSync(path.join(ROOT, "tools", "capture-screenshots.mjs"), "utf8").replace(/\r\n/g, "\n");
+const code = text.replace(/^\s*\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
 
 describe("capture script: manifest with served-file hashes (CH7-03)", () => {
   it("hashes the served files at capture time", () => {
