@@ -112,3 +112,34 @@ It carries no code, no key, no base-URL path and no prize-family word.
 3. The video, slides and cover; export the room.
 
 CertGate makes no claim of winning, entering or qualifying for any prize.
+
+## 7. After the first push: the lablab form limit (repair cycle 2 of 2)
+
+**What happened:**
+- After candidate 2 was pushed (GitHub main 40ea1ae, auditor `ls-remote` at 11:35:36Z), the operator found that the lablab form **rejects the long description**: "2201 / 2000 characters (min 600). Must be 600–2000 characters".
+- Dispatch 8 had stated "at least 100 words", so S10-07, T10-05 and the docs test had checked the wrong limit. Every seat had followed the dispatch's figure.
+- The auditor reported the blocker in msg eb158d80 (11:38Z).
+
+**Ruling (R10.5, msg efa2e055):**
+- The form's actual limits govern: title ≤ 50, short description ≤ 255, long description **600–2000** characters, all in code points.
+- The repair is **deletion only.** Three already-mapped sentences are removed: "CertGate never releases material on its own." (the paragraph keeps "a person decides"); the reading-time sentence; and the scan-count sentence (the scan count stays in the README).
+
+**Candidate 3** `3b46b1d143f578abdc979eb304fd9d1333a59f86` (tree fba52582), one commit on 18dd217:
+- **Text:** the long description is **1980 code points** (LF) and 336 words. It is byte-equal to the text the auditor gave the operator to paste.
+- **Claims:** the three claims rows are removed, leaving 0 unmapped and 0 stale.
+- **Tests:**
+  - the limit test now checks 600–2000 code points;
+  - the scan sentence is required in the README only;
+  - lablab.md must contain no reading time at all, which is stricter.
+- **Verdict: ACCEPTED** (auditor msg 2e16d37e, record a6661f0 committed 11:48:02Z).
+  - Suite 616/616 ×2.
+  - The auditor's mutants B1–B4 were killed: 2001 code points, 599 code points, a time back in lablab, and the README scan sentence removed.
+  - 0 secret-value hits.
+- **Merged into main.** Outside `evidence/`, main equals 3b46b1d.
+
+**Updated figures for §1 and §6:**
+- **Repair cycles:** 2 of 2.
+- **Accepted:** 11:48:02Z, the candidate 3 record.
+- **Wall clock:** 96 min 21 s (10:11:41Z → 11:48:02Z), inside the 120-minute limit.
+
+**New push request:** the local main head named in the room message that posts this section. It is a fast-forward from GitHub main 40ea1ae, and changes only `docs/submission/lablab.md`, `claims-map.json`, the Stage 10 test and `evidence/`. **Operator:** paste the long description from the pushed `docs/submission/lablab.md`; it is the same 1980-character text you were given.
