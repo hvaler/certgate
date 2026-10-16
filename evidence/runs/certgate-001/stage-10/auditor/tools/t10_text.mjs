@@ -76,7 +76,8 @@ if (lab) {
   const title = field("Title"), short = field("Short description"), long = field("Long description");
   say("lablab title code points (<= 50)", title === null ? "MISSING" : [...title].length);
   say("lablab short code points (<= 255)", short === null ? "MISSING" : [...short].length);
-  say("lablab long words (>= 100)", long === null ? "MISSING" : long.split(/\s+/).filter(Boolean).length);
+  say("lablab long words (information only, R10.5)", long === null ? "MISSING" : long.split(/\s+/).filter(Boolean).length);
+  say("lablab long code points (600..2000, R10.5)", long === null ? "MISSING" : [...long].length);
   for (const w of ["EN 10204 3.1", "a person decides", "Additional Information"]) say(`lablab has "${w}"`, lab.includes(w));
   for (const f of ["0/18", "27/27", "26/27", "591/594", "9/9", "8/9", "0/9", "1/9"]) say(`lablab has ${f}`, lab.includes(f));
   say("lablab prize-family words", [...new Set(lab.match(/\b(prize|win|wins|won|winner|winning|award|qualif\w*|finalist|trophy)\b/gi) ?? [])]);
