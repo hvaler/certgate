@@ -98,7 +98,7 @@ Dispatch 7 requires no live check beyond the capture's own reading and the audit
 
 | | Start (UTC) | Accepted (UTC) | Wall clock | Limit |
 |---|---|---|---|---|
-| Stage 9 | 05:26:47Z, 2026-10-16 (dispatch 7) | auditor final verdict 8bfbb847, record 1e6399a | ~70 min | 150 min (ends 07:56Z); stage hard stop 14:00Z |
+| Stage 9 | 05:26:47Z, 2026-10-16 (dispatch 7) | verdict message 8bfbb847 written 06:43:54Z; record 1e6399a committed 06:44:41Z | 77 min (05:26:47Z → 06:44:41Z; auditor correction E1) | 150 min (ends 07:56Z); stage hard stop 14:00Z |
 
 - **Repair cycles:** 1 of 2. **Infrastructure retries:** 0.
 - **Endpoint usage in Stage 9** (Token Factory, free credits, no monetary value): 1 live reading (Gemma-4-31B-IT), cost 0.0001025185 as reported, reconciled with GET /usage (requests 199 → 200). No other seat called the endpoint; the auditor's checks were GETs to the site only.
