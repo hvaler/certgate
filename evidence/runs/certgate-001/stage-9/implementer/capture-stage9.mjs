@@ -119,12 +119,14 @@ async function servedHashes(site) {
 }
 
 /** Returns the visible-field record of this screen (CH9-02); the code is never typed, so the input must be empty. */
-async function publicHashes(site) {
+const fetchedAt = {};
+async function publicHashes(site, label) {
   const out = {};
   for (const f of PUBLIC_FILES) {
     const r = await fetch(site + f, { cache: "no-store" });
     if (!r.ok) fail(`public file ${f} answered ${r.status}`);
     out[f] = sha256(Buffer.from(await r.arrayBuffer()));
+    (fetchedAt[label] ??= {})[f] = new Date().toISOString();
   }
   return out;
 }
@@ -171,7 +173,7 @@ async function capture(args, accessCode, secrets) {
   const short = args.commit.slice(0, 7);
   const served = await servedHashes(args.site);
   for (const f of SERVED_FILES) if (served[f] !== base.served_files_sha256[f]) fail(`served file ${f} differs from the tool run's`);
-  const publicBefore = await publicHashes(args.site);
+  const publicBefore = await publicHashes(args.site, "before");
   for (const f of SERVED_FILES) if (publicBefore[f] !== served[f]) fail(`public file ${f} differs between the two reads`);
   for (const [f, h] of Object.entries(served)) console.log(`${h}  served ${f}`);
 
@@ -229,7 +231,7 @@ async function capture(args, accessCode, secrets) {
 
   const after = await servedHashes(args.site);
   for (const f of SERVED_FILES) if (after[f] !== served[f]) fail(`served file ${f} changed during the capture`);
-  const publicAfter = await publicHashes(args.site);
+  const publicAfter = await publicHashes(args.site, "after");
   for (const f of PUBLIC_FILES) if (publicAfter[f] !== publicBefore[f]) fail(`public file ${f} changed during the capture`);
   const finishedAt = new Date().toISOString();
 
@@ -238,9 +240,10 @@ async function capture(args, accessCode, secrets) {
     // V-05: all 12 files under public/ at the deployed commit, as fetched in this window (the tool hashes 6 of them;
     // those 6 must agree, checked above).
     served_files_sha256: { ...base.served_files_sha256, ...publicBefore },
+    served_files_fetched_at: fetchedAt.before,
     runs: [
       { script: "tools/capture-screenshots.mjs (unchanged)", captured_at: base.captured_at, served_files_sha256: base.served_files_sha256 },
-      { script: "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs", started_at: startedAt, finished_at: finishedAt, served_files_sha256_before: served, served_files_sha256_after: after, public_files_sha256_before: publicBefore, public_files_sha256_after: publicAfter },
+      { script: "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs", started_at: startedAt, finished_at: finishedAt, served_files_sha256_before: served, served_files_sha256_after: after, public_files_sha256_before: publicBefore, public_files_sha256_after: publicAfter, public_files_fetched_at: fetchedAt },
     ],
     secret_check: SECRET_CHECK_NOTE,
     live: { sample: live.sample, width: live.width, model_requested: live.model_requested, model_reported: live.model_reported ?? null, evaluated: live.evaluated ?? null, listing_checked_at: live.listing_checked_at ?? null, job_posts: live.job_posts, job_id: live.job_id ?? null, post_status: live.post_status ?? null, states_observed: live.states_observed, timeline: live.timeline, outcome: live.failure ? "failed" : live.states_observed.includes("done") ? "done" : live.unlisted ? "not run: model not listed" : "not run", failure: live.failure ?? null },
