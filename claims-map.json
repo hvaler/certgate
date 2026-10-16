@@ -3631,11 +3631,6 @@
  },
  {
   "doc": "docs/submission/lablab.md",
-  "text": "The open model Qwen3.8-27B, served by AMD Token Factory, reads the page images of the certificate; it is the evaluated model behind every figure below, and live reading also offers other measured and experimental models.",
-  "row": "C-04"
- },
- {
-  "doc": "docs/submission/lablab.md",
   "text": "On a digital PDF, a second channel without any model reads the text layer, and any disagreement sends the case to review.",
   "row": "C-06"
  },
@@ -3662,11 +3657,6 @@
  {
   "doc": "docs/submission/lablab.md",
   "text": "Of the 9 cases whose expected proposal is release, 9 of 9 were proposed release in the implementer run and 8 of 9 in the auditor's run.",
-  "row": "C-104"
- },
- {
-  "doc": "docs/submission/lablab.md",
-  "text": "Sent to review without need: 0 of 9 in the implementer run and 1 of 9 in the auditor's run (cg-004, where the model read the printed carbon equivalent with a decimal comma and the channel check disagreed with the text layer).",
   "row": "C-104"
  },
  {
@@ -3733,5 +3723,20 @@
   "doc": "README.md",
   "text": "Stage 9: the adversary's 20 of 20.",
   "row": "C-64"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "The open model Qwen3.8-27B, served by AMD Token Factory, reads the page images of the certificate; live reading also offers Gemma-4-31B-IT and experimental models.",
+  "row": "C-04"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "Sent to review without need: 0 of 9 in the implementer run and 1 of 9 in the auditor's run (cg-004, a decimal comma caught by the channel check).",
+  "row": "C-104"
+ },
+ {
+  "doc": "docs/submission/lablab.md",
+  "text": "In a comparison run on AMD Token Factory, Gemma-4-31B-IT gave false conforming 0 of 18, 26 of 27 as expected and 591 of 594 fields correct.",
+  "row": "C-70"
  }
 ]

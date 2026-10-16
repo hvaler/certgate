@@ -118,7 +118,8 @@ repoOnly("cg-004, the one release case sent to review (S10-02, X-04)", () => {
     const correct = c.fields.cev_printed!.correct!;
     expect(model.replace(",", ".")).toBe(correct);
     expect(flat(read("README.md"))).toContain(`cg-004: the model read the printed CEV with a decimal comma, "${model}", the text layer read ${correct}, and the channel check disagreed)`);
-    expect(flat(read(LABLAB))).toContain("(cg-004, where the model read the printed carbon equivalent with a decimal comma and the channel check disagreed with the text layer)");
+    // Stage 11 (dispatch 9, A11-03): lablab.md gives the short form; the full explanation stays required in the README.
+    expect(flat(read(LABLAB))).toContain("(cg-004, a decimal comma caught by the channel check)");
   });
 });
 
@@ -303,8 +304,30 @@ repoOnly("the lablab form text (S10-07, X-08, X-09, Z-09)", () => {
       `Sent to review without need: ${i.review.length} of ${i.n} in the implementer run and ${a.review.length} of ${a.n} in the auditor's run`,
       "The text-layer parser covers the two fictitious layouts of the dataset, not arbitrary mill certificates.",
       "Four agent seats built and verified CertGate with Claude Code",
-      "the evaluated model behind every figure below",
+      // Stage 11 (dispatch 9, A11-02): the Qwen figures carry their runs; live reading names Gemma-4-31B-IT.
+      "On 27 evaluated fictitious certificates, in two independent Qwen3.8-27B runs,",
+      "live reading also offers Gemma-4-31B-IT and experimental models.",
     ]) expect(long, s).toContain(s);
+  });
+  it("states the Gemma-4-31B-IT comparison figures computed from its run, equal to METRICS.md (Stage 11, S11-03)", () => {
+    const dir = "evaluation/runs/real-gemma-04100b9";
+    const rs = results(dir);
+    const notRelease = rs.filter((r) => r.expected_proposal !== "release");
+    const fc = notRelease.filter((r) => r.proposal === "release").length;
+    const equal = rs.filter((r) => r.proposal === r.expected_proposal).length;
+    const fields = rs.flatMap((r) => Object.values(r.fields));
+    const correct = fields.filter((f) => f.category === "correct").length;
+    const m = metrics(dir);
+    expect(`${fc}/${notRelease.length}`).toBe(frac(m.headline.fc_broad));
+    expect(`${equal}/${rs.length}`).toBe(frac(m.headline.proposal_agreement));
+    expect(`${correct}/${fields.length}`).toBe(frac(m.per_field_accuracy.totals.correct));
+    expect(new Set(rs.map((r) => (r as unknown as { endpoint_response: { model: string } }).endpoint_response.model))).toEqual(new Set(["self-dploy/Gemma-4-31B-IT"]));
+    const md = read("METRICS.md");
+    expect(md).toContain(`| **False conforming, FC-broad** (released where the expected proposal was not release) | **0 / 18** | **0 / 18** | **${fc} / ${notRelease.length}** |`);
+    expect(md).toContain(`| Proposal equal to the expected proposal | 27 / 27 | 26 / 27 | ${equal} / ${rs.length} |`);
+    expect(md).toContain(`| correct | 591 / 594 | 591 / 594 | ${correct} / ${fields.length} |`);
+    const long = flat(field(read(LABLAB), "Long description"));
+    expect(long).toContain(`In a comparison run on AMD Token Factory, Gemma-4-31B-IT gave false conforming ${fc} of ${notRelease.length}, ${equal} of ${rs.length} as expected and ${correct} of ${fields.length} fields correct.`);
   });
   it("names no code, key or endpoint path, and says where the access code goes", () => {
     const t = read(LABLAB);
