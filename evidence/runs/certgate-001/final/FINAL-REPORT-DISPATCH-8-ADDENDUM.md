@@ -99,7 +99,7 @@ It carries no code, no key, no base-URL path and no prize-family word.
 
 - **Repair cycles:** 1 of 2. **Infrastructure retries:** 0.
 - **Endpoint usage:** none. Dispatch 8 forbids calls, and none was made.
-- **Seat usage (Claude):** `final/band-usage-agents-dispatch8.txt`, read at 11:08:15Z. The meter still shows the figures read at the end of Stage 9 (last activity ~06:0xZ), so **Stage 10's usage is not yet visible in the meter**, and no Stage 10 figure is claimed.
+- **Seat usage (Claude):** `final/band-usage-agents-dispatch8.txt`, read at 11:08:15Z. The meter still shows the figures read at the end of Stage 9 (the latest per-seat activity it shows is 06:06:50.840Z, implementer-zt7m), so **Stage 10's usage is not yet visible in the meter**, and no Stage 10 figure is claimed.
 
 **Final commit and push request:**
 - The accepted candidate is **18dd217**, merged into main at 9463aa2. Outside `evidence/`, main equals 18dd217.
