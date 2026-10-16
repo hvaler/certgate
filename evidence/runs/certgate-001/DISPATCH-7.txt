@@ -1,0 +1,22 @@
+[Verbatim copy of room msg bf50f64b-a847-421a-bac8-0c87759899ea from hugo.valer, room 3e47b667-b685-4655-8f34-cc0dad08ab30, as returned in the content field of band --session analyst-zt7k brief --json at 2026-10-16T05:26Z. Copied by analyst-zt7k.]
+
+@hugo.valer/analyst-zt7k This is a SEVENTH human dispatch for CertGate (AMD Developer Hackathon: ACT III, track Intelligent Industry). It authorises ONE more stage, STAGE 9 — FRESH SCREENSHOTS OF THE DEPLOYED SITE, in the same BAND room and result repository, starting from GitHub main c040e82 (Stage 8 accepted at 37938b2, deployed, plus evidence-only commits). Dispatches 1 to 6 and operator amendment 1 remain in force (source of truth, invariants I1-I7, calling discipline, acceptance and recovery, autonomy, claims table fail-closed) except where this message changes them. Same four seats: implementer @hugo.valer/implementer-zt7m, adversary @hugo.valer/adversary-zt7n, auditor @hugo.valer/auditor-zt7p. The analyst commits this dispatch verbatim as evidence/runs/certgate-001/DISPATCH-7.txt.
+
+WHY
+The README "Screenshots" section shows the site of Stage 7 (commit d1aaa3e, 2026-10-15T05:15:09Z): the live screen has no model choice and the live reading shown failed at the endpoint (O7-01). Since Stage 8 the deployed site offers the model choice and live readings complete. A judge opening the README should see the product as it is deployed now, with honest labels. This stage changes documentation and evidence only.
+
+STAGE 9 — DELIVER
+- Re-run tools/capture-screenshots.mjs (Playwright 1.56.1, as in Stage 7) against https://certgate-wheat.vercel.app, deployed from 37938b2 (the auditor confirms the served files equal the commit before and after the capture), at 1280 px and 375 px, with the same safeguards: the access-code input empty before every screenshot, no tracing, HAR, video or console capture, the code and the key never written.
+- Add the Stage 8 screens: the live-reading screen with the three model groups (MEASURED, NOT EVALUATED · EXPERIMENTAL, LISTED, NOT OFFERED) and their probe time; one completed live reading of sample cg-004 with Gemma-4-31B-IT (a measured model), captured queued or reading and done, its proposal with the model line, and its receipt showing model requested, model as reported and the F1 copy at reading time. If Gemma is not listed or fails at capture time, use Qwen3.8-27B and say so; a failed reading is captured and labelled as failed, never retried into a success silently, and never replaced by a stored result.
+- At most 3 live readings in the stage, under announced endpoint leases, each reconciled with GET /usage.
+- README "Screenshots": the new table with machine times and the site commit for every image; the Stage 7 captures and their O7-01 note move to a short dated "Earlier captures (Stage 7)" line pointing to the evidence, not deleted from history. manifest.json regenerated with the SHA-256 of every image and of the served files. Every new or changed sentence has a claims-map row; the docs tests and the stage 7 screenshot checks are updated only as far as the new manifest requires, never loosened.
+- Nothing outside docs/, README.md, CLAIMS.md, claims-map.json, the screenshot tests and evidence/ changes. src/, public/, api/, data/, config/, evaluation/, the package files, vercel.json and Dockerfile stay byte-identical to c040e82; the auditor checks it by diff.
+
+LIMITS
+At most 2 repair cycles, 2 infrastructure retries per command, 150 minutes for Stage 9 including final verification. STAGE HARD STOP: 2026-10-16T14:00:00Z (Friday 16:00 in Madrid), so the human can submit; if Stage 9 is not accepted by then, the band reports where it stands and the human keeps c040e82.
+
+ACCEPTANCE
+The auditor: runs the full suite from a clean clone and the docs and diagram checks; confirms the byte-identity of the product paths; opens every new image and checks it matches its row and label; checks the manifest hashes against the images and against the files served during the capture; and checks that no image or file shows the access code, the key or the base-URL path. A screenshot that shows a stored result as live, a failed reading presented as successful, or a secret, rejects the stage.
+
+FINAL REPORT
+An addendum to the final report, same shape, with the push request. The band never deploys, never pushes, never submits. The push is evidence and documentation only; Vercel redeploys the same product.
