@@ -191,7 +191,7 @@ repoOnly("README Gemma section (S5-10, G-05, G-08, S5-15 a)", () => {
     const z = (c: string) => (tot[c] ? of(tot[c]) : `0 of ${tot.correct.denominator}`);
     expect(t).toContain(`| Field readings correct | ${of(tot.correct)} |`);
     expect(t).toContain(`| Confident on illegible · unknown · wrong | ${z("confident_on_illegible")} · ${z("unknown")} · ${z("wrong")} |`);
-    expect(t).toContain(`| Seconds per certificate | mean ${h.seconds_per_certificate.mean}, median ${h.seconds_per_certificate.median} (N ${h.seconds_per_certificate.n}) |`);
+    expect(t).toContain(`| Seconds per certificate, Gemma-4-31B-IT | mean ${h.seconds_per_certificate.mean}, median ${h.seconds_per_certificate.median} (N ${h.seconds_per_certificate.n}) |`);
     expect(t).toContain(`| Cost per certificate | mean ${h.cost_per_certificate.mean} |`);
     expect(t).toContain(`no false conforming (${of(h.fc_broad)})`);
     expect(t).toContain(`(${z("confident_on_illegible")}, cg-017)`);

@@ -1,7 +1,10 @@
 # CertGate
 
-**CertGate prepares the review of a steel mill inspection certificate against a purchase specification, and
-proposes release, block or review. A person in Quality decides.** CertGate never releases material on its own.
+**CertGate checks a steel mill certificate (an inspection certificate of the EN 10204 3.1 kind) against the purchase specification, for the goods-in or Quality technician who must release or block the batch.**
+How it works: a model on AMD Token Factory reads the certificate (Qwen3.8-27B, the evaluated model, for every figure below; live reading also offers other measured and experimental models), deterministic versioned rules propose release, block or review, and a person decides; CertGate never releases material on its own.
+Results on the 27 evaluated fictitious certificates (2 Qwen3.8-27B runs): false conforming **0/18** in both runs; proposals equal to the expected proposal **27/27** (implementer run) and **26/27** (auditor's independent run); fields read correctly **591/594** in both runs.
+Utility, of the 9 cases whose expected proposal is release: proposed release **9/9** (implementer run) and **8/9** (auditor's run); sent to review without need **0/9** (implementer run) and **1/9** (auditor's run, cg-004: the model read the printed CEV with a decimal comma, "0,39", the text layer read 0.39, and the channel check disagreed).
+[Deployed site](https://certgate-wheat.vercel.app) · [judge mode](https://certgate-wheat.vercel.app/#/judge) · [screenshots](#screenshots)
 
 > **All data in this repository is fictitious.** Siderúrgica Valdemora S.A. (the mill), Talleres Ribera Norte
 > S.L. (the buyer), the grade TRN-355 and the purchase specification ESP-014 are invented for the demo. The limits
@@ -9,7 +12,7 @@ proposes release, block or review. A person in Quality decides.** CertGate never
 > synthetic certificates are ever sent to the model endpoint.
 
 Companion documents: [METRICS.md](METRICS.md) (evaluation, generated) · [DEPLOY.md](DEPLOY.md) (Vercel, for the
-human) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) ·
+operator) · [CLAIMS.md](CLAIMS.md) (every capability sentence and its proof) ·
 [EVIDENCE-INDEX.md](EVIDENCE-INDEX.md) (where the evidence is).
 
 ## Try it
@@ -112,7 +115,7 @@ which is generated from those artifacts.
 | Proposal as expected | 27 of 27 | 26 of 27 (cg-004: review, expected release) |
 | Failures · retries | 0 of 27 · 0 | 0 of 27 · 0 |
 | Field readings correct | 591 of 594 | 591 of 594 |
-| Seconds per certificate | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |
+| Seconds per certificate, Qwen3.8-27B | mean 89.6, median 80.6 (N 27) | mean 77.1, median 76.9 (N 27) |
 | Cost per certificate | mean 0.00020529 | mean 0.00020863 |
 
 - Costs are the cost reported by the endpoint; Token Factory credits are free and have no monetary value.
@@ -141,7 +144,7 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 | Failures · retries | 0 of 27 · 0 |
 | Field readings correct | 591 of 594 |
 | Confident on illegible · unknown · wrong | 1 of 594 · 1 of 594 · 0 of 594 |
-| Seconds per certificate | mean 34.5, median 30 (N 27) |
+| Seconds per certificate, Gemma-4-31B-IT | mean 34.5, median 30 (N 27) |
 | Cost per certificate | mean 0.00007789 |
 
 - cg-021: Gemma returned Si as absent while the text layer read 0.62 % (limit 0.55 %). The two channels disagreed,
@@ -156,15 +159,15 @@ artifacts; [METRICS.md](METRICS.md) shows them next to both Qwen runs, with ever
 - One extra Gemma reading of the story certificate cg-003 is kept as evidence only, outside the evaluation and the
   demo ([gemma-read-cg-003.json](evidence/runs/certgate-001/stage-5/implementer/endpoint/gemma-read-cg-003.json)):
   Gemma read the smudged ReH as 338 MPa, as the recorded Qwen story reading does, so the proposal was block.
-- Dated facts reported by the operator (the human), not observed by the band: on 2026-10-13 Gemma-4-31B-IT on this endpoint
-  returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the human re-tested it and it answered
+- Dated facts reported by the operator, not observed by the agent seats: on 2026-10-13 Gemma-4-31B-IT on this endpoint
+  returned degenerate output; on 2026-10-14 between 10:27 and 10:31 UTC the operator re-tested it and it answered
   correctly. The comparison run above started after that re-test.
 
 **Why the demo and the landing use Qwen.** Qwen3.8-27B is the model CertGate was built, tuned and accepted with, and
 its two runs are the figures of record. In the Gemma run there was no false conforming (0 of 18), but it proposed
 review on one non-conformity that both Qwen runs blocked (cg-021) and gave one confident value on an illegible field
 (1 of 594, cg-017) that both Qwen runs reported as unknown. The landing figures, the stories and the product
-default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading uses the model chosen on the live screen, with Vercel's `MODEL_ID` as the default, and each live receipt names the model requested and the model as the endpoint reports it. From dispatch 4 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC (O7-01), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md).
+default stay Qwen3.8-27B. Judge mode makes no model call: it replays recorded Qwen readings. Live reading uses the model chosen on the live screen, with Vercel's `MODEL_ID` as the default, and each live receipt names the model requested and the model as the endpoint reports it. From 2026-10-14 the deployed live model was Gemma-4-31B-IT: live readings completed on 2026-10-14 (Stage 6 auditor, 17:00 and 18:00 UTC), failed with HTTP 5xx on 2026-10-15 at 05:15 UTC ([Stage 7 record](evidence/runs/certgate-001/stage-7/)), and by 18:23 UTC that day Token Factory no longer listed Gemma and refused it (HTTP 4xx); the operator then set Qwen3.8-27B (see DEPLOY.md). Token Factory listed Gemma-4-31B-IT again on 2026-10-16 (operator observation at 04:21:59Z; the auditor's direct GET /models at 04:23:34.429Z), which is why the screenshots show a live Gemma-4-31B-IT reading.
 
 To run the comparison, set `MODEL_ID` only in the environment of the evaluation command (the other two `MODEL_*`
 variables as for any real run):
@@ -179,7 +182,7 @@ This comparison makes no claim about any prize or award.
 
 ## Architecture and certificate flow
 
-Both diagrams are generated by [tools/diagrams.mjs](tools/diagrams.mjs) from one definition, in which every box and arrow names the file and symbol it stands for; a test checks each one against the code. The SVG files are the band's own render of the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).
+Both diagrams are generated by [tools/diagrams.mjs](tools/diagrams.mjs) from one definition, in which every box and arrow names the file and symbol it stands for; a test checks each one against the code. The SVG files are rendered by the agent seats from the same definition, for slides: [architecture.svg](docs/diagrams/architecture.svg) and [flow.svg](docs/diagrams/flow.svg).
 
 ### Architecture
 
@@ -276,7 +279,7 @@ Real captures of the deployed site (see "Try it"), served from commit `37938b2`,
 | Its receipt: model requested, model as reported and the endpoint data copied at reading time. The page labels its browser-held copy "Stored in this browser · … · not live"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 1280 px | [live-receipt-1280.png](docs/screenshots/live-receipt-1280.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:08.528Z |
 | Its receipt: model requested, model as reported and the endpoint data copied at reading time. The page labels its browser-held copy "Stored in this browser · … · not live"; the reading itself was live (job `bc8a3b3a63f4…`, `reading_source: live`) | 375 px | [live-receipt-375.png](docs/screenshots/live-receipt-375.png) | live-receipt · done · model Gemma-4-31B-IT · site commit 37938b2 · captured 2026-10-16T05:59:09.027Z |
 
-**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (endpoint_5xx, O7-01); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/). Of the 2026-10-16 captures, `judge` and `story-cg-003-decision` (1280 and 375 px) came out byte-identical to the Stage 7 files; they were written by the tool run of 2026-10-16T05:58:08.081Z ([RECAPTURE-NOTE.md](evidence/runs/certgate-001/stage-9/implementer/RECAPTURE-NOTE.md)).
+**Earlier captures (Stage 7).** The captures of 2026-10-15T05:15:09.161Z (site commit `d1aaa3e`) showed the live screen before the model choice, and their one live reading failed at the endpoint (HTTP 5xx; [Stage 7 record](evidence/runs/certgate-001/stage-7/)); their image files are kept in the history at commit `cf97dfad` (docs/screenshots/) and recorded in [evidence/runs/certgate-001/stage-7/](evidence/runs/certgate-001/stage-7/). Of the 2026-10-16 captures, `judge` and `story-cg-003-decision` (1280 and 375 px) came out byte-identical to the Stage 7 files; they were written by the tool run of 2026-10-16T05:58:08.081Z ([RECAPTURE-NOTE.md](evidence/runs/certgate-001/stage-9/implementer/RECAPTURE-NOTE.md)).
 
 ## Problem and user
 
@@ -289,14 +292,20 @@ out of spec that reaches production means scrap, claims or a recall.
 - **Primary user:** goods-in or Quality technician at a mid-size plant that buys certified material.
 - **Who decides:** the Quality manager who signs the release or the block.
 
+**Where the second channel applies.** The model-free text-layer parser covers the two fictitious layouts of the
+dataset, not arbitrary mill certificates. A real digital PDF in another layout gets no second channel and goes to
+review, like a scan: this is safe, but it reduces the saving. Of the 27 evaluated certificates, 3 are scans; of
+the 30 in the dataset, 5.
+
 ## What it does
 
 For each case (certificate PDF plus its delivery-note line), CertGate:
 
 1. Validates the files (PDF by magic bytes, size limits, not encrypted, has pages) and records their SHA-256.
 2. Reads the certificate through two channels:
-   - the **model channel**: the open model Qwen3.8-27B, served by AMD Token Factory, reads the rendered **page
-     images** of every certificate, digital or scanned, and returns the values as one JSON object;
+   - the **model channel**: the open model Qwen3.8-27B (the evaluated model; a live reading may use another offered
+     model), served by AMD Token Factory, reads the rendered **page images** of every certificate, digital or
+     scanned, and returns the values as one JSON object;
    - the **text layer** of a digital PDF, extracted without any model. A scan has no text layer, so its critical
      fields need human confirmation, and CertGate says so.
 3. Compares the channels. A disagreement makes the field unknown and the case goes to review.
@@ -498,7 +507,7 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
 
 ## Limitations
 
-- **Quick navigation (F7-02).** Navigating very quickly between screens can show the previous screen under the new address. Reload the page to see the right one.
+- **Quick navigation.** Navigating very quickly between screens can show the previous screen under the new address. Reload the page to see the right one.
 - **Experimental models are not evaluated.** Each passed one probe on one certificate on 2026-10-15; that shows
   the request is accepted and the reply has the right shape, not that the values are right. A model's behaviour can
   change after its probe (Gemma-4-31B-IT did, between 2026-10-13 and 2026-10-15). The rules, the channel check and
@@ -509,28 +518,28 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
 - **Shared service.** AMD Token Factory is a shared service.
   - Per key: about 20–30 requests per minute, 8 concurrent requests, and a rolling daily spend cap read from
     GET /usage (1, in free credits).
-  - During the human's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts. In the
-    band's two evaluation runs there were 0 retries and 0 failures.
+  - During the operator's test it answered 429 (concurrency), 504 from the upstream, and connection timeouts. In the
+    two evaluation runs there were 0 retries and 0 failures.
   - CertGate keeps at most 2 requests in flight, retries only 429 and 5xx (at most 3 attempts, Retry-After
     honoured), and waits up to 300 s per attempt.
   - A reply that is not one JSON object (JSON wrapped in prose or followed by text, empty content, or a reply cut
     off by the token limit) is a failure (status error, proposal review), never repaired by guessing.
   - The provider keeps prompts and outputs for about 2 days, so only synthetic data may be sent. Before any live
     reading the page shows that notice, and the server requires the visitor to confirm it.
-- **Slow readings.** One reading takes about 1 to 4 minutes (52–208 s per certificate in the evaluation).
-- **Live reading on the deployed site is bounded by the function duration (OI-S2-02).**
+- **Slow readings.** With Qwen3.8-27B, one reading takes about 1 to 4 minutes (52–208 s per certificate in the implementer run).
+- **Live reading on the deployed site is bounded by the function duration.**
   - A job waits at most 60 s for one of the two reading slots and then has at most 210 s to read, inside the
     300 s function duration; a reading that does not finish in time fails as "timed out" and offers a retry.
   - The one-request route `/api/live/read` stays unavailable there (503 "live reading unavailable on the deployed
     site; live demonstration from the container"); the deployed site reads through the job API.
   - Without the access code and the shared store configured, the deployed site has no live reading at all.
-- **Live-read limits (OI-S2-01).** On the deployed site the hourly limit, the two in-flight slots and the
+- **Live-read limits.** On the deployed site the hourly limit, the two in-flight slots and the
   wrong-code counts are kept in the shared store, so they hold across all instances. In the container they are
   kept in process: two separate container processes with a limit of 2 let 4 readings through (test "the live
   limit is per instance" in `test/web.test.ts`).
 - **Uploads.** Without `LIVE_ACCESS_CODE`, live reading is limited to the 30 dataset certificates, matched by
   SHA-256; with it, a visitor's synthetic file can also be read. The access-code path is tested against a local
-  stub with a test-only code, and no real access code is configured on the band's host.
+  stub with a test-only code, and no real access code is configured on the build machine.
 - **cg-003, the ambiguous scan.** The model reads the smudged yield strength confidently as **338** MPa; the true
   value is 358. It did so in both completed tuning reads, in the recorded story and in the adversary's probe. The
   product therefore proposes **block** (rule failure plus no second channel), never release, and the scan still
@@ -540,8 +549,8 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
   (`0,41`). It happened once in each real run, on a different case each time (cg-028 in the implementer run,
   cg-004 in the auditor's). The text-layer channel check caught it every time, and the case went to review.
 - **No model-written explanation.** The model is not asked for an explanation, and the product never shows one.
-  This deviates from step 7 of the product design (03-DISENO); it was chosen to keep decisions entirely in the
-  deterministic rules (I1). The case file shows the rule reasons.
+  This deviates from step 7 of the product design written before the build; it was chosen to keep decisions
+  entirely in the deterministic rules. The case file shows the rule reasons.
 - **Locations are the model's claim.** The page and fragment where the model says it found a value are labelled
   "as reported by the model" and are not verified. On digital PDFs the text layer checks the values, not the
   locations.
@@ -552,9 +561,10 @@ Sources: [docs/sources/vercel-limits.md](docs/sources/vercel-limits.md),
 - **Text-layer parser.** It covers the two fictitious certificate layouts of the dataset, not arbitrary mill
   certificates.
 - **Cosmetic:** `/favicon.ico` answers 404.
-- **One endpoint and one model.** The results apply to Qwen3.8-27B on AMD Token Factory, as reported on
-  2026-10-13. A repeat run may differ: the two independent runs differ in one proposal (cg-004, review) and in
-  timing.
+- **The evaluation figures are for one model.** They apply to Qwen3.8-27B on AMD Token Factory, as reported on
+  2026-10-13; Gemma-4-31B-IT has its own comparison run, and live reading offers a choice of models, to which
+  those figures do not apply. A repeat run may differ: the two independent Qwen3.8-27B runs differ in one
+  proposal (cg-004, review) and in timing.
 
 ## Dataset
 
@@ -589,17 +599,17 @@ data/        fictitious dataset, spec ESP-014 r3, delivery notes
 docs/        cited sources
 evaluation/  real-run expectations, tuning exclusions, development call log, evaluation runs
 tools/       dataset generator (Python, dev-time), evaluation, metrics and development tools
-evidence/    stage records of the band (registers, handoffs, verdicts, logs)
+evidence/    stage records of the four agent seats (registers, handoffs, verdicts, logs)
 ```
 
 ## How it was built and verified
 
-CertGate was built with Claude Code by a band of four seats. AMD Token Factory runs the product's reading of the
+CertGate was built with Claude Code by four agent seats. AMD Token Factory runs the product's reading of the
 certificates. Every figure below comes from the stage register,
 [evidence/runs/certgate-001/STAGE-REGISTER.md](evidence/runs/certgate-001/STAGE-REGISTER.md), and the records it
 names.
 
-- **Analyst:** wrote each stage's obligation register from the human's dispatch and coordinated the stage.
+- **Analyst:** wrote each stage's obligation register from the operator's instructions and coordinated the stage.
 - **Implementer:** the only seat that wrote the product.
 - **Adversary:** challenged each register and attacked each candidate, including mutation checks.
 - **Auditor:** accepted or rejected each stage independently, with its own clean clones, its own mutants and, in
@@ -607,19 +617,28 @@ names.
 
 | Stage | Accepted candidate | Repair cycles used | Rejections before acceptance |
 |---|---|---|---|
-| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1: F-01, F-02, F-05; mutants M13 and M14 survived |
-| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1: F2-01 |
-| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3: F3-01, ADV-S3-F01, ADV-S3-F02 |
-| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4: F4-01, F4-02, F4-03 |
-| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2: F5-01, F5-02 |
-| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1: F6-01, F6-02; then the operator's security repair (R6.4) |
+| 1 · core pipeline, mock path | `9d044991` | 1 of 5 | candidate 1 rejected: injected reader failures were not labelled as planted, the README run command did not work, and two floating-point mutants survived the suite |
+| 2 · web app, Vercel shape | `b7f4a546` | 1 of 5 | candidate 1 rejected: a re-evaluated story showed the re-evaluation time as its stored time |
+| 3 · real reading on AMD Token Factory | `5c904693` | 3 of 5 | candidates 1–3 rejected or superseded: receipts of live readings said the endpoint was "off"; a "JSON repaired by guessing" mutant survived; a mutant dropping " · not live" from the story label survived |
+| 4 · delivery candidate | `b0ec67a6` | 4 of 5 | candidates 1, 3 and 4 rejected: capability sentences without a claims-table row, then claims hidden in headings, code comments and text fences |
+| 5 · comparison with Gemma-4-31B-IT | `409fb69a` | 2 of 3 | candidates 1 and 2 rejected: a forbidden kind of claim survived the documentation check, and the receipt's model id was not checked |
+| 6 · live reading on the deployed site | `9759d3af` | 2 of 4 | candidate 1 rejected: the production store scripts were never run by a test, and a guard test was flaky; then the operator's security repair |
+
+Later stages, from the same register:
+- Stage 7 (documentation, visuals and the original certificate): candidate 1 rejected, because a timing-sensitive guard test was flaky; repaired in the tests only, and candidate `cf97dfad` accepted, 1 of 3 repair cycles.
+- Stage 8 (model choice for live reading): candidate 1 rejected, because the older one-request route accepted a reply naming a different model; candidate 2 `adb21d5e` accepted, 1 of 3 repair cycles.
+- Stage 9 (fresh screenshots of the deployed site): candidate 1 rejected, because the image-metadata check did not cover the screenshots and the import check missed one import form; candidate 2 `3fff2942` accepted, 1 of 2 repair cycles.
 
 **Mutation checks**, from the same register:
 - Stage 1: 14 of 14 killed.
 - Stage 2: the auditor's 29 of 29 killed.
 - Stage 3: 12 of 12 killed.
 - Stage 4: the adversary's 38 of 38 killed.
+- Stage 5: the auditor's 21 claim-wording and 4 identity mutants killed; the adversary's 34 of 39, with 5 recorded as non-binding.
 - Stage 6: the auditor's 13 of 13 on the security delta, and the adversary's 9 of 9.
+- Stage 7: the auditor's 13 of 13 and the adversary's 19 of 19.
+- Stage 8: the auditor's 25 of 25 and the adversary's 29 of 29.
+- Stage 9: the adversary's 20 of 20.
 
 **Independent auditor runs:**
 - Stage 3: the auditor's own real evaluation, 26 of 27 proposals as expected (see "Evaluation").

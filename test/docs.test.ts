@@ -10,7 +10,8 @@ import { ROOT } from "./helpers.js";
 import { ALLOWED_PRIZE_CLAUSES, prizeFindings, prizeSentences, prizeText } from "./support/prize-check.mjs";
 
 const read = (f: string) => readFileSync(path.join(ROOT, f), "utf8").replace(/\r\n/g, "\n");
-const DOCS = ["README.md", "DEPLOY.md", "METRICS.md", "CLAIMS.md", "EVIDENCE-INDEX.md", ".env.example"];
+// Stage 10 (S10-07): the lablab form text is a delivery document too.
+const DOCS = ["README.md", "DEPLOY.md", "METRICS.md", "CLAIMS.md", "EVIDENCE-INDEX.md", ".env.example", "docs/submission/lablab.md"];
 // These are checks over the repository's delivery documents and evidence. The Docker image carries neither
 // (.dockerignore excludes evidence/, and the Dockerfile copies only README.md of the documents), so inside the
 // image they are reported as skipped; they run in every checkout of the repository.
@@ -124,7 +125,7 @@ repoOnly("function duration (F-10, S4-02)", () => {
 
 repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-11, S4-12)", () => {
   it("no forbidden claim in README, DEPLOY.md, METRICS.md or public", () => {
-    const files = ["README.md", "DEPLOY.md", "METRICS.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
+    const files = ["README.md", "DEPLOY.md", "METRICS.md", "docs/submission/lablab.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
     const forbidden = [/MI3\d\d/, /ROCm \d/, /vLLM \d/, /deployed at/i, /\blive at\b/i, /submitted/i, /winner/i, /qualif/i, /own vLLM endpoint/i, /AMD Instinct/i,
       // R4.7 (F-06 extension): no hosted-demo claim or deployment URL. The cited Vercel documentation URL is allowed.
       /vercel\.app/i, /hosted demo/i, /https?:\/\/(?!localhost|127\.|vercel\.com\/docs\/)[^\s)"'`]*(vercel|netlify)/i];
@@ -132,9 +133,17 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     // README only, once, inside "Try it"; any other deployment URL or hosted-demo wording is still forbidden.
     const SITE = "https://certgate-wheat.vercel.app";
     const readme = read("README.md");
-    expect(readme.split(SITE).length - 1, "the site URL appears once in README").toBe(1);
-    expect(readme.indexOf(SITE) > readme.indexOf("## Try it") && readme.indexOf(SITE) < readme.indexOf("## What runs on AMD"), "the site URL is in Try it").toBe(true);
-    for (const f of files) for (const re of forbidden) expect(f === "README.md" ? read(f).replace(`- **Site:** ${SITE}\n`, "") : read(f), `${f}: ${re}`).not.toMatch(re);
+    // Stage 10 (S10-01, Y-05, Z-05): the top block links the site and judge mode too. Exactly three occurrences, in
+    // two exact strings at fixed positions: the top-block link line (before the first heading) and Try it.
+    const TRY = `- **Site:** ${SITE}\n`;
+    const TOP = `[Deployed site](${SITE}) · [judge mode](${SITE}/#/judge) · [screenshots](#screenshots)\n`;
+    expect(readme.split(SITE).length - 1, "the site URL appears three times in README").toBe(3);
+    expect(readme.split(TRY).length - 1, "Try it names the site once").toBe(1);
+    expect(readme.split(TOP).length - 1, "the top block links the site once").toBe(1);
+    expect(readme.indexOf(TRY) > readme.indexOf("## Try it") && readme.indexOf(TRY) < readme.indexOf("## What runs on AMD"), "the site URL is in Try it").toBe(true);
+    expect(readme.indexOf(TOP) > 0 && readme.indexOf(TOP) < readme.indexOf("\n## "), "the top-block links come before any heading").toBe(true);
+    expect(readme.replace(TRY, "").replace(TOP, "").includes(SITE), "no other occurrence of the site URL").toBe(false);
+    for (const f of files) for (const re of forbidden) expect(f === "README.md" ? read(f).replace(TRY, "").replace(TOP, "") : read(f), `${f}: ${re}`).not.toMatch(re);
     // ADV-S4-F06: no positive claim that live reading works on the deployed site, in prose, headings or code
     // comments. The documented negative sentences ("unavailable on the deployed site", "runs from the container,
     // not from the deployed site") are allowed: a match is a finding only if it carries no negation.
@@ -158,7 +167,7 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
     }
   });
   it("every prize allow-list entry still occurs, as a whole sentence, in a checked file (E-19 item 3)", () => {
-    const files = ["README.md", "DEPLOY.md", "METRICS.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
+    const files = ["README.md", "DEPLOY.md", "METRICS.md", "docs/submission/lablab.md", ...readdirSync(path.join(ROOT, "public")).filter((f) => /\.(js|html|css|json)$/.test(f)).map((f) => `public/${f}`)];
     const seen = new Set(files.flatMap((f) => prizeSentences(prizeText(f, read(f)))));
     expect(ALLOWED_PRIZE_CLAUSES.size).toBeGreaterThan(0);
     for (const s of ALLOWED_PRIZE_CLAUSES.keys()) expect(seen.has(s), `stale allow-list entry: ${s}`).toBe(true);
@@ -205,11 +214,14 @@ repoOnly("no forbidden claim, no secret, no local path (F-06, F-08 d, F-07, S4-1
 repoOnly("sentence map (F-02 completeness, ADV-S4-F02)", () => {
   it("every sentence of README, DEPLOY.md and METRICS.md is in the claims map, with a known row or a reason", async () => {
     // @ts-expect-error plain JS tool
-    const { allUnits, loadMap } = await import("../tools/claims-units.mjs");
+    const { allUnits, loadMap, units: split } = await import("../tools/claims-units.mjs");
     const map: { doc: string; text: string; row: string }[] = loadMap(ROOT);
     const key = (u: { doc: string; text: string }) => `${u.doc} :: ${u.text}`;
     const mapped = new Map(map.map((m) => [key(m), m.row]));
-    const units: { doc: string; text: string }[] = allUnits(ROOT);
+    // Stage 10 (S10-07, X-10): the lablab form text goes through the same, unchanged splitter, with its own doc name.
+    const LABLAB = "docs/submission/lablab.md";
+    const units: { doc: string; text: string }[] = [...allUnits(ROOT), ...split(read(LABLAB)).map((text: string) => ({ doc: LABLAB, text }))];
+    expect(units.filter((u) => u.doc === LABLAB).length).toBeGreaterThan(10);
     const missing = units.filter((u) => !mapped.has(key(u))).map(key);
     expect(missing, "sentences without a claims-map entry (map them in claims-map.json)").toEqual([]);
     const present = new Set(units.map(key));
@@ -253,7 +265,7 @@ repoOnly("README facts against their sources (ADV-S4-F01, F-04)", () => {
     const m = JSON.parse(read(`${runDirs.implementer}/metrics.json`));
     const lo = Math.round(Number(m.time.seconds_per_certificate_processed.min));
     const hi = Math.round(Number(m.time.seconds_per_certificate_processed.max));
-    expect(read("README.md").replace(/\s+/g, " ")).toContain(`(${lo}–${hi} s per certificate in the evaluation)`);
+    expect(read("README.md").replace(/\s+/g, " ")).toContain(`(${lo}–${hi} s per certificate in the implementer run)`);
     expect(lo).toBeGreaterThanOrEqual(45);
     expect(hi).toBeLessThanOrEqual(240); // "about 1 to 4 minutes"
   });
@@ -264,7 +276,7 @@ repoOnly("README facts against their sources (ADV-S4-F01, F-04)", () => {
       expect(m.retries.cases_with_retry).toEqual([]);
       expect(m.abstentions.failure.numerator).toBe("0");
     }
-    expect(readme.replace(/\s+/g, " ")).toContain("In the band's two evaluation runs there were 0 retries and 0 failures.");
+    expect(readme.replace(/\s+/g, " ")).toContain("In the two evaluation runs there were 0 retries and 0 failures.");
   });
   it("the prompt examples named in the README occur in the instruction and in cg-001's correct reading", () => {
     const src = read("src/web/live-reader.ts");
