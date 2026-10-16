@@ -53,7 +53,7 @@ Earlier handles in the evidence (`*-xwz3/4/5/6`) are the previous seats. Times a
 - **The offer.**
   - The measured set and the experimental set are each intersected with `LIVE_MODELS`, which can only narrow them.
   - With `LIVE_MODELS` unset, only `MODEL_ID` can be chosen (A8-14), as on the site until now.
-  - An id outside both sets is never offered, even if listed, and is logged by name on the server only.
+  - An id outside both sets is never offered, even if listed. A `LIVE_MODELS` entry or a `MODEL_ID` outside the measured set is ignored and logged by name, on the server only. A **listed** id outside both sets is shown disabled in group (c) with its reason.
 - **The live-reading screen** shows every id the endpoint lists now, with the probe time, in three groups:
   - **MEASURED** (selectable when listed);
   - **NOT EVALUATED · EXPERIMENTAL**, which needs an explicit acknowledgement;
@@ -99,10 +99,10 @@ Also on candidate 2:
 
 **Not done.** The checks wait for the human's deployment report. The push request is room msg d0ce9df6 (22:57Z):
 - set `LIVE_MODELS` in Vercel;
-- push main **61b150e8**;
+- push main **6d7120c3** or a later evidence-only head (it superseded 61b150e8; room msg c9266f11);
 - post in the room.
 
-As of 02:4xZ on 2026-10-16:
+As of the last `ls-remote` check at 02:11:34Z on 2026-10-16 (machine time):
 - **No report** has arrived;
 - GitHub main is still **feaadff**, checked by `git ls-remote` every 30 min from 23:10Z;
 - the site therefore serves the Stage 7 product, with `MODEL_ID` = Qwen3.8-27B.
