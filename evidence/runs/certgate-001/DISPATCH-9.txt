@@ -1,0 +1,26 @@
+[Verbatim copy of room msg 7bf7dbb1-910b-4ce6-88af-8a5eedb7b0c3 from hugo.valer, room 3e47b667-b685-4655-8f34-cc0dad08ab30, as returned in the content field of band --session analyst-zt7k brief --json at 2026-10-16T11:59:43Z. Copied by analyst-zt7k.]
+
+@hugo.valer/analyst-zt7k This is a NINTH human dispatch for CertGate. It authorises ONE small stage, STAGE 11 — GEMMA IN THE SUBMISSION TEXT. It runs in the same room and repository and starts from GitHub main 55b217d (Stage 10 accepted on 3b46b1d). Dispatches 1 to 8 and amendment 1 remain in force except where this message changes them. Same four seats: analyst @hugo.valer/analyst-zt7k, implementer @hugo.valer/implementer-zt7m, adversary @hugo.valer/adversary-zt7n, auditor @hugo.valer/auditor-zt7p. The analyst commits this dispatch verbatim as evidence/runs/certgate-001/DISPATCH-9.txt.
+
+WHY
+The long description in docs/submission/lablab.md does not name Gemma-4-31B-IT. CertGate has a measured Gemma comparison run on AMD Token Factory, and the operator wants the submission text to state it. This is a statement of fact only; the text makes no claim about any prize.
+
+STAGE 11 — DELIVER
+- In the long description of docs/submission/lablab.md, change exactly two sentences and add one:
+1. "The open model Qwen3.8-27B, served by AMD Token Factory, reads the page images of the certificate; it is the evaluated model behind every figure below, and live reading also offers other measured and experimental models." becomes "The open model Qwen3.8-27B, served by AMD Token Factory, reads the page images of the certificate; live reading also offers Gemma-4-31B-IT and experimental models."
+2. "(cg-004, where the model read the printed carbon equivalent with a decimal comma and the channel check disagreed with the text layer)" becomes "(cg-004, a decimal comma caught by the channel check)".
+3. Added after that sentence: "In a comparison run on AMD Token Factory, Gemma-4-31B-IT gave false conforming 0 of 18, 26 of 27 as expected and 591 of 594 fields correct."
+- Result: a long description of 1983 code points, within the form's 600–2000. Title, short description, README and every other file stay unchanged.
+- Every Gemma figure is computed by a test from evaluation/runs/real-gemma-04100b9 and equals METRICS.md. Each changed or new sentence has its claims-map row (0 unmapped, 0 stale). The docs tests are adjusted for the changed sentences, never loosened. The prize check passes.
+- Byte identity with 55b217d outside docs/submission/lablab.md, claims-map.json, the docs tests and evidence/.
+
+LIMITS
+At most 1 repair cycle and 45 minutes for Stage 11, including final verification. No endpoint call.
+
+ACCEPTANCE
+The auditor recomputes the three Gemma figures from the Gemma run artifacts, counts the long description, byte-compares it with the text above, runs the suite and the claims and prize checks from a clean clone, and scans for secrets by value.
+
+FINAL REPORT
+A short addendum with the push request. The band never pushes and never submits. The human pastes the new long description into the lablab form.
+@hugo.valer/analyst-zt7k @hugo.valer/implementer-zt7m @hugo.valer/adversary-zt7n @hugo.valer/auditor-zt7p
+@hugo.valer/analyst-zt7k @hugo.valer/implementer-zt7m @hugo.valer/adversary-zt7n @hugo.valer/auditor-zt7p
