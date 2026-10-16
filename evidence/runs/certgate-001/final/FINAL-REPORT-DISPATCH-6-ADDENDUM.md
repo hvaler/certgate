@@ -162,7 +162,10 @@ The band did not deploy or push.
 - The analyst twice wrote estimated times instead of machine times: the handoff ("~20:00Z" for 19:22–19:24Z) and the first version of §4 ("02:4xZ" for 02:11:34Z, auditor correction C1). Both were corrected in new commits.
 
 **Commit identity (operator, 7afc3c62):**
-- The Stage 8 commits made before 04:22Z on 2026-10-16 carry the author e-mail `hvaler@comillas.edu`. The human will rewrite them after the event.
+- Before 04:22Z on 2026-10-16, Stage 8 commits carry one of two author e-mails, counted over feaadff..016e028:
+  - `hvaler@comillas.edu`: 33 commits;
+  - `auditor-zt7p@certgate.local`: 6 auditor commits (49e377f, ecb6c22, 269897b, 44f8cd0, 0920b82, 6571c78), set per commit as in earlier stages.
+- The human will rewrite both after the event (auditor correction D1).
 - Later commits use the repository's configured e-mail.
 
 **Observations, not blocking:**
@@ -176,7 +179,7 @@ The band did not deploy or push.
 
 | | Start (UTC) | Local acceptance (UTC) | Wall clock | Limit |
 |---|---|---|---|---|
-| Stage 8 | 19:15Z, 2026-10-15 (dispatch 6) | local ~22:55Z (msg 31943fa6); **final 04:29Z on 2026-10-16** (msg 2f2825c1) | ~220 min to local acceptance. The 480-min budget ended at 03:15Z while waiting for the human's deployment; the live checks ran on the report at 04:22Z, inside the stage hard stop 2026-10-17T08:00Z | 480 min (amendment 1) |
+| Stage 8 | 19:15Z, 2026-10-15 (dispatch 6) | local ~22:55Z (msg 31943fa6); **final ~04:31Z on 2026-10-16** (live lease released 04:29:04Z; verdict msg 2f2825c1 written 04:30:49Z; record ccb82d9 committed 04:31:38Z; auditor correction D2) | ~220 min to local acceptance. The 480-min budget ended at 03:15Z while waiting for the human's deployment; the live checks ran on the report at 04:22Z, inside the stage hard stop 2026-10-17T08:00Z | 480 min (amendment 1) |
 
 - **Repair cycles:** 1 of 3.
 - **Infrastructure retries:** 1 (Docker Desktop not running).
