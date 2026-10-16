@@ -2,15 +2,30 @@
 // The scripts are never run here: they drive a browser against the deployed site.
 // Stage 9 (dispatch 7, R9.0 A9-01): the same safeguard checks also cover the Stage 9 capture script, which copies the
 // Stage 7 tool's safeguards because the tool cannot be imported (it starts a capture when loaded).
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ROOT } from "./helpers.js";
 
+// CH9-01: every script under evidence/runs/certgate-001/stage-9/ that drives Playwright is discovered, not listed.
+const STAGE9_DIR = path.join(ROOT, "evidence", "runs", "certgate-001", "stage-9");
+const walk = (d: string): string[] => (existsSync(d) ? readdirSync(d).flatMap((e) => { const p = path.join(d, e); return statSync(p).isDirectory() ? walk(p) : [p]; }) : []);
+const stage9Scripts = walk(STAGE9_DIR).filter((p) => p.endsWith(".mjs") && /playwright/.test(readFileSync(p, "utf8")));
 const SCRIPTS = [
   { name: "capture script", file: path.join("tools", "capture-screenshots.mjs"), manifestEnd: 'writeFileSync(path.join(OUT_DIR, "manifest.json")' },
-  { name: "Stage 9 capture script", file: path.join("evidence", "runs", "certgate-001", "stage-9", "implementer", "capture-stage9.mjs"), manifestEnd: "writeFileSync(manifestPath" },
+  ...stage9Scripts.map((p) => ({ name: `Stage 9 capture script ${path.basename(p)}`, file: path.relative(ROOT, p), manifestEnd: "writeFileSync(manifestPath" })),
 ];
+describe("Stage 9 capture scripts are discovered (CH9-01)", () => {
+  it("finds the Stage 9 capture script", () => expect(stage9Scripts.map((p) => path.basename(p))).toContain("capture-stage9.mjs"));
+  for (const p of stage9Scripts) {
+    const t = readFileSync(p, "utf8");
+    it(`${path.basename(p)} imports nothing from src/, keeps no persistent profile or storage state and dumps no page HTML`, () => {
+      expect(t).not.toMatch(/from\s+["'][^"']*\/src\//);
+      expect(t).not.toMatch(/import\([^)]*\/src\//);
+      for (const banned of ["launchPersistentContext", "storageState", "page.content(", ".content()"]) expect(t, banned).not.toContain(banned);
+    });
+  }
+});
 for (const S of SCRIPTS) {
 const text = readFileSync(path.join(ROOT, S.file), "utf8").replace(/\r\n/g, "\n");
 const code = text.replace(/^\s*\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
@@ -90,15 +105,25 @@ describe(`${S.name}: visible-field rule (CH7-11)`, () => {
 }
 
 describe("Stage 9 capture script: measured models only, one reading, per-image machine time (S9-02, A9-03, A9-05)", () => {
-  const s9 = readFileSync(path.join(ROOT, SCRIPTS[1]!.file), "utf8").replace(/\r\n/g, "\n");
+  const s9 = readFileSync(path.join(STAGE9_DIR, "implementer", "capture-stage9.mjs"), "utf8").replace(/\r\n/g, "\n");
   it("accepts only a measured model and stops on a failed reading without retrying", () => {
     expect(s9).toContain('const MEASURED = ["Gemma-4-31B-IT", "Qwen3.8-27B"];');
     expect(s9).toContain("if (!MEASURED.includes(out.model)) fail(");
     expect(s9).toMatch(/seen\("failed"\);\n\s+await page\.unroute\("\*\*\/api\/live\/jobs"\);\n[^\n]*\n\s+return;/);
   });
   it("captions every image with its model, the site commit and its own capture time", () => {
-    expect(s9).toContain("caption: `${screen} · model ${args.model} · site commit ${short} · captured ${at}`");
+    expect(s9).toContain("caption: `${screen}${state} · model ${args.model}${note} · site commit ${short} · captured ${at}`");
     expect(s9).toContain("const at = new Date().toISOString();");
+  });
+  it("labels a failed reading from the job's own record, and a Qwen fallback in every caption (CH9-03)", () => {
+    expect(s9).toContain("state: `failed (${live.failure.reason_class ?? \"unknown\"})`");
+    expect(s9.indexOf("live.failure = {")).toBeLessThan(s9.indexOf('await shoot(page, "live-failed"'));
+    expect(s9).toContain('const note = args.fallback ? ` · fallback: ${args.fallback}` : "";');
+    expect(s9).toContain('if (out.fallback !== null && out.model !== "Qwen3.8-27B") fail(');
+  });
+  it("records the visible-field result of every image (CH9-02)", () => {
+    expect(s9).toContain("const visible = await guard(page, screen, secrets);");
+    expect(s9).toContain("visible_field: visible");
   });
 });
 

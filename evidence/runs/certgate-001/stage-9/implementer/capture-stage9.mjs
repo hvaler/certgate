@@ -34,6 +34,8 @@ const EVIDENCE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PLAYWRIGHT_VERSION = "1.56.1";
 const DEFAULT_SITE = "https://certgate-wheat.vercel.app";
 const SERVED_FILES = ["/index.html", "/app.js", "/styles.css", "/labels.js", "/figures.json", "/stories/index.json"];
+/** CH9-05: every file under public/ at the deployed commit, fetched and hashed before and after this run. */
+const PUBLIC_FILES = ["/app.js", "/figures.json", "/index.html", "/labels.js", "/stories/cg-001.json", "/stories/cg-001.recording.json", "/stories/cg-002.json", "/stories/cg-002.recording.json", "/stories/cg-003.json", "/stories/cg-003.recording.json", "/stories/index.json", "/styles.css"];
 const MEASURED = ["Gemma-4-31B-IT", "Qwen3.8-27B"];
 const LIVE_SAMPLE = "cg-004";
 const CODE_HEADER = "x-live-access-code";
@@ -45,14 +47,19 @@ class CaptureError extends Error {}
 const fail = (msg) => { throw new CaptureError(msg); };
 
 function parseArgs(argv) {
-  const out = { site: DEFAULT_SITE, commit: null, model: null };
+  const out = { site: DEFAULT_SITE, commit: null, model: null, fallback: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--site" && argv[i + 1]) out.site = argv[++i];
     else if (a === "--commit" && argv[i + 1]) out.commit = argv[++i];
     else if (a === "--model" && argv[i + 1]) out.model = argv[++i];
+    // CH9-03, A9-03: a Qwen run after Gemma was unlisted or failed names that in every caption,
+    // e.g. --fallback "Gemma-4-31B-IT unlisted" or --fallback "Gemma-4-31B-IT failed: endpoint_5xx".
+    else if (a === "--fallback" && argv[i + 1]) out.fallback = argv[++i];
     else fail(`unknown or incomplete argument: ${a}`);
   }
+  if (out.fallback !== null && !/^Gemma-4-31B-IT (unlisted|failed: [a-z0-9_]+)$/.test(out.fallback)) fail("--fallback must be \"Gemma-4-31B-IT unlisted\" or \"Gemma-4-31B-IT failed: <reason_class>\"");
+  if (out.fallback !== null && out.model !== "Qwen3.8-27B") fail("--fallback is only for the declared Qwen3.8-27B fallback");
   let u;
   try { u = new URL(out.site); } catch { fail("--site is not a URL"); }
   if (u.protocol !== "https:" && u.hostname !== "localhost" && u.hostname !== "127.0.0.1") fail("--site must be https (or localhost)");
@@ -111,11 +118,23 @@ async function servedHashes(site) {
   return out;
 }
 
+/** Returns the visible-field record of this screen (CH9-02); the code is never typed, so the input must be empty. */
+async function publicHashes(site) {
+  const out = {};
+  for (const f of PUBLIC_FILES) {
+    const r = await fetch(site + f, { cache: "no-store" });
+    if (!r.ok) fail(`public file ${f} answered ${r.status}`);
+    out[f] = sha256(Buffer.from(await r.arrayBuffer()));
+  }
+  return out;
+}
+
 async function guard(page, screen, secrets) {
   const values = await page.evaluate((sel) => [...document.querySelectorAll(`${sel}, input[type=password]`)].map((el) => el.value), CODE_INPUT);
   for (const value of values) if (!(value === "")) fail(`access-code input not empty on ${screen}`);
   const text = await page.evaluate(() => document.body.innerText);
   for (const v of secrets) if (v && text.includes(v)) fail(`secret check failed on ${screen}`);
+  return { code_input_present: values.length > 0, code_input_empty: values.every((v) => v === ""), secret_hits: 0 };
 }
 
 /** The strict identity rule of the product (src/web/models.ts sameModel, L-C1), restated for the capture check. */
@@ -152,21 +171,25 @@ async function capture(args, accessCode, secrets) {
   const short = args.commit.slice(0, 7);
   const served = await servedHashes(args.site);
   for (const f of SERVED_FILES) if (served[f] !== base.served_files_sha256[f]) fail(`served file ${f} differs from the tool run's`);
+  const publicBefore = await publicHashes(args.site);
   for (const [f, h] of Object.entries(served)) console.log(`${h}  served ${f}`);
 
   const images = [];
+  let aborted = null;
   const live = { requested: true, sample: LIVE_SAMPLE, width: 1280, model_requested: args.model, job_posts: 0, states_observed: [], timeline: [] };
   const browser = await pw.chromium.launch({ headless: true });
   try {
+    const note = args.fallback ? ` · fallback: ${args.fallback}` : "";
     const shoot = async (page, screen, width, opts) => {
-      await guard(page, screen, secrets);
+      const visible = await guard(page, screen, secrets);
       const file = `${screen}-${width}.png`;
       const target = path.join(OUT_DIR, file);
       const at = new Date().toISOString();
       if (opts && opts.locator) await opts.locator.screenshot({ path: target, animations: "disabled" });
       else await page.screenshot({ path: target, animations: "disabled", fullPage: !!(opts && opts.fullPage) });
       const hash = sha256(readFileSync(target));
-      images.push({ file, screen, width, sha256: hash, captured_at: at, caption: `${screen} · model ${args.model} · site commit ${short} · captured ${at}` });
+      const state = opts && opts.state ? ` · ${opts.state}` : "";
+      images.push({ file, screen, width, sha256: hash, captured_at: at, url: page.url(), visible_field: visible, caption: `${screen}${state} · model ${args.model}${note} · site commit ${short} · captured ${at}` });
       console.log(`${hash}  ${file}`);
     };
 
@@ -181,7 +204,22 @@ async function capture(args, accessCode, secrets) {
       if (!/checked \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(groups)) fail("#live-models shows no probe time");
       await page.locator("#live-models").scrollIntoViewIfNeeded();
       await shoot(page, "live-models", vp.width, { locator: page.locator("#live-models") });
-      if (vp.width === 1280) await liveReading(page, args, accessCode, live, shoot);
+      if (vp.width === 1280) {
+        try {
+          await liveReading(page, args, accessCode, live, shoot);
+        } catch (e) {
+          // W-04: an attempt that failed a check after its job POST keeps its record: the current screen, the job's
+          // own record (one read-only GET) and its outcome are written before the run exits non-zero.
+          aborted = e;
+          if (live.job_posts > 0 && !live.failure) {
+            const j = live.job_id ? await (await page.request.get(`${args.site}/api/live/jobs/${live.job_id}`)).json().catch(() => ({})) : {};
+            live.job_record = j;
+            live.failure = { job_id: live.job_id ?? null, state: j.state ?? null, reason_class: j.reason_class ?? "capture_check_failed", reason: j.reason ?? null, check: e instanceof CaptureError ? e.message : "capture error", polled_at: new Date().toISOString() };
+            await page.unroute("**/api/live/jobs").catch(() => undefined);
+            await shoot(page, "live-mismatch", 1280, { fullPage: true, state: `failed (${live.failure.reason_class})` }).catch(() => undefined);
+          }
+        }
+      }
       await context.close();
     }
   } finally {
@@ -190,22 +228,27 @@ async function capture(args, accessCode, secrets) {
 
   const after = await servedHashes(args.site);
   for (const f of SERVED_FILES) if (after[f] !== served[f]) fail(`served file ${f} changed during the capture`);
+  const publicAfter = await publicHashes(args.site);
+  for (const f of PUBLIC_FILES) if (publicAfter[f] !== publicBefore[f]) fail(`public file ${f} changed during the capture`);
   const finishedAt = new Date().toISOString();
 
   const manifest = {
     ...base,
     runs: [
       { script: "tools/capture-screenshots.mjs (unchanged)", captured_at: base.captured_at, served_files_sha256: base.served_files_sha256 },
-      { script: "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs", started_at: startedAt, finished_at: finishedAt, served_files_sha256_before: served, served_files_sha256_after: after },
+      { script: "evidence/runs/certgate-001/stage-9/implementer/capture-stage9.mjs", started_at: startedAt, finished_at: finishedAt, served_files_sha256_before: served, served_files_sha256_after: after, public_files_sha256_before: publicBefore, public_files_sha256_after: publicAfter },
     ],
     secret_check: SECRET_CHECK_NOTE,
     live: { sample: live.sample, width: live.width, model_requested: live.model_requested, model_reported: live.model_reported ?? null, evaluated: live.evaluated ?? null, listing_checked_at: live.listing_checked_at ?? null, job_posts: live.job_posts, job_id: live.job_id ?? null, post_status: live.post_status ?? null, states_observed: live.states_observed, timeline: live.timeline, outcome: live.failure ? "failed" : live.states_observed.includes("done") ? "done" : live.unlisted ? "not run: model not listed" : "not run", failure: live.failure ?? null },
     images: [...base.images.filter((i) => !images.some((n) => n.file === i.file)), ...images],
   };
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
-  writeFileSync(path.join(EVIDENCE_DIR, `capture-${args.model}.json`), JSON.stringify({ started_at: startedAt, finished_at: finishedAt, live: manifest.live, images }, null, 2) + "\n");
+  // CH9-04: each reading attempt keeps its own record: the run, its images, and the job's own record with its receipt
+  // as the API returned it (it carries no access code, key or provider text, W-02).
+  writeFileSync(path.join(EVIDENCE_DIR, `capture-${args.model}.json`), JSON.stringify({ started_at: startedAt, finished_at: finishedAt, fallback: args.fallback, live: manifest.live, status_models: live.status_models ?? null, job_record: live.job_record ?? null, images }, null, 2) + "\n");
   console.log(`${sha256(readFileSync(manifestPath))}  manifest.json`);
   console.log(`live reading: ${manifest.live.outcome}`);
+  if (aborted) throw aborted;
 }
 
 /** One real reading of cg-004 with the chosen measured model: exactly one job POST. */
@@ -213,6 +256,9 @@ async function liveReading(page, args, accessCode, live, shoot) {
   const status = await (await page.request.get(`${args.site}/api/live/status`)).json();
   if (!status || !status.enabled || !status.job_api) fail("live reading is not enabled on the site");
   if (status.access_code_required && !accessCode) fail("the site needs the access code and LIVE_ACCESS_CODE is not set");
+  // W-05: the model block of the status (no code in it) is kept, so an "unlisted" fallback has its evidence beside the
+  // live-models-1280 image taken just before.
+  live.status_models = status.models ?? null;
   const radio = page.locator(`input[name=live-model][value="${args.model}"]`);
   if ((await radio.count()) === 0 || (await radio.isDisabled())) {
     live.unlisted = true;
@@ -261,14 +307,16 @@ async function liveReading(page, args, accessCode, live, shoot) {
     const text = (await msg.innerText().catch(() => "")).trim();
     if (/^Queued/.test(text) && !live.states_observed.includes("queued")) {
       seen("queued");
-      await shoot(page, "live-queued", 1280, { locator: page.locator("#live") });
+      await shoot(page, "live-queued", 1280, { locator: page.locator("#live"), state: "queued" });
     } else if (/^Reading at AMD/.test(text) && !live.states_observed.includes("reading")) {
       seen("reading");
-      await shoot(page, "live-reading", 1280, { locator: page.locator("#live") });
+      await shoot(page, "live-reading", 1280, { locator: page.locator("#live"), state: "reading" });
     } else if (/failed|Refused|No reading was made|could not be read/.test(text)) {
-      await shoot(page, "live-failed", 1280, { locator: page.locator("#live") });
+      // CH9-03: the caption is made from the job's own final record, read first (read-only; no model call).
       const j = live.job_id ? await (await page.request.get(`${args.site}/api/live/jobs/${live.job_id}`)).json().catch(() => ({})) : {};
       live.failure = { job_id: live.job_id ?? null, state: j.state ?? null, reason_class: j.reason_class ?? null, reason: j.reason ?? null, polled_at: new Date().toISOString() };
+      live.job_record = j;
+      await shoot(page, "live-failed", 1280, { locator: page.locator("#live"), state: `failed (${live.failure.reason_class ?? "unknown"})` });
       seen("failed");
       await page.unroute("**/api/live/jobs");
       console.log(`live reading failed: job ${live.failure.job_id ?? "unknown"} · state ${live.failure.state ?? "unknown"} · reason_class ${live.failure.reason_class ?? "unknown"}`);
@@ -280,19 +328,21 @@ async function liveReading(page, args, accessCode, live, shoot) {
   seen("done");
   const line = (await page.locator("#model-choice").innerText().catch(() => "")).trim();
   if (!line.startsWith(`Read by ${args.model}, a measured model (reported as `)) fail("the proposal has no model line for the chosen measured model");
-  await shoot(page, "live-done", 1280, { fullPage: true });
-  await page.setViewportSize({ width: 375, height: 812 });
-  await page.waitForTimeout(300);
-  await shoot(page, "live-done", 375, { fullPage: true });
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.waitForTimeout(300);
-
-  // The job's own record, read back once (read-only; no model call).
+  // The job's own record, read back once (read-only; no model call), before the done captions are written.
   const j = await (await page.request.get(`${args.site}/api/live/jobs/${live.job_id}`)).json();
+  live.job_record = j;
   live.model_reported = j.model_reported ?? null;
   live.evaluated = j.evaluated ?? null;
   live.listing_checked_at = j.listing_checked_at ?? null;
+  const rc = j.result && j.result.view && j.result.view.receipt;
   if (j.state !== "done" || j.model_requested !== args.model || !sameModel(args.model, j.model_reported) || j.evaluated !== true) fail("the job record does not show a done reading of the chosen measured model");
+  if (!rc || rc.reading_source !== "live" || !rc.model_choice || rc.model_choice.requested !== args.model || rc.model_choice.evaluated !== true) fail("the job's receipt is not a live reading of the chosen measured model");
+  await shoot(page, "live-done", 1280, { fullPage: true, state: "done" });
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.waitForTimeout(300);
+  await shoot(page, "live-done", 375, { fullPage: true, state: "done" });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.waitForTimeout(300);
 
   // The receipt, opened with the page's own link.
   await page.getByRole("link", { name: "Open the receipt" }).click();
@@ -300,10 +350,10 @@ async function liveReading(page, args, accessCode, live, shoot) {
   const requested = (await page.locator("#receipt-model-requested").innerText()).trim();
   const reported = (await page.locator("#receipt-model-reported").innerText()).trim();
   if (requested !== args.model || !sameModel(args.model, reported)) fail("the receipt does not show the requested and the reported model");
-  await shoot(page, "live-receipt", 1280, { fullPage: true });
+  await shoot(page, "live-receipt", 1280, { fullPage: true, state: "done" });
   await page.setViewportSize({ width: 375, height: 812 });
   await page.waitForTimeout(300);
-  await shoot(page, "live-receipt", 375, { fullPage: true });
+  await shoot(page, "live-receipt", 375, { fullPage: true, state: "done" });
   await page.unroute("**/api/live/jobs");
   if (live.job_posts !== 1) fail("expected exactly one job POST");
 }
