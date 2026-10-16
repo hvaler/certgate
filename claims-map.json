@@ -3646,11 +3646,6 @@
  },
  {
   "doc": "docs/submission/lablab.md",
-  "text": "CertGate never releases material on its own.",
-  "row": "C-01"
- },
- {
-  "doc": "docs/submission/lablab.md",
   "text": "On 27 evaluated fictitious certificates, in two independent Qwen3.8-27B runs, false conforming was 0 of 18 in both runs.",
   "row": "C-103"
  },
@@ -3676,22 +3671,12 @@
  },
  {
   "doc": "docs/submission/lablab.md",
-  "text": "Reading took 89.6 s mean and 80.6 s median per certificate with Qwen3.8-27B in the implementer run.",
-  "row": "C-19"
- },
- {
-  "doc": "docs/submission/lablab.md",
   "text": "The text-layer parser covers the two fictitious layouts of the dataset, not arbitrary mill certificates.",
   "row": "C-105"
  },
  {
   "doc": "docs/submission/lablab.md",
   "text": "A digital PDF in another layout gets no second channel and goes to review, like a scan: this is safe, but it reduces the saving.",
-  "row": "C-105"
- },
- {
-  "doc": "docs/submission/lablab.md",
-  "text": "Of the 27 evaluated certificates, 3 are scans; of the 30 in the dataset, 5.",
   "row": "C-105"
  },
  {
